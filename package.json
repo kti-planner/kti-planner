@@ -10,7 +10,8 @@
     "build-src": "rm -rf ./build && mkdir ./build && tsc",
     "build-www": "tsc --project ./www && astro check --root ./www --minimumSeverity warning && astro build --root ./www",
     "lint": "eslint .",
-    "prettier": "prettier src/ www/src/ --write"
+    "prettier": "prettier src/ www/src/ --write",
+    "dev": "astro dev --root ./www"
   },
   "repository": {
     "type": "git",
