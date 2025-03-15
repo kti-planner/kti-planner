@@ -1,0 +1,25 @@
+{
+    "extends": "astro/tsconfigs/strict",
+    "compilerOptions": {
+        "strict": true,
+        "noFallthroughCasesInSwitch": true,
+        "noImplicitOverride": true,
+        "noImplicitReturns": true,
+        "noPropertyAccessFromIndexSignature": false,
+        "noUncheckedIndexedAccess": true,
+        "exactOptionalPropertyTypes": true,
+        "allowJs": false,
+        "baseUrl": ".",
+        "paths": {
+            "@components/*": ["src/components/*"],
+            "@layouts/*": ["src/layouts/*"],
+            "@pages/*": ["src/pages/*"]
+        }
+    },
+    "include": [
+        ".astro/types.d.ts",
+        "src/**/*.astro",
+        "src/**/*.ts",
+        "src/**/*.d.ts"
+    ]
+}
