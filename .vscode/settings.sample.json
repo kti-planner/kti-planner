@@ -26,6 +26,5 @@
     "javascript.format.placeOpenBraceOnNewLineForFunctions": false,
     "javascript.format.placeOpenBraceOnNewLineForControlBlocks": false,
     "typescript.format.placeOpenBraceOnNewLineForFunctions": false,
-    "typescript.format.placeOpenBraceOnNewLineForControlBlocks": false,
-    "editor.formatOnSave": true
+    "typescript.format.placeOpenBraceOnNewLineForControlBlocks": false
 }

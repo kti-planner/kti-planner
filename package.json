@@ -8,7 +8,7 @@
   "scripts": {
     "build": "npm-run-all build-www build-src",
     "build-src": "rm -rf ./build && mkdir ./build && tsc",
-    "build-www": "tsc --project ./www && astro check --root ./www --minimumSeverity warning && astro build --root ./www",
+    "build-www": "astro check --root ./www --minimumSeverity warning && tsc --project ./www && astro build --root ./www",
     "lint": "eslint .",
     "prettier": "prettier src/ www/src/ --write",
     "dev": "astro dev --root ./www"
