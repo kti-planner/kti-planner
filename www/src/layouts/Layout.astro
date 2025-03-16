@@ -1,10 +1,10 @@
 ---
 interface Props {
-    title: string;
+    title?: string | null | undefined;
     description?: string | null | undefined;
 }
 
-const { title, description = null } = Astro.props;
+const { title = 'KTI Planner', description = null } = Astro.props;
 ---
 
 <!doctype html>
@@ -12,6 +12,7 @@ const { title, description = null } = Astro.props;
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="shortcut icon" href="/favicon.svg" type="image/svg" />
 
         <title>
             {title}
