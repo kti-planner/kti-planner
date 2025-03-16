@@ -25,3 +25,7 @@ Run the server:
 ```bash
 node build/main.js
 ```
+
+## Run as Docker container
+
+This repository can be run as a single Docker container, using the provided [Dockerfile](./Dockerfile).
