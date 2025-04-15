@@ -33,7 +33,12 @@ app.use((err: unknown, req: express.Request, res: express.Response, next: expres
     res.status(500).end();
 });
 
-const server = app.listen(config.port, () => {
+const server = app.listen(config.port, error => {
+    if (error) {
+        console.error(`Failed to start listening on port ${config.port}.`);
+        throw error;
+    }
+
     console.log(`Listening on port ${config.port}.`);
 });
 
