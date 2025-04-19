@@ -27,7 +27,7 @@ app.use(
         cookie: {
             secure: process.env.NODE_ENV === 'production',
             sameSite: process.env.NODE_ENV === 'production' ? 'strict' : undefined,
-            maxAge: 10800000, // 3 hours
+            maxAge: 1000 * 60 * 60 * 3, // 3 hours
         },
     }),
 );
