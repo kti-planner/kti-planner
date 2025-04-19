@@ -3,3 +3,7 @@ CREATE TABLE users (
     email text UNIQUE,
     password_hash text NOT NULL
 );
+
+CREATE TABLE counter (
+    i integer
+);

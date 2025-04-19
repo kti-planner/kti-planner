@@ -11,6 +11,7 @@
         "allowJs": false,
         "baseUrl": ".",
         "paths": {
+            "@backend/*": ["src/backend/*"],
             "@components/*": ["src/components/*"],
             "@layouts/*": ["src/layouts/*"],
             "@pages/*": ["src/pages/*"]
