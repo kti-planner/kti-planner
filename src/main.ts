@@ -1,5 +1,7 @@
+import { RedisStore } from 'connect-redis';
 import express from 'express';
 import session from 'express-session';
+import redis from 'redis';
 import { ssrHandler } from './ssr-handler.js';
 import { requestLogger } from './request-logger.js';
 
@@ -17,10 +19,19 @@ app.use(requestLogger);
 
 app.use('/', express.static('www/dist/client/'));
 
+const redisClient = redis.createClient({
+    url: process.env.REDIS_URL!,
+});
+await redisClient.connect();
+
+const redisStore = new RedisStore({
+    client: redisClient,
+});
+
 app.use(
     session({
-        store: undefined,
-        secret: crypto.getRandomValues(new Int8Array(32)),
+        store: redisStore,
+        secret: process.env.SESSION_SECRET ?? crypto.getRandomValues(new Int8Array(32)),
         resave: false,
         saveUninitialized: false,
         rolling: true,
@@ -66,5 +77,15 @@ process.on('SIGTERM', () => {
 
     server.close(() => {
         console.log('HTTP server closed.');
+
+        redisClient
+            .quit()
+            .then(() => {
+                console.log('Redis client closed.');
+            })
+            .catch(error => {
+                console.error('Closing redis client failed.');
+                console.error(error);
+            });
     });
 });
