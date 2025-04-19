@@ -35,24 +35,22 @@ function translate(text: keyof (typeof translations)[LangId]): string {
 ---
 
 <Layout>
-    <div class="vstack justify-content-center h-100">
-        <div class="text-center">
-            {translate('Hello World')}!
-            <i class="bi bi-emoji-smile"></i>
-            <br />
-            {translate('Session counter')}: {session.counter}
-            <br />
-            {translate('Database counter')}: {databaseCounter}
-            <br />
-            <form action="/increment-counter/" method="post">
-                <input type="number" name="count" class="form-control" placeholder={translate('Count')} />
-                <button type="submit" class="btn btn-primary"> {translate('Increment counter')} </button>
-            </form>
-            <CounterApp client:only="vue" />
-            {translate('Language')}: {langId}
-            <br />
-            <a href="/lang/en/" class="btn btn-primary"> English </a>
-            <a href="/lang/pl/" class="btn btn-primary"> Polski </a>
-        </div>
+    <div class="text-center py-2">
+        {translate('Hello World')}!
+        <i class="bi bi-emoji-smile"></i>
+        <br />
+        {translate('Session counter')}: {session.counter}
+        <br />
+        {translate('Database counter')}: {databaseCounter}
+        <br />
+        <form action="/increment-counter/" method="post">
+            <input type="number" name="count" class="form-control" placeholder={translate('Count')} />
+            <button type="submit" class="btn btn-primary"> {translate('Increment counter')} </button>
+        </form>
+        <CounterApp client:only="vue" />
+        {translate('Language')}: {langId}
+        <br />
+        <a href="/lang/en/" class="btn btn-primary"> English </a>
+        <a href="/lang/pl/" class="btn btn-primary"> Polski </a>
     </div>
 </Layout>

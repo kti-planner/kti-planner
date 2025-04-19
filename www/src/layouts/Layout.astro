@@ -10,6 +10,13 @@ const { title, description } = Astro.props;
 ---
 
 <Page title={title} description={description}>
+    <header class="bg-body-secondary">
+        <nav class="navbar">
+            <div class="container-xxl">
+                <a class="navbar-brand" href="/">KTI</a>
+            </div>
+        </nav>
+    </header>
     <div class="container">
         <slot />
     </div>
@@ -18,5 +25,10 @@ const { title, description } = Astro.props;
 <style lang="scss">
     .container {
         flex: 1;
+    }
+
+    header {
+        margin-inline: calc((100vw - 100%) / -2);
+        padding-inline: calc((100vw - 100%) / 2);
     }
 </style>
