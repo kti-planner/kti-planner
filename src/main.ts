@@ -1,4 +1,5 @@
 import express from 'express';
+import session from 'express-session';
 import { ssrHandler } from './ssr-handler.js';
 import { requestLogger } from './request-logger.js';
 
@@ -16,8 +17,26 @@ app.use(requestLogger);
 
 app.use('/', express.static('www/dist/client/'));
 
+app.use(
+    session({
+        store: undefined,
+        secret: crypto.getRandomValues(new Int8Array(32)),
+        resave: false,
+        saveUninitialized: false,
+        rolling: true,
+        cookie: {
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: process.env.NODE_ENV === 'production' ? 'strict' : undefined,
+            maxAge: 1000 * 60 * 60 * 3, // 3 hours
+        },
+    }),
+);
+
 app.use((req, res, next) => {
-    const locals = {};
+    const locals = {
+        req: req,
+        session: req.session,
+    };
 
     ssrHandler(req, res, next, locals);
 });

@@ -1,8 +1,14 @@
 ---
 import Layout from '@layouts/Layout.astro';
+
+const { session } = Astro.locals;
+
+session.counter ??= 0;
+session.counter++;
 ---
 
 <Layout>
     Hello World!
     <i class="bi bi-emoji-smile"></i>
+    {session.counter}
 </Layout>
