@@ -2,26 +2,53 @@
 import { db } from '@backend/db';
 import Layout from '@layouts/Layout.astro';
 
-const { session } = Astro.locals;
+const { session, langId } = Astro.locals;
 
 session.counter ??= 0;
 session.counter++;
 
 const databaseCounter = (await db.query<{ count: number }>('SELECT Count(*) as count FROM counter')).rows[0]?.count;
+
+const translations = {
+    'en': {
+        'Hello World': 'Hello World',
+        'Session counter': 'Session counter',
+        'Database counter': 'Database counter',
+        'Count': 'Count',
+        'Increment counter': 'Increment counter',
+        'Language': 'Language',
+    },
+    'pl': {
+        'Hello World': 'Witaj Świecie',
+        'Session counter': 'Licznik sesji',
+        'Database counter': 'Licznik bazy danych',
+        'Count': 'Liczba',
+        'Increment counter': 'Zwiększ licznik',
+        'Language': 'Język',
+    },
+};
+
+function translate(text: keyof (typeof translations)[LangId]): string {
+    return translations[langId][text];
+}
 ---
 
 <Layout>
     <div class="container">
-        Hello World!
+        {translate('Hello World')}!
         <i class="bi bi-emoji-smile"></i>
         <br />
-        Session counter: {session.counter}
+        {translate('Session counter')}: {session.counter}
         <br />
-        Database counter: {databaseCounter}
+        {translate('Database counter')}: {databaseCounter}
         <br />
         <form action="/increment-counter/" method="post">
-            <input type="number" name="count" class="form-control" placeholder="Count" />
-            <button type="submit" class="btn btn-primary"> Increment counter </button>
+            <input type="number" name="count" class="form-control" placeholder={translate('Count')} />
+            <button type="submit" class="btn btn-primary"> {translate('Increment counter')} </button>
         </form>
+        {translate('Language')}: {langId}
+        <br />
+        <a href="/lang/en/" class="btn btn-primary"> English </a>
+        <a href="/lang/pl/" class="btn btn-primary"> Polski </a>
     </div>
 </Layout>

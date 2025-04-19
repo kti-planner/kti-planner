@@ -1,4 +1,5 @@
 import { defineMiddleware } from 'astro:middleware';
+import { isLangId, langIds } from '@backend/lang';
 
 declare module 'express-session' {
     interface SessionData {
@@ -6,7 +7,7 @@ declare module 'express-session' {
     }
 }
 
-export const onRequest = defineMiddleware(async ({ request, locals }, next) => {
+export const onRequest = defineMiddleware(async ({ request, locals, cookies }, next) => {
     const contentType = request.headers.get('Content-Type')?.split(';', 1)[0];
 
     if (contentType === 'application/x-www-form-urlencoded' || contentType === 'multipart/form-data') {
@@ -25,6 +26,18 @@ export const onRequest = defineMiddleware(async ({ request, locals }, next) => {
         }
 
         locals.jsonData = jsonData;
+    }
+
+    const langIdCookie = cookies.get('langId')?.value;
+    if (langIdCookie === undefined || !isLangId(langIdCookie)) {
+        const langId = locals.req.acceptsLanguages(langIds) as LangId | false;
+        locals.langId = langId !== false ? langId : 'pl';
+        cookies.set('langId', locals.langId, {
+            path: '/',
+            secure: true,
+        });
+    } else {
+        locals.langId = langIdCookie;
     }
 
     return next();
