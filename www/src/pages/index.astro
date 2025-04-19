@@ -20,6 +20,7 @@ const databaseCounter = (await db.query<{ count: number }>('SELECT Count(*) as c
         Database counter: {databaseCounter}
         <br />
         <form action="/increment-counter/" method="post">
+            <input type="number" name="count" class="form-control" placeholder="Count" />
             <button type="submit" class="btn btn-primary"> Increment counter </button>
         </form>
     </div>
