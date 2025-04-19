@@ -9,6 +9,8 @@ A dedicated content management system for planning classes organized by the Depa
 1. Make a `.env` file in the root of the project for database credentials:
 
     ```
+    POSTGRES_DB=kti_planner
+    POSTGRES_USER=webapp
     POSTGRES_PASSWORD=secret-password
     ```
 
@@ -38,28 +40,25 @@ docker exec -it <name-of-container> psql -d kti_planner -U webapp
 
 ### Running the web app
 
-Install dependencies and run the dev server:
-
-```bash
-npm i
-npm run dev
-```
-
-## Building for production
-
 Install dependencies then build the website and server:
 
 ```bash
-npm i
+npm install
 npm run build
 ```
 
 Run the server:
 
 ```bash
-node build/main.js
+node .
 ```
 
 ## Run as a Docker container
 
 The app can be run as a Docker container using the provided [Dockerfile](./Dockerfile).
+
+## Run using Docker Compose
+
+```bash
+docker compose up --build -d
+```
