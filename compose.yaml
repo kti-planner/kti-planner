@@ -1,0 +1,17 @@
+name: kti-planner
+
+services:
+  web:
+    build:
+      context: .
+    depends_on:
+      - postgres
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+  postgres:
+    build:
+      context: ./db
+    env_file:
+      - .env
