@@ -37,7 +37,7 @@ function translate(text: keyof (typeof translations)[LangId]): string {
             />
             <label for="increment-count-input">{{ translate('Count') }}</label>
         </div>
-        <button type="button" class="btn btn-primary" @click="count += incrementCount">
+        <button type="button" class="btn btn-success" @click="count += incrementCount">
             {{ translate('Increment vue counter') }}
         </button>
     </div>
