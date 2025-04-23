@@ -5,6 +5,7 @@ interface Props {
 }
 
 const { title = 'KTI Planner', description = null } = Astro.props;
+const { langId } = Astro.locals;
 ---
 
 <!doctype html>
@@ -22,6 +23,9 @@ const { title = 'KTI Planner', description = null } = Astro.props;
         <link rel="stylesheet" href="/assets/css/bootstrap.min.css?ver=5.3.3" />
         <link rel="stylesheet" href="/assets/css/bootstrap-icons.min.css?ver=1.11.3" />
 
+        <script is:inline define:vars={{ langId }}>
+            globalThis.langId = langId;
+        </script>
         <script is:inline src="/assets/js/bootstrap.bundle.min.js?ver=5.3.3"></script>
     </head>
     <body>

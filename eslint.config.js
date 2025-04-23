@@ -4,18 +4,29 @@ import eslint from '@eslint/js';
 import tseslint from 'typescript-eslint';
 import eslintPluginAstro from 'eslint-plugin-astro';
 import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
+import eslintPluginVue from 'eslint-plugin-vue';
 
 export default tseslint.config(
     eslint.configs.recommended,
     ...tseslint.configs.recommendedTypeChecked,
     ...tseslint.configs.stylisticTypeChecked,
     ...eslintPluginAstro.configs.recommended,
+    ...eslintPluginVue.configs['flat/recommended'],
     eslintPluginPrettierRecommended,
     {
-        files: ['src/**/*.ts', 'www/src/**/*.ts', 'www/src/**/*.astro'],
+        files: ['src/**/*.ts', 'www/src/**/*.ts', 'www/src/**/*.astro', 'www/src/**/*.vue'],
         languageOptions: {
             parserOptions: {
                 project: true,
+            },
+        },
+    },
+    {
+        files: ['**/*.vue'],
+        languageOptions: {
+            parserOptions: {
+                parser: '@typescript-eslint/parser',
+                extraFileExtensions: ['.vue'],
             },
         },
     },
@@ -86,10 +97,106 @@ export default tseslint.config(
             '@typescript-eslint/no-empty-function': 'off',
             '@typescript-eslint/class-literal-property-style': 'off',
             '@typescript-eslint/consistent-indexed-object-style': 'off',
+
+            // Vue
+            'vue/html-self-closing': [
+                'error',
+                {
+                    'html': {
+                        'void': 'any',
+                        'normal': 'any',
+                        'component': 'always',
+                    },
+                    'svg': 'always',
+                    'math': 'always',
+                },
+            ],
+            'vue/attributes-order': [
+                'error',
+                {
+                    'order': [
+                        'DEFINITION',
+                        'SLOT',
+                        'CONDITIONALS',
+                        'LIST_RENDERING',
+                        'RENDER_MODIFIERS',
+                        ['UNIQUE', 'TWO_WAY_BINDING', 'OTHER_DIRECTIVES', 'GLOBAL', 'OTHER_ATTR', 'EVENTS'],
+                        'CONTENT',
+                    ],
+                    'alphabetical': false,
+                },
+            ],
+            'vue/order-in-components': [
+                'error',
+                {
+                    'order': [
+                        'props',
+                        'emits',
+                        'expose',
+                        'directives',
+                        'components',
+                        'data',
+                        'watch',
+                        'methods',
+                        'computed',
+                        'LIFECYCLE_HOOKS',
+                    ],
+                },
+            ],
+            'vue/block-lang': [
+                'error',
+                {
+                    'script': {
+                        'lang': 'ts',
+                    },
+                },
+            ],
+            'vue/block-order': [
+                'error',
+                {
+                    'order': ['script', 'template', 'style'],
+                },
+            ],
+            'vue/component-name-in-template-casing': 'error',
+            'vue/component-options-name-casing': 'error',
+            'vue/custom-event-name-casing': 'error',
+            'vue/define-emits-declaration': ['error', 'type-literal'],
+            'vue/define-props-declaration': 'error',
+            'vue/enforce-style-attribute': [
+                'error',
+                {
+                    'allow': ['scoped'],
+                },
+            ],
+            'vue/html-button-has-type': 'error',
+            'vue/match-component-import-name': 'error',
+            'vue/no-empty-component-block': 'error',
+            'vue/no-multiple-objects-in-class': 'error',
+            'vue/no-undef-components': 'error',
+            'vue/no-unused-emit-declarations': 'error',
+            'vue/no-unused-refs': 'error',
+            'vue/no-useless-v-bind': 'error',
+            'vue/padding-line-between-blocks': 'error',
+            'vue/prefer-define-options': 'error',
+            'vue/require-macro-variable-name': 'error',
+            'vue/require-typed-ref': 'error',
+            'vue/v-for-delimiter-style': 'error',
+            'vue/valid-define-options': 'error',
+            'vue/html-closing-bracket-newline': 'off',
+            'vue/singleline-html-element-content-newline': 'off',
+            'vue/multiline-html-element-content-newline': 'off',
+            'vue/max-attributes-per-line': 'off',
+            'vue/first-attribute-linebreak': 'off',
+            'vue/require-default-prop': 'off',
+            'vue/multi-word-component-names': 'off',
         },
     },
     {
         files: ['**/*.js', '**/*.cjs', '**/*.mjs'],
+        ...tseslint.configs.disableTypeChecked,
+    },
+    {
+        files: ['www/src/**/*.vue'],
         ...tseslint.configs.disableTypeChecked,
     },
     {
