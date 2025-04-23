@@ -1,62 +1,18 @@
 ---
+import Navbar from '@components/Navbar.astro';
 import Page from '@layouts/Page.astro';
 
 interface Props {
     title?: string | undefined;
     description?: string | null | undefined;
+    breadcrumbs: Breadcrumb[];
 }
 
-const { title, description } = Astro.props;
+const { title, description, breadcrumbs } = Astro.props;
 ---
 
 <Page title={title} description={description}>
-    <nav class="navbar bg-body-tertiary border-bottom navbar-expand-md border-secondary-subtle">
-        <div class="container-xxl">
-            <a class="navbar-brand" href="/">Lab KTI</a>
-            <button
-                class="navbar-toggler"
-                type="button"
-                data-bs-toggle="collapse"
-                data-bs-target="#navbarDesktop"
-                aria-controls="navbarDesktop"
-                aria-expanded="false"
-                aria-label="Toggle navigation"
-            >
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarDesktop">
-                <div class="d-flex align-items-center w-100 justify-content-between">
-                    <ol class="breadcrumb m-0">
-                        <li class="breadcrumb-item">
-                            <a
-                                href="/"
-                                class="text-reset link-underline link-underline-opacity-0 link-underline-opacity-100-hover"
-                                >Semestry</a
-                            >
-                        </li>
-                        <li class="breadcrumb-item">
-                            <a
-                                href="/"
-                                class="text-reset link-underline link-underline-opacity-0 link-underline-opacity-100-hover"
-                                >Semestr letni 2025</a
-                            >
-                        </li>
-                        <li class="breadcrumb-item">
-                            <a
-                                href="/"
-                                class="text-reset link-underline link-underline-opacity-0 link-underline-opacity-100-hover"
-                                >Informatyka I st.</a
-                            >
-                        </li>
-                        <li class="breadcrumb-item active text-success fw-semibold" aria-current="page">
-                            Bezpieczeństwo sieci komputerowych
-                        </li>
-                    </ol>
-                    <a href="/" role="button" class="btn btn-success btn-sm">Zaloguj Się</a>
-                </div>
-            </div>
-        </div>
-    </nav>
+    <Navbar breadcrumbs={breadcrumbs} />
     <div class="container mt-4">
         <slot />
     </div>

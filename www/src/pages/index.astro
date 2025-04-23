@@ -18,6 +18,7 @@ const translations = {
         'Count': 'Count',
         'Increment counter': 'Increment counter',
         'Language': 'Language',
+        'Semesters': 'Semesters',
     },
     'pl': {
         'Hello World': 'Witaj Świecie',
@@ -26,6 +27,7 @@ const translations = {
         'Count': 'Liczba',
         'Increment counter': 'Zwiększ licznik',
         'Language': 'Język',
+        'Semesters': 'Semestry',
     },
 };
 
@@ -34,7 +36,7 @@ function translate(text: keyof (typeof translations)[LangId]): string {
 }
 ---
 
-<Layout>
+<Layout breadcrumbs={[{ text: translate('Semesters'), href: '/' }]}>
     <div class="text-center py-2">
         {translate('Hello World')}!
         <i class="bi bi-emoji-smile"></i>

@@ -1,4 +1,5 @@
 type LangId = 'en' | 'pl';
+type Breadcrumb = { text: string; href: string };
 
 declare namespace App {
     interface Locals {

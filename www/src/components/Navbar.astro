@@ -1,0 +1,71 @@
+---
+interface Props {
+    breadcrumbs: Breadcrumb[];
+}
+
+const { breadcrumbs } = Astro.props;
+const { langId } = Astro.locals;
+
+const translations = {
+    'en': {
+        'Sign in': 'Sign in',
+    },
+    'pl': {
+        'Sign in': 'Zaloguj się',
+    },
+};
+
+function translate(text: keyof (typeof translations)[LangId]): string {
+    return translations[langId][text];
+}
+---
+
+<nav class="navbar bg-body-tertiary border-bottom navbar-expand-md border-secondary-subtle">
+    <div class="container-xxl">
+        <a class="navbar-brand" href="/">Lab KTI</a>
+        <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarDesktop"
+            aria-controls="navbarDesktop"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+        >
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarDesktop">
+            <div class="d-flex align-items-center w-100 justify-content-between">
+                <ol class="breadcrumb m-0">
+                    {
+                        breadcrumbs.map(({ text, href }, i) =>
+                            // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+                            i != breadcrumbs.length - 1 ? (
+                                <li class="breadcrumb-item">
+                                    <a
+                                        href={href}
+                                        class="text-reset link-underline link-underline-opacity-0 link-underline-opacity-100-hover"
+                                    >
+                                        {text}
+                                    </a>
+                                </li>
+                            ) : (
+                                <li class="breadcrumb-item active text-success fw-semibold" aria-current="page">
+                                    {text}
+                                </li>
+                            ),
+                        )
+                    }
+                </ol>
+                <a href="/" role="button" class="btn btn-success btn-sm">{translate('Sign in')}</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<style>
+    nav {
+        margin-inline: calc((100vw - 100%) / -2);
+        padding-inline: calc((100vw - 100%) / 2);
+    }
+</style>
