@@ -11,7 +11,8 @@
     "eslint.validate": [
         "javascript",
         "typescript",
-        "astro"
+        "astro",
+        "vue"
     ],
     "eslint.format.enable": true,
     "[typescript]": {
@@ -21,6 +22,9 @@
         "editor.defaultFormatter": "dbaeumer.vscode-eslint"
     },
     "[astro]": {
+        "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+    },
+    "[vue]": {
         "editor.defaultFormatter": "dbaeumer.vscode-eslint"
     },
     "javascript.format.placeOpenBraceOnNewLineForFunctions": false,

@@ -1,6 +1,7 @@
 ---
 import { db } from '@backend/db';
 import Layout from '@layouts/Layout.astro';
+import CounterApp from '@components/CounterApp.vue';
 
 const { session, langId } = Astro.locals;
 
@@ -46,6 +47,7 @@ function translate(text: keyof (typeof translations)[LangId]): string {
             <input type="number" name="count" class="form-control" placeholder={translate('Count')} />
             <button type="submit" class="btn btn-primary"> {translate('Increment counter')} </button>
         </form>
+        <CounterApp client:only="vue" />
         {translate('Language')}: {langId}
         <br />
         <a href="/lang/en/" class="btn btn-primary"> English </a>
