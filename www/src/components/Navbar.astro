@@ -38,22 +38,22 @@ function translate(text: keyof (typeof translations)[LangId]): string {
             <div class="d-flex align-items-center w-100 justify-content-between">
                 <ol class="breadcrumb m-0">
                     {
-                        breadcrumbs.map(({ text, href }, i) =>
-                            // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-                            i != breadcrumbs.length - 1 ? (
-                                <li class="breadcrumb-item">
-                                    <a
-                                        href={href}
-                                        class="text-reset link-underline link-underline-opacity-0 link-underline-opacity-100-hover"
-                                    >
+                        breadcrumbs.map(
+                            ({ text, href }, i) =>
+                                (i != breadcrumbs.length - 1 ? (
+                                    <li class="breadcrumb-item">
+                                        <a
+                                            href={href}
+                                            class="text-reset link-underline link-underline-opacity-0 link-underline-opacity-100-hover"
+                                        >
+                                            {text}
+                                        </a>
+                                    </li>
+                                ) : (
+                                    <li class="breadcrumb-item active text-success fw-semibold" aria-current="page">
                                         {text}
-                                    </a>
-                                </li>
-                            ) : (
-                                <li class="breadcrumb-item active text-success fw-semibold" aria-current="page">
-                                    {text}
-                                </li>
-                            ),
+                                    </li>
+                                )) as unknown,
                         )
                     }
                 </ol>
