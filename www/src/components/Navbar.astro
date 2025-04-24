@@ -1,4 +1,6 @@
 ---
+import { langIds } from '@backend/lang';
+
 interface Props {
     breadcrumbs: Breadcrumb[];
 }
@@ -18,6 +20,8 @@ const translations = {
 function translate(text: keyof (typeof translations)[LangId]): string {
     return translations[langId][text];
 }
+
+const altLang = langIds.find(l => l != langId);
 ---
 
 <nav class="navbar bg-body-tertiary border-bottom navbar-expand-md border-secondary-subtle">
@@ -57,7 +61,19 @@ function translate(text: keyof (typeof translations)[LangId]): string {
                         )
                     }
                 </ol>
-                <a href="/" role="button" class="btn btn-success btn-sm">{translate('Sign in')}</a>
+                <div class="d-flex align-items-center gap-2">
+                    <a href="/" role="button" class="btn btn-success btn-sm">{translate('Sign in')}</a>
+                    {
+                        altLang && (
+                            <a
+                                href={`/lang/${altLang}/`}
+                                class="text-reset link-underline link-underline-opacity-0 link-underline-opacity-100-hover"
+                            >
+                                {altLang.toUpperCase()}
+                            </a>
+                        )
+                    }
+                </div>
             </div>
         </div>
     </div>

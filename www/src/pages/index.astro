@@ -51,8 +51,5 @@ function translate(text: keyof (typeof translations)[LangId]): string {
         </form>
         <CounterApp client:only="vue" />
         {translate('Language')}: {langId}
-        <br />
-        <a href="/lang/en/" class="btn btn-success"> English </a>
-        <a href="/lang/pl/" class="btn btn-success"> Polski </a>
     </div>
 </Layout>
