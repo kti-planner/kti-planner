@@ -1,10 +1,11 @@
 // @ts-check
 
 import eslint from '@eslint/js';
-import tseslint from 'typescript-eslint';
 import eslintPluginAstro from 'eslint-plugin-astro';
 import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
+import eslintPluginSimpleImportSort from 'eslint-plugin-simple-import-sort';
 import eslintPluginVue from 'eslint-plugin-vue';
+import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
     eslint.configs.recommended,
@@ -12,6 +13,11 @@ export default tseslint.config(
     ...tseslint.configs.stylisticTypeChecked,
     ...eslintPluginAstro.configs.recommended,
     ...eslintPluginVue.configs['flat/recommended'],
+    {
+        plugins: {
+            'simple-import-sort': eslintPluginSimpleImportSort,
+        },
+    },
     eslintPluginPrettierRecommended,
     {
         files: ['src/**/*.ts', 'www/src/**/*.ts', 'www/src/**/*.astro', 'www/src/**/*.vue'],
@@ -44,15 +50,41 @@ export default tseslint.config(
                     'destructuring': 'all',
                 },
             ],
-            'sort-imports': [
-                'error',
-                {
-                    'ignoreDeclarationSort': true,
-                },
-            ],
 
             // Layout & Formatting
             'unicode-bom': 'error',
+
+            // Imports
+            'simple-import-sort/imports': [
+                'error',
+                {
+                    groups: [
+                        [
+                            // Side effect imports
+                            '^\\u0000',
+                            // Node.js builtins prefixed with `node:`
+                            '^node:',
+                            '^astro$',
+                            '^astro/',
+                            '^vue$',
+                            // Packages (things that start with a letter (or digit or underscore), or `@` followed by a letter)
+                            '^@?\\w',
+                            // Absolute imports
+                            '^@backend/',
+                            '^@components/frontend/',
+                            '^@components/',
+                            '^@layouts/',
+                            '^@components/.*\\.(vue|astro)',
+                            '^@pages/',
+                            // Anything not matched in another group
+                            '^',
+                            // Relative imports (anything that starts with a dot)
+                            '^\\.',
+                        ],
+                    ],
+                },
+            ],
+            'simple-import-sort/exports': 'error',
 
             // Typescript
             'no-undef': 'off',

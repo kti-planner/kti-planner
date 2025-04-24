@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { langId } from '@components/frontend/lang';
 import { ref } from 'vue';
+import { langId } from '@components/frontend/lang';
 
 const count = ref<number>(0);
 const incrementCount = ref<number>(1);
