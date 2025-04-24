@@ -2,8 +2,8 @@ import { RedisStore } from 'connect-redis';
 import express from 'express';
 import session from 'express-session';
 import redis from 'redis';
-import { ssrHandler } from './ssr-handler.js';
 import { requestLogger } from './request-logger.js';
+import { ssrHandler } from './ssr-handler.js';
 
 const config = {
     port: 8080,
