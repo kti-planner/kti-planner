@@ -6,6 +6,6 @@ export default defineConfig({
     envPrefix: 'POSTGRES_',
     test: {
         include: ['**/*.test.ts'],
-        setupFiles: ['www/tests/unit/testDb.ts'],
+        setupFiles: ['www/tests/unit/test-db.ts'],
     },
 });
