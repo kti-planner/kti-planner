@@ -44,7 +44,7 @@ test('Can fetch by email', async () => {
 });
 
 test('Cannot fetch nonexistant', async () => {
-    const user = await User.fetch('a');
+    const user = await User.fetch(crypto.randomUUID());
     expect(user).toBeNull();
     const user2 = await User.fetchByEmail('unknown@test.com');
     expect(user2).toBeNull();
@@ -52,8 +52,10 @@ test('Cannot fetch nonexistant', async () => {
 
 test('Can fetch multiple', async () => {
     const users = await User.fetchAll();
-    expect(users).toContainEqual({ name: exampleUser.name, email: exampleUser.email });
-    expect(users).toContainEqual({ name: secondUser.name, email: secondUser.email });
+    const user1 = users.find(u => u.id === exampleUser.id);
+    expectUser(user1, exampleUser);
+    const user2 = users.find(u => u.id === secondUser.id);
+    expectUser(user2, secondUser);
 });
 
 test('Can edit', async () => {
