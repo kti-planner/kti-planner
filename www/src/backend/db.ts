@@ -13,7 +13,6 @@ const dbOpts: pg.ClientConfig = {
 export const db = new pg.Pool({
     ...dbOpts,
     max: 10,
-    allowExitOnIdle: true,
 });
 
 const parentDbClient = new pg.Client(dbOpts);
