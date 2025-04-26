@@ -1,10 +1,5 @@
-import { afterAll, beforeAll, expect, test } from 'vitest';
-import { getTestDb } from './db';
-import { User } from './user';
-
-const [initDb, cleanupDb] = getTestDb();
-beforeAll(initDb);
-afterAll(cleanupDb);
+import { expect, test } from 'vitest';
+import { User } from '@backend/user';
 
 const exampleUser = {
     id: '',
