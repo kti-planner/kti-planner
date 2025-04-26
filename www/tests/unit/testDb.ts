@@ -17,4 +17,5 @@ beforeAll(async () => {
 afterAll(async () => {
     await db.end();
     await parentDbClient.query(`DROP DATABASE ${dbName}`);
+    await parentDbClient.end();
 });
