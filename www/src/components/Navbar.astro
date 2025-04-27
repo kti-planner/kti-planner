@@ -1,6 +1,4 @@
 ---
-import { langIds } from '@backend/lang';
-
 interface Props {
     breadcrumbs: Breadcrumb[];
 }
@@ -21,10 +19,15 @@ function translate(text: keyof (typeof translations)[LangId]): string {
     return translations[langId][text];
 }
 
-const altLang = langIds.find(l => l != langId);
+const altLang = langId === 'en' ? 'pl' : 'en';
+
+const languageLabels: Record<LangId, string> = {
+    'en': 'English',
+    'pl': 'Polski',
+};
 ---
 
-<nav class="navbar bg-body-tertiary border-bottom navbar-expand-md border-secondary-subtle">
+<nav class="navbar navbar-expand-md bg-body-tertiary border-bottom border-secondary-subtle">
     <div class="container-xxl">
         <a class="navbar-brand" href="/">Lab KTI</a>
         <button
@@ -39,7 +42,7 @@ const altLang = langIds.find(l => l != langId);
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarDesktop">
-            <div class="d-flex align-items-center w-100 justify-content-between">
+            <div class="d-flex justify-content-between align-items-center w-100">
                 <ol class="breadcrumb m-0">
                     {
                         breadcrumbs.map(
@@ -48,31 +51,27 @@ const altLang = langIds.find(l => l != langId);
                                     <li class="breadcrumb-item">
                                         <a
                                             href={href}
-                                            class="text-reset link-underline link-underline-opacity-0 link-underline-opacity-100-hover"
+                                            class="link-success link-underline-opacity-0 link-underline-opacity-100-hover"
                                         >
                                             {text}
                                         </a>
                                     </li>
                                 ) : (
-                                    <li class="breadcrumb-item active text-success fw-semibold" aria-current="page">
+                                    <li class="breadcrumb-item active fw-semibold" aria-current="page">
                                         {text}
                                     </li>
                                 )) as unknown,
                         )
                     }
                 </ol>
-                <div class="d-flex align-items-center gap-2">
+                <div class="d-flex align-items-center gap-3">
                     <a href="/" role="button" class="btn btn-success btn-sm">{translate('Sign in')}</a>
-                    {
-                        altLang && (
-                            <a
-                                href={`/lang/${altLang}/`}
-                                class="text-reset link-underline link-underline-opacity-0 link-underline-opacity-100-hover"
-                            >
-                                {altLang.toUpperCase()}
-                            </a>
-                        )
-                    }
+                    <a
+                        href={`/lang/${altLang}/`}
+                        class="link-body-emphasis link-underline-opacity-0 link-underline-opacity-100-hover"
+                    >
+                        {languageLabels[altLang]}
+                    </a>
                 </div>
             </div>
         </div>
