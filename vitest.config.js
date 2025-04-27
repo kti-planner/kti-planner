@@ -6,7 +6,7 @@ export default defineConfig({
     plugins: [tsconfigPaths()],
     envPrefix: 'POSTGRES_',
     test: {
-        include: ['**/*.test.ts'],
+        include: ['www/tests/unit/**/*.test.ts'],
         setupFiles: ['www/tests/unit/test-db.ts'],
     },
 });
