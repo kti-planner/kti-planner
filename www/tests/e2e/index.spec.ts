@@ -9,7 +9,7 @@ test('Can switch languages', async ({ page }) => {
     };
     const defaultLang = await page.evaluate(() => window.langId);
     const signInPageText = await page.locator('#signin-link').innerText();
-    expect(signInPageText).toBe(signInText[defaultLang]);
+    expect(signInPageText).toBe(signInText[defaultLang as LangId]);
 
     await page.click('#lang-switch-link');
     await page.waitForURL('/');
@@ -17,5 +17,5 @@ test('Can switch languages', async ({ page }) => {
     const newLang = await page.evaluate(() => window.langId);
     expect(newLang).not.toBe(defaultLang);
     const newSignInPageText = await page.locator('#signin-link').innerText();
-    expect(newSignInPageText).toBe(signInText[newLang]);
+    expect(newSignInPageText).toBe(signInText[newLang as LangId]);
 });
