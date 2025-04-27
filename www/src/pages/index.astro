@@ -36,7 +36,14 @@ function translate(text: keyof (typeof translations)[LangId]): string {
 }
 ---
 
-<Layout breadcrumbs={[{ text: translate('Semesters'), href: '/' }]}>
+<Layout
+    breadcrumbs={[
+        { text: translate('Semesters'), href: '/' },
+        { text: 'ABC', href: '/abc/' },
+        { text: 'DEF', href: '/def/' },
+        { text: 'GHI', href: '/ghi/' },
+    ]}
+>
     <div class="text-center py-2">
         {translate('Hello World')}!
         <i class="bi bi-emoji-smile"></i>
