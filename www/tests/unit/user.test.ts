@@ -12,6 +12,7 @@ const exampleUser: UserCreateTestData = {
     email: 'first@test.com',
     password: 'pass1',
 };
+
 const secondUser: UserCreateTestData = {
     id: '',
     name: 'Second',
@@ -51,14 +52,17 @@ test('Can fetch by email', async () => {
 test('Cannot fetch nonexistant', async () => {
     const user = await User.fetch(crypto.randomUUID());
     expect(user).toBeNull();
+
     const user2 = await User.fetchByEmail('unknown@test.com');
     expect(user2).toBeNull();
 });
 
 test('Can fetch multiple', async () => {
     const users = await User.fetchAll();
+
     const user1 = users.find(u => u.id === exampleUser.id);
     expectUser(user1, exampleUser);
+
     const user2 = users.find(u => u.id === secondUser.id);
     expectUser(user2, secondUser);
 });
@@ -66,11 +70,13 @@ test('Can fetch multiple', async () => {
 test('Can edit', async () => {
     let user = await User.fetch(exampleUser.id);
     expect(user).not.toBeNull();
+
     const editSpec = {
         name: 'e' + exampleUser.name,
         email: 'e' + exampleUser.email,
         password: 'e' + exampleUser.password,
     };
+
     await user!.edit(editSpec);
 
     user = await User.fetch(exampleUser.id);
@@ -81,6 +87,7 @@ test('Can edit', async () => {
 test('Recognises password', async () => {
     const user = await User.fetch(secondUser.id);
     expect(user).not.toBeNull();
+
     const valid = await user!.checkPassword(secondUser.password);
     expect(valid).toBe(true);
 });
@@ -88,6 +95,7 @@ test('Recognises password', async () => {
 test('Rejects invalid password', async () => {
     const user = await User.fetch(secondUser.id);
     expect(user).not.toBeNull();
+
     const valid = await user!.checkPassword(secondUser.password + ' ');
     expect(valid).toBe(false);
 });

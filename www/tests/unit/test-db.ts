@@ -1,17 +1,19 @@
 import crypto from 'node:crypto';
 import pg from 'pg';
 import { afterAll, beforeAll } from 'vitest';
-import { db, dbOpts } from '@backend/db';
-import initSQL from '../../../db/init.sql?raw';
+import { db, dbOptions } from '@backend/db';
+import initSql from '../../../db/init.sql?raw';
 
-const parentDbClient = new pg.Client(dbOpts);
+const parentDbClient = new pg.Client(dbOptions);
 const dbName = `testing_${Date.now()}_${crypto.randomInt(1e8)}`;
 
 beforeAll(async () => {
     await parentDbClient.connect();
     await parentDbClient.query(`CREATE DATABASE ${dbName}`);
+
     db.options.database = dbName;
-    await db.query(initSQL);
+
+    await db.query(initSql);
 });
 
 afterAll(async () => {

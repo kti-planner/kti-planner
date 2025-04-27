@@ -1,6 +1,6 @@
 import pg from 'pg';
 
-export const dbOpts: pg.ClientConfig = {
+export const dbOptions: pg.ClientConfig = {
     database: process.env.POSTGRES_DB,
     user: process.env.POSTGRES_USER,
     password: process.env.POSTGRES_PASSWORD,
@@ -9,6 +9,6 @@ export const dbOpts: pg.ClientConfig = {
 };
 
 export const db = new pg.Pool({
-    ...dbOpts,
+    ...dbOptions,
     max: 10,
 });
