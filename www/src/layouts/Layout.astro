@@ -1,34 +1,25 @@
 ---
+import Page from '@layouts/Page.astro';
+import Navbar from '@components/Navbar.astro';
+
 interface Props {
     title?: string | undefined;
     description?: string | null | undefined;
+    breadcrumbs: Breadcrumb[];
 }
 
-const { title = 'KTI Planner', description = null } = Astro.props;
-const { langId } = Astro.locals;
+const { title, description, breadcrumbs } = Astro.props;
 ---
 
-<!doctype html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-        <link rel="icon" href="/favicon.svg" type="image/svg" />
-        <title>
-            {title}
-        </title>
-        {description !== null ? <meta name="description" content={description} /> : null}
-
-        <link rel="stylesheet" href="/assets/css/bootstrap.min.css?ver=5.3.3" />
-        <link rel="stylesheet" href="/assets/css/bootstrap-icons.min.css?ver=1.11.3" />
-
-        <script is:inline define:vars={{ langId }}>
-            globalThis.langId = langId;
-        </script>
-        <script is:inline src="/assets/js/bootstrap.bundle.min.js?ver=5.3.3"></script>
-    </head>
-    <body>
+<Page title={title} description={description}>
+    <Navbar breadcrumbs={breadcrumbs} />
+    <div class="container mt-4">
         <slot />
-    </body>
-</html>
+    </div>
+</Page>
+
+<style lang="scss">
+    .container {
+        flex: 1;
+    }
+</style>

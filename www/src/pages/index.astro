@@ -18,6 +18,7 @@ const translations = {
         'Count': 'Count',
         'Increment counter': 'Increment counter',
         'Language': 'Language',
+        'Semesters': 'Semesters',
     },
     'pl': {
         'Hello World': 'Witaj Świecie',
@@ -26,6 +27,7 @@ const translations = {
         'Count': 'Liczba',
         'Increment counter': 'Zwiększ licznik',
         'Language': 'Język',
+        'Semesters': 'Semestry',
     },
 };
 
@@ -34,8 +36,15 @@ function translate(text: keyof (typeof translations)[LangId]): string {
 }
 ---
 
-<Layout>
-    <div class="container">
+<Layout
+    breadcrumbs={[
+        { text: translate('Semesters'), href: '/' },
+        { text: 'ABC', href: '/abc/' },
+        { text: 'DEF', href: '/def/' },
+        { text: 'GHI', href: '/ghi/' },
+    ]}
+>
+    <div class="text-center py-2">
         {translate('Hello World')}!
         <i class="bi bi-emoji-smile"></i>
         <br />
@@ -45,12 +54,9 @@ function translate(text: keyof (typeof translations)[LangId]): string {
         <br />
         <form action="/increment-counter/" method="post">
             <input type="number" name="count" class="form-control" placeholder={translate('Count')} />
-            <button type="submit" class="btn btn-primary"> {translate('Increment counter')} </button>
+            <button type="submit" class="btn btn-success"> {translate('Increment counter')} </button>
         </form>
         <CounterApp client:only="vue" />
         {translate('Language')}: {langId}
-        <br />
-        <a href="/lang/en/" class="btn btn-primary"> English </a>
-        <a href="/lang/pl/" class="btn btn-primary"> Polski </a>
     </div>
 </Layout>
