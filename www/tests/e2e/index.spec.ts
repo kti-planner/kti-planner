@@ -1,4 +1,4 @@
-import { test } from '@playwright/test';
+import { test } from './test-setup';
 
 test('Loads index page', async ({ page }) => {
     await page.goto('/');
