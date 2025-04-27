@@ -11,7 +11,7 @@
     "build-www": "astro check --root ./www --minimumSeverity warning && vue-tsc --project ./www && astro build --root ./www",
     "lint": "eslint .",
     "prettier": "prettier src/ www/src/ --write",
-    "unit-test": "vitest run"
+    "test-unit": "vitest run"
   },
   "repository": {
     "type": "git",
