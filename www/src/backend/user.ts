@@ -9,13 +9,13 @@ interface DbUser {
     password_hash: string | null;
 }
 
-interface UserCreateData {
+export interface UserCreateData {
     name: string;
     email: string;
     password: string | null;
 }
 
-interface UserEditData {
+export interface UserEditData {
     name?: string | undefined;
     email?: string | undefined;
     password?: string | null | undefined;

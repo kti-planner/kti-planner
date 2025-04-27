@@ -20,7 +20,7 @@ export default tseslint.config(
     },
     eslintPluginPrettierRecommended,
     {
-        files: ['src/**/*.ts', 'www/src/**/*.ts', 'www/src/**/*.astro', 'www/src/**/*.vue'],
+        files: ['src/**/*.ts', 'www/src/**/*.ts', 'www/src/**/*.astro', 'www/src/**/*.vue', 'www/tests/**/*.ts'],
         languageOptions: {
             parserOptions: {
                 project: true,

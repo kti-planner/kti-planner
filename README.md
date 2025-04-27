@@ -62,3 +62,13 @@ The app can be run as a Docker container using the provided [Dockerfile](./Docke
 ```bash
 docker compose up --build -d
 ```
+
+## Run unit tests
+
+This repository uses the `Vitest` library for unit tests, you can run them like so:
+
+```bash
+# make sure db is available
+docker compose up postgres --build
+npm run test-unit
+```

@@ -24,3 +24,18 @@ jobs:
 
       - name: Lint
         run: npm run lint
+
+      - name: Setup ENV
+        run: |
+          cat > .env << EOF
+          POSTGRES_USER=CI
+          POSTGRES_PASSWORD=CI_PASS
+          POSTGRES_DB=kti_planner
+          EOF
+
+      - name: Setup PostgreSQL
+        run: |
+          docker compose up postgres --build -d --wait
+
+      - name: Unit test
+        run: npm run test-unit

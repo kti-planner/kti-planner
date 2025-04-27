@@ -10,7 +10,9 @@
     "build-src": "rm -rf ./build && mkdir ./build && tsc",
     "build-www": "astro check --root ./www --minimumSeverity warning && vue-tsc --project ./www && astro build --root ./www",
     "lint": "eslint .",
-    "prettier": "prettier src/ www/src/ --write"
+    "prettier": "prettier src/ www/src/ --write",
+    "test": "npm-run-all test-unit",
+    "test-unit": "vitest run"
   },
   "repository": {
     "type": "git",
@@ -54,6 +56,8 @@
     "sass": "^1.87.0",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.31.0",
+    "vite-tsconfig-paths": "^5.1.4",
+    "vitest": "^3.1.2",
     "vue": "^3.5.13",
     "vue-tsc": "^2.2.10"
   }
