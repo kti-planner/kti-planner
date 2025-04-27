@@ -70,5 +70,5 @@ This repository uses the `Vitest` library for unit tests, you can run them like 
 ```bash
 # make sure db is available
 docker compose up postgres --build
-npm run unit-test
+npm run test-unit
 ```
