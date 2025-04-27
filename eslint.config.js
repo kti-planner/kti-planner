@@ -25,7 +25,7 @@ export default tseslint.config(
             'www/src/**/*.ts',
             'www/src/**/*.astro',
             'www/src/**/*.vue',
-            '*.ts',
+            '*.js',
             'www/tests/**/*.ts',
         ],
         languageOptions: {

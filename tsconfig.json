@@ -20,6 +20,5 @@
     "include": [
         "src/**/*.ts",
         "src/**/*.d.ts",
-        "*.ts"
     ]
 }
