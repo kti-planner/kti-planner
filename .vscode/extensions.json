@@ -3,6 +3,7 @@
         "dbaeumer.vscode-eslint",
         "astro-build.astro-vscode",
         "vue.volar",
-        "esbenp.prettier-vscode"
+        "esbenp.prettier-vscode",
+        "vitest.explorer"
     ]
 }
