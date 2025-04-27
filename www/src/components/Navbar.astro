@@ -29,7 +29,7 @@ const languageLabels: Record<LangId, string> = {
 
 <nav class="navbar navbar-expand-md bg-body-tertiary border-bottom border-secondary-subtle">
     <div class="container-xxl">
-        <a class="navbar-brand" href="/">Lab KTI</a>
+        <a class="navbar-brand order-first" href="/">Lab KTI</a>
         <button
             class="navbar-toggler"
             type="button"
@@ -64,16 +64,16 @@ const languageLabels: Record<LangId, string> = {
                         )
                     }
                 </ol>
-                <div class="d-flex align-items-center gap-3">
-                    <a href="/" role="button" class="btn btn-success btn-sm">{translate('Sign in')}</a>
-                    <a
-                        href={`/lang/${altLang}/`}
-                        class="link-body-emphasis link-underline-opacity-0 link-underline-opacity-100-hover"
-                    >
-                        {languageLabels[altLang]}
-                    </a>
-                </div>
             </div>
+        </div>
+        <div class="d-flex align-items-center gap-3 order-first order-md-last px-3 ms-auto">
+            <a href="/" role="button" class="btn btn-success btn-sm text-nowrap">{translate('Sign in')}</a>
+            <a
+                href={`/lang/${altLang}/`}
+                class="link-body-emphasis link-underline-opacity-0 link-underline-opacity-100-hover"
+            >
+                {languageLabels[altLang]}
+            </a>
         </div>
     </div>
 </nav>
