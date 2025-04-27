@@ -3,5 +3,5 @@ VALUES (
   gen_random_uuid(),
   'Admin',
   'admin@admin.com',
-  '$2a$10$mtVk6oNmvc6T7E9tsxJdd.D3.a8JlvVkIsj/v0qjmqzLDExMoTkYK' -- bcrypt hash of word admin
+  '$2b$10$RRdybUw9Ypxd.HR38l8UGORzd36eE.KbVXMUq1ICwBXnoxjAw8g8S' -- bcrypt hash of word kti
 );
