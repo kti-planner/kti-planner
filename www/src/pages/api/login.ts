@@ -23,10 +23,7 @@ export const POST: APIRoute = async ({ locals }) => {
     if (!parseResult.success) {
         const errors = parseResult.error.flatten().fieldErrors;
 
-        return new Response(JSON.stringify({ errors }), {
-            status: 400,
-            headers: { 'Content-Type': 'application/json' },
-        });
+        return Response.json({ errors }, { status: 400 });
     }
 
     const { email, password } = parseResult.data;
