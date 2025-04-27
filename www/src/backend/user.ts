@@ -9,7 +9,7 @@ interface DbUser {
     password_hash: string | null;
 }
 
-interface UserCreateData {
+export interface UserCreateData {
     name: string;
     email: string;
     password: string | null;

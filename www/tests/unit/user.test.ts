@@ -1,20 +1,25 @@
 import { expect, test } from 'vitest';
-import { User } from '@backend/user';
+import { User, type UserCreateData } from '@backend/user';
 
-const exampleUser = {
+interface UserCreateTestData extends UserCreateData {
+    id: string;
+    password: string;
+}
+
+const exampleUser: UserCreateTestData = {
     id: '',
     name: 'First',
     email: 'first@test.com',
     password: 'pass1',
 };
-const secondUser = {
+const secondUser: UserCreateTestData = {
     id: '',
     name: 'Second',
     email: 'second@test.com',
     password: 'pass2',
 };
 
-function expectUser(user: User | null | undefined, check: typeof exampleUser) {
+function expectUser(user: User | null | undefined, check: UserCreateData) {
     expect(user).toHaveProperty('name', check.name);
     expect(user).toHaveProperty('email', check.email);
 }
