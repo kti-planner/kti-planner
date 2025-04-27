@@ -38,4 +38,4 @@ jobs:
           docker compose up postgres --build -d --wait
 
       - name: Unit test
-        run: npm run unit-test
+        run: npm run test-unit
