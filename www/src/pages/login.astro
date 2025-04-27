@@ -26,7 +26,5 @@ function translate(text: keyof (typeof translations)[LangId]): string {
     <div class="container">
         <h2 class="text-center mb-4">{translate('Login')}</h2>
         <LoginForm client:only="vue" />
-        <a href="/lang/en/?next=/login/" class="btn btn-primary"> English </a>
-        <a href="/lang/pl/?next=/login/" class="btn btn-primary"> Polski </a>
     </div>
 </Layout>
