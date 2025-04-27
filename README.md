@@ -72,3 +72,17 @@ This repository uses the `Vitest` library for unit tests, you can run them like 
 docker compose up postgres --build
 npm run test-unit
 ```
+
+## Run E2E tests
+
+Make sure you install the necessary binaries for your system:
+
+```bash
+npx playwright install
+```
+
+Then when the app is running with Docker Compose run the following command:
+
+```bash
+npm run test-e2e
+```
