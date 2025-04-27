@@ -23,8 +23,6 @@ function translate(text: keyof (typeof translations)[LangId]): string {
 ---
 
 <Layout breadcrumbs={[]}>
-    <div class="container">
-        <h2 class="text-center mb-4">{translate('Login')}</h2>
-        <LoginForm client:only="vue" />
-    </div>
+    <h2 class="text-center mb-4">{translate('Login')}</h2>
+    <LoginForm client:only="vue" />
 </Layout>
