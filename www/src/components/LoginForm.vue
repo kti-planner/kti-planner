@@ -60,7 +60,7 @@ const translations = {
     },
     'pl': {
         'Password': 'Hasło',
-        'Log in': 'Zaloguj Się',
+        'Log in': 'Zaloguj się',
         'Email cannot be empty': 'Email nie może być pusty',
         'Enter valid email': 'Podaj poprawny email',
         'Password cannot be empty': 'Hasło nie może być puste',

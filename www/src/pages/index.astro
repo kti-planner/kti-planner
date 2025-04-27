@@ -23,8 +23,6 @@ const translations = {
         'User uuid': 'User uuid',
         'User name': 'User name',
         'User email': 'User email',
-        'Log out': 'Log out',
-        'Log in': 'Log in',
     },
     'pl': {
         'Hello World': 'Witaj Świecie',
@@ -38,8 +36,6 @@ const translations = {
         'User uuid': 'Uuid użytkownika',
         'User name': 'Nazwa użytkownika',
         'User email': 'Email użytkownika',
-        'Log out': 'Wyloguj się',
-        'Log in': 'Zaloguj się',
     },
 };
 
@@ -84,19 +80,5 @@ function translate(text: keyof (typeof translations)[LangId]): string {
         </form>
         <CounterApp client:only="vue" />
         {translate('Language')}: {langId}
-        <br />
-        {
-            user === null ? (
-                <a href="/login/" class="btn btn-primary">
-                    {translate('Log in')}
-                </a>
-            ) : (
-                <form action="/api/logout/" method="post">
-                    <button type="submit" class="btn btn-primary">
-                        {translate('Log out')}
-                    </button>
-                </form>
-            )
-        }
     </div>
 </Layout>
