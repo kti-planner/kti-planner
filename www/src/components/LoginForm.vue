@@ -3,9 +3,9 @@ import { ref } from 'vue';
 import { langId } from '@components/frontend/lang';
 
 type FormErrors = {
-    email?: ['Email cannot be empty' | 'Enter valid email'];
-    password?: ['Password cannot be empty'];
-    form?: ['Invalid credentials'];
+    email?: 'Email cannot be empty';
+    password?: 'Password cannot be empty';
+    form?: 'Invalid credentials';
 };
 
 const email = ref<string>('');
@@ -17,11 +17,11 @@ async function submit() {
     email.value = email.value.trim();
 
     if (email.value === '') {
-        errors.value.email = ['Email cannot be empty'];
+        errors.value.email = 'Email cannot be empty';
     }
 
     if (password.value === '') {
-        errors.value.password = ['Password cannot be empty'];
+        errors.value.password = 'Password cannot be empty';
     }
 
     if (Object.keys(errors.value).length === 0) {
@@ -54,7 +54,6 @@ const translations = {
         'Password': 'Password',
         'Log in': 'Log in',
         'Email cannot be empty': 'Email cannot be empty',
-        'Enter valid email': 'Enter valid email',
         'Password cannot be empty': 'Password cannot be empty',
         'Invalid credentials': 'Invalid credentials',
     },
@@ -62,7 +61,6 @@ const translations = {
         'Password': 'Hasło',
         'Log in': 'Zaloguj się',
         'Email cannot be empty': 'Email nie może być pusty',
-        'Enter valid email': 'Podaj poprawny email',
         'Password cannot be empty': 'Hasło nie może być puste',
         'Invalid credentials': 'Nieprawidłowe dane logowania',
     },
@@ -88,7 +86,7 @@ function translate(text: keyof (typeof translations)[LangId]): string {
             />
 
             <div v-if="errors.email" class="invalid-feedback">
-                {{ translate(errors.email[0]) }}
+                {{ translate(errors.email) }}
             </div>
         </div>
 
@@ -104,12 +102,12 @@ function translate(text: keyof (typeof translations)[LangId]): string {
                 required
             />
             <div v-if="errors.password" class="invalid-feedback">
-                {{ translate(errors.password[0]) }}
+                {{ translate(errors.password) }}
             </div>
         </div>
 
         <div v-if="errors.form" class="invalid-feedback mb-3" style="display: block">
-            {{ translate(errors.form[0]) }}
+            {{ translate(errors.form) }}
         </div>
 
         <button type="submit" class="btn btn-success w-100">{{ translate('Log in') }}</button>

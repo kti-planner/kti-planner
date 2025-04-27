@@ -2,18 +2,11 @@ import type { APIRoute } from 'astro';
 import { z } from 'zod';
 import { User } from '@backend/user';
 
-const loginErrors = {
-    email: {
-        empty: 'Email cannot be empty',
-        invalid: 'Enter valid email',
-    },
-    password: 'Password cannot be empty',
-    form: 'Invalid credentials',
-} as const;
+const loginError = 'Invalid credentials';
 
 const schema = z.object({
-    email: z.string().nonempty({ message: loginErrors.email.empty }).email({ message: loginErrors.email.invalid }),
-    password: z.string().nonempty({ message: loginErrors.password }),
+    email: z.string().nonempty().email(),
+    password: z.string().nonempty(),
 });
 
 export const POST: APIRoute = async ({ locals }) => {
@@ -21,8 +14,7 @@ export const POST: APIRoute = async ({ locals }) => {
     const parseResult = schema.safeParse(jsonData);
 
     if (!parseResult.success) {
-        const errors = parseResult.error.flatten().fieldErrors;
-
+        const errors = { form: loginError };
         return Response.json({ errors }, { status: 400 });
     }
 
@@ -40,15 +32,9 @@ export const POST: APIRoute = async ({ locals }) => {
             });
         });
 
-        return new Response(null, {
-            status: 200,
-            headers: { 'Content-Type': 'application/json' },
-        });
+        return new Response(null, { status: 200 });
     }
 
-    const errors = { form: [loginErrors.form] };
-    return new Response(JSON.stringify({ errors }), {
-        status: 400,
-        headers: { 'Content-Type': 'application/json' },
-    });
+    const errors = { form: loginError };
+    return Response.json({ errors }, { status: 400 });
 };
