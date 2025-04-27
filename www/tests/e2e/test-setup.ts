@@ -1,5 +1,11 @@
 import { test as base } from '@playwright/test';
 
+declare global {
+    interface Window {
+        langId: LangId;
+    }
+}
+
 export const test = base.extend({
     page: async ({ page }, use) => {
         // Fail tests on exceptions or console errors
