@@ -2,39 +2,35 @@ import type { APIRoute } from 'astro';
 import { z } from 'zod';
 import { User } from '@backend/user';
 
-const loginError = 'Invalid credentials';
-
 const schema = z.object({
-    email: z.string().nonempty().email(),
-    password: z.string().nonempty(),
+    email: z.string(),
+    password: z.string(),
 });
 
 export const POST: APIRoute = async ({ locals }) => {
-    const { jsonData, req } = locals;
-    const parseResult = schema.safeParse(jsonData);
+    const { jsonData } = locals;
 
-    if (!parseResult.success) {
-        const errors = { form: loginError };
-        return Response.json({ errors }, { status: 400 });
+    const data = schema.nullable().catch(null).parse(jsonData);
+
+    if (!data) {
+        return Response.json(null, { status: 400 });
     }
 
-    const { email, password } = parseResult.data;
+    locals.session.userId = null;
+    await new Promise((resolve, reject) => locals.session.save(resolve));
 
-    const user = await User.fetchByEmail(email);
+    await new Promise((resolve, reject) => locals.session.regenerate(resolve));
 
-    if (user && (await user.checkPassword(password))) {
+    locals.session = locals.req.session;
+
+    const user = await User.fetchByEmail(data.email);
+
+    if (user && (await user.checkPassword(data.password))) {
         locals.session.userId = user.id;
+        await new Promise((resolve, reject) => locals.session.save(resolve));
 
-        await new Promise<void>(resolve => {
-            req.session.regenerate(() => {
-                Object.assign(req.session, locals.session);
-                resolve();
-            });
-        });
-
-        return new Response(null, { status: 200 });
+        return Response.json(true, { status: 200 });
     }
 
-    const errors = { form: loginError };
-    return Response.json({ errors }, { status: 400 });
+    return Response.json(false, { status: 200 });
 };

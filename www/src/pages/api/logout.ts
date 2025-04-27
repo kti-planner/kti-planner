@@ -1,14 +1,14 @@
 import type { APIRoute } from 'astro';
 
 export const POST: APIRoute = async ({ locals, redirect }) => {
-    const { req } = locals;
     locals.session.userId = null;
+    await new Promise((resolve, reject) => locals.session.save(resolve));
 
-    await new Promise<void>(resolve => {
-        req.session.regenerate(() => {
-            resolve();
-        });
-    });
+    await new Promise((resolve, reject) => locals.session.regenerate(resolve));
 
-    return redirect('/');
+    locals.session = locals.req.session;
+
+    await new Promise((resolve, reject) => locals.session.save(resolve));
+
+    return redirect('/', 303);
 };
