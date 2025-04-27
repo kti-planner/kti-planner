@@ -69,7 +69,7 @@ const languageLabels: Record<LangId, string> = {
         <div class="d-flex align-items-center gap-3 order-first order-md-last px-3 ms-auto">
             <a href="/" role="button" class="btn btn-success btn-sm text-nowrap">{translate('Sign in')}</a>
             <a
-                href={`/lang/${altLang}/`}
+                href={`/lang/${altLang}/?${new URLSearchParams({ next: `${Astro.url.pathname}${Astro.url.search}` }).toString()}`}
                 class="link-body-emphasis link-underline-opacity-0 link-underline-opacity-100-hover"
             >
                 {languageLabels[altLang]}
