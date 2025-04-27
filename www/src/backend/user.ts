@@ -15,7 +15,7 @@ export interface UserCreateData {
     password: string | null;
 }
 
-interface UserEditData {
+export interface UserEditData {
     name?: string | undefined;
     email?: string | undefined;
     password?: string | null | undefined;
