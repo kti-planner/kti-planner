@@ -1,0 +1,32 @@
+---
+import Layout from '@layouts/Layout.astro';
+import LoginForm from '@components/LoginForm.vue';
+
+const { langId, user } = Astro.locals;
+
+if (user) {
+    return Astro.redirect('/');
+}
+
+const translations = {
+    'en': {
+        'Login': 'Login',
+    },
+    'pl': {
+        'Login': 'Zaloguj Się',
+    },
+};
+
+function translate(text: keyof (typeof translations)[LangId]): string {
+    return translations[langId][text];
+}
+---
+
+<Layout breadcrumbs={[]}>
+    <div class="container">
+        <h2 class="text-center mb-4">{translate('Login')}</h2>
+        <LoginForm client:only="vue" />
+        <a href="/lang/en/?next=/login/" class="btn btn-primary"> English </a>
+        <a href="/lang/pl/?next=/login/" class="btn btn-primary"> Polski </a>
+    </div>
+</Layout>
