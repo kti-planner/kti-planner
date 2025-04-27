@@ -16,7 +16,7 @@ export default defineConfig({
         ssr: {
             target: 'node',
             noExternal: true,
-            external: ['express', 'bcrypt'],
+            external: ['bcrypt', 'connect-redis', 'express', 'express-session', 'on-headers', 'pg', 'redis'],
         },
     },
 });
