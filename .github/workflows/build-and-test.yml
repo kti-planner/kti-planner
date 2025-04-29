@@ -33,9 +33,15 @@ jobs:
           POSTGRES_DB=kti_planner
           EOF
 
-      - name: Setup PostgreSQL
+      - name: Run app
         run: |
-          docker compose up postgres --build -d --wait
+          docker compose up --build -d --wait
 
       - name: Unit test
         run: npm run test-unit
+
+      - name: Install Playwright dependencies
+        run: npx playwright install --with-deps chromium
+
+      - name: E2E test
+        run: npm run test-e2e

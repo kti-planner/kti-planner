@@ -3,5 +3,6 @@
 /build/
 /www/dist/
 /www/node_modules/
-/www/.astro
+/www/.astro/
 /.env
+/test-results/
