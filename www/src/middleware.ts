@@ -1,9 +1,11 @@
 import { defineMiddleware } from 'astro:middleware';
 import { isLangId, langIds } from '@backend/lang';
+import { User } from '@backend/user';
 
 declare module 'express-session' {
     interface SessionData {
         counter?: number;
+        userId?: string | null;
     }
 }
 
@@ -38,6 +40,13 @@ export const onRequest = defineMiddleware(async ({ request, locals, cookies }, n
         });
     } else {
         locals.langId = langIdCookie;
+    }
+
+    const userIdSession = locals.session.userId;
+    if (userIdSession !== undefined && userIdSession !== null) {
+        locals.user = await User.fetch(userIdSession);
+    } else {
+        locals.user = null;
     }
 
     return next();

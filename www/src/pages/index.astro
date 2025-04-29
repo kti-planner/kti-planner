@@ -3,7 +3,7 @@ import { db } from '@backend/db';
 import Layout from '@layouts/Layout.astro';
 import CounterApp from '@components/CounterApp.vue';
 
-const { session, langId } = Astro.locals;
+const { session, langId, user } = Astro.locals;
 
 session.counter ??= 0;
 session.counter++;
@@ -19,6 +19,10 @@ const translations = {
         'Increment counter': 'Increment counter',
         'Language': 'Language',
         'Semesters': 'Semesters',
+        'User not logged in': 'User not logged in',
+        'User uuid': 'User uuid',
+        'User name': 'User name',
+        'User email': 'User email',
     },
     'pl': {
         'Hello World': 'Witaj Świecie',
@@ -28,6 +32,10 @@ const translations = {
         'Increment counter': 'Zwiększ licznik',
         'Language': 'Język',
         'Semesters': 'Semestry',
+        'User not logged in': 'Użytkownik niezalogowany',
+        'User uuid': 'Uuid użytkownika',
+        'User name': 'Nazwa użytkownika',
+        'User email': 'Email użytkownika',
     },
 };
 
@@ -51,6 +59,20 @@ function translate(text: keyof (typeof translations)[LangId]): string {
         {translate('Session counter')}: {session.counter}
         <br />
         {translate('Database counter')}: {databaseCounter}
+        <br />
+        {
+            user === null ? (
+                <p>{translate('User not logged in')}</p>
+            ) : (
+                <p>
+                    {translate('User uuid')}: {user.id}
+                    <br />
+                    {translate('User name')}: {user.name}
+                    <br />
+                    {translate('User email')}: {user.email}
+                </p>
+            )
+        }
         <br />
         <form action="/increment-counter/" method="post">
             <input type="number" name="count" class="form-control" placeholder={translate('Count')} />
