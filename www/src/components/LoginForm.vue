@@ -40,12 +40,12 @@ async function submit() {
 const translations = {
     'en': {
         'Password': 'Password',
-        'Log in': 'Log in',
+        'Sign in': 'Sign in',
         'Login failed.': 'Login failed.',
     },
     'pl': {
         'Password': 'Hasło',
-        'Log in': 'Zaloguj się',
+        'Sign in': 'Zaloguj się',
         'Login failed.': 'Logowanie nie powiodło się.',
     },
 };
@@ -75,7 +75,7 @@ function translate(text: keyof (typeof translations)[LangId]): string {
         </div>
 
         <div class="text-center">
-            <button type="submit" class="btn btn-success">{{ translate('Log in') }}</button>
+            <button type="submit" class="btn btn-success">{{ translate('Sign in') }}</button>
         </div>
 
         <div v-if="loginFailed" class="text-center text-danger">

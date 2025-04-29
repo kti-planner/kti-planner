@@ -10,10 +10,10 @@ if (user) {
 
 const translations = {
     'en': {
-        'Login': 'Login',
+        'LoginTitle': 'Sign in to Lab KTI',
     },
     'pl': {
-        'Login': 'Zaloguj się',
+        'LoginTitle': 'Zaloguj się do Lab KTI',
     },
 };
 
@@ -23,6 +23,6 @@ function translate(text: keyof (typeof translations)[LangId]): string {
 ---
 
 <Layout breadcrumbs={[]}>
-    <h2 class="text-center mb-4">{translate('Login')}</h2>
+    <h2 class="text-center mb-4">{translate('LoginTitle')}</h2>
     <LoginForm client:only="vue" />
 </Layout>
