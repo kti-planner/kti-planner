@@ -1,0 +1,71 @@
+import { expect, test } from 'vitest';
+import { Semester } from '@backend/semester';
+
+function sortById(array: Semester[]): Semester[] {
+    return array.toSorted((a, b) => a.id.localeCompare(b.id));
+}
+
+test('Semesters', async () => {
+    expect(await Semester.fetchAll()).toStrictEqual([]);
+
+    const semester1 = await Semester.create({
+        startDate: new Date('2024-10-01T00:00:00'),
+        endDate: new Date('2025-01-30T00:00:00'),
+    });
+
+    expect(semester1).toHaveProperty('startDate', new Date('2024-10-01T00:00:00'));
+    expect(semester1.startDate.getFullYear()).toBe(2024);
+    expect(semester1.startDate.getMonth()).toBe(9);
+    expect(semester1.startDate.getDate()).toBe(1);
+    expect(semester1).toHaveProperty('endDate', new Date('2025-01-30T00:00:00'));
+    expect(semester1.endDate.getFullYear()).toBe(2025);
+    expect(semester1.endDate.getMonth()).toBe(0);
+    expect(semester1.endDate.getDate()).toBe(30);
+
+    expect(await Semester.fetch(semester1.id)).toStrictEqual(semester1);
+    expect(await Semester.fetchAll()).toStrictEqual([semester1]);
+
+    const semester2 = await Semester.create({
+        startDate: new Date('2025-02-24T00:00:00'),
+        endDate: new Date('2025-06-15T00:00:00'),
+    });
+
+    expect(semester2).toHaveProperty('startDate', new Date('2025-02-24T00:00:00'));
+    expect(semester2.startDate.getFullYear()).toBe(2025);
+    expect(semester2.startDate.getMonth()).toBe(1);
+    expect(semester2.startDate.getDate()).toBe(24);
+    expect(semester2).toHaveProperty('endDate', new Date('2025-06-15T00:00:00'));
+    expect(semester2.endDate.getFullYear()).toBe(2025);
+    expect(semester2.endDate.getMonth()).toBe(5);
+    expect(semester2.endDate.getDate()).toBe(15);
+
+    expect(await Semester.fetch(semester2.id)).toStrictEqual(semester2);
+    expect(await Semester.fetch(semester1.id)).toStrictEqual(semester1);
+    expect(sortById(await Semester.fetchAll())).toStrictEqual(sortById([semester1, semester2]));
+
+    await semester2.edit({
+        startDate: new Date('2025-02-25T00:00:00'),
+    });
+
+    expect(semester2).toHaveProperty('startDate', new Date('2025-02-25T00:00:00'));
+    expect(semester2.startDate.getFullYear()).toBe(2025);
+    expect(semester2.startDate.getMonth()).toBe(1);
+    expect(semester2.startDate.getDate()).toBe(25);
+    expect(semester2).toHaveProperty('endDate', new Date('2025-06-15T00:00:00'));
+    expect(semester2.endDate.getFullYear()).toBe(2025);
+    expect(semester2.endDate.getMonth()).toBe(5);
+    expect(semester2.endDate.getDate()).toBe(15);
+
+    expect(semester1).toHaveProperty('startDate', new Date('2024-10-01T00:00:00'));
+    expect(semester1.startDate.getFullYear()).toBe(2024);
+    expect(semester1.startDate.getMonth()).toBe(9);
+    expect(semester1.startDate.getDate()).toBe(1);
+    expect(semester1).toHaveProperty('endDate', new Date('2025-01-30T00:00:00'));
+    expect(semester1.endDate.getFullYear()).toBe(2025);
+    expect(semester1.endDate.getMonth()).toBe(0);
+    expect(semester1.endDate.getDate()).toBe(30);
+
+    expect(await Semester.fetch(semester2.id)).toStrictEqual(semester2);
+    expect(await Semester.fetch(semester1.id)).toStrictEqual(semester1);
+    expect(sortById(await Semester.fetchAll())).toStrictEqual(sortById([semester1, semester2]));
+});
