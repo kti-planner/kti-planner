@@ -18,7 +18,6 @@ const translations = {
         'Count': 'Count',
         'Increment counter': 'Increment counter',
         'Language': 'Language',
-        'Semesters': 'Semesters',
         'User not logged in': 'User not logged in',
         'User uuid': 'User uuid',
         'User name': 'User name',
@@ -31,7 +30,6 @@ const translations = {
         'Count': 'Liczba',
         'Increment counter': 'Zwiększ licznik',
         'Language': 'Język',
-        'Semesters': 'Semestry',
         'User not logged in': 'Użytkownik niezalogowany',
         'User uuid': 'Uuid użytkownika',
         'User name': 'Nazwa użytkownika',
@@ -46,7 +44,7 @@ function translate(text: keyof (typeof translations)[LangId]): string {
 
 <Layout
     breadcrumbs={[
-        { text: translate('Semesters'), href: '/' },
+        { text: 'Index', href: '/' },
         { text: 'ABC', href: '/abc/' },
         { text: 'DEF', href: '/def/' },
         { text: 'GHI', href: '/ghi/' },
@@ -55,6 +53,8 @@ function translate(text: keyof (typeof translations)[LangId]): string {
     <div class="text-center py-2">
         {translate('Hello World')}!
         <i class="bi bi-emoji-smile"></i>
+        <br />
+        <a href="/semesters/">Semesters list</a>
         <br />
         {translate('Session counter')}: {session.counter}
         <br />
