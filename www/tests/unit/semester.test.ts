@@ -1,12 +1,9 @@
 import { expect, test } from 'vitest';
 import { Semester } from '@backend/semester';
 
-function sortById(array: Semester[]): Semester[] {
-    return array.toSorted((a, b) => a.id.localeCompare(b.id));
-}
-
 test('Semesters', async () => {
     expect(await Semester.fetchAll()).toStrictEqual([]);
+    expect(await Semester.fetch(crypto.randomUUID())).toStrictEqual(null);
 
     const semester1 = await Semester.create({
         year: 2024,
@@ -28,6 +25,9 @@ test('Semesters', async () => {
 
     expect(await Semester.fetch(semester1.id)).toStrictEqual(semester1);
     expect(await Semester.fetchAll()).toStrictEqual([semester1]);
+    expect(await Semester.fetchByYearAndType(2024, 'winter')).toStrictEqual(semester1);
+    expect(await Semester.fetchByYearAndType(2024, 'summer')).toStrictEqual(null);
+    expect(await Semester.fetchByYearAndType(2025, 'winter')).toStrictEqual(null);
 
     const semester2 = await Semester.create({
         year: 2024,
@@ -49,7 +49,10 @@ test('Semesters', async () => {
 
     expect(await Semester.fetch(semester2.id)).toStrictEqual(semester2);
     expect(await Semester.fetch(semester1.id)).toStrictEqual(semester1);
-    expect(sortById(await Semester.fetchAll())).toStrictEqual(sortById([semester1, semester2]));
+    expect(await Semester.fetchAll()).toStrictEqual([semester1, semester2]);
+    expect(await Semester.fetchByYearAndType(2024, 'winter')).toStrictEqual(semester1);
+    expect(await Semester.fetchByYearAndType(2024, 'summer')).toStrictEqual(semester2);
+    expect(await Semester.fetchByYearAndType(2025, 'winter')).toStrictEqual(null);
 
     await semester2.edit({
         year: 2025,
@@ -82,5 +85,8 @@ test('Semesters', async () => {
 
     expect(await Semester.fetch(semester2.id)).toStrictEqual(semester2);
     expect(await Semester.fetch(semester1.id)).toStrictEqual(semester1);
-    expect(sortById(await Semester.fetchAll())).toStrictEqual(sortById([semester1, semester2]));
+    expect(await Semester.fetchAll()).toStrictEqual([semester1, semester2]);
+    expect(await Semester.fetchByYearAndType(2024, 'winter')).toStrictEqual(semester1);
+    expect(await Semester.fetchByYearAndType(2024, 'summer')).toStrictEqual(null);
+    expect(await Semester.fetchByYearAndType(2025, 'winter')).toStrictEqual(semester2);
 });

@@ -1,7 +1,7 @@
 import assert from 'node:assert';
 import { db } from '@backend/db';
 
-export type SemesterType = 'summer' | 'winter';
+export type SemesterType = 'winter' | 'summer';
 
 interface DbSemester {
     id: string;
@@ -46,8 +46,15 @@ export class Semester {
         return data ? new Semester(data) : null;
     }
 
+    static async fetchByYearAndType(year: number, type: SemesterType): Promise<Semester | null> {
+        const data = (await db.query<DbSemester>('SELECT * FROM semesters WHERE year = $1 AND type = $2', [year, type]))
+            .rows[0];
+
+        return data ? new Semester(data) : null;
+    }
+
     static async fetchAll(): Promise<Semester[]> {
-        const records = (await db.query<DbSemester>('SELECT * FROM semesters')).rows;
+        const records = (await db.query<DbSemester>('SELECT * FROM semesters ORDER BY year, type')).rows;
 
         return records.map(record => new Semester(record));
     }
