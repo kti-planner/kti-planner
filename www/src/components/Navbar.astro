@@ -49,7 +49,7 @@ const languageLabels: Record<LangId, string> = {
                     {
                         breadcrumbs.map(
                             ({ text, href }, i) =>
-                                (i != breadcrumbs.length - 1 ? (
+                                (i !== breadcrumbs.length - 1 ? (
                                     <li class="breadcrumb-item">
                                         <a
                                             href={href}
