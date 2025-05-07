@@ -5,8 +5,18 @@ import { Semester } from '@backend/semester';
 const schema = z.object({
     year: z.number(),
     type: z.enum(['summer', 'winter']),
-    startDate: z.coerce.date(),
-    endDate: z.coerce.date(),
+    startDate: z
+        .string()
+        .date()
+        .transform(str => {
+            return new Date(`${str}T00:00:00`);
+        }),
+    endDate: z
+        .string()
+        .date()
+        .transform(str => {
+            return new Date(`${str}T00:00:00`);
+        }),
 });
 
 export const POST: APIRoute = async ({ locals }) => {
