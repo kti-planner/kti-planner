@@ -43,6 +43,7 @@ export default tseslint.config(
 
             // Suggestions
             'curly': ['error', 'all'],
+            'eqeqeq': 'error',
             'one-var': ['error', 'never'],
             'prefer-const': [
                 'error',
