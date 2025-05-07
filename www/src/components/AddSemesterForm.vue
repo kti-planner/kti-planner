@@ -7,8 +7,8 @@ const addingFailed = ref(false);
 
 const type = ref<'summer' | 'winter'>();
 const year = ref<number>();
-const startDate = ref<Date>();
-const endDate = ref<Date>();
+const startDate = ref<string>();
+const endDate = ref<string>();
 
 async function submit() {
     try {
