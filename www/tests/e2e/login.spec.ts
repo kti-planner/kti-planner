@@ -9,7 +9,7 @@ test('Can sign in and logout', async ({ page }) => {
     await page.getByRole('textbox', { name: 'Password' }).fill('kti');
     await page.locator('form').getByRole('button', { name: 'Sign in' }).click();
 
-    await expect(page.locator('.navbar #username')).toHaveText('Admin');
+    await expect(page.locator('.navbar')).toContainText("You're logged in as Admin");
 
     await page.getByRole('button', { name: 'Sign out' }).click();
     await expect(page.getByRole('button', { name: 'Sign in' })).toBeVisible();
@@ -25,7 +25,7 @@ test('Can sign in with keyboard navigation', async ({ page }) => {
     await page.getByRole('textbox', { name: 'Password' }).fill('kti');
     await page.getByRole('textbox', { name: 'Password' }).press('Enter');
 
-    await expect(page.locator('.navbar #username')).toHaveText('Admin');
+    await expect(page.locator('.navbar')).toContainText("You're logged in as Admin");
 });
 
 test('Wrong password', async ({ page }) => {
@@ -42,7 +42,7 @@ test('Wrong password', async ({ page }) => {
     await page.getByRole('textbox', { name: 'Password' }).fill('kti');
     await page.locator('form').getByRole('button', { name: 'Sign in' }).click();
 
-    await expect(page.locator('.navbar #username')).toHaveText('Admin');
+    await expect(page.locator('.navbar')).toContainText("You're logged in as Admin");
 });
 
 test('Wrong email', async ({ page }) => {
@@ -60,5 +60,5 @@ test('Wrong email', async ({ page }) => {
     await page.getByRole('textbox', { name: 'Password' }).fill('kti');
     await page.locator('form').getByRole('button', { name: 'Sign in' }).click();
 
-    await expect(page.locator('.navbar #username')).toHaveText('Admin');
+    await expect(page.locator('.navbar')).toContainText("You're logged in as Admin");
 });
