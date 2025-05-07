@@ -15,7 +15,3 @@ CREATE TABLE semesters (
     end_date date NOT NULL,
     UNIQUE (year, type)
 );
-
-CREATE TABLE counter (
-    i integer
-);

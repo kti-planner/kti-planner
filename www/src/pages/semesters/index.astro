@@ -1,0 +1,50 @@
+---
+import { Semester } from '@backend/semester';
+import Layout from '@layouts/Layout.astro';
+
+const { langId } = Astro.locals;
+
+const translations = {
+    'en': {
+        'Semesters': 'Semesters',
+        'Winter semester': 'Winter semester',
+        'Summer semester': 'Summer semester',
+    },
+    'pl': {
+        'Semesters': 'Semestry',
+        'Winter semester': 'Semestr zimowy',
+        'Summer semester': 'Semestr letni',
+    },
+};
+
+function translate(text: keyof (typeof translations)[LangId]): string {
+    return translations[langId][text];
+}
+
+const semesters = await Semester.fetchAll();
+---
+
+<Layout breadcrumbs={[{ text: translate('Semesters'), href: '#' }]}>
+    <div class="semesters-list list-group mx-auto mt-4">
+        {
+            semesters.map(
+                s =>
+                    (
+                        <a
+                            href={`/semesters/${s.type}-${s.year}/`}
+                            class="list-group-item list-group-item-action text-success-hover"
+                        >
+                            {s.type === 'summer' ? translate('Summer semester') : translate('Winter semester')}{' '}
+                            {`${s.year}/${s.year + 1}`}
+                        </a>
+                    ) as unknown,
+            )
+        }
+    </div>
+</Layout>
+
+<style>
+    .semesters-list {
+        max-width: 600px;
+    }
+</style>

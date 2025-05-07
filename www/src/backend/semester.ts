@@ -54,7 +54,7 @@ export class Semester {
     }
 
     static async fetchAll(): Promise<Semester[]> {
-        const records = (await db.query<DbSemester>('SELECT * FROM semesters ORDER BY year, type')).rows;
+        const records = (await db.query<DbSemester>('SELECT * FROM semesters ORDER BY year DESC, type DESC')).rows;
 
         return records.map(record => new Semester(record));
     }

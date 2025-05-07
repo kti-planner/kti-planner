@@ -4,7 +4,6 @@ import { User } from '@backend/user';
 
 declare module 'express-session' {
     interface SessionData {
-        counter?: number;
         userId?: string | null;
     }
 }
