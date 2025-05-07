@@ -31,7 +31,7 @@ const semesters = await Semester.fetchAll();
                 s =>
                     (
                         <a
-                            href={`/semesters/${s.id}/`}
+                            href={`/semesters/${s.type}-${s.year}/`}
                             class="list-group-item list-group-item-action text-success-hover"
                         >
                             {s.type === 'summer' ? translate('Summer Semester') : translate('Winter Semester')} {s.year}

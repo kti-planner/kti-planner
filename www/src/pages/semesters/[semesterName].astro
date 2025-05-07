@@ -1,8 +1,8 @@
 ---
-import { Semester } from '@backend/semester';
+import { Semester, type SemesterType } from '@backend/semester';
 import Layout from '@layouts/Layout.astro';
 
-const { semesterId } = Astro.params;
+const { semesterName } = Astro.params;
 const { langId } = Astro.locals;
 
 const translations = {
@@ -22,11 +22,16 @@ function translate(text: keyof (typeof translations)[LangId]): string {
     return translations[langId][text];
 }
 
-if (semesterId === undefined) {
+if (semesterName === undefined) {
     return new Response(null, { status: 404 });
 }
 
-const semester = await Semester.fetch(semesterId);
+const [type, year] = semesterName.split('-');
+if (type == undefined || year == undefined) {
+    return new Response(null, { status: 404 });
+}
+
+const semester = await Semester.fetchByYearAndType(parseInt(year), type as SemesterType);
 if (!semester) {
     return new Response(null, { status: 404 });
 }
