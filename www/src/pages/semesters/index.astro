@@ -1,7 +1,7 @@
 ---
 import { Semester } from '@backend/semester';
 import Layout from '@layouts/Layout.astro';
-import AddSemesterForm from '@components/AddSemesterForm.vue';
+import AddSemester from '@components/AddSemester.vue';
 
 const { langId, user } = Astro.locals;
 
@@ -26,7 +26,7 @@ const semesters = await Semester.fetchAll();
 ---
 
 <Layout breadcrumbs={[{ text: translate('Semesters'), href: '#' }]}>
-    {user && <AddSemesterForm client:only="vue" />}
+    {user && <AddSemester client:only="vue" />}
     <div class="semesters-list list-group mx-auto mt-4 mb-4">
         {
             semesters.map(
