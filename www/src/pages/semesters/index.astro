@@ -1,8 +1,9 @@
 ---
 import { Semester } from '@backend/semester';
 import Layout from '@layouts/Layout.astro';
+import AddSemesterForm from '@components/AddSemesterForm.vue';
 
-const { langId } = Astro.locals;
+const { langId, user } = Astro.locals;
 
 const translations = {
     'en': {
@@ -25,7 +26,8 @@ const semesters = await Semester.fetchAll();
 ---
 
 <Layout breadcrumbs={[{ text: translate('Semesters'), href: '#' }]}>
-    <div class="semesters-list list-group mx-auto mt-4">
+    {user && <AddSemesterForm client:only="vue" />}
+    <div class="semesters-list list-group mx-auto mt-4 mb-4">
         {
             semesters.map(
                 s =>
