@@ -8,13 +8,13 @@ const { langId } = Astro.locals;
 const translations = {
     'en': {
         'Semesters': 'Semesters',
-        'Winter Semester': 'Winter Semester',
-        'Summer Semester': 'Summer Semester',
+        'Winter semester': 'Winter semester',
+        'Summer semester': 'Summer semester',
     },
     'pl': {
         'Semesters': 'Semestry',
-        'Winter Semester': 'Semestr Zimowy',
-        'Summer Semester': 'Semestr Letni',
+        'Winter semester': 'Semestr zimowy',
+        'Summer semester': 'Semestr letni',
     },
 };
 
@@ -41,7 +41,7 @@ if (!semester) {
     breadcrumbs={[
         { text: translate('Semesters'), href: '/semesters/' },
         {
-            text: `${semester.type === 'summer' ? translate('Summer Semester') : translate('Winter Semester')} ${semester.year}/${semester.year + 1}`,
+            text: `${semester.type === 'summer' ? translate('Summer semester') : translate('Winter semester')} ${semester.year}/${semester.year + 1}`,
             href: '#',
         },
     ]}
