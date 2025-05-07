@@ -75,11 +75,14 @@ const languageLabels: Record<LangId, string> = {
                         {translate('Sign in')}
                     </a>
                 ) : (
-                    <form action="/api/logout/" method="post">
-                        <button type="submit" class="btn btn-success btn-sm text-nowrap">
-                            {translate('Sign out')}
-                        </button>
-                    </form>
+                    <>
+                        <span id="username">{user.name}</span>
+                        <form action="/api/logout/" method="post">
+                            <button type="submit" class="btn btn-success btn-sm text-nowrap">
+                                {translate('Sign out')}
+                            </button>
+                        </form>
+                    </>
                 )
             }
             <a
