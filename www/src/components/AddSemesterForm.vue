@@ -89,26 +89,26 @@ function translate(text: keyof (typeof translations)['en']): string {
 
             <form @submit.prevent="submit" class="vstack gap-3 mx-auto" style="max-width: 500px">
                 <div>
-                    <label class="form-label">{{ translate('Semester Type') }}</label>
-                    <select v-model="type" class="form-select" required>
+                    <label for="type" class="form-label">{{ translate('Semester Type') }}</label>
+                    <select v-model="type" id="type" class="form-select" required>
                         <option value="winter">{{ translate('Winter Semester') }}</option>
                         <option value="summer">{{ translate('Summer Semester') }}</option>
                     </select>
                 </div>
 
                 <div>
-                    <label class="form-label">{{ translate('Academic Year Start') }}</label>
-                    <input v-model="year" type="number" class="form-control" required />
+                    <label for="year" class="form-label">{{ translate('Academic Year Start') }}</label>
+                    <input v-model="year" type="number" id="year" class="form-control" required />
                 </div>
 
                 <div>
-                    <label class="form-label">{{ translate('Semester Start Date') }}</label>
-                    <input v-model="startDate" type="date" class="form-control" required />
+                    <label for="startDate" class="form-label">{{ translate('Semester Start Date') }}</label>
+                    <input v-model="startDate" type="date" id="startDate" class="form-control" required />
                 </div>
 
                 <div>
-                    <label class="form-label">{{ translate('Semester End Date') }}</label>
-                    <input v-model="endDate" type="date" class="form-control" required />
+                    <label for="endDate" class="form-label">{{ translate('Semester End Date') }}</label>
+                    <input v-model="endDate" type="date" id="endDate" class="form-control" required />
                 </div>
 
                 <div class="text-center">
