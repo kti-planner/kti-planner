@@ -8,7 +8,7 @@ VALUES (
 
 INSERT INTO semesters (id, year, type, start_date, end_date)
 VALUES
-  ( gen_random_uuid(), 2023, 'winter', '2023-10-01', '2024-02-18' ),
-  ( gen_random_uuid(), 2024, 'winter', '2024-10-01', '2025-02-18' ),
-  ( gen_random_uuid(), 2023, 'summer', '2024-02-24', '2024-06-29' ),
-  ( gen_random_uuid(), 2024, 'summer', '2025-02-24', '2025-06-29' );
+  ( gen_random_uuid(), 2023, 'winter', '2023-10-01', '2024-01-25' ),
+  ( gen_random_uuid(), 2023, 'summer', '2024-02-21', '2024-06-14' ),
+  ( gen_random_uuid(), 2024, 'winter', '2024-10-01', '2025-01-30' ),
+  ( gen_random_uuid(), 2024, 'summer', '2025-02-24', '2025-06-15' );
