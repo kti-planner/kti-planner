@@ -41,7 +41,7 @@ if (!semester) {
     breadcrumbs={[
         { text: translate('Semesters'), href: '/semesters/' },
         {
-            text: `${semester.type === 'summer' ? translate('Summer Semester') : translate('Winter Semester')} ${semester.year}`,
+            text: `${semester.type === 'summer' ? translate('Summer Semester') : translate('Winter Semester')} ${semester.year}/${semester.year + 1}`,
             href: '#',
         },
     ]}
