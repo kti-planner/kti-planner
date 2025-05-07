@@ -49,7 +49,7 @@ test('Semesters', async () => {
 
     expect(await Semester.fetch(semester2.id)).toStrictEqual(semester2);
     expect(await Semester.fetch(semester1.id)).toStrictEqual(semester1);
-    expect(await Semester.fetchAll()).toStrictEqual([semester1, semester2]);
+    expect(await Semester.fetchAll()).toStrictEqual([semester2, semester1]);
     expect(await Semester.fetchByYearAndType(2024, 'winter')).toStrictEqual(semester1);
     expect(await Semester.fetchByYearAndType(2024, 'summer')).toStrictEqual(semester2);
     expect(await Semester.fetchByYearAndType(2025, 'winter')).toStrictEqual(null);
@@ -85,7 +85,7 @@ test('Semesters', async () => {
 
     expect(await Semester.fetch(semester2.id)).toStrictEqual(semester2);
     expect(await Semester.fetch(semester1.id)).toStrictEqual(semester1);
-    expect(await Semester.fetchAll()).toStrictEqual([semester1, semester2]);
+    expect(await Semester.fetchAll()).toStrictEqual([semester2, semester1]);
     expect(await Semester.fetchByYearAndType(2024, 'winter')).toStrictEqual(semester1);
     expect(await Semester.fetchByYearAndType(2024, 'summer')).toStrictEqual(null);
     expect(await Semester.fetchByYearAndType(2025, 'winter')).toStrictEqual(semester2);
