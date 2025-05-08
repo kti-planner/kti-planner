@@ -39,9 +39,11 @@ const semesters = await Semester.fetchAll();
                         >
                             {s.type === 'summer' ? translate('Summer semester') : translate('Winter semester')}{' '}
                             {`${s.year}/${s.year + 1}`}
-                            <div class="edit-semester-wrapper">
-                                <EditSemester semester={s} client:only="vue" />
-                            </div>
+                            {user && (
+                                <div class="edit-semester-wrapper">
+                                    <EditSemester semester={s} client:only="vue" />
+                                </div>
+                            )}
                         </a>
                     ) as unknown,
             )
