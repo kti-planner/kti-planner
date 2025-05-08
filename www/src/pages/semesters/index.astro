@@ -2,6 +2,7 @@
 import { Semester } from '@backend/semester';
 import Layout from '@layouts/Layout.astro';
 import AddSemester from '@components/semesters/AddSemester.vue';
+import EditSemester from '@components/semesters/EditSemester.vue';
 
 const { langId, user } = Astro.locals;
 
@@ -34,10 +35,13 @@ const semesters = await Semester.fetchAll();
                     (
                         <a
                             href={`/semesters/${s.type}-${s.year}/`}
-                            class="list-group-item list-group-item-action text-success-hover"
+                            class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
                         >
                             {s.type === 'summer' ? translate('Summer semester') : translate('Winter semester')}{' '}
                             {`${s.year}/${s.year + 1}`}
+                            <div class="edit-semester-wrapper">
+                                <EditSemester semester={s} client:only="vue" />
+                            </div>
                         </a>
                     ) as unknown,
             )
@@ -48,5 +52,18 @@ const semesters = await Semester.fetchAll();
 <style>
     .semesters-list {
         max-width: 600px;
+    }
+
+    .edit-semester-wrapper {
+        display: none;
+    }
+
+    .list-group-item:hover .edit-semester-wrapper {
+        display: block;
+        background-color: white;
+    }
+
+    .list-group-item:hover .edit-semester-wrapper:hover {
+        background-color: inherit;
     }
 </style>

@@ -2,25 +2,48 @@
 import { ref } from 'vue';
 import { langId } from '@components/frontend/lang';
 
+const props = defineProps<{
+    semester?: {
+        id: string;
+        type: 'summer' | 'winter';
+        year: number;
+        startDate: Date;
+        endDate: Date;
+    };
+}>();
+
 const addingFailed = ref(false);
 
-const type = ref<'summer' | 'winter'>();
-const year = ref<number>();
-const startDate = ref<string>();
-const endDate = ref<string>();
+const type = ref<'summer' | 'winter' | undefined>(props.semester?.type);
+const year = ref<number | undefined>(props.semester?.year);
+const startDate = ref<string | undefined>(props.semester?.startDate.toISOString().substring(0, 10));
+const endDate = ref<string | undefined>(props.semester?.endDate.toISOString().substring(0, 10));
 
 async function submit() {
     try {
-        const result = await fetch('/semesters/api/semesters/', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                type: type.value,
-                year: year.value,
-                startDate: startDate.value,
-                endDate: endDate.value,
-            }),
-        });
+        const result =
+            props.semester === undefined
+                ? await fetch('/semesters/api/semesters/', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({
+                          type: type.value,
+                          year: year.value,
+                          startDate: startDate.value,
+                          endDate: endDate.value,
+                      }),
+                  })
+                : await fetch('/semesters/api/semesters/', {
+                      method: 'PATCH',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({
+                          id: props.semester.id,
+                          type: type.value,
+                          year: year.value,
+                          startDate: startDate.value,
+                          endDate: endDate.value,
+                      }),
+                  });
 
         if (!result.ok) {
             console.error('API request failed!');
@@ -47,6 +70,7 @@ const translations = {
         'Semester start date': 'Semester start date',
         'Semester end date': 'Semester end date',
         'Add': 'Add',
+        'Edit': 'Edit',
         'Semester with this year and type already exists.': 'Semester with this year and type already exists.',
     },
     'pl': {
@@ -57,6 +81,7 @@ const translations = {
         'Semester start date': 'Data rozpoczęcia semestru',
         'Semester end date': 'Data zakończenia semestru',
         'Add': 'Dodaj',
+        'Edit': 'Edytuj',
         'Semester with this year and type already exists.': 'Semestr o podanym roku i rodzaju już istnieje.',
     },
 };
@@ -92,7 +117,7 @@ function translate(text: keyof (typeof translations)[LangId]): string {
         </div>
 
         <div class="text-center">
-            <button type="submit" class="btn btn-success">{{ translate('Add') }}</button>
+            <button type="submit" class="btn btn-success">{{ translate(props.semester ? 'Edit' : 'Add') }}</button>
         </div>
 
         <div v-if="addingFailed" class="text-center text-danger">
