@@ -100,8 +100,8 @@ function translate(text: keyof (typeof translations)['en']): string {
                 <button type="submit" class="btn btn-success">{{ translate('Add') }}</button>
             </div>
 
-            <div class="text-center" style="min-height: 1.5em">
-                <span v-if="addingFailed" class="text-danger">
+            <div class="text-center">
+                <span :class="['text-danger', { 'invisible': !addingFailed }]">
                     {{ translate('Semester with this year and type already exists.') }}
                 </span>
             </div>
