@@ -40,24 +40,20 @@ async function submit() {
 
 const translations = {
     'en': {
-        'Add new semester': 'Add new semester',
-        'Close form': 'Close form',
         'Semester Type': 'Semester Type',
         'Winter Semester': 'Winter Semester',
         'Summer Semester': 'Summer Semester',
-        'Academic Year Start': 'Academic Year Start Year',
+        'Academic Year Start Year': 'Academic Year Start Year',
         'Semester Start Date': 'Semester Start Date',
         'Semester End Date': 'Semester End Date',
         'Add': 'Add',
         'Semester with this year and type already exists.': 'Semester with this year and type already exists.',
     },
     'pl': {
-        'Add new semester': 'Dodaj nowy semestr',
-        'Close form': 'Zamknij formularz',
         'Semester Type': 'Rodzaj Semestru',
         'Winter Semester': 'Semestr Zimowy',
         'Summer Semester': 'Semestr Letni',
-        'Academic Year Start': 'Rok Rozpoczęcia Roku Akademickiego',
+        'Academic Year Start Year': 'Rok Rozpoczęcia Roku Akademickiego',
         'Semester Start Date': 'Data Rozpoczęcia Semestru',
         'Semester End Date': 'Data zakończenia semestru',
         'Add': 'Dodaj',
@@ -82,7 +78,7 @@ function translate(text: keyof (typeof translations)['en']): string {
             </div>
 
             <div>
-                <label for="year" class="form-label">{{ translate('Academic Year Start') }}</label>
+                <label for="year" class="form-label">{{ translate('Academic Year Start Year') }}</label>
                 <input v-model="year" type="number" id="year" class="form-control" required />
             </div>
 
