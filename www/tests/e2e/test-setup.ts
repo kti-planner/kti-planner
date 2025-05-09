@@ -1,4 +1,4 @@
-import { test as base } from '@playwright/test';
+import { type Page, test as base } from '@playwright/test';
 
 declare global {
     interface Window {
@@ -22,3 +22,10 @@ export const test = base.extend({
         await use(page);
     },
 });
+
+export async function login(page: Page) {
+    await page.getByRole('button', { name: 'Sign in' }).click();
+    await page.getByRole('textbox', { name: 'Email' }).fill('admin@admin.com');
+    await page.getByRole('textbox', { name: 'Password' }).fill('kti');
+    await page.locator('form').getByRole('button', { name: 'Sign in' }).click();
+}
