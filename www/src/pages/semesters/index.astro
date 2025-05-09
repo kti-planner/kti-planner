@@ -27,7 +27,7 @@ const semesters = await Semester.fetchAll();
 
 <Layout breadcrumbs={[{ text: translate('Semesters'), href: '#' }]}>
     {user && <AddSemester client:only="vue" />}
-    <div class="semesters-list list-group mx-auto mt-4 mb-4">
+    <div class="semesters-list list-group mx-auto my-4">
         {
             semesters.map(
                 s =>

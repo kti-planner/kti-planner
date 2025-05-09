@@ -40,28 +40,28 @@ async function submit() {
 
 const translations = {
     'en': {
-        'Semester Type': 'Semester Type',
-        'Winter Semester': 'Winter Semester',
-        'Summer Semester': 'Summer Semester',
-        'Academic Year Start Year': 'Academic Year Start Year',
-        'Semester Start Date': 'Semester Start Date',
-        'Semester End Date': 'Semester End Date',
+        'Semester type': 'Semester type',
+        'Winter semester': 'Winter semester',
+        'Summer semester': 'Summer semester',
+        'Academic year': 'Academic year',
+        'Semester start date': 'Semester start date',
+        'Semester end date': 'Semester end date',
         'Add': 'Add',
         'Semester with this year and type already exists.': 'Semester with this year and type already exists.',
     },
     'pl': {
-        'Semester Type': 'Rodzaj Semestru',
-        'Winter Semester': 'Semestr Zimowy',
-        'Summer Semester': 'Semestr Letni',
-        'Academic Year Start Year': 'Rok Rozpoczęcia Roku Akademickiego',
-        'Semester Start Date': 'Data Rozpoczęcia Semestru',
-        'Semester End Date': 'Data zakończenia semestru',
+        'Semester type': 'Rodzaj semestru',
+        'Winter semester': 'Semestr zimowy',
+        'Summer semester': 'Semestr letni',
+        'Academic year': 'Rok rozpoczęcia roku akademickiego',
+        'Semester start date': 'Data rozpoczęcia semestru',
+        'Semester end date': 'Data zakończenia semestru',
         'Add': 'Dodaj',
         'Semester with this year and type already exists.': 'Semestr o podanym roku i rodzaju już istnieje.',
     },
 };
 
-function translate(text: keyof (typeof translations)['en']): string {
+function translate(text: keyof (typeof translations)[LangId]): string {
     return translations[langId][text];
 }
 </script>
@@ -70,25 +70,25 @@ function translate(text: keyof (typeof translations)['en']): string {
     <div>
         <form @submit.prevent="submit" class="vstack gap-3 mx-auto" style="max-width: 500px">
             <div>
-                <label for="type" class="form-label">{{ translate('Semester Type') }}</label>
+                <label for="type" class="form-label">{{ translate('Semester type') }}</label>
                 <select v-model="type" id="type" class="form-select" required>
-                    <option value="winter">{{ translate('Winter Semester') }}</option>
-                    <option value="summer">{{ translate('Summer Semester') }}</option>
+                    <option value="winter">{{ translate('Winter semester') }}</option>
+                    <option value="summer">{{ translate('Summer semester') }}</option>
                 </select>
             </div>
 
             <div>
-                <label for="year" class="form-label">{{ translate('Academic Year Start Year') }}</label>
+                <label for="year" class="form-label">{{ translate('Academic year') }}</label>
                 <input v-model="year" type="number" id="year" class="form-control" required />
             </div>
 
             <div>
-                <label for="startDate" class="form-label">{{ translate('Semester Start Date') }}</label>
+                <label for="startDate" class="form-label">{{ translate('Semester start date') }}</label>
                 <input v-model="startDate" type="date" id="startDate" class="form-control" required />
             </div>
 
             <div>
-                <label for="endDate" class="form-label">{{ translate('Semester End Date') }}</label>
+                <label for="endDate" class="form-label">{{ translate('Semester end date') }}</label>
                 <input v-model="endDate" type="date" id="endDate" class="form-control" required />
             </div>
 
