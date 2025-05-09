@@ -8,7 +8,7 @@ services:
       - postgres
       - redis
     ports:
-      - '8080:8080'
+      - '${APP_HOST_PORT:-8080}:8080'
     env_file:
       - .env
     environment:
@@ -18,7 +18,7 @@ services:
     build:
       context: ./db
     ports:
-      - '5432:5432'
+      - '${POSTGRES_HOST_PORT:-5432}:5432'
     env_file:
       - .env
   redis:
