@@ -67,40 +67,38 @@ function translate(text: keyof (typeof translations)[LangId]): string {
 </script>
 
 <template>
-    <div>
-        <form @submit.prevent="submit" class="vstack gap-3 mx-auto" style="max-width: 500px">
-            <div>
-                <label for="type" class="form-label">{{ translate('Semester type') }}</label>
-                <select v-model="type" id="type" class="form-select" required>
-                    <option value="winter">{{ translate('Winter semester') }}</option>
-                    <option value="summer">{{ translate('Summer semester') }}</option>
-                </select>
-            </div>
+    <form @submit.prevent="submit" class="vstack gap-3 mx-auto" style="max-width: 500px">
+        <div>
+            <label for="type" class="form-label">{{ translate('Semester type') }}</label>
+            <select v-model="type" id="type" class="form-select" required>
+                <option value="winter">{{ translate('Winter semester') }}</option>
+                <option value="summer">{{ translate('Summer semester') }}</option>
+            </select>
+        </div>
 
-            <div>
-                <label for="year" class="form-label">{{ translate('Academic year') }}</label>
-                <input v-model="year" type="number" id="year" class="form-control" required />
-            </div>
+        <div>
+            <label for="year" class="form-label">{{ translate('Academic year') }}</label>
+            <input v-model="year" type="number" id="year" class="form-control" required />
+        </div>
 
-            <div>
-                <label for="startDate" class="form-label">{{ translate('Semester start date') }}</label>
-                <input v-model="startDate" type="date" id="startDate" class="form-control" required />
-            </div>
+        <div>
+            <label for="startDate" class="form-label">{{ translate('Semester start date') }}</label>
+            <input v-model="startDate" type="date" id="startDate" class="form-control" required />
+        </div>
 
-            <div>
-                <label for="endDate" class="form-label">{{ translate('Semester end date') }}</label>
-                <input v-model="endDate" type="date" id="endDate" class="form-control" required />
-            </div>
+        <div>
+            <label for="endDate" class="form-label">{{ translate('Semester end date') }}</label>
+            <input v-model="endDate" type="date" id="endDate" class="form-control" required />
+        </div>
 
-            <div class="text-center">
-                <button type="submit" class="btn btn-success">{{ translate('Add') }}</button>
-            </div>
+        <div class="text-center">
+            <button type="submit" class="btn btn-success">{{ translate('Add') }}</button>
+        </div>
 
-            <div class="text-center">
-                <span :class="['text-danger', { 'invisible': !addingFailed }]">
-                    {{ translate('Semester with this year and type already exists.') }}
-                </span>
-            </div>
-        </form>
-    </div>
+        <div class="text-center">
+            <span :class="['text-danger', { 'invisible': !addingFailed }]">
+                {{ translate('Semester with this year and type already exists.') }}
+            </span>
+        </div>
+    </form>
 </template>
