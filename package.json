@@ -29,6 +29,7 @@
     "connect-redis": "^8.0.3",
     "express": "^5.1.0",
     "express-session": "^1.18.1",
+    "ioredis": "^5.6.1",
     "on-headers": "^1.0.2",
     "pg": "^8.15.6",
     "redis": "^4.7.0"
