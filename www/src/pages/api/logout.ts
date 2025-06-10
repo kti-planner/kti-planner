@@ -1,7 +1,6 @@
 import type { APIRoute } from 'astro';
 
-export const POST: APIRoute = async ({ redirect, session }) => {
-    session?.set('userId', null);
-    await session?.regenerate();
+export const POST: APIRoute = ({ redirect, session }) => {
+    session?.destroy();
     return redirect('/', 303);
 };
