@@ -13,7 +13,8 @@
     "prettier": "prettier src/ www/src/ --write",
     "test": "npm-run-all test-unit test-e2e",
     "test-unit": "vitest run",
-    "test-e2e": "playwright test"
+    "test-e2e": "playwright test",
+    "dev": "astro dev --root ./www"
   },
   "repository": {
     "type": "git",
