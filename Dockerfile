@@ -1,5 +1,7 @@
 FROM node:22-alpine AS builder
 
+ARG REDIS_URL
+
 RUN mkdir -p /home/node/build && chown -R node:node /home/node/build
 WORKDIR /home/node/build
 USER node

@@ -4,23 +4,24 @@ services:
   web:
     build:
       context: .
+      args:
+        REDIS_URL: redis://redis
     depends_on:
       - postgres
       - redis
     ports:
       - '8080:8080'
     env_file:
-      - .env
+      - ./www/.env
     environment:
       POSTGRES_HOST: postgres
-      REDIS_URL: redis://redis
   postgres:
     build:
       context: ./db
     ports:
       - '5432:5432'
     env_file:
-      - .env
+      - ./www/.env
   redis:
     image: redis
     ports:
