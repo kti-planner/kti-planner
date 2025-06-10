@@ -2,11 +2,15 @@
 
 A dedicated content management system for planning classes organized by the Department of Computer Communications at the Gdańsk University of Technology.
 
-## Development
+## Development setup
 
-### Setting up the database
+1. Install dependencies
 
-1. Make a `.env` file in the root of the project for database credentials:
+    ```bash
+    npm install
+    ```
+
+2. Make a `www/.env` file for database credentials (example values below):
 
     ```
     POSTGRES_DB=kti_planner
@@ -14,50 +18,22 @@ A dedicated content management system for planning classes organized by the Depa
     POSTGRES_PASSWORD=secret-password
     ```
 
-2. Build the Docker image (needs to be rebuilt when [db/init.sql](db/init.sql) changes):
+3. Start the database and Redis (needs to be restarted when files in the [db](db) directory change):
 
     ```bash
-    docker build db -t kti-planner-db
+    docker compose up --build postgres redis
     ```
 
-3. Start a database container (the below command does not persist data when recreating the container):
+4. Start the Astro.js development server
 
     ```bash
-    docker run -p 5432:5432 --env-file .env -d kti-planner-db
+    npm run dev
     ```
 
-You can start a db container with data persistence like so (**db/init.sql will not rerun if the db is already initialized**):
+## Build for production
 
-```bash
-docker run -p 5432:5432 --env-file .env -v <path to a data directory>:/var/lib/postgresql/data -d kti-planner-db
-```
-
-You can inspect the database using the cli with the following command:
-
-```bash
-docker exec -it <name-of-container> psql -d kti_planner -U webapp
-```
-
-### Running the web app
-
-Install dependencies then build the website and server:
-
-```bash
-npm install
-npm run build
-```
-
-Run the server:
-
-```bash
-node .
-```
-
-## Run as a Docker container
-
-The app can be run as a Docker container using the provided [Dockerfile](./Dockerfile).
-
-## Run using Docker Compose
+In production we use Express.js as the server handling the website.
+You can run the entire app with Docker Compose:
 
 ```bash
 docker compose up --build -d
