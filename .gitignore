@@ -6,3 +6,4 @@
 /www/.astro/
 /.env
 /test-results/
+www/.env

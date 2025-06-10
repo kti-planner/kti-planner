@@ -14,3 +14,15 @@ declare namespace App {
         userId?: string | null;
     }
 }
+
+interface ImportMetaEnv {
+    readonly POSTGRES_DB: string;
+    readonly POSTGRES_USER: string;
+    readonly POSTGRES_PASSWORD: string;
+    readonly POSTGRES_HOST: string;
+    readonly POSTGRES_PORT: string;
+}
+
+interface ImportMeta {
+    readonly env: ImportMetaEnv;
+}
