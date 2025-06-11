@@ -31,8 +31,8 @@ export const onRequest = defineMiddleware(async ({ request, locals, cookies, ses
 
     const langIdCookie = cookies.get('langId')?.value;
     if (langIdCookie === undefined || !isLangId(langIdCookie)) {
-        const langId = locals.req?.acceptsLanguages?.(langIds) as LangId | false;
-        locals.langId = langId !== false ? langId : 'pl';
+        const langId = locals.req?.acceptsLanguages?.(langIds) as LangId | false | undefined;
+        locals.langId = langId !== false && langId !== undefined ? langId : 'pl';
         cookies.set('langId', locals.langId, {
             path: '/',
             secure: true,
