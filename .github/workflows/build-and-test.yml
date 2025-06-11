@@ -27,7 +27,7 @@ jobs:
 
       - name: Setup ENV
         run: |
-          cat > www/.env << EOF
+          cat > .env << EOF
           POSTGRES_USER=CI
           POSTGRES_PASSWORD=CI_PASS
           POSTGRES_DB=kti_planner
