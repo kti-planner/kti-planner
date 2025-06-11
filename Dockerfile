@@ -1,5 +1,7 @@
 FROM node:22-alpine AS builder
 
+# This is a build time environment variable used in www/astro.config.mjs
+# It is set in compose.yaml
 ARG REDIS_URL
 
 RUN mkdir -p /home/node/build && chown -R node:node /home/node/build
