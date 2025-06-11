@@ -10,9 +10,9 @@ A dedicated content management system for planning classes organized by the Depa
     npm install
     ```
 
-2. Make a `www/.env` file for database credentials (example values below):
+2. Make a `.env` file in the root of the project for database credentials (example values below):
 
-    ```
+    ```ini
     POSTGRES_DB=kti_planner
     POSTGRES_USER=webapp
     POSTGRES_PASSWORD=secret-password
