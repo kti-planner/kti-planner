@@ -5,4 +5,4 @@
 /www/node_modules/
 /www/.astro/
 /test-results/
-www/.env
+/.env

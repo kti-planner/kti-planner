@@ -18,6 +18,7 @@ export default defineConfig({
             noExternal: import.meta.env.PROD ? true : undefined,
             external: ['bcrypt', 'connect-redis', 'express', 'express-session', 'on-headers', 'pg', 'redis'],
         },
+        envDir: '.',
     },
     session: {
         driver: 'redis',
