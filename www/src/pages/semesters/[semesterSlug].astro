@@ -6,7 +6,7 @@ import Layout from '@layouts/Layout.astro';
 import EditSemester from '@components/semesters/EditSemester.vue';
 
 const { semesterSlug } = Astro.params;
-const { langId } = Astro.locals;
+const { langId, user } = Astro.locals;
 
 const translations = {
     'en': {
@@ -59,7 +59,10 @@ const semesterData: SemesterData = {
         },
     ]}
 >
-    <h1 class="text-center fs-5">{semesterName} <EditSemester client:only="vue" semester={semesterData} /></h1>
+    <h1 class="text-center fs-5">
+        {semesterName}
+        {user && <EditSemester client:only="vue" semester={semesterData} />}
+    </h1>
     <div class="text-center">
         {semester.startDate.toLocaleDateString('pl-PL')} - {semester.endDate.toLocaleDateString('pl-PL')}
     </div>
