@@ -1,23 +1,18 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { langId } from '@components/frontend/lang';
+import type { SemesterData } from '@components/semesters/types';
 
 const props = defineProps<{
-    semester?: {
-        id: string;
-        type: 'summer' | 'winter';
-        year: number;
-        startDate: Date;
-        endDate: Date;
-    };
+    semester?: SemesterData;
 }>();
 
 const addingFailed = ref(false);
 
 const type = ref<'summer' | 'winter' | undefined>(props.semester?.type);
 const year = ref<number | undefined>(props.semester?.year);
-const startDate = ref<string | undefined>(props.semester?.startDate.toISOString().substring(0, 10));
-const endDate = ref<string | undefined>(props.semester?.endDate.toISOString().substring(0, 10));
+const startDate = ref<string | undefined>(props.semester?.startDate);
+const endDate = ref<string | undefined>(props.semester?.endDate);
 
 async function submit() {
     try {
@@ -54,7 +49,7 @@ async function submit() {
         addingFailed.value = !addingSuccess;
 
         if (addingSuccess) {
-            window.location.href = '/semesters/';
+            window.location.assign(`/semesters/${type.value}-${year.value}/`);
         }
     } catch (error) {
         console.log(error);
@@ -69,8 +64,8 @@ const translations = {
         'Academic year': 'Academic year',
         'Semester start date': 'Semester start date',
         'Semester end date': 'Semester end date',
+        'Save': 'Save',
         'Add': 'Add',
-        'Edit': 'Edit',
         'Semester with this year and type already exists.': 'Semester with this year and type already exists.',
     },
     'pl': {
@@ -80,8 +75,8 @@ const translations = {
         'Academic year': 'Rok rozpoczęcia roku akademickiego',
         'Semester start date': 'Data rozpoczęcia semestru',
         'Semester end date': 'Data zakończenia semestru',
+        'Save': 'Zapisz',
         'Add': 'Dodaj',
-        'Edit': 'Edytuj',
         'Semester with this year and type already exists.': 'Semestr o podanym roku i rodzaju już istnieje.',
     },
 };
@@ -117,7 +112,7 @@ function translate(text: keyof (typeof translations)[LangId]): string {
         </div>
 
         <div class="text-center">
-            <button type="submit" class="btn btn-success">{{ translate(props.semester ? 'Edit' : 'Add') }}</button>
+            <button type="submit" class="btn btn-success">{{ translate(semester ? 'Save' : 'Add') }}</button>
         </div>
 
         <div v-if="addingFailed" class="text-center text-danger">

@@ -1,0 +1,66 @@
+---
+import { isSemesterType, Semester } from '@backend/semester';
+import type { SemesterData } from '@components/semesters/types';
+import { formatDateLocalYyyyMmDd } from '@components/utils';
+import Layout from '@layouts/Layout.astro';
+import EditSemester from '@components/semesters/EditSemester.vue';
+
+const { semesterSlug } = Astro.params;
+const { langId } = Astro.locals;
+
+const translations = {
+    'en': {
+        'Semesters': 'Semesters',
+        'Winter semester': 'Winter semester',
+        'Summer semester': 'Summer semester',
+    },
+    'pl': {
+        'Semesters': 'Semestry',
+        'Winter semester': 'Semestr zimowy',
+        'Summer semester': 'Semestr letni',
+    },
+};
+
+function translate(text: keyof (typeof translations)[LangId]): string {
+    return translations[langId][text];
+}
+
+if (semesterSlug === undefined) {
+    return new Response(null, { status: 404 });
+}
+
+const [type, year, ...rest] = semesterSlug.split('-');
+if (!isSemesterType(type) || year === undefined || rest.length > 0) {
+    return new Response(null, { status: 404 });
+}
+
+const semester = await Semester.fetchByYearAndType(parseInt(year), type);
+if (!semester) {
+    return new Response(null, { status: 404 });
+}
+
+const semesterName = `${semester.type === 'summer' ? translate('Summer semester') : translate('Winter semester')} ${semester.year}/${semester.year + 1}`;
+
+const semesterData: SemesterData = {
+    id: semester.id,
+    type: semester.type,
+    year: semester.year,
+    startDate: formatDateLocalYyyyMmDd(semester.startDate),
+    endDate: formatDateLocalYyyyMmDd(semester.endDate),
+};
+---
+
+<Layout
+    breadcrumbs={[
+        { text: translate('Semesters'), href: '/semesters/' },
+        {
+            text: semesterName,
+            href: '#',
+        },
+    ]}
+>
+    <h1 class="text-center fs-5">{semesterName} <EditSemester client:only="vue" semester={semesterData} /></h1>
+    <div class="text-center">
+        {semester.startDate.toLocaleDateString('pl-PL')} - {semester.endDate.toLocaleDateString('pl-PL')}
+    </div>
+</Layout>

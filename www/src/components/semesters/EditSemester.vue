@@ -1,16 +1,12 @@
 <script setup lang="ts">
 import { langId } from '@components/frontend/lang';
+import type { SemesterData } from '@components/semesters/types';
+import IconButton from '@components/IconButton.vue';
 import Modal from '@components/Modal.vue';
 import SemesterForm from '@components/semesters/SemesterForm.vue';
 
 const props = defineProps<{
-    semester: {
-        id: string;
-        type: 'summer' | 'winter';
-        year: number;
-        startDate: Date;
-        endDate: Date;
-    };
+    semester: SemesterData;
 }>();
 
 const translations = {
@@ -30,21 +26,17 @@ const modalId = `edit-semester-modal-${props.semester.type}-${props.semester.yea
 </script>
 
 <template>
-    <div>
-        <button
-            type="button"
-            class="btn border border-secondary-subtle btn-sm"
-            data-bs-toggle="modal"
-            :data-bs-target="`#${modalId}`"
-        >
-            <i class="bi bi-pencil"></i>
-        </button>
+    <IconButton
+        icon="pencil"
+        position="absolute"
+        class="ms-1"
+        style="margin-top: -0.25rem"
+        data-bs-toggle="modal"
+        :data-bs-target="`#${modalId}`"
+    />
 
-        <Modal :id="modalId">
-            <template #header>
-                {{ translate('Edit semester') }} {{ props.semester.year }}/{{ props.semester.year + 1 }}
-            </template>
-            <SemesterForm :semester="props.semester" />
-        </Modal>
-    </div>
+    <Modal :id="modalId">
+        <template #header>{{ translate('Edit semester') }} {{ semester.year }}/{{ semester.year + 1 }}</template>
+        <SemesterForm :semester="semester" />
+    </Modal>
 </template>

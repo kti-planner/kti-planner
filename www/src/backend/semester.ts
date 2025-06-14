@@ -3,6 +3,10 @@ import { db } from '@backend/db';
 
 export type SemesterType = 'winter' | 'summer';
 
+export function isSemesterType(key: unknown): key is SemesterType {
+    return key === 'winter' || key === 'summer';
+}
+
 interface DbSemester {
     id: string;
     year: number;
