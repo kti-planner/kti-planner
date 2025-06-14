@@ -20,18 +20,16 @@ function translate(text: keyof (typeof translations)[LangId]): string {
 <template>
     <div>
         <div class="d-flex justify-content-center mb-3">
-            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#semesterModal">
+            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#semester-modal">
                 {{ translate('Add new semester') }}
             </button>
         </div>
 
-        <Modal modal-id="semesterModal">
+        <Modal id="semester-modal">
             <template #header>
                 {{ translate('Add new semester') }}
             </template>
-            <template #body>
-                <SemesterForm />
-            </template>
+            <SemesterForm />
         </Modal>
     </div>
 </template>
