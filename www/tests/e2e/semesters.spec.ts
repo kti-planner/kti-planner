@@ -1,5 +1,5 @@
 import { expect } from 'playwright/test';
-import { login, test } from './test-setup';
+import { test } from './test-setup';
 
 test('Can access semesters from /', async ({ page }) => {
     await page.goto('/');
