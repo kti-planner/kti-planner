@@ -74,15 +74,19 @@ export const PATCH: APIRoute = async ({ locals }) => {
         return Response.json(null, { status: 400 });
     }
 
-    try {
-        const semester = await Semester.fetch(data.id);
-        if (semester !== null) {
-            await semester.edit(data);
-            return Response.json(true, { status: 200 });
-        }
+    const semester = await Semester.fetch(data.id);
 
-        return Response.json(false, { status: 200 });
-    } catch {
+    if (semester === null) {
+        return Response.json(null, { status: 404 });
+    }
+
+    const other = await Semester.fetchByYearAndType(data.year ?? semester.year, data.type ?? semester.type);
+
+    if (other && other.id !== semester.id) {
         return Response.json(false, { status: 200 });
     }
+
+    await semester.edit(data);
+
+    return Response.json(true, { status: 200 });
 };
