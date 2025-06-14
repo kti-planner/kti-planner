@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { langId } from '@components/frontend/lang';
-import Modal from './Modal.vue';
-import SemesterForm from './SemesterForm.vue';
+import Modal from '@components/Modal.vue';
+import SemesterForm from '@components/semesters/SemesterForm.vue';
 
 const translations = {
     'en': {
