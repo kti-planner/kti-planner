@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { onBeforeUnmount, ref } from 'vue';
+import { onBeforeUnmount, ref, useId } from 'vue';
 
-defineProps<{
-    id: string;
+const { id = useId() } = defineProps<{
+    id?: string;
     size?: 'sm' | null | 'lg' | 'xl' | undefined;
     centered?: boolean | undefined;
     scrollable?: boolean | undefined;
