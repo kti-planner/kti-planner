@@ -32,10 +32,11 @@ export const POST: APIRoute = async ({ locals }) => {
         return Response.json(null, { status: 400 });
     }
 
-    try {
-        await Semester.create(data);
-        return Response.json(true, { status: 201 });
-    } catch {
+    if (await Semester.fetchByYearAndType(data.year, data.type)) {
         return Response.json(false, { status: 200 });
     }
+
+    await Semester.create(data);
+
+    return Response.json(true, { status: 201 });
 };
