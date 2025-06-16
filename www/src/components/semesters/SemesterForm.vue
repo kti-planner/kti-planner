@@ -1,26 +1,44 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { langId } from '@components/frontend/lang';
+import type { SemesterData } from '@components/semesters/types';
+
+const props = defineProps<{
+    semester?: SemesterData;
+}>();
 
 const addingFailed = ref(false);
 
-const type = ref<'summer' | 'winter'>();
-const year = ref<number>();
-const startDate = ref<string>();
-const endDate = ref<string>();
+const type = ref<'summer' | 'winter' | undefined>(props.semester?.type);
+const year = ref<number | undefined>(props.semester?.year);
+const startDate = ref<string | undefined>(props.semester?.startDate);
+const endDate = ref<string | undefined>(props.semester?.endDate);
 
 async function submit() {
     try {
-        const result = await fetch('/semesters/api/semesters/', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                type: type.value,
-                year: year.value,
-                startDate: startDate.value,
-                endDate: endDate.value,
-            }),
-        });
+        const result =
+            props.semester === undefined
+                ? await fetch('/semesters/api/semesters/', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({
+                          type: type.value,
+                          year: year.value,
+                          startDate: startDate.value,
+                          endDate: endDate.value,
+                      }),
+                  })
+                : await fetch('/semesters/api/semesters/', {
+                      method: 'PATCH',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({
+                          id: props.semester.id,
+                          type: type.value,
+                          year: year.value,
+                          startDate: startDate.value,
+                          endDate: endDate.value,
+                      }),
+                  });
 
         if (!result.ok) {
             console.error('API request failed!');
@@ -31,7 +49,7 @@ async function submit() {
         addingFailed.value = !addingSuccess;
 
         if (addingSuccess) {
-            window.location.href = '/semesters/';
+            window.location.assign(`/semesters/${type.value}-${year.value}/`);
         }
     } catch (error) {
         console.log(error);
@@ -46,6 +64,7 @@ const translations = {
         'Academic year': 'Academic year',
         'Semester start date': 'Semester start date',
         'Semester end date': 'Semester end date',
+        'Save': 'Save',
         'Add': 'Add',
         'Semester with this year and type already exists.': 'Semester with this year and type already exists.',
     },
@@ -56,6 +75,7 @@ const translations = {
         'Academic year': 'Rok rozpoczęcia roku akademickiego',
         'Semester start date': 'Data rozpoczęcia semestru',
         'Semester end date': 'Data zakończenia semestru',
+        'Save': 'Zapisz',
         'Add': 'Dodaj',
         'Semester with this year and type already exists.': 'Semestr o podanym roku i rodzaju już istnieje.',
     },
@@ -92,7 +112,7 @@ function translate(text: keyof (typeof translations)[LangId]): string {
         </div>
 
         <div class="text-center">
-            <button type="submit" class="btn btn-success">{{ translate('Add') }}</button>
+            <button type="submit" class="btn btn-success">{{ translate(semester ? 'Save' : 'Add') }}</button>
         </div>
 
         <div v-if="addingFailed" class="text-center text-danger">

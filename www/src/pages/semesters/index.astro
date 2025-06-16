@@ -32,10 +32,7 @@ const semesters = await Semester.fetchAll();
             semesters.map(
                 s =>
                     (
-                        <a
-                            href={`/semesters/${s.type}-${s.year}/`}
-                            class="list-group-item list-group-item-action text-success-hover"
-                        >
+                        <a href={`/semesters/${s.type}-${s.year}/`} class="list-group-item list-group-item-action">
                             {s.type === 'summer' ? translate('Summer semester') : translate('Winter semester')}{' '}
                             {`${s.year}/${s.year + 1}`}
                         </a>
