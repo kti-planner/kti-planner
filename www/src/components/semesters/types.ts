@@ -1,4 +1,4 @@
-export type SemesterType = 'summer' | 'winter';
+import type { SemesterType } from '@backend/semester';
 
 export interface SemesterData {
     id: string;
