@@ -15,8 +15,16 @@ export default defineConfig({
     vite: {
         ssr: {
             target: 'node',
-            noExternal: true,
+            noExternal: import.meta.env.PROD ? true : undefined,
             external: ['bcrypt', 'connect-redis', 'express', 'express-session', 'on-headers', 'pg', 'redis'],
         },
+        envDir: '.',
+    },
+    session: {
+        driver: 'redis',
+        options: {
+            url: process.env.REDIS_URL,
+        },
+        ttl: 60 * 60 * 3, // 3 hours
     },
 });
