@@ -122,6 +122,7 @@ export default tseslint.config(
                     'allowRegExp': true,
                 },
             ],
+            '@typescript-eslint/no-import-type-side-effects': 'error',
             '@typescript-eslint/no-explicit-any': 'off',
             '@typescript-eslint/no-non-null-assertion': 'off',
             '@typescript-eslint/no-useless-constructor': 'off',
@@ -222,6 +223,66 @@ export default tseslint.config(
             'vue/first-attribute-linebreak': 'off',
             'vue/require-default-prop': 'off',
             'vue/multi-word-component-names': 'off',
+        },
+    },
+    {
+        files: ['www/src/**/*.ts', 'www/src/**/*.astro'],
+        rules: {
+            '@typescript-eslint/no-restricted-imports': [
+                'error',
+                {
+                    'patterns': [
+                        {
+                            'group': ['@components/frontend/'],
+                            'allowTypeImports': true,
+                        },
+                        {
+                            'group': ['*.client.ts'],
+                            'allowTypeImports': true,
+                        },
+                    ],
+                },
+            ],
+        },
+    },
+    {
+        files: ['www/src/components/**/*.ts'],
+        rules: {
+            '@typescript-eslint/no-restricted-imports': [
+                'error',
+                {
+                    'patterns': [
+                        {
+                            'group': ['@backend/'],
+                            'allowTypeImports': true,
+                        },
+                        {
+                            'group': ['@components/frontend/'],
+                            'allowTypeImports': true,
+                        },
+                    ],
+                },
+            ],
+        },
+    },
+    {
+        files: [
+            'www/src/components/frontend/**/*.ts',
+            'www/src/components/**/*.client.ts',
+            'www/src/components/**/*.vue',
+        ],
+        rules: {
+            '@typescript-eslint/no-restricted-imports': [
+                'error',
+                {
+                    'patterns': [
+                        {
+                            'group': ['@backend/'],
+                            'allowTypeImports': true,
+                        },
+                    ],
+                },
+            ],
         },
     },
     {
