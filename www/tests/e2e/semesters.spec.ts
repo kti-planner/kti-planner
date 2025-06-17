@@ -106,7 +106,7 @@ test('Can add edit semester when logged in', async ({ page }) => {
 });
 
 test('Can edit semester', async ({ page }) => {
-    //Can not edit semester with data that do not match already existing semester
+    //Can edit semester with data that do not match already existing semester
     await page.goto('/semesters/');
     await login(page);
 
