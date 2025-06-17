@@ -29,6 +29,7 @@ const modalId = `edit-semester-modal-${props.semester.type}-${props.semester.yea
     <IconButton
         icon="pencil"
         position="absolute"
+        aria-label="edit semester"
         class="ms-1"
         style="margin-top: -0.25rem"
         data-bs-toggle="modal"
