@@ -27,6 +27,19 @@ test('Can access semester page', async ({ page }) => {
     await expect(page.locator('.breadcrumb')).toContainText('Summer semester 2024/2025');
 });
 
+test('Can not add new semester when not logged in', async ({ page }) => {
+    await page.goto('/semesters/');
+
+    await expect(page.getByRole('button', { name: 'Add new semester' })).toHaveCount(0);
+});
+
+test('Can add new semester when not logged in', async ({ page }) => {
+    await page.goto('/semesters/');
+    await login(page);
+
+    await expect(page.getByRole('button', { name: 'Add new semester' })).toBeVisible();
+});
+
 test('Can add new semester and prevent duplicate semester creation', async ({ page }) => {
     //Can add new semester
     await page.goto('/semesters/');
