@@ -106,6 +106,7 @@ test('Can add edit semester when logged in', async ({ page }) => {
 });
 
 test('Can edit semester', async ({ page }) => {
+    //Can not edit semester with data that do not match already existing semester
     await page.goto('/semesters/');
     await login(page);
 
@@ -126,6 +127,28 @@ test('Can edit semester', async ({ page }) => {
     await page.getByRole('textbox', { name: 'Semester end date' }).fill('2070-02-15');
 
     await page.getByRole('button', { name: 'Save' }).click();
+
+    await expect(page.locator('.breadcrumb')).toContainText('Winter semester 2069/2070');
+    await expect(page.locator('body')).toContainText('1.10.2069 - 15.02.2070');
+
+    //Can not edit semester with data that match already existing semester
+    await page.getByRole('button', { name: 'edit semester' }).click();
+
+    await expect(page.locator('#edit-semester-modal-winter-2069')).toBeVisible();
+    await expect(page.locator('#edit-semester-modal-winter-2069')).toContainText('Edit semester 2069/2070');
+
+    await page.getByRole('combobox', { name: 'Semester type' }).selectOption('winter');
+    await page.getByRole('spinbutton', { name: 'Academic year' }).fill('2023');
+    await page.getByRole('textbox', { name: 'Semester start date' }).fill('2023-10-01');
+    await page.getByRole('textbox', { name: 'Semester end date' }).fill('2023-02-15');
+
+    await page.getByRole('button', { name: 'Save' }).click();
+
+    await expect(page.locator('#edit-semester-modal-winter-2069').locator('form')).toContainText(
+        'Semester with this year and type already exists.',
+    );
+
+    await page.getByRole('button', { name: 'Close' }).click();
 
     await expect(page.locator('.breadcrumb')).toContainText('Winter semester 2069/2070');
     await expect(page.locator('body')).toContainText('1.10.2069 - 15.02.2070');
