@@ -1,4 +1,5 @@
 import { test as base } from '@playwright/test';
+import { restoreDb } from './db-utils';
 
 declare global {
     interface Window {
@@ -19,6 +20,7 @@ export const test = base.extend({
             }
         });
 
+        await restoreDb('mock.sql');
         await use(page);
     },
 });

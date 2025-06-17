@@ -1,5 +1,5 @@
 import { expect } from 'playwright/test';
-import { test } from './test-setup';
+import { test } from './fixtures';
 
 test('Can switch languages', async ({ page }) => {
     await page.goto('/');
