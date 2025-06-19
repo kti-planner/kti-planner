@@ -27,13 +27,13 @@ test('Can access semester page', async ({ page }) => {
     await expect(page.locator('.breadcrumb')).toContainText('Summer semester 2024/2025');
 });
 
-test('Can not add new semester when not logged in', async ({ page }) => {
+test('Add new semester button is hidden for logged-out user', async ({ page }) => {
     await page.goto('/semesters/');
 
     await expect(page.getByRole('button', { name: 'Add new semester' })).toHaveCount(0);
 });
 
-test('Can add new semester when logged in', async ({ page }) => {
+test('Add new semester button is visible for logged-in user', async ({ page }) => {
     await page.goto('/semesters/');
     await login(page);
 
@@ -60,6 +60,9 @@ test('Can add new semester and prevent duplicate semester creation', async ({ pa
 
     await expect(page.locator('.breadcrumb')).toContainText('Summer semester 2100/2101');
 
+    await page.goto('/semesters/');
+    await expect(page.getByRole('link', { name: 'Summer semester 2100/2101' })).toBeVisible();
+
     //Can not add duplicate semester
     await page.goto('/semesters/');
 
@@ -81,10 +84,12 @@ test('Can add new semester and prevent duplicate semester creation', async ({ pa
     );
 
     await page.getByRole('button', { name: 'Close' }).click();
+
     await expect(page.getByRole('button', { name: 'Add new semester' })).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Summer semester 2100/2101' })).toHaveCount(1);
 });
 
-test('Can not edit semester when not logged in', async ({ page }) => {
+test('Edit semester button is hidden for logged-out user', async ({ page }) => {
     await page.goto('/semesters/');
 
     await page.getByText('Summer semester 2024/2025').click();
@@ -94,7 +99,7 @@ test('Can not edit semester when not logged in', async ({ page }) => {
     await expect(page.getByRole('button', { name: 'edit semester' })).toHaveCount(0);
 });
 
-test('Can add edit semester when logged in', async ({ page }) => {
+test('Edit semester button is visible for logged-in user', async ({ page }) => {
     await page.goto('/semesters/');
     await login(page);
 
@@ -105,7 +110,7 @@ test('Can add edit semester when logged in', async ({ page }) => {
     await expect(page.getByRole('button', { name: 'edit semester' })).toBeVisible();
 });
 
-test('Can edit semester', async ({ page }) => {
+test('Can edit semester and prevent duplicate semester', async ({ page }) => {
     //Can edit semester with data that do not match already existing semester
     await page.goto('/semesters/');
     await login(page);
