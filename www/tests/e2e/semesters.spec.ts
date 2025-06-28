@@ -41,7 +41,6 @@ test('Add new semester button is visible for logged-in user', async ({ page }) =
 });
 
 test('Can add new semester and prevent duplicate semester creation', async ({ page }) => {
-    //Can add new semester
     await page.goto('/semesters/');
     await login(page);
 
@@ -63,7 +62,7 @@ test('Can add new semester and prevent duplicate semester creation', async ({ pa
     await page.goto('/semesters/');
     await expect(page.getByRole('link', { name: 'Summer semester 2100/2101' })).toBeVisible();
 
-    //Can not add duplicate semester
+    // Cannot add duplicate semester
     await page.goto('/semesters/');
 
     await expect(page.getByRole('button', { name: 'Add new semester' })).toBeVisible();
@@ -96,7 +95,7 @@ test('Edit semester button is hidden for logged-out user', async ({ page }) => {
     await page.waitForURL('/semesters/summer-2024/');
     await expect(page.locator('.breadcrumb')).toContainText('Summer semester 2024/2025');
 
-    await expect(page.getByRole('button', { name: 'edit semester' })).toHaveCount(0);
+    await expect(page.getByRole('button', { name: 'Edit semester' })).toHaveCount(0);
 });
 
 test('Edit semester button is visible for logged-in user', async ({ page }) => {
@@ -107,11 +106,11 @@ test('Edit semester button is visible for logged-in user', async ({ page }) => {
     await page.waitForURL('/semesters/summer-2024/');
     await expect(page.locator('.breadcrumb')).toContainText('Summer semester 2024/2025');
 
-    await expect(page.getByRole('button', { name: 'edit semester' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Edit semester' })).toBeVisible();
 });
 
 test('Can edit semester and prevent duplicate semester', async ({ page }) => {
-    //Can edit semester with data that do not match already existing semester
+    // Can edit semester with data that do not match already existing semester
     await page.goto('/semesters/');
     await login(page);
 
@@ -120,8 +119,8 @@ test('Can edit semester and prevent duplicate semester', async ({ page }) => {
     await expect(page.locator('.breadcrumb')).toContainText('Summer semester 2024/2025');
     await expect(page.locator('body')).toContainText('24.02.2025 - 15.06.2025');
 
-    await expect(page.getByRole('button', { name: 'edit semester' })).toBeVisible();
-    await page.getByRole('button', { name: 'edit semester' }).click();
+    await expect(page.getByRole('button', { name: 'Edit semester' })).toBeVisible();
+    await page.getByRole('button', { name: 'Edit semester' }).click();
 
     await expect(page.locator('#edit-semester-modal-summer-2024')).toBeVisible();
     await expect(page.locator('#edit-semester-modal-summer-2024')).toContainText('Edit semester 2024/2025');
@@ -136,8 +135,8 @@ test('Can edit semester and prevent duplicate semester', async ({ page }) => {
     await expect(page.locator('.breadcrumb')).toContainText('Winter semester 2069/2070');
     await expect(page.locator('body')).toContainText('1.10.2069 - 15.02.2070');
 
-    //Can not edit semester with data that match already existing semester
-    await page.getByRole('button', { name: 'edit semester' }).click();
+    // Can not edit semester with data that match already existing semester
+    await page.getByRole('button', { name: 'Edit semester' }).click();
 
     await expect(page.locator('#edit-semester-modal-winter-2069')).toBeVisible();
     await expect(page.locator('#edit-semester-modal-winter-2069')).toContainText('Edit semester 2069/2070');
