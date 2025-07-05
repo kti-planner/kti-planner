@@ -16,7 +16,7 @@ export default defineConfig({
         ssr: {
             target: 'node',
             noExternal: import.meta.env.PROD ? true : undefined,
-            external: ['bcrypt', 'connect-redis', 'express', 'express-session', 'on-headers', 'pg', 'redis'],
+            external: ['bcrypt', 'express', 'on-headers', 'pg'],
         },
         envDir: '.',
     },

@@ -2,12 +2,6 @@ import { defineMiddleware } from 'astro:middleware';
 import { isLangId, langIds } from '@backend/lang';
 import { User } from '@backend/user';
 
-declare module 'express-session' {
-    interface SessionData {
-        userId?: string | null;
-    }
-}
-
 export const onRequest = defineMiddleware(async ({ request, locals, cookies, session }, next) => {
     const contentType = request.headers.get('Content-Type')?.split(';', 1)[0];
 

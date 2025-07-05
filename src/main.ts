@@ -19,7 +19,6 @@ app.use('/', express.static('www/dist/client/'));
 app.use((req, res, next) => {
     const locals = {
         req: req,
-        session: req.session,
     };
 
     ssrHandler(req, res, next, locals);
