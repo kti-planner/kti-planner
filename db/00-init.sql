@@ -21,3 +21,11 @@ CREATE TABLE subjects (
     name        text NOT NULL,
     semester_id uuid REFERENCES semesters NOT NULL
 );
+
+CREATE TABLE exercises (
+    id              uuid PRIMARY KEY,
+    name            text NOT NULL,
+    subject_id      uuid REFERENCES subjects NOT NULL,
+    exercise_number integer NOT NULL,
+    UNIQUE (subject_id, exercise_number)
+);
