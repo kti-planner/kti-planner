@@ -15,3 +15,9 @@ CREATE TABLE semesters (
     end_date date NOT NULL,
     UNIQUE (year, type)
 );
+
+CREATE TABLE subjects (
+    id          uuid PRIMARY KEY,
+    name        text NOT NULL,
+    semester_id uuid REFERENCES semesters NOT NULL
+);
