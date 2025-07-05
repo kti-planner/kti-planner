@@ -16,14 +16,18 @@ export const POST: APIRoute = async ({ locals, session }) => {
         return Response.json(null, { status: 400 });
     }
 
-    session?.set('userId', null);
+    if (!session) {
+        throw new Error('Session storage has not been configured!');
+    }
 
-    await session?.regenerate();
+    session.set('userId', null);
+
+    await session.regenerate();
 
     const user = await User.fetchByEmail(data.email);
 
     if (user && (await user.checkPassword(data.password))) {
-        session?.set('userId', user.id);
+        session.set('userId', user.id);
 
         return Response.json(true, { status: 200 });
     }

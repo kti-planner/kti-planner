@@ -1,6 +1,10 @@
 import type { APIRoute } from 'astro';
 
 export const POST: APIRoute = ({ redirect, session }) => {
-    session?.destroy();
+    if (!session) {
+        throw new Error('Session storage has not been configured!');
+    }
+
+    session.destroy();
     return redirect('/', 303);
 };
