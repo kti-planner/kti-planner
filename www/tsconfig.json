@@ -17,6 +17,11 @@
             "@pages/*": ["src/pages/*"]
         }
     },
+    "vueCompilerOptions": {
+        "strictTemplates": true,
+        "fallthroughAttributes": true,
+        "dataAttributes": ["data-*"]
+    },
     "include": [
         ".astro/types.d.ts",
         "src/**/*.astro",
