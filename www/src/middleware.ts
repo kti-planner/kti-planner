@@ -2,13 +2,7 @@ import { defineMiddleware } from 'astro:middleware';
 import { isLangId, langIds } from '@backend/lang';
 import { User } from '@backend/user';
 
-declare module 'express-session' {
-    interface SessionData {
-        userId?: string | null;
-    }
-}
-
-export const onRequest = defineMiddleware(async ({ request, locals, cookies }, next) => {
+export const onRequest = defineMiddleware(async ({ request, locals, cookies, session }, next) => {
     const contentType = request.headers.get('Content-Type')?.split(';', 1)[0];
 
     if (contentType === 'application/x-www-form-urlencoded' || contentType === 'multipart/form-data') {
@@ -31,8 +25,8 @@ export const onRequest = defineMiddleware(async ({ request, locals, cookies }, n
 
     const langIdCookie = cookies.get('langId')?.value;
     if (langIdCookie === undefined || !isLangId(langIdCookie)) {
-        const langId = locals.req.acceptsLanguages(langIds) as LangId | false;
-        locals.langId = langId !== false ? langId : 'pl';
+        const langId = locals.req?.acceptsLanguages?.(langIds) as LangId | false | undefined;
+        locals.langId = langId !== false && langId !== undefined ? langId : 'pl';
         cookies.set('langId', locals.langId, {
             path: '/',
             secure: true,
@@ -41,9 +35,9 @@ export const onRequest = defineMiddleware(async ({ request, locals, cookies }, n
         locals.langId = langIdCookie;
     }
 
-    const userIdSession = locals.session.userId;
-    if (userIdSession !== undefined && userIdSession !== null) {
-        locals.user = await User.fetch(userIdSession);
+    const userId = await session?.get('userId');
+    if (userId !== undefined && userId !== null) {
+        locals.user = await User.fetch(userId);
     } else {
         locals.user = null;
     }

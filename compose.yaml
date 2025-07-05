@@ -4,6 +4,8 @@ services:
   web:
     build:
       context: .
+      args:
+        REDIS_URL: redis://redis
     depends_on:
       - postgres
       - redis
@@ -13,7 +15,6 @@ services:
       - .env
     environment:
       POSTGRES_HOST: postgres
-      REDIS_URL: redis://redis
   postgres:
     build:
       context: ./db
@@ -23,3 +24,5 @@ services:
       - .env
   redis:
     image: redis
+    ports:
+      - '6379:6379'

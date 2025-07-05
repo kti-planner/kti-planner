@@ -7,7 +7,7 @@ const schema = z.object({
     password: z.string(),
 });
 
-export const POST: APIRoute = async ({ locals }) => {
+export const POST: APIRoute = async ({ locals, session }) => {
     const { jsonData } = locals;
 
     const data = schema.nullable().catch(null).parse(jsonData);
@@ -16,18 +16,18 @@ export const POST: APIRoute = async ({ locals }) => {
         return Response.json(null, { status: 400 });
     }
 
-    locals.session.userId = null;
-    await new Promise((resolve, reject) => locals.session.save(resolve));
+    if (!session) {
+        throw new Error('Session storage has not been configured!');
+    }
 
-    await new Promise((resolve, reject) => locals.session.regenerate(resolve));
+    session.set('userId', null);
 
-    locals.session = locals.req.session;
+    await session.regenerate();
 
     const user = await User.fetchByEmail(data.email);
 
     if (user && (await user.checkPassword(data.password))) {
-        locals.session.userId = user.id;
-        await new Promise((resolve, reject) => locals.session.save(resolve));
+        session.set('userId', user.id);
 
         return Response.json(true, { status: 200 });
     }

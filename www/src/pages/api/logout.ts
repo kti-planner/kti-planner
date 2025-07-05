@@ -1,14 +1,10 @@
 import type { APIRoute } from 'astro';
 
-export const POST: APIRoute = async ({ locals, redirect }) => {
-    locals.session.userId = null;
-    await new Promise((resolve, reject) => locals.session.save(resolve));
+export const POST: APIRoute = ({ redirect, session }) => {
+    if (!session) {
+        throw new Error('Session storage has not been configured!');
+    }
 
-    await new Promise((resolve, reject) => locals.session.regenerate(resolve));
-
-    locals.session = locals.req.session;
-
-    await new Promise((resolve, reject) => locals.session.save(resolve));
-
+    session.destroy();
     return redirect('/', 303);
 };
