@@ -1,5 +1,6 @@
 ---
 import { Semester } from '@backend/semester';
+import { Subject } from '@backend/subject';
 import type { SemesterData } from '@components/semesters/types';
 import { formatDateLocalYyyyMmDd } from '@components/utils';
 import Layout from '@layouts/Layout.astro';
@@ -43,6 +44,8 @@ const semesterData: SemesterData = {
     startDate: formatDateLocalYyyyMmDd(semester.startDate),
     endDate: formatDateLocalYyyyMmDd(semester.endDate),
 };
+
+const subjects = await Subject.fetchAllFromSemester(semester);
 ---
 
 <Layout
@@ -61,4 +64,22 @@ const semesterData: SemesterData = {
     <div class="text-center">
         {semester.startDate.toLocaleDateString('pl-PL')} - {semester.endDate.toLocaleDateString('pl-PL')}
     </div>
+    <div class="subjects-list list-group mx-auto my-4">
+        {
+            subjects.map(
+                s =>
+                    (
+                        <a href={`/semesters/${semesterSlug}/${s.id}`} class="list-group-item list-group-item-action">
+                            {s.name}
+                        </a>
+                    ) as unknown,
+            )
+        }
+    </div>
 </Layout>
+
+<style>
+    .subjects-list {
+        max-width: 600px;
+    }
+</style>
