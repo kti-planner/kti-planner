@@ -1,12 +1,11 @@
 ---
+import { Exercise } from '@backend/exercise';
 import { isSemesterType, Semester } from '@backend/semester';
-import type { SemesterData } from '@components/semesters/types';
-import { formatDateLocalYyyyMmDd } from '@components/utils';
+import { Subject } from '@backend/subject';
 import Layout from '@layouts/Layout.astro';
-import EditSemester from '@components/semesters/EditSemester.vue';
 
-const { semesterSlug } = Astro.params;
-const { langId, user } = Astro.locals;
+const { semesterSlug, subjectId, exerciseId } = Astro.params;
+const { langId } = Astro.locals;
 
 const translations = {
     'en': {
@@ -25,7 +24,7 @@ function translate(text: keyof (typeof translations)[LangId]): string {
     return translations[langId][text];
 }
 
-if (semesterSlug === undefined) {
+if (semesterSlug === undefined || subjectId === undefined || exerciseId === undefined) {
     return new Response(null, { status: 404 });
 }
 
@@ -38,32 +37,38 @@ const semester = await Semester.fetchByYearAndType(parseInt(year), type);
 if (!semester) {
     return new Response(null, { status: 404 });
 }
-
 const semesterName = `${semester.type === 'summer' ? translate('Summer semester') : translate('Winter semester')} ${semester.year}/${semester.year + 1}`;
 
-const semesterData: SemesterData = {
-    id: semester.id,
-    type: semester.type,
-    year: semester.year,
-    startDate: formatDateLocalYyyyMmDd(semester.startDate),
-    endDate: formatDateLocalYyyyMmDd(semester.endDate),
-};
+const subject = await Subject.fetch(subjectId);
+if (!subject) {
+    return new Response(null, { status: 404 });
+}
+
+const exercise = await Exercise.fetch(exerciseId);
+if (!exercise) {
+    return new Response(null, { status: 404 });
+}
 ---
 
 <Layout
     breadcrumbs={[
-        { text: translate('Semesters'), href: '/semesters/' },
+        {
+            text: translate('Semesters'),
+            href: '/semesters/',
+        },
         {
             text: semesterName,
+            href: `/semesters/${semesterSlug}/`,
+        },
+        {
+            text: subject.name,
+            href: `/semesters/${semesterSlug}/${subjectId}/`,
+        },
+        {
+            text: exercise.name,
             href: '#',
         },
     ]}
 >
-    <h1 class="text-center fs-5">
-        {semesterName}
-        {user && <EditSemester client:only="vue" semester={semesterData} />}
-    </h1>
-    <div class="text-center">
-        {semester.startDate.toLocaleDateString('pl-PL')} - {semester.endDate.toLocaleDateString('pl-PL')}
-    </div>
+    <h1 class="text-center fs-5">{exercise.name}</h1>
 </Layout>
