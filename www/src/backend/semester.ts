@@ -44,6 +44,10 @@ export class Semester {
         this.endDate = data.end_date;
     }
 
+    get slug(): string {
+        return `${this.year}-${this.type}`;
+    }
+
     static async fetch(id: string): Promise<Semester | null> {
         const data = (await db.query<DbSemester>('SELECT * FROM semesters WHERE id = $1', [id])).rows[0];
 
@@ -55,6 +59,16 @@ export class Semester {
             .rows[0];
 
         return data ? new Semester(data) : null;
+    }
+
+    static async fetchBySlug(slug: string): Promise<Semester | null> {
+        const [year, type, ...rest] = slug.split('-');
+
+        if (!isSemesterType(type) || year === undefined || rest.length > 0) {
+            return null;
+        }
+
+        return await Semester.fetchByYearAndType(parseInt(year), type);
     }
 
     static async fetchAll(): Promise<Semester[]> {

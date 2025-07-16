@@ -23,7 +23,7 @@ test('Can access semester page', async ({ page }) => {
     await page.goto('/');
 
     await page.getByText('Summer semester 2024/2025').click();
-    await page.waitForURL('/semesters/summer-2024/');
+    await page.waitForURL('/semesters/2024-summer/');
     await expect(page.locator('.breadcrumb')).toContainText('Summer semester 2024/2025');
 });
 
@@ -92,7 +92,7 @@ test('Edit semester button is hidden for logged-out user', async ({ page }) => {
     await page.goto('/semesters/');
 
     await page.getByText('Summer semester 2024/2025').click();
-    await page.waitForURL('/semesters/summer-2024/');
+    await page.waitForURL('/semesters/2024-summer/');
     await expect(page.locator('.breadcrumb')).toContainText('Summer semester 2024/2025');
 
     await expect(page.getByRole('button', { name: 'Edit semester' })).toHaveCount(0);
@@ -103,7 +103,7 @@ test('Edit semester button is visible for logged-in user', async ({ page }) => {
     await login(page);
 
     await page.getByText('Summer semester 2024/2025').click();
-    await page.waitForURL('/semesters/summer-2024/');
+    await page.waitForURL('/semesters/2024-summer/');
     await expect(page.locator('.breadcrumb')).toContainText('Summer semester 2024/2025');
 
     await expect(page.getByRole('button', { name: 'Edit semester' })).toBeVisible();

@@ -22,12 +22,15 @@ test('Semesters', async () => {
     expect(semester1.endDate.getFullYear()).toBe(2025);
     expect(semester1.endDate.getMonth()).toBe(0);
     expect(semester1.endDate.getDate()).toBe(30);
+    expect(semester1).toHaveProperty('slug', '2024-winter');
 
     expect(await Semester.fetch(semester1.id)).toStrictEqual(semester1);
     expect(await Semester.fetchAll()).toStrictEqual([semester1]);
     expect(await Semester.fetchByYearAndType(2024, 'winter')).toStrictEqual(semester1);
     expect(await Semester.fetchByYearAndType(2024, 'summer')).toStrictEqual(null);
     expect(await Semester.fetchByYearAndType(2025, 'winter')).toStrictEqual(null);
+    expect(await Semester.fetchBySlug('2024-winter')).toStrictEqual(semester1);
+    expect(await Semester.fetchBySlug('2024-summer')).toStrictEqual(null);
 
     const semester2 = await Semester.create({
         year: 2024,
@@ -46,6 +49,7 @@ test('Semesters', async () => {
     expect(semester2.endDate.getFullYear()).toBe(2025);
     expect(semester2.endDate.getMonth()).toBe(5);
     expect(semester2.endDate.getDate()).toBe(15);
+    expect(semester2).toHaveProperty('slug', '2024-summer');
 
     expect(await Semester.fetch(semester2.id)).toStrictEqual(semester2);
     expect(await Semester.fetch(semester1.id)).toStrictEqual(semester1);
@@ -53,6 +57,10 @@ test('Semesters', async () => {
     expect(await Semester.fetchByYearAndType(2024, 'winter')).toStrictEqual(semester1);
     expect(await Semester.fetchByYearAndType(2024, 'summer')).toStrictEqual(semester2);
     expect(await Semester.fetchByYearAndType(2025, 'winter')).toStrictEqual(null);
+    expect(await Semester.fetchBySlug('2024-winter')).toStrictEqual(semester1);
+    expect(await Semester.fetchBySlug('2024-summer')).toStrictEqual(semester2);
+    expect(await Semester.fetchBySlug('2025-winter')).toStrictEqual(null);
+    expect(await Semester.fetchBySlug('2025-summer')).toStrictEqual(null);
 
     await semester2.edit({
         year: 2025,
@@ -71,6 +79,7 @@ test('Semesters', async () => {
     expect(semester2.endDate.getFullYear()).toBe(2026);
     expect(semester2.endDate.getMonth()).toBe(2);
     expect(semester2.endDate.getDate()).toBe(4);
+    expect(semester2).toHaveProperty('slug', '2025-winter');
 
     expect(semester1).toHaveProperty('year', 2024);
     expect(semester1).toHaveProperty('type', 'winter');
@@ -82,6 +91,7 @@ test('Semesters', async () => {
     expect(semester1.endDate.getFullYear()).toBe(2025);
     expect(semester1.endDate.getMonth()).toBe(0);
     expect(semester1.endDate.getDate()).toBe(30);
+    expect(semester1).toHaveProperty('slug', '2024-winter');
 
     expect(await Semester.fetch(semester2.id)).toStrictEqual(semester2);
     expect(await Semester.fetch(semester1.id)).toStrictEqual(semester1);
@@ -89,4 +99,8 @@ test('Semesters', async () => {
     expect(await Semester.fetchByYearAndType(2024, 'winter')).toStrictEqual(semester1);
     expect(await Semester.fetchByYearAndType(2024, 'summer')).toStrictEqual(null);
     expect(await Semester.fetchByYearAndType(2025, 'winter')).toStrictEqual(semester2);
+    expect(await Semester.fetchBySlug('2024-winter')).toStrictEqual(semester1);
+    expect(await Semester.fetchBySlug('2024-summer')).toStrictEqual(null);
+    expect(await Semester.fetchBySlug('2025-winter')).toStrictEqual(semester2);
+    expect(await Semester.fetchBySlug('2025-summer')).toStrictEqual(null);
 });
