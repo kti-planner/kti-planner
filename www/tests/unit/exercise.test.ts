@@ -44,6 +44,8 @@ test('Exercises', async () => {
     expect(await Exercise.fetch(exercise1.id)).toStrictEqual(exercise1);
     expect(await Exercise.fetchAll()).toStrictEqual([exercise1]);
     expect(await Exercise.fetchAllFromSubject(subject1)).toStrictEqual([exercise1]);
+    expect(await Exercise.fetchByNumber(subject1, 1)).toStrictEqual(exercise1);
+    expect(await Exercise.fetchByNumber(subject1, 2)).toStrictEqual(null);
 
     const exercise2 = await Exercise.create({
         name: 'Firewall',
@@ -62,6 +64,10 @@ test('Exercises', async () => {
     );
     expect(await Exercise.fetchAllFromSubject(subject1)).toStrictEqual([exercise1]);
     expect(await Exercise.fetchAllFromSubject(subject2)).toStrictEqual([exercise2]);
+    expect(await Exercise.fetchByNumber(subject1, 1)).toStrictEqual(exercise1);
+    expect(await Exercise.fetchByNumber(subject1, 2)).toStrictEqual(null);
+    expect(await Exercise.fetchByNumber(subject2, 1)).toStrictEqual(null);
+    expect(await Exercise.fetchByNumber(subject2, 2)).toStrictEqual(exercise2);
 
     await exercise2.edit({
         name: 'IPv6',
@@ -82,4 +88,9 @@ test('Exercises', async () => {
     expect(await Exercise.fetchAll()).toStrictEqual([exercise1, exercise2]);
     expect(await Exercise.fetchAllFromSubject(subject1)).toStrictEqual([exercise1, exercise2]);
     expect(await Exercise.fetchAllFromSubject(subject2)).toStrictEqual([]);
+    expect(await Exercise.fetchByNumber(subject1, 1)).toStrictEqual(exercise1);
+    expect(await Exercise.fetchByNumber(subject1, 2)).toStrictEqual(null);
+    expect(await Exercise.fetchByNumber(subject1, 4)).toStrictEqual(exercise2);
+    expect(await Exercise.fetchByNumber(subject2, 1)).toStrictEqual(null);
+    expect(await Exercise.fetchByNumber(subject2, 2)).toStrictEqual(null);
 });
