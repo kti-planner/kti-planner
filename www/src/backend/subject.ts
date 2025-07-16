@@ -1,6 +1,6 @@
 import assert from 'node:assert';
 import { db } from '@backend/db';
-import type { Semester } from '@backend/semester';
+import { Semester } from '@backend/semester';
 
 interface DbSubject {
     id: string;
@@ -18,6 +18,10 @@ export interface SubjectEditData {
     semester?: Semester | undefined;
 }
 
+function makeSlug(name: string) {
+    return name.toLocaleLowerCase().replaceAll(/\s+/g, '-');
+}
+
 export class Subject {
     id: string;
     name: string;
@@ -27,6 +31,10 @@ export class Subject {
         this.id = data.id;
         this.name = data.name;
         this.semesterId = data.semester_id;
+    }
+
+    get slug(): string {
+        return makeSlug(this.name);
     }
 
     static async fetch(id: string): Promise<Subject | null> {
@@ -49,7 +57,17 @@ export class Subject {
         return records.map(record => new Subject(record));
     }
 
+    static async fetchBySlug(semester: Semester, slug: string): Promise<Subject | null> {
+        const subjects = await Subject.fetchAllFromSemester(semester);
+
+        return subjects.find(subject => subject.slug === slug) ?? null;
+    }
+
     static async create(data: SubjectCreateData): Promise<Subject> {
+        if (await Subject.fetchBySlug(data.semester, makeSlug(data.name))) {
+            throw new Error('Subject with this slug already exists');
+        }
+
         const result = (
             await db.query<DbSubject>('INSERT INTO subjects (id, name, semester_id) VALUES ($1, $2, $3) RETURNING *', [
                 crypto.randomUUID(),

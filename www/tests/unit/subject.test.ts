@@ -27,10 +27,14 @@ test('Subjects', async () => {
 
     expect(subject1).toHaveProperty('name', 'Sieci komputerowe');
     expect(subject1).toHaveProperty('semesterId', semester1.id);
+    expect(subject1).toHaveProperty('slug', 'sieci-komputerowe');
 
     expect(await Subject.fetch(subject1.id)).toStrictEqual(subject1);
     expect(await Subject.fetchAll()).toStrictEqual([subject1]);
     expect(await Subject.fetchAllFromSemester(semester1)).toStrictEqual([subject1]);
+    expect(await Subject.fetchBySlug(semester1, 'sieci-komputerowe')).toStrictEqual(subject1);
+    expect(await Subject.fetchBySlug(semester1, 'zarządzanie-bezpieczeństwem-sieci')).toStrictEqual(null);
+    expect(await Subject.fetchBySlug(semester2, 'sieci-komputerowe')).toStrictEqual(null);
 
     const subject2 = await Subject.create({
         name: 'Zarządzanie bezpieczeństwem sieci',
@@ -39,12 +43,17 @@ test('Subjects', async () => {
 
     expect(subject2).toHaveProperty('name', 'Zarządzanie bezpieczeństwem sieci');
     expect(subject2).toHaveProperty('semesterId', semester2.id);
+    expect(subject2).toHaveProperty('slug', 'zarządzanie-bezpieczeństwem-sieci');
 
     expect(await Subject.fetch(subject2.id)).toStrictEqual(subject2);
     expect(await Subject.fetch(subject1.id)).toStrictEqual(subject1);
     expect(await Subject.fetchAll()).toStrictEqual([subject1, subject2]);
     expect(await Subject.fetchAllFromSemester(semester1)).toStrictEqual([subject1]);
     expect(await Subject.fetchAllFromSemester(semester2)).toStrictEqual([subject2]);
+    expect(await Subject.fetchBySlug(semester1, 'sieci-komputerowe')).toStrictEqual(subject1);
+    expect(await Subject.fetchBySlug(semester1, 'zarządzanie-bezpieczeństwem-sieci')).toStrictEqual(null);
+    expect(await Subject.fetchBySlug(semester2, 'sieci-komputerowe')).toStrictEqual(null);
+    expect(await Subject.fetchBySlug(semester2, 'zarządzanie-bezpieczeństwem-sieci')).toStrictEqual(subject2);
 
     await subject2.edit({
         name: 'Lokalne sieci bezprzewodowe',
@@ -53,13 +62,21 @@ test('Subjects', async () => {
 
     expect(subject2).toHaveProperty('name', 'Lokalne sieci bezprzewodowe');
     expect(subject2).toHaveProperty('semesterId', semester1.id);
+    expect(subject2).toHaveProperty('slug', 'lokalne-sieci-bezprzewodowe');
 
     expect(subject1).toHaveProperty('name', 'Sieci komputerowe');
     expect(subject1).toHaveProperty('semesterId', semester1.id);
+    expect(subject1).toHaveProperty('slug', 'sieci-komputerowe');
 
     expect(await Subject.fetch(subject2.id)).toStrictEqual(subject2);
     expect(await Subject.fetch(subject1.id)).toStrictEqual(subject1);
     expect(await Subject.fetchAll()).toStrictEqual([subject2, subject1]);
     expect(await Subject.fetchAllFromSemester(semester1)).toStrictEqual([subject2, subject1]);
     expect(await Subject.fetchAllFromSemester(semester2)).toStrictEqual([]);
+    expect(await Subject.fetchBySlug(semester1, '')).toStrictEqual(null);
+    expect(await Subject.fetchBySlug(semester1, 'sieci-komputerowe')).toStrictEqual(subject1);
+    expect(await Subject.fetchBySlug(semester1, 'zarządzanie-bezpieczeństwem-sieci')).toStrictEqual(null);
+    expect(await Subject.fetchBySlug(semester1, 'lokalne-sieci-bezprzewodowe')).toStrictEqual(subject2);
+    expect(await Subject.fetchBySlug(semester2, 'sieci-komputerowe')).toStrictEqual(null);
+    expect(await Subject.fetchBySlug(semester2, 'lokalne-sieci-bezprzewodowe')).toStrictEqual(null);
 });
