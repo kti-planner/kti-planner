@@ -1,5 +1,5 @@
 ---
-import { isSemesterType, Semester } from '@backend/semester';
+import { Semester } from '@backend/semester';
 import type { SemesterData } from '@components/semesters/types';
 import { formatDateLocalYyyyMmDd } from '@components/utils';
 import Layout from '@layouts/Layout.astro';
@@ -29,12 +29,7 @@ if (semesterSlug === undefined) {
     return new Response(null, { status: 404 });
 }
 
-const [type, year, ...rest] = semesterSlug.split('-');
-if (!isSemesterType(type) || year === undefined || rest.length > 0) {
-    return new Response(null, { status: 404 });
-}
-
-const semester = await Semester.fetchByYearAndType(parseInt(year), type);
+const semester = await Semester.fetchBySlug(semesterSlug);
 if (!semester) {
     return new Response(null, { status: 404 });
 }

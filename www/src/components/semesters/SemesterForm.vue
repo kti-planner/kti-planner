@@ -49,7 +49,7 @@ async function submit() {
         addingFailed.value = !addingSuccess;
 
         if (addingSuccess) {
-            window.location.assign(`/semesters/${type.value}-${year.value}/`);
+            window.location.assign(`/semesters/${year.value}-${type.value}/`);
         }
     } catch (error) {
         console.log(error);

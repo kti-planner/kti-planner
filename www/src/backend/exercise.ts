@@ -57,6 +57,17 @@ export class Exercise {
         return records.map(record => new Exercise(record));
     }
 
+    static async fetchByNumber(subject: Subject, number: number): Promise<Exercise | null> {
+        const data = (
+            await db.query<DbExercise>('SELECT * FROM exercises WHERE subject_id = $1 AND exercise_number = $2', [
+                subject.id,
+                number,
+            ])
+        ).rows[0];
+
+        return data ? new Exercise(data) : null;
+    }
+
     static async create(data: ExerciseCreateData): Promise<Exercise> {
         const result = (
             await db.query<DbExercise>(
