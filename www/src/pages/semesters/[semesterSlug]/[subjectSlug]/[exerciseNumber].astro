@@ -1,0 +1,74 @@
+---
+import { Exercise } from '@backend/exercise';
+import { Semester } from '@backend/semester';
+import { Subject } from '@backend/subject';
+import Layout from '@layouts/Layout.astro';
+
+const { semesterSlug, subjectSlug, exerciseNumber } = Astro.params;
+const { langId } = Astro.locals;
+
+const translations = {
+    'en': {
+        'Semesters': 'Semesters',
+        'Winter semester': 'Winter semester',
+        'Summer semester': 'Summer semester',
+    },
+    'pl': {
+        'Semesters': 'Semestry',
+        'Winter semester': 'Semestr zimowy',
+        'Summer semester': 'Semestr letni',
+    },
+};
+
+function translate(text: keyof (typeof translations)[LangId]): string {
+    return translations[langId][text];
+}
+
+if (semesterSlug === undefined || subjectSlug === undefined || exerciseNumber === undefined) {
+    return new Response(null, { status: 404 });
+}
+
+const semester = await Semester.fetchBySlug(semesterSlug);
+if (!semester) {
+    return new Response(null, { status: 404 });
+}
+const semesterName = `${semester.type === 'summer' ? translate('Summer semester') : translate('Winter semester')} ${semester.year}/${semester.year + 1}`;
+
+const subject = await Subject.fetchBySlug(semester, subjectSlug);
+if (!subject) {
+    return new Response(null, { status: 404 });
+}
+
+const exerciseNumberParsed = parseInt(exerciseNumber, 10);
+if (Number.isNaN(exerciseNumberParsed)) {
+    return new Response(null, { status: 404 });
+}
+
+const exercise = await Exercise.fetchByNumber(subject, exerciseNumberParsed);
+if (!exercise) {
+    return new Response(null, { status: 404 });
+}
+---
+
+<Layout
+    breadcrumbs={[
+        {
+            text: translate('Semesters'),
+            href: '/semesters/',
+        },
+        {
+            text: semesterName,
+            href: `/semesters/${semesterSlug}/`,
+        },
+        {
+            text: subject.name,
+            href: `/semesters/${semesterSlug}/${subjectSlug}/`,
+        },
+        {
+            text: exercise.name,
+            href: '#',
+        },
+    ]}
+>
+    <h1 class="text-center fs-5">{exercise.name}</h1>
+</Layout>

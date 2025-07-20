@@ -1,0 +1,83 @@
+---
+import { Exercise } from '@backend/exercise';
+import { Semester } from '@backend/semester';
+import { Subject } from '@backend/subject';
+import Layout from '@layouts/Layout.astro';
+
+const { semesterSlug, subjectSlug } = Astro.params;
+const { langId } = Astro.locals;
+
+const translations = {
+    'en': {
+        'Semesters': 'Semesters',
+        'Winter semester': 'Winter semester',
+        'Summer semester': 'Summer semester',
+    },
+    'pl': {
+        'Semesters': 'Semestry',
+        'Winter semester': 'Semestr zimowy',
+        'Summer semester': 'Semestr letni',
+    },
+};
+
+function translate(text: keyof (typeof translations)[LangId]): string {
+    return translations[langId][text];
+}
+
+if (semesterSlug === undefined || subjectSlug === undefined) {
+    return new Response(null, { status: 404 });
+}
+
+const semester = await Semester.fetchBySlug(semesterSlug);
+if (!semester) {
+    return new Response(null, { status: 404 });
+}
+const semesterName = `${semester.type === 'summer' ? translate('Summer semester') : translate('Winter semester')} ${semester.year}/${semester.year + 1}`;
+
+const subject = await Subject.fetchBySlug(semester, subjectSlug);
+if (!subject) {
+    return new Response(null, { status: 404 });
+}
+
+const exercises = await Exercise.fetchAllFromSubject(subject);
+---
+
+<Layout
+    breadcrumbs={[
+        {
+            text: translate('Semesters'),
+            href: '/semesters/',
+        },
+        {
+            text: semesterName,
+            href: `/semesters/${semesterSlug}/`,
+        },
+        {
+            text: subject.name,
+            href: '#',
+        },
+    ]}
+>
+    <h1 class="text-center fs-5">{subject.name}</h1>
+    <div class="exercises-list list-group mx-auto my-4">
+        {
+            exercises.map(
+                e =>
+                    (
+                        <a
+                            href={`/semesters/${semesterSlug}/${subjectSlug}/${e.exerciseNumber}/`}
+                            class="list-group-item list-group-item-action"
+                        >
+                            {e.name}
+                        </a>
+                    ) as unknown,
+            )
+        }
+    </div>
+</Layout>
+
+<style>
+    .exercises-list {
+        max-width: 600px;
+    }
+</style>
