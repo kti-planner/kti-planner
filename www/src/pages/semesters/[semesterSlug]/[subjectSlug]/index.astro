@@ -1,10 +1,10 @@
 ---
 import { Exercise } from '@backend/exercise';
-import { isSemesterType, Semester } from '@backend/semester';
+import { Semester } from '@backend/semester';
 import { Subject } from '@backend/subject';
 import Layout from '@layouts/Layout.astro';
 
-const { semesterSlug, subjectId } = Astro.params;
+const { semesterSlug, subjectSlug } = Astro.params;
 const { langId } = Astro.locals;
 
 const translations = {
@@ -24,22 +24,17 @@ function translate(text: keyof (typeof translations)[LangId]): string {
     return translations[langId][text];
 }
 
-if (semesterSlug === undefined || subjectId === undefined) {
+if (semesterSlug === undefined || subjectSlug === undefined) {
     return new Response(null, { status: 404 });
 }
 
-const [type, year, ...rest] = semesterSlug.split('-');
-if (!isSemesterType(type) || year === undefined || rest.length > 0) {
-    return new Response(null, { status: 404 });
-}
-
-const semester = await Semester.fetchByYearAndType(parseInt(year), type);
+const semester = await Semester.fetchBySlug(semesterSlug);
 if (!semester) {
     return new Response(null, { status: 404 });
 }
 const semesterName = `${semester.type === 'summer' ? translate('Summer semester') : translate('Winter semester')} ${semester.year}/${semester.year + 1}`;
 
-const subject = await Subject.fetch(subjectId);
+const subject = await Subject.fetchBySlug(semester, subjectSlug);
 if (!subject) {
     return new Response(null, { status: 404 });
 }
@@ -70,7 +65,7 @@ const exercises = await Exercise.fetchAllFromSubject(subject);
                 e =>
                     (
                         <a
-                            href={`/semesters/${semesterSlug}/${subjectId}/${e.id}/`}
+                            href={`/semesters/${semesterSlug}/${subjectSlug}/${e.exerciseNumber}/`}
                             class="list-group-item list-group-item-action"
                         >
                             {e.name}

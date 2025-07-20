@@ -69,7 +69,10 @@ const subjects = await Subject.fetchAllFromSemester(semester);
             subjects.map(
                 s =>
                     (
-                        <a href={`/semesters/${semesterSlug}/${s.id}/`} class="list-group-item list-group-item-action">
+                        <a
+                            href={`/semesters/${semesterSlug}/${s.slug}/`}
+                            class="list-group-item list-group-item-action"
+                        >
                             {s.name}
                         </a>
                     ) as unknown,
