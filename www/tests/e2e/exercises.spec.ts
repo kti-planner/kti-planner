@@ -2,8 +2,7 @@ import { expect } from 'playwright/test';
 import { test } from './fixtures';
 
 test('Can access exercises list', async ({ page }) => {
-    await page.goto('/semesters/summer-2024/');
-    await page.getByText('Lokalne sieci bezprzewodowe').click();
+    await page.goto('/semesters/2024-summer/lokalne-sieci-bezprzewodowe/');
 
     await expect(page.locator('body')).toContainText('Tryby pracy punktów dostępowych');
     await expect(page.locator('body')).toContainText('Wydajność sieci standardów IEEE 802.11');
@@ -16,8 +15,7 @@ test('Can access exercises list', async ({ page }) => {
 });
 
 test('Can access exercise page', async ({ page }) => {
-    await page.goto('/semesters/summer-2024/');
-    await page.getByText('Lokalne sieci bezprzewodowe').click();
+    await page.goto('/semesters/2024-summer/lokalne-sieci-bezprzewodowe/');
     await page.getByText('Tryby pracy punktów dostępowych').click();
 
     await expect(page.locator('.breadcrumb')).toContainText('Tryby pracy punktów dostępowych');
