@@ -37,7 +37,7 @@ VALUES
   ( '724ee79c-47e6-40d0-97fa-1a2b03085c95', 'Podstawowe mechanizmy zabezpieczeń sieci standardu 802.11', '60bd04c7-b83c-4b4d-8668-7bad4ea0a800', 3 ),
   ( '3a330675-94a8-44f8-8806-456cc3f4a0b7', 'Emulacja sieci bezprzewodowych', '60bd04c7-b83c-4b4d-8668-7bad4ea0a800', 4 ),
 
-  -- Zarządzanie bezpieczeństwem sieci
+  -- Zarządzanie bezpieczeństwem sieci 2024
   ( 'f2cde405-c91f-417e-be0c-34217ed694e2', 'VLAN 2', '3f58b671-5b38-43f8-bf0f-49d93048c52e', 1 ),
   ( '24adefb8-c2a4-4320-b64d-d9b9d2d59656', 'Firewall', '3f58b671-5b38-43f8-bf0f-49d93048c52e', 2 ),
   ( '686b3992-b468-42b5-bf78-c6247d96e910', 'Skanowanie sieci', '3f58b671-5b38-43f8-bf0f-49d93048c52e', 3 ),
@@ -49,7 +49,7 @@ VALUES
   ( 'eda8f76f-414a-4abb-b2f1-7a97b49cbe53', 'IPv6', 'cfaa8255-992f-405e-9064-dd8baf9dfde3', 3 ),
   ( 'da10e215-beb9-41f6-9895-0a6b83ab9a79', 'IPv6 cz. II', 'cfaa8255-992f-405e-9064-dd8baf9dfde3', 4 ),
 
-  -- Sieci komputerowe 2024
+  -- Sieci komputerowe 2023
   ( '79d83df1-1fc1-4cc5-afe6-6cc9e0387221', 'Diagnostyka sieci IPv4', '981c68ba-3f6a-459e-83af-f9fc578adc85', 1 ),
   ( '2a31cf55-f926-42e2-a985-50849bafe939', 'Zarządzanie sprzętem sieciowym', '981c68ba-3f6a-459e-83af-f9fc578adc85', 2 ),
   ( 'a263264d-1d2d-42de-939e-ee9553961b17', 'IPv6', '981c68ba-3f6a-459e-83af-f9fc578adc85', 3 ),
