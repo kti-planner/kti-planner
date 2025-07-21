@@ -2,10 +2,14 @@
 import { Exercise } from '@backend/exercise';
 import { Semester } from '@backend/semester';
 import { Subject } from '@backend/subject';
+import type { SemesterData } from '@components/semesters/types';
+import type { SubjectData } from '@components/subjects/types';
+import { formatDateLocalYyyyMmDd } from '@components/utils';
 import Layout from '@layouts/Layout.astro';
+import EditSubject from '@components/subjects/EditSubject.vue';
 
 const { semesterSlug, subjectSlug } = Astro.params;
-const { langId } = Astro.locals;
+const { langId, user } = Astro.locals;
 
 const translations = {
     'en': {
@@ -39,6 +43,20 @@ if (!subject) {
     return new Response(null, { status: 404 });
 }
 
+const semesterData: SemesterData = {
+    id: semester.id,
+    type: semester.type,
+    year: semester.year,
+    startDate: formatDateLocalYyyyMmDd(semester.startDate),
+    endDate: formatDateLocalYyyyMmDd(semester.endDate),
+};
+
+const subjectData: SubjectData = {
+    id: subject.id,
+    name: subject.name,
+    semesterId: subject.semesterId,
+};
+
 const exercises = await Exercise.fetchAllFromSubject(subject);
 ---
 
@@ -58,7 +76,10 @@ const exercises = await Exercise.fetchAllFromSubject(subject);
         },
     ]}
 >
-    <h1 class="text-center fs-5">{subject.name}</h1>
+    <h1 class="text-center fs-5">
+        {subject.name}
+        {user && <EditSubject client:only="vue" semester={semesterData} subject={subjectData} />}
+    </h1>
     <div class="exercises-list list-group mx-auto my-4">
         {
             exercises.map(
