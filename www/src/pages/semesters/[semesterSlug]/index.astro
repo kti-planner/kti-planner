@@ -5,6 +5,7 @@ import type { SemesterData } from '@components/semesters/types';
 import { formatDateLocalYyyyMmDd } from '@components/utils';
 import Layout from '@layouts/Layout.astro';
 import EditSemester from '@components/semesters/EditSemester.vue';
+import AddSubject from '@components/subjects/AddSubject.vue';
 
 const { semesterSlug } = Astro.params;
 const { langId, user } = Astro.locals;
@@ -41,6 +42,7 @@ const semesterData: SemesterData = {
     id: semester.id,
     type: semester.type,
     year: semester.year,
+    slug: semester.slug,
     startDate: formatDateLocalYyyyMmDd(semester.startDate),
     endDate: formatDateLocalYyyyMmDd(semester.endDate),
 };
@@ -63,6 +65,9 @@ const subjects = await Subject.fetchAllFromSemester(semester);
     </h1>
     <div class="text-center">
         {semester.startDate.toLocaleDateString('pl-PL')} - {semester.endDate.toLocaleDateString('pl-PL')}
+    </div>
+    <div class="my-2">
+        {user && <AddSubject client:only="vue" semester={semesterData} />}
     </div>
     <div class="subjects-list list-group mx-auto my-4">
         {
