@@ -111,8 +111,8 @@ test('Can edit subject and prevent duplicate subject', async ({ page }) => {
     await expect(page.getByRole('button', { name: 'Edit subject' })).toBeVisible();
     await page.getByRole('button', { name: 'Edit subject' }).click();
 
-    await expect(page.locator('#edit-subject-modal-summer-2024-lokalne-sieci-bezprzewodowe')).toBeVisible();
-    await expect(page.locator('#edit-subject-modal-summer-2024-lokalne-sieci-bezprzewodowe')).toContainText(
+    await expect(page.locator('#edit-subject-modal-2024-summer-lokalne-sieci-bezprzewodowe')).toBeVisible();
+    await expect(page.locator('#edit-subject-modal-2024-summer-lokalne-sieci-bezprzewodowe')).toContainText(
         'Edit subject Lokalne sieci bezprzewodowe',
     );
 
@@ -126,8 +126,8 @@ test('Can edit subject and prevent duplicate subject', async ({ page }) => {
     // Can not edit subject with data that match already existing subject
     await page.getByRole('button', { name: 'Edit subject' }).click();
 
-    await expect(page.locator('#edit-subject-modal-summer-2024-sieci-ethernet-i-ip')).toBeVisible();
-    await expect(page.locator('#edit-subject-modal-summer-2024-sieci-ethernet-i-ip')).toContainText(
+    await expect(page.locator('#edit-subject-modal-2024-summer-sieci-ethernet-i-ip')).toBeVisible();
+    await expect(page.locator('#edit-subject-modal-2024-summer-sieci-ethernet-i-ip')).toContainText(
         'Edit subject Sieci Ethernet i IP',
     );
 
@@ -135,7 +135,7 @@ test('Can edit subject and prevent duplicate subject', async ({ page }) => {
 
     await page.getByRole('button', { name: 'Save' }).click();
 
-    await expect(page.locator('#edit-subject-modal-summer-2024-sieci-ethernet-i-ip').locator('form')).toContainText(
+    await expect(page.locator('#edit-subject-modal-2024-summer-sieci-ethernet-i-ip').locator('form')).toContainText(
         'Subject with this name already exists.',
     );
 
