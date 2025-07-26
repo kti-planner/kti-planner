@@ -45,7 +45,7 @@ async function submit() {
         addingFailed.value = !addingSuccess;
 
         if (addingSuccess) {
-            const newUrl = `/semesters/${props.semester.year}-${props.semester.type}/${toHyphenatedLowercase(subjectName.value ?? '')}/`;
+            const newUrl = `/semesters/${props.semester.slug}/${toHyphenatedLowercase(subjectName.value ?? '')}/`;
 
             if (isEditing.value) {
                 window.history.replaceState({}, '', newUrl);

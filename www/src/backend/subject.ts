@@ -1,6 +1,7 @@
 import assert from 'node:assert';
 import { db } from '@backend/db';
 import { Semester } from '@backend/semester';
+import { toHyphenatedLowercase } from '@components/utils';
 
 interface DbSubject {
     id: string;
@@ -18,10 +19,6 @@ export interface SubjectEditData {
     semester?: Semester | undefined;
 }
 
-function makeSlug(name: string) {
-    return name.toLocaleLowerCase().replaceAll(/\s+/g, '-');
-}
-
 export class Subject {
     id: string;
     name: string;
@@ -34,7 +31,7 @@ export class Subject {
     }
 
     get slug(): string {
-        return makeSlug(this.name);
+        return toHyphenatedLowercase(this.name);
     }
 
     static async fetch(id: string): Promise<Subject | null> {
@@ -64,7 +61,7 @@ export class Subject {
     }
 
     static async create(data: SubjectCreateData): Promise<Subject> {
-        if (await Subject.fetchBySlug(data.semester, makeSlug(data.name))) {
+        if (await Subject.fetchBySlug(data.semester, toHyphenatedLowercase(data.name))) {
             throw new Error('Subject with this slug already exists');
         }
 
