@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { useId } from 'vue';
 import { langId } from '@components/frontend/lang';
 import type { SemesterData } from '@components/semesters/types';
 import type { SubjectData } from '@components/subjects/types';
@@ -7,7 +6,7 @@ import IconButton from '@components/IconButton.vue';
 import Modal from '@components/Modal.vue';
 import SubjectFrom from '@components/subjects/SubjectFrom.vue';
 
-defineProps<{
+const props = defineProps<{
     semester: SemesterData;
     subject: SubjectData;
 }>();
@@ -24,7 +23,7 @@ const translations = {
 function translate(text: keyof (typeof translations)['en']): string {
     return translations[langId][text];
 }
-const modalId = useId();
+const modalId = `edit-subject-modal-${props.semester.slug}-${props.subject.slug}`;
 </script>
 
 <template>
