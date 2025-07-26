@@ -22,7 +22,7 @@ function translate(text: keyof (typeof translations)['en']): string {
     return translations[langId][text];
 }
 
-const modalId = `edit-semester-modal-${props.slug}`;
+const modalId = `edit-semester-modal-${props.semester.slug}`;
 </script>
 
 <template>
