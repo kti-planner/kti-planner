@@ -20,9 +20,10 @@ const translations = {
     },
 };
 
-function translate(text: keyof (typeof translations)['en']): string {
+function translate(text: keyof (typeof translations)[LangId]): string {
     return translations[langId][text];
 }
+
 const modalId = `edit-subject-modal-${props.semester.slug}-${props.subject.slug}`;
 </script>
 

@@ -20,19 +20,18 @@ const secondUser: UserCreateTestData = {
     password: 'pass2',
 };
 
-function expectUser(user: User | null | undefined, check: UserCreateData) {
-    expect(user).toHaveProperty('name', check.name);
-    expect(user).toHaveProperty('email', check.email);
-}
-
 test('Can create users', async () => {
     const user = await User.create(exampleUser);
     exampleUser.id = user.id;
-    expectUser(user, exampleUser);
+
+    expect(user).toHaveProperty('name', exampleUser.name);
+    expect(user).toHaveProperty('email', exampleUser.email);
 
     const user2 = await User.create(secondUser);
     secondUser.id = user2.id;
-    expectUser(user2, secondUser);
+
+    expect(user2).toHaveProperty('name', secondUser.name);
+    expect(user2).toHaveProperty('email', secondUser.email);
 });
 
 test('Cannot create duplicate users', async () => {
@@ -41,12 +40,16 @@ test('Cannot create duplicate users', async () => {
 
 test('Can fetch by id', async () => {
     const user = await User.fetch(exampleUser.id);
-    expectUser(user, exampleUser);
+
+    expect(user).toHaveProperty('name', exampleUser.name);
+    expect(user).toHaveProperty('email', exampleUser.email);
 });
 
 test('Can fetch by email', async () => {
     const user = await User.fetchByEmail(exampleUser.email);
-    expectUser(user, exampleUser);
+
+    expect(user).toHaveProperty('name', exampleUser.name);
+    expect(user).toHaveProperty('email', exampleUser.email);
 });
 
 test('Cannot fetch nonexistant', async () => {
@@ -61,10 +64,14 @@ test('Can fetch multiple', async () => {
     const users = await User.fetchAll();
 
     const user1 = users.find(u => u.id === exampleUser.id);
-    expectUser(user1, exampleUser);
+
+    expect(user1).toHaveProperty('name', exampleUser.name);
+    expect(user1).toHaveProperty('email', exampleUser.email);
 
     const user2 = users.find(u => u.id === secondUser.id);
-    expectUser(user2, secondUser);
+
+    expect(user2).toHaveProperty('name', secondUser.name);
+    expect(user2).toHaveProperty('email', secondUser.email);
 });
 
 test('Can edit', async () => {

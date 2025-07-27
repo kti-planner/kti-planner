@@ -1,4 +1,4 @@
-import express from 'express';
+import type express from 'express';
 import onHeaders from 'on-headers';
 
 let nextRequestId = 0;

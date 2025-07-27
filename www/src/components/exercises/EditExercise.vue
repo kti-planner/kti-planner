@@ -1,20 +1,24 @@
 <script setup lang="ts">
 import { langId } from '@components/frontend/lang';
+import type { ExerciseData } from '@components/exercises/types';
 import type { SemesterData } from '@components/semesters/types';
+import type { SubjectData } from '@components/subjects/types';
+import ExerciseForm from '@components/exercises/ExerciseForm.vue';
 import IconButton from '@components/IconButton.vue';
 import Modal from '@components/Modal.vue';
-import SemesterForm from '@components/semesters/SemesterForm.vue';
 
 const props = defineProps<{
     semester: SemesterData;
+    subject: SubjectData;
+    exercise: ExerciseData;
 }>();
 
 const translations = {
     'en': {
-        'Edit semester': 'Edit semester',
+        'Edit exercise': 'Edit exercise',
     },
     'pl': {
-        'Edit semester': 'Edytuj semestr',
+        'Edit exercise': 'Edytuj ćwiczenie',
     },
 };
 
@@ -22,14 +26,14 @@ function translate(text: keyof (typeof translations)[LangId]): string {
     return translations[langId][text];
 }
 
-const modalId = `edit-semester-modal-${props.semester.slug}`;
+const modalId = `edit-exercise-modal-${props.semester.slug}-${props.subject.slug}-${props.exercise.exerciseNumber}`;
 </script>
 
 <template>
     <IconButton
         icon="pencil"
         position="absolute"
-        aria-label="Edit semester"
+        aria-label="Edit exercise"
         class="ms-1"
         style="margin-top: -0.25rem"
         data-bs-toggle="modal"
@@ -37,7 +41,7 @@ const modalId = `edit-semester-modal-${props.semester.slug}`;
     />
 
     <Modal :id="modalId">
-        <template #header>{{ translate('Edit semester') }} {{ semester.year }}/{{ semester.year + 1 }}</template>
-        <SemesterForm :semester="semester" />
+        <template #header>{{ translate('Edit exercise') }} {{ exercise.name }}</template>
+        <ExerciseForm :semester="semester" :subject="subject" :exercise="exercise" />
     </Modal>
 </template>

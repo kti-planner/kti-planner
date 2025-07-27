@@ -46,8 +46,8 @@ onBeforeUnmount(() => {
     <Teleport to="body">
         <div
             ref="el"
-            class="modal fade"
             :id="id"
+            class="modal fade"
             :data-bs-backdrop="staticBackdrop ? 'static' : true"
             tabindex="-1"
             :aria-labelledby="`${id}-label`"
@@ -71,7 +71,7 @@ onBeforeUnmount(() => {
             >
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5" :id="`${id}-label`">
+                        <h1 :id="`${id}-label`" class="modal-title fs-5">
                             <slot name="header"></slot>
                         </h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>

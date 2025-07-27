@@ -56,18 +56,18 @@ function translate(text: keyof (typeof translations)[LangId]): string {
 </script>
 
 <template>
-    <form @submit.prevent="submit" class="vstack gap-3 mx-auto" style="max-width: 500px">
+    <form class="vstack gap-3 mx-auto" style="max-width: 500px" @submit.prevent="submit">
         <div>
             <label for="email" class="form-label">Email</label>
-            <input v-model="email" type="email" id="email" class="form-control" placeholder="Email" required />
+            <input id="email" v-model="email" type="email" class="form-control" placeholder="Email" required />
         </div>
 
         <div>
             <label for="password" class="form-label">{{ 'Password' }}</label>
             <input
+                id="password"
                 v-model="password"
                 type="password"
-                id="password"
                 class="form-control"
                 :placeholder="translate('Password')"
                 required

@@ -1,38 +1,42 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import { langId } from '@components/frontend/lang';
+import type { ExerciseData } from '@components/exercises/types';
 import type { SemesterData } from '@components/semesters/types';
 import type { SubjectData } from '@components/subjects/types';
-import { toHyphenatedLowercase } from '@components/utils';
 
 const props = defineProps<{
     semester: SemesterData;
-    subject?: SubjectData;
+    subject: SubjectData;
+    exercise?: ExerciseData;
 }>();
 
-const isEditing = computed(() => props.subject !== undefined);
+const isEditing = computed(() => props.exercise !== undefined);
 
 const addingFailed = ref(false);
 
-const subjectName = ref<string | undefined>(props.subject?.name);
+const exerciseName = ref<string | undefined>(props.exercise?.name);
+const exerciseNumber = ref<number | undefined>(props.exercise?.exerciseNumber);
 
 async function submit() {
     try {
         const result = !isEditing.value
-            ? await fetch('/semesters/api/subjects/', {
+            ? await fetch('/semesters/api/exercises/', {
                   method: 'POST',
                   headers: { 'Content-Type': 'application/json' },
                   body: JSON.stringify({
-                      name: subjectName.value,
-                      semesterId: props.semester.id,
+                      name: exerciseName.value,
+                      exerciseNumber: exerciseNumber.value,
+                      subjectId: props.subject.id,
                   }),
               })
-            : await fetch('/semesters/api/subjects/', {
+            : await fetch('/semesters/api/exercises/', {
                   method: 'PATCH',
                   headers: { 'Content-Type': 'application/json' },
                   body: JSON.stringify({
-                      id: props.subject?.id,
-                      name: subjectName.value,
+                      id: props.exercise?.id,
+                      name: exerciseName.value,
+                      exerciseNumber: exerciseNumber.value,
                   }),
               });
 
@@ -45,7 +49,7 @@ async function submit() {
         addingFailed.value = !addingSuccess;
 
         if (addingSuccess) {
-            const newUrl = `/semesters/${props.semester.slug}/${toHyphenatedLowercase(subjectName.value ?? '')}/`;
+            const newUrl = `/semesters/${props.semester.slug}/${props.subject.slug}/${exerciseNumber.value}/`;
 
             if (isEditing.value) {
                 window.history.replaceState({}, '', newUrl);
@@ -61,16 +65,18 @@ async function submit() {
 
 const translations = {
     'en': {
-        'Subject name': 'Subject name',
+        'Exercise name': 'Exercise name',
+        'Exercise number': 'Exercise number',
         'Save': 'Save',
         'Add': 'Add',
-        'Subject with this name already exists.': 'Subject with this name already exists.',
+        'Exercise with this name or number already exists.': 'Exercise with this name or number already exists.',
     },
     'pl': {
-        'Subject name': 'Nazwa przedmiotu',
+        'Exercise name': 'Nazwa ćwiczenia',
+        'Exercise number': 'Numer ćwiczenia',
         'Save': 'Zapisz',
         'Add': 'Dodaj',
-        'Subject with this name already exists.': 'Przedmiot o podanej nazwie już isnieje.',
+        'Exercise with this name or number already exists.': 'Ćwiczenie o podanej nazwie lub numerze już isnieje.',
     },
 };
 
@@ -82,8 +88,13 @@ function translate(text: keyof (typeof translations)[LangId]): string {
 <template>
     <form class="vstack gap-3 mx-auto" style="max-width: 500px" @submit.prevent="submit">
         <div>
-            <label for="subjectName" class="form-label">{{ translate('Subject name') }}</label>
-            <input id="subjectName" v-model="subjectName" type="text" class="form-control" required />
+            <label for="exerciseName" class="form-label">{{ translate('Exercise name') }}</label>
+            <input id="exerciseName" v-model="exerciseName" type="text" class="form-control" required />
+        </div>
+
+        <div>
+            <label for="exerciseNumber" class="form-label">{{ translate('Exercise number') }}</label>
+            <input id="exerciseNumber" v-model="exerciseNumber" type="number" class="form-control" required />
         </div>
 
         <div class="text-center">
@@ -91,7 +102,7 @@ function translate(text: keyof (typeof translations)[LangId]): string {
         </div>
 
         <div v-if="addingFailed" class="text-center text-danger">
-            {{ translate('Subject with this name already exists.') }}
+            {{ translate('Exercise with this name or number already exists.') }}
         </div>
     </form>
 </template>

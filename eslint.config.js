@@ -1,6 +1,8 @@
 // @ts-check
 
 import eslint from '@eslint/js';
+import stylistic from '@stylistic/eslint-plugin';
+import vitest from '@vitest/eslint-plugin';
 import eslintPluginAstro from 'eslint-plugin-astro';
 import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
 import eslintPluginSimpleImportSort from 'eslint-plugin-simple-import-sort';
@@ -9,13 +11,14 @@ import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
     eslint.configs.recommended,
-    ...tseslint.configs.recommendedTypeChecked,
+    ...tseslint.configs.strictTypeChecked,
     ...tseslint.configs.stylisticTypeChecked,
     ...eslintPluginAstro.configs.recommended,
     ...eslintPluginVue.configs['flat/recommended'],
     {
         plugins: {
             'simple-import-sort': eslintPluginSimpleImportSort,
+            '@stylistic': stylistic,
         },
     },
     eslintPluginPrettierRecommended,
@@ -24,8 +27,13 @@ export default tseslint.config(
         languageOptions: {
             parserOptions: {
                 project: true,
+                tsconfigRootDir: import.meta.dirname,
             },
         },
+    },
+    {
+        files: ['www/tests/unit/**/*.ts'],
+        ...vitest.configs.recommended,
     },
     {
         files: ['**/*.vue'],
@@ -89,25 +97,28 @@ export default tseslint.config(
 
             // Typescript
             'no-undef': 'off',
+            '@typescript-eslint/class-literal-property-style': 'off',
+            '@typescript-eslint/consistent-indexed-object-style': 'off',
+            '@typescript-eslint/consistent-type-definitions': 'off',
+            '@typescript-eslint/consistent-type-imports': [
+                'error',
+                {
+                    'disallowTypeAnnotations': false,
+                    'fixStyle': 'inline-type-imports',
+                },
+            ],
+            '@typescript-eslint/dot-notation': 'off',
+            '@typescript-eslint/no-empty-function': 'off',
+            '@typescript-eslint/no-explicit-any': 'off',
+            '@typescript-eslint/no-extraneous-class': 'off',
+            '@typescript-eslint/no-import-type-side-effects': 'error',
+            '@typescript-eslint/no-non-null-assertion': 'off',
             '@typescript-eslint/no-unused-vars': [
                 'error',
                 {
                     'args': 'none',
                     'destructuredArrayIgnorePattern': '.',
-                },
-            ],
-            '@typescript-eslint/no-unused-expressions': 'error',
-            '@typescript-eslint/strict-boolean-expressions': 'error',
-            '@typescript-eslint/no-confusing-void-expression': [
-                'error',
-                {
-                    'ignoreArrowShorthand': true,
-                },
-            ],
-            '@typescript-eslint/no-invalid-void-type': [
-                'error',
-                {
-                    'allowAsThisParameter': true,
+                    'ignoreRestSiblings': true,
                 },
             ],
             '@typescript-eslint/restrict-template-expressions': [
@@ -122,59 +133,28 @@ export default tseslint.config(
                     'allowRegExp': true,
                 },
             ],
-            '@typescript-eslint/no-import-type-side-effects': 'error',
-            '@typescript-eslint/no-explicit-any': 'off',
-            '@typescript-eslint/no-non-null-assertion': 'off',
-            '@typescript-eslint/no-useless-constructor': 'off',
-            '@typescript-eslint/consistent-type-definitions': 'off',
-            '@typescript-eslint/dot-notation': 'off',
-            '@typescript-eslint/no-empty-function': 'off',
-            '@typescript-eslint/class-literal-property-style': 'off',
-            '@typescript-eslint/consistent-indexed-object-style': 'off',
+            '@typescript-eslint/return-await': ['error', 'always'],
+            '@typescript-eslint/strict-boolean-expressions': 'error',
 
             // Vue
-            'vue/html-self-closing': [
-                'error',
-                {
-                    'html': {
-                        'void': 'any',
-                        'normal': 'any',
-                        'component': 'always',
-                    },
-                    'svg': 'always',
-                    'math': 'always',
-                },
-            ],
             'vue/attributes-order': [
                 'error',
                 {
                     'order': [
                         'DEFINITION',
-                        'SLOT',
                         'CONDITIONALS',
                         'LIST_RENDERING',
                         'RENDER_MODIFIERS',
-                        ['UNIQUE', 'TWO_WAY_BINDING', 'OTHER_DIRECTIVES', 'GLOBAL', 'OTHER_ATTR', 'EVENTS'],
+                        'UNIQUE',
+                        'SLOT',
+                        'GLOBAL',
+                        'TWO_WAY_BINDING',
+                        'OTHER_DIRECTIVES',
+                        'OTHER_ATTR',
+                        'EVENTS',
                         'CONTENT',
                     ],
                     'alphabetical': false,
-                },
-            ],
-            'vue/order-in-components': [
-                'error',
-                {
-                    'order': [
-                        'props',
-                        'emits',
-                        'expose',
-                        'directives',
-                        'components',
-                        'data',
-                        'watch',
-                        'methods',
-                        'computed',
-                        'LIFECYCLE_HOOKS',
-                    ],
                 },
             ],
             'vue/block-lang': [
@@ -202,27 +182,75 @@ export default tseslint.config(
                     'allow': ['scoped'],
                 },
             ],
+            'vue/first-attribute-linebreak': 'off',
             'vue/html-button-has-type': 'error',
+            'vue/html-self-closing': [
+                'error',
+                {
+                    'html': {
+                        'void': 'any',
+                        'normal': 'any',
+                        'component': 'always',
+                    },
+                    'svg': 'always',
+                    'math': 'always',
+                },
+            ],
             'vue/match-component-import-name': 'error',
+            'vue/multi-word-component-names': 'off',
             'vue/no-empty-component-block': 'error',
             'vue/no-multiple-objects-in-class': 'error',
             'vue/no-undef-components': 'error',
             'vue/no-unused-emit-declarations': 'error',
             'vue/no-unused-refs': 'error',
             'vue/no-useless-v-bind': 'error',
+            'vue/order-in-components': [
+                'error',
+                {
+                    'order': [
+                        'props',
+                        'emits',
+                        'expose',
+                        'directives',
+                        'components',
+                        'data',
+                        'watch',
+                        'methods',
+                        'computed',
+                        'LIFECYCLE_HOOKS',
+                    ],
+                },
+            ],
             'vue/padding-line-between-blocks': 'error',
             'vue/prefer-define-options': 'error',
+            'vue/require-default-prop': 'off',
             'vue/require-macro-variable-name': 'error',
             'vue/require-typed-ref': 'error',
             'vue/v-for-delimiter-style': 'error',
             'vue/valid-define-options': 'error',
-            'vue/html-closing-bracket-newline': 'off',
-            'vue/singleline-html-element-content-newline': 'off',
-            'vue/multiline-html-element-content-newline': 'off',
-            'vue/max-attributes-per-line': 'off',
-            'vue/first-attribute-linebreak': 'off',
-            'vue/require-default-prop': 'off',
-            'vue/multi-word-component-names': 'off',
+
+            // Stylistic
+            '@stylistic/padding-line-between-statements': [
+                'error',
+                { 'blankLine': 'always', 'prev': 'import', 'next': '*' },
+                { 'blankLine': 'any', 'prev': 'import', 'next': 'import' },
+
+                { 'blankLine': 'always', 'prev': 'block-like', 'next': '*' },
+
+                { 'blankLine': 'always', 'prev': 'multiline-const', 'next': '*' },
+                { 'blankLine': 'always', 'prev': 'multiline-export', 'next': '*' },
+                { 'blankLine': 'always', 'prev': 'multiline-expression', 'next': '*' },
+                { 'blankLine': 'always', 'prev': 'multiline-let', 'next': '*' },
+                { 'blankLine': 'always', 'prev': 'multiline-using', 'next': '*' },
+                { 'blankLine': 'always', 'prev': 'multiline-var', 'next': '*' },
+
+                { 'blankLine': 'always', 'prev': '*', 'next': 'multiline-const' },
+                { 'blankLine': 'always', 'prev': '*', 'next': 'multiline-export' },
+                { 'blankLine': 'always', 'prev': '*', 'next': 'multiline-expression' },
+                { 'blankLine': 'always', 'prev': '*', 'next': 'multiline-let' },
+                { 'blankLine': 'always', 'prev': '*', 'next': 'multiline-using' },
+                { 'blankLine': 'always', 'prev': '*', 'next': 'multiline-var' },
+            ],
         },
     },
     {

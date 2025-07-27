@@ -5,18 +5,12 @@ import { Semester } from '@backend/semester';
 const schema = z.object({
     year: z.number(),
     type: z.enum(['summer', 'winter']),
-    startDate: z
-        .string()
-        .date()
-        .transform(str => {
-            return new Date(`${str}T00:00:00`);
-        }),
-    endDate: z
-        .string()
-        .date()
-        .transform(str => {
-            return new Date(`${str}T00:00:00`);
-        }),
+    startDate: z.iso.date().transform(str => {
+        return new Date(`${str}T00:00:00`);
+    }),
+    endDate: z.iso.date().transform(str => {
+        return new Date(`${str}T00:00:00`);
+    }),
 });
 
 export const POST: APIRoute = async ({ locals }) => {
@@ -42,18 +36,16 @@ export const POST: APIRoute = async ({ locals }) => {
 };
 
 const schemaEdit = z.object({
-    id: z.string().uuid(),
+    id: z.uuid(),
     year: z.number().optional(),
     type: z.enum(['summer', 'winter']).optional(),
-    startDate: z
-        .string()
+    startDate: z.iso
         .date()
         .transform(str => {
             return new Date(`${str}T00:00:00`);
         })
         .optional(),
-    endDate: z
-        .string()
+    endDate: z.iso
         .date()
         .transform(str => {
             return new Date(`${str}T00:00:00`);
