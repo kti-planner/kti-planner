@@ -17,7 +17,6 @@ export interface ExerciseCreateData {
 
 export interface ExerciseEditData {
     name?: string | undefined;
-    subject?: Subject | undefined;
     exerciseNumber?: number | undefined;
 }
 
@@ -84,10 +83,6 @@ export class Exercise {
     async edit(data: ExerciseEditData): Promise<void> {
         if (data.name !== undefined) {
             this.name = data.name;
-        }
-
-        if (data.subject !== undefined) {
-            this.subjectId = data.subject.id;
         }
 
         if (data.exerciseNumber !== undefined) {
