@@ -6,6 +6,7 @@ import type { SemesterData } from '@components/semesters/types';
 import type { SubjectData } from '@components/subjects/types';
 import { formatDateLocalYyyyMmDd } from '@components/utils';
 import Layout from '@layouts/Layout.astro';
+import AddExercise from '@components/exercises/AddExercise.vue';
 import EditSubject from '@components/subjects/EditSubject.vue';
 
 const { semesterSlug, subjectSlug } = Astro.params;
@@ -82,6 +83,9 @@ const exercises = await Exercise.fetchAllFromSubject(subject);
         {subject.name}
         {user && <EditSubject client:only="vue" semester={semesterData} subject={subjectData} />}
     </h1>
+    <div class="my-2">
+        {user && <AddExercise client:only="vue" semester={semesterData} subject={subjectData} />}
+    </div>
     <div class="exercises-list list-group mx-auto my-4">
         {
             exercises.map(

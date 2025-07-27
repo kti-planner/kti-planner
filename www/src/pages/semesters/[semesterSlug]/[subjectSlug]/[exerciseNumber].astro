@@ -2,10 +2,15 @@
 import { Exercise } from '@backend/exercise';
 import { Semester } from '@backend/semester';
 import { Subject } from '@backend/subject';
+import type { ExerciseData } from '@components/exercises/types';
+import type { SemesterData } from '@components/semesters/types';
+import type { SubjectData } from '@components/subjects/types';
+import { formatDateLocalYyyyMmDd } from '@components/utils';
 import Layout from '@layouts/Layout.astro';
+import EditExercise from '@components/exercises/EditExercise.vue';
 
 const { semesterSlug, subjectSlug, exerciseNumber } = Astro.params;
-const { langId } = Astro.locals;
+const { langId, user } = Astro.locals;
 
 const translations = {
     'en': {
@@ -48,6 +53,29 @@ const exercise = await Exercise.fetchByNumber(subject, exerciseNumberParsed);
 if (!exercise) {
     return new Response(null, { status: 404 });
 }
+
+const semesterData: SemesterData = {
+    id: semester.id,
+    type: semester.type,
+    year: semester.year,
+    slug: semester.slug,
+    startDate: formatDateLocalYyyyMmDd(semester.startDate),
+    endDate: formatDateLocalYyyyMmDd(semester.endDate),
+};
+
+const subjectData: SubjectData = {
+    id: subject.id,
+    name: subject.name,
+    semesterId: subject.semesterId,
+    slug: subject.slug,
+};
+
+const exerciseData: ExerciseData = {
+    id: exercise.id,
+    name: exercise.name,
+    exerciseNumber: exercise.exerciseNumber,
+    subjectId: exercise.subjectId,
+};
 ---
 
 <Layout
@@ -70,5 +98,12 @@ if (!exercise) {
         },
     ]}
 >
-    <h1 class="text-center fs-5">{exercise.name}</h1>
+    <h1 class="text-center fs-5">
+        {exercise.name}
+        {
+            user && (
+                <EditExercise client:only="vue" semester={semesterData} subject={subjectData} exercise={exerciseData} />
+            )
+        }
+    </h1>
 </Layout>

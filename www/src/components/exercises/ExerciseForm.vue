@@ -1,0 +1,108 @@
+<script setup lang="ts">
+import { computed, ref } from 'vue';
+import { langId } from '@components/frontend/lang';
+import type { ExerciseData } from '@components/exercises/types';
+import type { SemesterData } from '@components/semesters/types';
+import type { SubjectData } from '@components/subjects/types';
+
+const props = defineProps<{
+    semester: SemesterData;
+    subject: SubjectData;
+    exercise?: ExerciseData;
+}>();
+
+const isEditing = computed(() => props.exercise !== undefined);
+
+const addingFailed = ref(false);
+
+const exerciseName = ref<string | undefined>(props.exercise?.name);
+const exerciseNumber = ref<number | undefined>(props.exercise?.exerciseNumber);
+
+async function submit() {
+    try {
+        const result = !isEditing.value
+            ? await fetch('/semesters/api/exercises/', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                      name: exerciseName.value,
+                      exerciseNumber: exerciseNumber.value,
+                      subjectId: props.subject.id,
+                  }),
+              })
+            : await fetch('/semesters/api/exercises/', {
+                  method: 'PATCH',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                      id: props.exercise?.id,
+                      name: exerciseName.value,
+                      exerciseNumber: exerciseNumber.value,
+                  }),
+              });
+
+        if (!result.ok) {
+            console.error('API request failed!');
+            return;
+        }
+
+        const addingSuccess = (await result.json()) as boolean;
+        addingFailed.value = !addingSuccess;
+
+        if (addingSuccess) {
+            const newUrl = `/semesters/${props.semester.slug}/${props.subject.slug}/${exerciseNumber.value}/`;
+
+            if (isEditing.value) {
+                window.history.replaceState({}, '', newUrl);
+                window.location.reload();
+            } else {
+                window.location.assign(newUrl);
+            }
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+const translations = {
+    'en': {
+        'Exercise name': 'Exercise name',
+        'Exercise number': 'Exercise number',
+        'Save': 'Save',
+        'Add': 'Add',
+        'Exercise with this name or number already exists.': 'Exercise with this name or number already exists.',
+    },
+    'pl': {
+        'Exercise name': 'Nazwa ćwiczenia',
+        'Exercise number': 'Numer ćwiczenia',
+        'Save': 'Zapisz',
+        'Add': 'Dodaj',
+        'Exercise with this name or number already exists.': 'Ćwiczenie o podanej nazwie lub numerze już isnieje.',
+    },
+};
+
+function translate(text: keyof (typeof translations)[LangId]): string {
+    return translations[langId][text];
+}
+</script>
+
+<template>
+    <form @submit.prevent="submit" class="vstack gap-3 mx-auto" style="max-width: 500px">
+        <div>
+            <label for="exerciseName" class="form-label">{{ translate('Exercise name') }}</label>
+            <input v-model="exerciseName" type="text" id="exerciseName" class="form-control" required />
+        </div>
+
+        <div>
+            <label for="exerciseNumber" class="form-label">{{ translate('Exercise number') }}</label>
+            <input v-model="exerciseNumber" type="number" id="exerciseNumber" class="form-control" required />
+        </div>
+
+        <div class="text-center">
+            <button type="submit" class="btn btn-success">{{ translate(isEditing ? 'Save' : 'Add') }}</button>
+        </div>
+
+        <div v-if="addingFailed" class="text-center text-danger">
+            {{ translate('Exercise with this name or number already exists.') }}
+        </div>
+    </form>
+</template>
