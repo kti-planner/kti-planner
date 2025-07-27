@@ -98,6 +98,7 @@ export class Semester {
         if (data.type !== undefined) {
             this.type = data.type;
         }
+
         if (data.startDate !== undefined) {
             this.startDate = data.startDate;
         }

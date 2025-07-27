@@ -86,15 +86,15 @@ function translate(text: keyof (typeof translations)[LangId]): string {
 </script>
 
 <template>
-    <form @submit.prevent="submit" class="vstack gap-3 mx-auto" style="max-width: 500px">
+    <form class="vstack gap-3 mx-auto" style="max-width: 500px" @submit.prevent="submit">
         <div>
             <label for="exerciseName" class="form-label">{{ translate('Exercise name') }}</label>
-            <input v-model="exerciseName" type="text" id="exerciseName" class="form-control" required />
+            <input id="exerciseName" v-model="exerciseName" type="text" class="form-control" required />
         </div>
 
         <div>
             <label for="exerciseNumber" class="form-label">{{ translate('Exercise number') }}</label>
-            <input v-model="exerciseNumber" type="number" id="exerciseNumber" class="form-control" required />
+            <input id="exerciseNumber" v-model="exerciseNumber" type="number" class="form-control" required />
         </div>
 
         <div class="text-center">

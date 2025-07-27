@@ -6,7 +6,7 @@ import { Subject } from '@backend/subject';
 const schema = z.object({
     name: z.string().trim().nonempty(),
     exerciseNumber: z.number(),
-    subjectId: z.string().uuid(),
+    subjectId: z.uuid(),
 });
 
 export const POST: APIRoute = async ({ locals }) => {
@@ -33,6 +33,7 @@ export const POST: APIRoute = async ({ locals }) => {
     if (subjectExercises.find(e => e.name.toLowerCase() === data.name.toLowerCase())) {
         return Response.json(false, { status: 200 });
     }
+
     if (subjectExercises.find(e => e.exerciseNumber === data.exerciseNumber)) {
         return Response.json(false, { status: 200 });
     }
@@ -43,7 +44,7 @@ export const POST: APIRoute = async ({ locals }) => {
 };
 
 const schemaEdit = z.object({
-    id: z.string().uuid(),
+    id: z.uuid(),
     name: z.string().optional(),
     exerciseNumber: z.number().optional(),
 });

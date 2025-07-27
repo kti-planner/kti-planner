@@ -87,10 +87,10 @@ function translate(text: keyof (typeof translations)[LangId]): string {
 </script>
 
 <template>
-    <form @submit.prevent="submit" class="vstack gap-3 mx-auto" style="max-width: 500px">
+    <form class="vstack gap-3 mx-auto" style="max-width: 500px" @submit.prevent="submit">
         <div>
             <label for="type" class="form-label">{{ translate('Semester type') }}</label>
-            <select v-model="type" id="type" class="form-select" required>
+            <select id="type" v-model="type" class="form-select" required>
                 <option value="winter">{{ translate('Winter semester') }}</option>
                 <option value="summer">{{ translate('Summer semester') }}</option>
             </select>
@@ -98,17 +98,17 @@ function translate(text: keyof (typeof translations)[LangId]): string {
 
         <div>
             <label for="year" class="form-label">{{ translate('Academic year') }}</label>
-            <input v-model="year" type="number" id="year" class="form-control" required />
+            <input id="year" v-model="year" type="number" class="form-control" required />
         </div>
 
         <div>
             <label for="startDate" class="form-label">{{ translate('Semester start date') }}</label>
-            <input v-model="startDate" type="date" id="startDate" class="form-control" required />
+            <input id="startDate" v-model="startDate" type="date" class="form-control" required />
         </div>
 
         <div>
             <label for="endDate" class="form-label">{{ translate('Semester end date') }}</label>
-            <input v-model="endDate" type="date" id="endDate" class="form-control" required />
+            <input id="endDate" v-model="endDate" type="date" class="form-control" required />
         </div>
 
         <div class="text-center">

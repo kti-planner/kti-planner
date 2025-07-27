@@ -5,7 +5,7 @@ import { Subject } from '@backend/subject';
 
 const schema = z.object({
     name: z.string().trim().nonempty(),
-    semesterId: z.string().uuid(),
+    semesterId: z.uuid(),
 });
 
 export const POST: APIRoute = async ({ locals }) => {
@@ -39,7 +39,7 @@ export const POST: APIRoute = async ({ locals }) => {
 };
 
 const schemaEdit = z.object({
-    id: z.string().uuid(),
+    id: z.uuid(),
     name: z.string().optional(),
 });
 

@@ -59,9 +59,11 @@ test('Exercises', async () => {
 
     expect(await Exercise.fetch(exercise2.id)).toStrictEqual(exercise2);
     expect(await Exercise.fetch(exercise1.id)).toStrictEqual(exercise1);
+
     expect(await Exercise.fetchAll()).toStrictEqual(
         [exercise1, exercise2].toSorted((a, b) => a.subjectId.localeCompare(b.subjectId)),
     );
+
     expect(await Exercise.fetchAllFromSubject(subject1)).toStrictEqual([exercise1]);
     expect(await Exercise.fetchAllFromSubject(subject2)).toStrictEqual([exercise2]);
     expect(await Exercise.fetchByNumber(subject1, 1)).toStrictEqual(exercise1);

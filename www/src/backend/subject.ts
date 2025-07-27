@@ -1,6 +1,6 @@
 import assert from 'node:assert';
 import { db } from '@backend/db';
-import { Semester } from '@backend/semester';
+import type { Semester } from '@backend/semester';
 import { toHyphenatedLowercase } from '@components/utils';
 
 interface DbSubject {
