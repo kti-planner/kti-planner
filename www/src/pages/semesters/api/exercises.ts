@@ -1,5 +1,6 @@
 import type { APIRoute } from 'astro';
 import { z } from 'zod';
+import { Classroom } from '@backend/classroom';
 import { Exercise } from '@backend/exercise';
 import { Subject } from '@backend/subject';
 
@@ -7,6 +8,7 @@ const schema = z.object({
     name: z.string().trim().nonempty(),
     exerciseNumber: z.number(),
     subjectId: z.uuid(),
+    classroomId: z.uuid(),
 });
 
 export const POST: APIRoute = async ({ locals }) => {
@@ -20,6 +22,12 @@ export const POST: APIRoute = async ({ locals }) => {
 
     if (!data) {
         return Response.json(null, { status: 400 });
+    }
+
+    const classroom = await Classroom.fetch(data.classroomId);
+
+    if (classroom === null) {
+        return Response.json(false, { status: 404 });
     }
 
     const subject = await Subject.fetch(data.subjectId);
@@ -38,7 +46,12 @@ export const POST: APIRoute = async ({ locals }) => {
         return Response.json(false, { status: 200 });
     }
 
-    await Exercise.create({ name: data.name, exerciseNumber: data.exerciseNumber, subject: subject });
+    await Exercise.create({
+        name: data.name,
+        exerciseNumber: data.exerciseNumber,
+        subject: subject,
+        classroom: classroom,
+    });
 
     return Response.json(true, { status: 201 });
 };
@@ -47,6 +60,7 @@ const schemaEdit = z.object({
     id: z.uuid(),
     name: z.string().optional(),
     exerciseNumber: z.number().optional(),
+    classroomId: z.uuid().optional(),
 });
 
 export const PATCH: APIRoute = async ({ locals }) => {
@@ -66,6 +80,12 @@ export const PATCH: APIRoute = async ({ locals }) => {
 
     if (exercise === null) {
         return Response.json(null, { status: 404 });
+    }
+
+    const classroom = data.classroomId === undefined ? undefined : await Classroom.fetch(data.classroomId);
+
+    if (classroom === null) {
+        return Response.json(false, { status: 404 });
     }
 
     const subject = await Subject.fetch(exercise.subjectId);
@@ -88,7 +108,11 @@ export const PATCH: APIRoute = async ({ locals }) => {
         return Response.json(false, { status: 200 });
     }
 
-    await exercise.edit(data);
+    await exercise.edit({
+        name: data.name,
+        exerciseNumber: data.exerciseNumber,
+        classroom: classroom,
+    });
 
     return Response.json(true, { status: 200 });
 };

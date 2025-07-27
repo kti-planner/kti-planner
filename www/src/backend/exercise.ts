@@ -1,4 +1,5 @@
 import assert from 'node:assert';
+import type { Classroom } from '@backend/classroom';
 import { db } from '@backend/db';
 import type { Subject } from '@backend/subject';
 
@@ -7,17 +8,20 @@ interface DbExercise {
     name: string;
     subject_id: string;
     exercise_number: number;
+    classroom_id: string;
 }
 
 export interface ExerciseCreateData {
     name: string;
     subject: Subject;
     exerciseNumber: number;
+    classroom: Classroom;
 }
 
 export interface ExerciseEditData {
     name?: string | undefined;
     exerciseNumber?: number | undefined;
+    classroom?: Classroom | undefined;
 }
 
 export class Exercise {
@@ -25,12 +29,14 @@ export class Exercise {
     name: string;
     subjectId: string;
     exerciseNumber: number;
+    classroomId: string;
 
     constructor(data: DbExercise) {
         this.id = data.id;
         this.name = data.name;
         this.subjectId = data.subject_id;
         this.exerciseNumber = data.exercise_number;
+        this.classroomId = data.classroom_id;
     }
 
     static async fetch(id: string): Promise<Exercise | null> {
@@ -70,8 +76,8 @@ export class Exercise {
     static async create(data: ExerciseCreateData): Promise<Exercise> {
         const result = (
             await db.query<DbExercise>(
-                'INSERT INTO exercises (id, name, subject_id, exercise_number) VALUES ($1, $2, $3, $4) RETURNING *',
-                [crypto.randomUUID(), data.name, data.subject.id, data.exerciseNumber],
+                'INSERT INTO exercises (id, name, subject_id, exercise_number, classroom_id) VALUES ($1, $2, $3, $4, $5) RETURNING *',
+                [crypto.randomUUID(), data.name, data.subject.id, data.exerciseNumber, data.classroom.id],
             )
         ).rows[0];
 
@@ -89,11 +95,13 @@ export class Exercise {
             this.exerciseNumber = data.exerciseNumber;
         }
 
-        await db.query('UPDATE exercises SET name = $2, subject_id = $3, exercise_number = $4 WHERE id = $1', [
-            this.id,
-            this.name,
-            this.subjectId,
-            this.exerciseNumber,
-        ]);
+        if (data.classroom !== undefined) {
+            this.classroomId = data.classroom.id;
+        }
+
+        await db.query(
+            'UPDATE exercises SET name = $2, subject_id = $3, exercise_number = $4, classroom_id = $5 WHERE id = $1',
+            [this.id, this.name, this.subjectId, this.exerciseNumber, this.classroomId],
+        );
     }
 }
