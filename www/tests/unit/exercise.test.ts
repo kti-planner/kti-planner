@@ -107,6 +107,12 @@ test('Exercises', async () => {
         classroom: classroom2,
     });
 
+    const exercise3 = await Exercise.create({
+        name: 'Firewall',
+        subject: subject1,
+        exerciseNumber: 2,
+    });
+
     expect(await Exercise.fetch(exercise2.id)).toStrictEqual(exercise2);
     expect(await Exercise.fetch(exercise1.id)).toStrictEqual(exercise1);
 
