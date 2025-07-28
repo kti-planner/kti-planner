@@ -3,4 +3,5 @@ export interface ExerciseData {
     name: string;
     subjectId: string;
     exerciseNumber: number;
+    classroomId: string;
 }

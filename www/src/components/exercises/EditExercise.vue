@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { langId } from '@components/frontend/lang';
+import type { ClassroomData } from '@components/classrooms/types';
 import type { ExerciseData } from '@components/exercises/types';
 import type { SemesterData } from '@components/semesters/types';
 import type { SubjectData } from '@components/subjects/types';
@@ -11,6 +12,7 @@ const props = defineProps<{
     semester: SemesterData;
     subject: SubjectData;
     exercise: ExerciseData;
+    classrooms: ClassroomData[];
 }>();
 
 const translations = {
@@ -42,6 +44,6 @@ const modalId = `edit-exercise-modal-${props.semester.slug}-${props.subject.slug
 
     <Modal :id="modalId">
         <template #header>{{ translate('Edit exercise') }} {{ exercise.name }}</template>
-        <ExerciseForm :semester="semester" :subject="subject" :exercise="exercise" />
+        <ExerciseForm :semester="semester" :subject="subject" :exercise="exercise" :classrooms="classrooms" />
     </Modal>
 </template>

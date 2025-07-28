@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import { langId } from '@components/frontend/lang';
+import type { ClassroomData } from '@components/classrooms/types';
 import type { ExerciseData } from '@components/exercises/types';
 import type { SemesterData } from '@components/semesters/types';
 import type { SubjectData } from '@components/subjects/types';
@@ -9,6 +10,7 @@ const props = defineProps<{
     semester: SemesterData;
     subject: SubjectData;
     exercise?: ExerciseData;
+    classrooms: ClassroomData[];
 }>();
 
 const isEditing = computed(() => props.exercise !== undefined);
@@ -17,6 +19,7 @@ const addingFailed = ref(false);
 
 const exerciseName = ref<string | undefined>(props.exercise?.name);
 const exerciseNumber = ref<number | undefined>(props.exercise?.exerciseNumber);
+const exerciseClassroomId = ref<string | undefined>(props.exercise?.classroomId);
 
 async function submit() {
     try {
@@ -28,6 +31,7 @@ async function submit() {
                       name: exerciseName.value,
                       exerciseNumber: exerciseNumber.value,
                       subjectId: props.subject.id,
+                      classroomId: exerciseClassroomId.value,
                   }),
               })
             : await fetch('/semesters/api/exercises/', {
@@ -37,6 +41,7 @@ async function submit() {
                       id: props.exercise?.id,
                       name: exerciseName.value,
                       exerciseNumber: exerciseNumber.value,
+                      classroomId: exerciseClassroomId.value,
                   }),
               });
 
@@ -67,6 +72,7 @@ const translations = {
     'en': {
         'Exercise name': 'Exercise name',
         'Exercise number': 'Exercise number',
+        'Classroom': 'Classroom',
         'Save': 'Save',
         'Add': 'Add',
         'Exercise with this name or number already exists.': 'Exercise with this name or number already exists.',
@@ -74,6 +80,7 @@ const translations = {
     'pl': {
         'Exercise name': 'Nazwa ćwiczenia',
         'Exercise number': 'Numer ćwiczenia',
+        'Classroom': 'Sala',
         'Save': 'Zapisz',
         'Add': 'Dodaj',
         'Exercise with this name or number already exists.': 'Ćwiczenie o podanej nazwie lub numerze już isnieje.',
@@ -95,6 +102,15 @@ function translate(text: keyof (typeof translations)[LangId]): string {
         <div>
             <label for="exerciseNumber" class="form-label">{{ translate('Exercise number') }}</label>
             <input id="exerciseNumber" v-model="exerciseNumber" type="number" class="form-control" required />
+        </div>
+
+        <div>
+            <label for="exerciseClassroom" class="form-label">{{ translate('Classroom') }}</label>
+            <select id="exerciseClassroom" v-model="exerciseClassroomId" class="form-select" required>
+                <option v-for="classroom in classrooms" :key="classroom.id" :value="classroom.id">
+                    {{ classroom.name }}
+                </option>
+            </select>
         </div>
 
         <div class="text-center">
