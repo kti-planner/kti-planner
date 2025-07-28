@@ -19,11 +19,15 @@ export const POST: APIRoute = async ({ locals }) => {
         return Response.json(null, { status: 400 });
     }
 
-    await Classroom.create({
-        name: data.name,
-    });
+    try {
+        await Classroom.create({
+            name: data.name,
+        });
 
-    return Response.json(true, { status: 201 });
+        return Response.json(true, { status: 201 });
+    } catch {
+        return Response.json(false, { status: 200 });
+    }
 };
 
 const schemaEdit = z.object({
