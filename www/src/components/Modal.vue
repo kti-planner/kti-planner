@@ -40,6 +40,19 @@ onBeforeUnmount(() => {
         window.bootstrap.Modal.getOrCreateInstance(el.value).dispose();
     }
 });
+
+function shownHandler() {
+    emit('shown');
+
+    if (!el.value) {
+        return;
+    }
+
+    const autoFocusInput = el.value.querySelector('input[autofocus]');
+    if (autoFocusInput instanceof HTMLInputElement) {
+        autoFocusInput.focus();
+    }
+}
 </script>
 
 <template>
@@ -56,7 +69,7 @@ onBeforeUnmount(() => {
                 'hide.bs.modal': () => emit('hide'),
                 'hidden.bs.modal': () => emit('hidden'),
                 'show.bs.modal': () => emit('show'),
-                'shown.bs.modal': () => emit('shown'),
+                'shown.bs.modal': shownHandler,
             }"
         >
             <div

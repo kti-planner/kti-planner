@@ -83,7 +83,7 @@ function translate(text: keyof (typeof translations)[LangId]): string {
     <form class="vstack gap-3 mx-auto" style="max-width: 500px" @submit.prevent="submit">
         <div>
             <label for="subjectName" class="form-label">{{ translate('Subject name') }}</label>
-            <input id="subjectName" v-model="subjectName" type="text" class="form-control" required />
+            <input id="subjectName" v-model="subjectName" type="text" class="form-control" required autofocus />
         </div>
 
         <div class="text-center">
