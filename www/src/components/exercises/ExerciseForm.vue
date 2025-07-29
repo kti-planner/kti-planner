@@ -101,7 +101,7 @@ function translate(text: keyof (typeof translations)[LangId]): string {
 
         <div>
             <label for="exerciseNumber" class="form-label">{{ translate('Exercise number') }}</label>
-            <input id="exerciseNumber" v-model="exerciseNumber" type="number" class="form-control" required />
+            <input id="exerciseNumber" v-model="exerciseNumber" type="number" :min="1" class="form-control" required />
         </div>
 
         <div>

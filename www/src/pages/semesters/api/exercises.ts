@@ -6,7 +6,7 @@ import { Subject } from '@backend/subject';
 
 const schema = z.object({
     name: z.string().trim().nonempty(),
-    exerciseNumber: z.number(),
+    exerciseNumber: z.number().int().min(1),
     subjectId: z.uuid(),
     classroomId: z.uuid(),
 });
