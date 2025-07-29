@@ -9,11 +9,11 @@ import type { SubjectData } from '@components/subjects/types';
 const props = defineProps<{
     semester: SemesterData;
     subject: SubjectData;
-    exercise?: ExerciseData;
+    exercise?: Partial<ExerciseData>;
     classrooms: ClassroomData[];
 }>();
 
-const isEditing = computed(() => props.exercise !== undefined);
+const isEditing = computed(() => props.exercise?.id !== undefined);
 
 const addingFailed = ref(false);
 
