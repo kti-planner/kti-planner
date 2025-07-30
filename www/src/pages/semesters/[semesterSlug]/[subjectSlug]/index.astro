@@ -64,7 +64,7 @@ const subjectData: SubjectData = {
 };
 
 const exercises = await Exercise.fetchAllFromSubject(subject);
-const nextExerciseNumber = exercises.map(e => e.exerciseNumber).reduce((max, num) => Math.max(max, num), 0) + 1;
+const nextExerciseNumber = exercises.reduce((max, e) => Math.max(max, e.exerciseNumber), 0) + 1;
 
 const classrooms = await Classroom.fetchAll();
 
