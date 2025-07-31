@@ -76,6 +76,7 @@ const translations = {
         'Save': 'Save',
         'Add': 'Add',
         'Exercise with this name or number already exists.': 'Exercise with this name or number already exists.',
+        'Manage classrooms': 'Manage classrooms',
     },
     'pl': {
         'Exercise name': 'Nazwa ćwiczenia',
@@ -84,6 +85,7 @@ const translations = {
         'Save': 'Zapisz',
         'Add': 'Dodaj',
         'Exercise with this name or number already exists.': 'Ćwiczenie o podanej nazwie lub numerze już isnieje.',
+        'Manage classrooms': 'Zarządzaj salami',
     },
 };
 
@@ -111,6 +113,11 @@ function translate(text: keyof (typeof translations)[LangId]): string {
                     {{ classroom.name }}
                 </option>
             </select>
+            <a
+                href="/classrooms/"
+                class="d-block mt-2 link-success link-underline-opacity-0 link-underline-opacity-100-hover"
+                >{{ translate('Manage classrooms') }}</a
+            >
         </div>
 
         <div class="text-center">

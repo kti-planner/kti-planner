@@ -1,0 +1,58 @@
+---
+import { Classroom } from '@backend/classroom';
+import Layout from '@layouts/Layout.astro';
+import AddClassroom from '@components/classrooms/AddClassroom.vue';
+import EditClassroom from '@components/classrooms/EditClassroom.vue';
+
+const { langId, user } = Astro.locals;
+
+if (!user) {
+    return Astro.redirect('/login/');
+}
+
+const translations = {
+    'en': {
+        'Classrooms': 'Classrooms',
+    },
+    'pl': {
+        'Classrooms': 'Sale laboratoryjne',
+    },
+};
+
+function translate(text: keyof (typeof translations)[LangId]): string {
+    return translations[langId][text];
+}
+
+const classrooms = await Classroom.fetchAll();
+---
+
+<Layout breadcrumbs={[{ text: translate('Classrooms'), href: '#' }]}>
+    <AddClassroom client:only="vue" />
+    <div class="classrooms-list list-group mx-auto my-4">
+        {
+            classrooms.map(
+                c =>
+                    (
+                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                            <span>{c.name}</span>
+                            <EditClassroom client:only="vue" classroom={{ id: c.id, name: c.name }} />
+                        </div>
+                    ) as unknown,
+            )
+        }
+    </div>
+</Layout>
+
+<style>
+    .classrooms-list {
+        max-width: 600px;
+    }
+
+    .list-group-item > :global(astro-island > button) {
+        visibility: hidden;
+    }
+
+    .list-group-item:hover > :global(astro-island > button) {
+        visibility: visible;
+    }
+</style>
