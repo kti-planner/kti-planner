@@ -2,7 +2,7 @@
 import { langId } from '@components/frontend/lang';
 import type { SemesterData } from '@components/semesters/types';
 import Modal from '@components/Modal.vue';
-import SubjectFrom from '@components/subjects/SubjectFrom.vue';
+import SubjectForm from '@components/subjects/SubjectForm.vue';
 
 defineProps<{
     semester: SemesterData;
@@ -34,7 +34,7 @@ function translate(text: keyof (typeof translations)[LangId]): string {
             <template #header>
                 {{ translate('Add new subject') }}
             </template>
-            <SubjectFrom :semester="semester" />
+            <SubjectForm :semester="semester" />
         </Modal>
     </div>
 </template>
