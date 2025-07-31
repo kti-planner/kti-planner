@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { langId } from '@components/frontend/lang';
-import type { ClassroomData } from './types';
+import type { ClassroomData } from '@components/classrooms/types';
 
 const props = defineProps<{
     classroom?: ClassroomData;

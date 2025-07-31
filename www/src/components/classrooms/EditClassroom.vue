@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { langId } from '@components/frontend/lang';
+import type { ClassroomData } from '@components/classrooms/types';
+import ClassroomForm from '@components/classrooms/ClassroomForm.vue';
 import IconButton from '@components/IconButton.vue';
 import Modal from '@components/Modal.vue';
-import ClassroomForm from './ClassroomForm.vue';
-import type { ClassroomData } from './types';
 
 const props = defineProps<{
     classroom: ClassroomData;

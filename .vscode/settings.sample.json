@@ -32,6 +32,8 @@
     },
     "javascript.format.placeOpenBraceOnNewLineForFunctions": false,
     "javascript.format.placeOpenBraceOnNewLineForControlBlocks": false,
+    "javascript.preferences.importModuleSpecifier": "non-relative",
     "typescript.format.placeOpenBraceOnNewLineForFunctions": false,
-    "typescript.format.placeOpenBraceOnNewLineForControlBlocks": false
+    "typescript.format.placeOpenBraceOnNewLineForControlBlocks": false,
+    "typescript.preferences.importModuleSpecifier": "non-relative"
 }
