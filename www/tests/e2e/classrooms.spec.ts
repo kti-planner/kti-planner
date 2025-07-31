@@ -31,7 +31,7 @@ test('Can add new classroom and prevent duplicate classroom creation', async ({ 
     await expect(page.locator('#classroom-modal')).toBeVisible();
     await expect(page.locator('#classroom-modal')).toContainText('Add new classroom');
 
-    await page.getByRole('textbox', { name: 'Classroom name' }).fill('EA 250');
+    await page.locator('#classroom-modal').locator('#classroomName').fill('EA 250');
     await page.getByRole('button', { name: 'Add', exact: true }).click();
 
     await expect(page.locator('body')).toContainText('EA 250');
@@ -43,7 +43,7 @@ test('Can add new classroom and prevent duplicate classroom creation', async ({ 
     await expect(page.locator('#classroom-modal')).toContainText('Add new classroom');
 
     // Existing name
-    await page.getByRole('textbox', { name: 'Classroom name' }).fill('EA 250');
+    await page.locator('#classroom-modal').locator('#classroomName').fill('EA 250');
     await page.getByRole('button', { name: 'Add', exact: true }).click();
 
     await expect(page.locator('#classroom-modal').locator('form')).toContainText(
