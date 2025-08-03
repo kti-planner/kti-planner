@@ -40,6 +40,7 @@ const modalId = `edit-exercise-modal-${props.semester.slug}-${props.subject.slug
         style="margin-top: -0.25rem"
         data-bs-toggle="modal"
         :data-bs-target="`#${modalId}`"
+        :title="translate('Edit exercise')"
     />
 
     <Modal :id="modalId">
