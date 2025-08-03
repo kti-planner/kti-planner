@@ -9,11 +9,11 @@ import type { SubjectData } from '@components/subjects/types';
 const props = defineProps<{
     semester: SemesterData;
     subject: SubjectData;
-    exercise?: ExerciseData;
+    exercise?: Partial<ExerciseData>;
     classrooms: ClassroomData[];
 }>();
 
-const isEditing = computed(() => props.exercise !== undefined);
+const isEditing = computed(() => props.exercise?.id !== undefined);
 
 const addingFailed = ref(false);
 
@@ -98,12 +98,12 @@ function translate(text: keyof (typeof translations)[LangId]): string {
     <form class="vstack gap-3 mx-auto" style="max-width: 500px" @submit.prevent="submit">
         <div>
             <label for="exerciseName" class="form-label">{{ translate('Exercise name') }}</label>
-            <input id="exerciseName" v-model="exerciseName" type="text" class="form-control" required />
+            <input id="exerciseName" v-model="exerciseName" type="text" class="form-control" required autofocus />
         </div>
 
         <div>
             <label for="exerciseNumber" class="form-label">{{ translate('Exercise number') }}</label>
-            <input id="exerciseNumber" v-model="exerciseNumber" type="number" class="form-control" required />
+            <input id="exerciseNumber" v-model="exerciseNumber" type="number" :min="0" class="form-control" required />
         </div>
 
         <div>
