@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { langId } from '@components/frontend/lang';
+import type { ClassroomData } from '@components/classrooms/types';
 import type { SemesterData } from '@components/semesters/types';
 import type { SubjectData } from '@components/subjects/types';
 import ExerciseForm from '@components/exercises/ExerciseForm.vue';
@@ -8,6 +9,7 @@ import Modal from '@components/Modal.vue';
 defineProps<{
     semester: SemesterData;
     subject: SubjectData;
+    classrooms: ClassroomData[];
 }>();
 
 const translations = {
@@ -36,7 +38,7 @@ function translate(text: keyof (typeof translations)[LangId]): string {
             <template #header>
                 {{ translate('Add new exercise') }}
             </template>
-            <ExerciseForm :semester="semester" :subject="subject" />
+            <ExerciseForm :semester="semester" :subject="subject" :classrooms="classrooms" />
         </Modal>
     </div>
 </template>

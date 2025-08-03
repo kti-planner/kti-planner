@@ -1,7 +1,9 @@
 ---
+import { Classroom } from '@backend/classroom';
 import { Exercise } from '@backend/exercise';
 import { Semester } from '@backend/semester';
 import { Subject } from '@backend/subject';
+import type { ClassroomData } from '@components/classrooms/types';
 import type { ExerciseData } from '@components/exercises/types';
 import type { SemesterData } from '@components/semesters/types';
 import type { SubjectData } from '@components/subjects/types';
@@ -76,7 +78,15 @@ const exerciseData: ExerciseData = {
     name: exercise.name,
     exerciseNumber: exercise.exerciseNumber,
     subjectId: exercise.subjectId,
+    classroomId: exercise.classroomId,
 };
+
+const classrooms = await Classroom.fetchAll();
+
+const classroomsData: ClassroomData[] = classrooms.map(classroom => ({
+    id: classroom.id,
+    name: classroom.name,
+}));
 ---
 
 <Layout
@@ -103,7 +113,13 @@ const exerciseData: ExerciseData = {
         {exercise.name}
         {
             user && (
-                <EditExercise client:only="vue" semester={semesterData} subject={subjectData} exercise={exerciseData} />
+                <EditExercise
+                    client:only="vue"
+                    semester={semesterData}
+                    subject={subjectData}
+                    exercise={exerciseData}
+                    classrooms={classroomsData}
+                />
             )
         }
     </h1>

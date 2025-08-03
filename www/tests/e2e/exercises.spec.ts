@@ -63,6 +63,7 @@ test('Can add new exercise and prevent duplicate exercise creation', async ({ pa
 
     await page.getByRole('textbox', { name: 'Exercise name' }).fill('Wirtualne sieci lokalne (VLAN)');
     await page.getByRole('spinbutton', { name: 'Exercise number' }).fill('5');
+    await page.getByRole('combobox', { name: 'Classroom' }).selectOption('EA 142');
 
     await page.getByRole('button', { name: 'Add', exact: true }).click();
 
@@ -82,6 +83,7 @@ test('Can add new exercise and prevent duplicate exercise creation', async ({ pa
     // Existing name
     await page.getByRole('textbox', { name: 'Exercise name' }).fill('Wirtualne sieci lokalne (VLAN)');
     await page.getByRole('spinbutton', { name: 'Exercise number' }).fill('100');
+    await page.getByRole('combobox', { name: 'Classroom' }).selectOption('EA 142');
 
     await page.getByRole('button', { name: 'Add', exact: true }).click();
 
@@ -92,6 +94,7 @@ test('Can add new exercise and prevent duplicate exercise creation', async ({ pa
     // Existing number
     await page.getByRole('textbox', { name: 'Exercise name' }).fill('WiFi Sieci bezprzewodowe standardów 802.11');
     await page.getByRole('spinbutton', { name: 'Exercise number' }).fill('1');
+    await page.getByRole('combobox', { name: 'Classroom' }).selectOption('EA 142');
 
     await page.getByRole('button', { name: 'Add', exact: true }).click();
 
@@ -156,6 +159,7 @@ test('Can edit exercise and prevent duplicate exercise', async ({ page }) => {
 
     await page.getByRole('textbox', { name: 'Exercise name' }).fill('Wirtualne sieci lokalne (VLAN)');
     await page.getByRole('spinbutton', { name: 'Exercise number' }).fill('4');
+    await page.getByRole('combobox', { name: 'Classroom' }).selectOption('EA 142');
 
     await page.getByRole('button', { name: 'Save' }).click();
 
@@ -174,6 +178,7 @@ test('Can edit exercise and prevent duplicate exercise', async ({ page }) => {
     // Existing name
     await page.getByRole('textbox', { name: 'Exercise name' }).fill('Diagnostyka sieci IPv4');
     await page.getByRole('spinbutton', { name: 'Exercise number' }).fill('100');
+    await page.getByRole('combobox', { name: 'Classroom' }).selectOption('EA 142');
 
     await page.getByRole('button', { name: 'Save' }).click();
 
@@ -184,6 +189,7 @@ test('Can edit exercise and prevent duplicate exercise', async ({ page }) => {
     // Existing number
     await page.getByRole('textbox', { name: 'Exercise name' }).fill('IPv6 cz. II');
     await page.getByRole('spinbutton', { name: 'Exercise number' }).fill('1');
+    await page.getByRole('combobox', { name: 'Classroom' }).selectOption('EA 142');
 
     await expect(page.locator('#edit-exercise-modal-2024-winter-sieci-komputerowe-4').locator('form')).toContainText(
         'Exercise with this name or number already exists.',
