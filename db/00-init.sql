@@ -35,3 +35,18 @@ CREATE TABLE exercises (
     classroom_id    uuid REFERENCES classrooms NOT NULL,
     UNIQUE (subject_id, exercise_number)
 );
+
+CREATE TABLE laboratory_groups (
+    id              uuid PRIMARY KEY,
+    name            text NOT NULL,
+    subject_id      uuid REFERENCES subjects NOT NULL,
+    UNIQUE (subject_id, name)
+);
+
+CREATE TABLE laboratory_classes (
+    id                  uuid PRIMARY KEY,
+    exercise_id         uuid REFERENCES exercises NOT NULL,
+    laboratory_group_id uuid REFERENCES laboratory_groups NOT NULL,
+    start_date          timestamptz NOT NULL,
+    end_date            timestamptz NOT NULL
+);
