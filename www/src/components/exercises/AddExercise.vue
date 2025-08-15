@@ -10,6 +10,7 @@ defineProps<{
     semester: SemesterData;
     subject: SubjectData;
     classrooms: ClassroomData[];
+    nextExerciseNumber: number;
 }>();
 
 const translations = {
@@ -38,7 +39,12 @@ function translate(text: keyof (typeof translations)[LangId]): string {
             <template #header>
                 {{ translate('Add new exercise') }}
             </template>
-            <ExerciseForm :semester="semester" :subject="subject" :classrooms="classrooms" />
+            <ExerciseForm
+                :exercise="{ exerciseNumber: nextExerciseNumber }"
+                :semester="semester"
+                :subject="subject"
+                :classrooms="classrooms"
+            />
         </Modal>
     </div>
 </template>
