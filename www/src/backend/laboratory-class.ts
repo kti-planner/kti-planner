@@ -47,7 +47,8 @@ export class LaboratoryClass {
     }
 
     static async fetchAll(): Promise<LaboratoryClass[]> {
-        const records = (await db.query<DbLaboratoryClass>('SELECT * FROM laboratory_classes ORDER BY id')).rows;
+        const records = (await db.query<DbLaboratoryClass>('SELECT * FROM laboratory_classes ORDER BY start_date'))
+            .rows;
 
         return records.map(record => new LaboratoryClass(record));
     }
@@ -55,10 +56,10 @@ export class LaboratoryClass {
     static async fetchAllFromSubject(subject: Subject): Promise<LaboratoryClass[]> {
         const records = (
             await db.query<DbLaboratoryClass>(
-                'SELECT *' +
+                'SELECT laboratory_classes.*' +
                     ' FROM laboratory_classes JOIN laboratory_groups ON laboratory_classes.laboratory_group_id = laboratory_groups.id' +
                     ' WHERE laboratory_groups.subject_id = $1' +
-                    ' ORDER BY laboratory_classes.id',
+                    ' ORDER BY laboratory_classes.start_date',
                 [subject.id],
             )
         ).rows;
