@@ -10,6 +10,10 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import FullCalendar from '@fullcalendar/vue3';
 import { langId } from '@components/frontend/lang';
 
+const { selectable } = defineProps<{
+    selectable?: boolean | undefined;
+}>();
+
 const emit = defineEmits<{
     eventClick: [event: EventClickArg];
     select: [event: DateSelectArg];
@@ -38,7 +42,7 @@ const options = computed((): CalendarOptions => {
             endTime: '16:00',
         },
         eventClick: event => emit('eventClick', event),
-        selectable: true,
+        selectable,
         select: event => emit('select', event),
         eventMinHeight: 25,
         eventTimeFormat: {
