@@ -10,6 +10,7 @@ import { formatDateLocalYyyyMmDd } from '@components/utils';
 import Layout from '@layouts/Layout.astro';
 import AddExercise from '@components/exercises/AddExercise.vue';
 import EditSubject from '@components/subjects/EditSubject.vue';
+import SubjectCalendar from '@components/subjects/SubjectCalendar.vue';
 
 const { semesterSlug, subjectSlug } = Astro.params;
 const { langId, user } = Astro.locals;
@@ -19,11 +20,13 @@ const translations = {
         'Semesters': 'Semesters',
         'Winter semester': 'Winter semester',
         'Summer semester': 'Summer semester',
+        'Exercises': 'Exercises',
     },
     'pl': {
         'Semesters': 'Semestry',
         'Winter semester': 'Semestr zimowy',
         'Summer semester': 'Semestr letni',
+        'Exercises': 'Ćwiczenia',
     },
 };
 
@@ -90,7 +93,7 @@ const classroomsData: ClassroomData[] = classrooms.map(classroom => ({
         },
     ]}
 >
-    <h1 class="text-center fs-5">
+    <h1 class="text-center fs-3">
         {subject.name}
         {user && <EditSubject client:only="vue" semester={semesterData} subject={subjectData} />}
     </h1>
@@ -107,20 +110,28 @@ const classroomsData: ClassroomData[] = classrooms.map(classroom => ({
             )
         }
     </div>
-    <div class="exercises-list list-group mx-auto my-4">
-        {
-            exercises.map(
-                e =>
-                    (
-                        <a
-                            href={`/semesters/${semesterSlug}/${subjectSlug}/${e.exerciseNumber}/`}
-                            class="list-group-item list-group-item-action"
-                        >
-                            {e.name}
-                        </a>
-                    ) as unknown,
-            )
-        }
+    <div class="row">
+        <div class="col-12 col-lg-9 mb-2">
+            <SubjectCalendar client:only="vue" />
+        </div>
+        <div class="col-12 col-lg-3">
+            <h2 class="text-center fs-5">{translate('Exercises')}</h2>
+            <div class="exercises-list list-group mx-auto my-2">
+                {
+                    exercises.map(
+                        e =>
+                            (
+                                <a
+                                    href={`/semesters/${semesterSlug}/${subjectSlug}/${e.exerciseNumber}/`}
+                                    class="list-group-item list-group-item-action"
+                                >
+                                    {e.exerciseNumber}. {e.name}
+                                </a>
+                            ) as unknown,
+                    )
+                }
+            </div>
+        </div>
     </div>
 </Layout>
 

@@ -59,7 +59,7 @@ const subjects = await Subject.fetchAllFromSemester(semester);
         },
     ]}
 >
-    <h1 class="text-center fs-5">
+    <h1 class="text-center fs-3">
         {semesterName}
         {user && <EditSemester client:only="vue" semester={semesterData} />}
     </h1>
