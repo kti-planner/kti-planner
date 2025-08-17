@@ -59,16 +59,20 @@ const subjects = await Subject.fetchAllFromSemester(semester);
         },
     ]}
 >
-    <h1 class="text-center fs-5">
+    <h1 class="text-center fs-4">
         {semesterName}
         {user && <EditSemester client:only="vue" semester={semesterData} />}
     </h1>
     <div class="text-center">
         {semester.startDate.toLocaleDateString('pl-PL')} - {semester.endDate.toLocaleDateString('pl-PL')}
     </div>
-    <div class="my-2">
-        {user && <AddSubject client:only="vue" semester={semesterData} />}
-    </div>
+    {
+        user && (
+            <div class="my-2">
+                <AddSubject client:only="vue" semester={semesterData} />
+            </div>
+        )
+    }
     <div class="subjects-list list-group mx-auto my-4">
         {
             subjects.map(

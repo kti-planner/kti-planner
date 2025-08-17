@@ -10,6 +10,7 @@ import { formatDateLocalYyyyMmDd } from '@components/utils';
 import Layout from '@layouts/Layout.astro';
 import AddExercise from '@components/exercises/AddExercise.vue';
 import EditSubject from '@components/subjects/EditSubject.vue';
+import SubjectCalendar from '@components/subjects/SubjectCalendar.vue';
 
 const { semesterSlug, subjectSlug } = Astro.params;
 const { langId, user } = Astro.locals;
@@ -19,11 +20,13 @@ const translations = {
         'Semesters': 'Semesters',
         'Winter semester': 'Winter semester',
         'Summer semester': 'Summer semester',
+        'Exercises': 'Exercises',
     },
     'pl': {
         'Semesters': 'Semestry',
         'Winter semester': 'Semestr zimowy',
         'Summer semester': 'Semestr letni',
+        'Exercises': 'Ćwiczenia',
     },
 };
 
@@ -90,37 +93,45 @@ const classroomsData: ClassroomData[] = classrooms.map(classroom => ({
         },
     ]}
 >
-    <h1 class="text-center fs-5">
+    <h1 class="text-center fs-4 mb-3">
         {subject.name}
         {user && <EditSubject client:only="vue" semester={semesterData} subject={subjectData} />}
     </h1>
-    <div class="my-2">
-        {
-            user && (
-                <AddExercise
-                    client:only="vue"
-                    semester={semesterData}
-                    subject={subjectData}
-                    classrooms={classroomsData}
-                    nextExerciseNumber={nextExerciseNumber}
-                />
-            )
-        }
-    </div>
-    <div class="exercises-list list-group mx-auto my-4">
-        {
-            exercises.map(
-                e =>
-                    (
-                        <a
-                            href={`/semesters/${semesterSlug}/${subjectSlug}/${e.exerciseNumber}/`}
-                            class="list-group-item list-group-item-action"
-                        >
-                            {e.name}
-                        </a>
-                    ) as unknown,
-            )
-        }
+    <div class="row g-4">
+        <div class="col-12 col-lg-9 mb-2 order-2 order-lg-1">
+            <SubjectCalendar client:only="vue" />
+        </div>
+        <div class="col-12 col-lg-3 order-1 order-lg-2">
+            <h2 class="text-center fs-5 mt-lg-4">{translate('Exercises')}</h2>
+            <div class="exercises-list list-group mx-auto my-2">
+                {
+                    exercises.map(
+                        e =>
+                            (
+                                <a
+                                    href={`/semesters/${semesterSlug}/${subjectSlug}/${e.exerciseNumber}/`}
+                                    class="list-group-item list-group-item-action"
+                                >
+                                    {e.exerciseNumber}. {e.name}
+                                </a>
+                            ) as unknown,
+                    )
+                }
+            </div>
+            {
+                user && (
+                    <div class="my-2">
+                        <AddExercise
+                            client:only="vue"
+                            semester={semesterData}
+                            subject={subjectData}
+                            classrooms={classroomsData}
+                            nextExerciseNumber={nextExerciseNumber}
+                        />
+                    </div>
+                )
+            }
+        </div>
     </div>
 </Layout>
 
