@@ -97,9 +97,9 @@ const classroomsData: ClassroomData[] = classrooms.map(classroom => ({
         {subject.name}
         {user && <EditSubject client:only="vue" semester={semesterData} subject={subjectData} />}
     </h1>
-    <div class="my-2">
-        {
-            user && (
+    {
+        user && (
+            <div class="my-2">
                 <AddExercise
                     client:only="vue"
                     semester={semesterData}
@@ -107,10 +107,10 @@ const classroomsData: ClassroomData[] = classrooms.map(classroom => ({
                     classrooms={classroomsData}
                     nextExerciseNumber={nextExerciseNumber}
                 />
-            )
-        }
-    </div>
-    <div class="row">
+            </div>
+        )
+    }
+    <div class="row mt-4">
         <div class="col-12 col-lg-9 mb-2">
             <SubjectCalendar client:only="vue" />
         </div>
