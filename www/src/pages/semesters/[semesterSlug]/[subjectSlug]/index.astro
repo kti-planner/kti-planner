@@ -97,11 +97,11 @@ const classroomsData: ClassroomData[] = classrooms.map(classroom => ({
         {subject.name}
         {user && <EditSubject client:only="vue" semester={semesterData} subject={subjectData} />}
     </h1>
-    <div class="row mt-4 flex-column-reverse flex-lg-row gap-4 gap-lg-0">
-        <div class="col-12 col-lg-9 mb-2">
+    <div class="row mt-0 g-4">
+        <div class="col-12 col-lg-9 mb-2 order-2 order-lg-1">
             <SubjectCalendar client:only="vue" />
         </div>
-        <div class="col-12 col-lg-3">
+        <div class="col-12 col-lg-3 order-1 order-lg-2">
             <div class="d-flex align-items-center mb-4 justify-content-center" style="height: 31px">
                 <h2 class="fs-5 m-0">{translate('Exercises')}</h2>
             </div>
