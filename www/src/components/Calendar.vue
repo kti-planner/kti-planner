@@ -19,6 +19,9 @@ const emit = defineEmits<{
     select: [event: DateSelectArg];
 }>();
 
+// Customize buttons
+bootstrap5Plugin.themeClasses.bootstrap5!.prototype.classes.button = 'btn btn-success btn-sm';
+
 const options = computed((): CalendarOptions => {
     return {
         plugins: [dayGridPlugin, timeGridPlugin, bootstrap5Plugin, interactionPlugin],
@@ -56,8 +59,14 @@ const options = computed((): CalendarOptions => {
 
 <template>
     <div class="overflow-y-auto">
-        <div style="min-width: 660px">
+        <div class="calendar-wrapper" style="min-width: 660px">
             <FullCalendar :options />
         </div>
     </div>
 </template>
+
+<style scoped lang="scss">
+.calendar-wrapper :deep(.fc-toolbar-title) {
+    font-size: 1.25rem;
+}
+</style>

@@ -97,26 +97,28 @@ const classroomsData: ClassroomData[] = classrooms.map(classroom => ({
         {subject.name}
         {user && <EditSubject client:only="vue" semester={semesterData} subject={subjectData} />}
     </h1>
-    {
-        user && (
-            <div class="my-2">
-                <AddExercise
-                    client:only="vue"
-                    semester={semesterData}
-                    subject={subjectData}
-                    classrooms={classroomsData}
-                    nextExerciseNumber={nextExerciseNumber}
-                />
-            </div>
-        )
-    }
     <div class="row mt-4">
         <div class="col-12 col-lg-9 mb-2">
             <SubjectCalendar client:only="vue" />
         </div>
         <div class="col-12 col-lg-3">
-            <h2 class="text-center fs-5">{translate('Exercises')}</h2>
-            <div class="exercises-list list-group mx-auto my-2">
+            <div class="d-flex align-items-center mb-4 justify-content-center" style="height: 31px">
+                <h2 class="fs-5 m-0">{translate('Exercises')}</h2>
+            </div>
+            {
+                user && (
+                    <div class="my-2">
+                        <AddExercise
+                            client:only="vue"
+                            semester={semesterData}
+                            subject={subjectData}
+                            classrooms={classroomsData}
+                            nextExerciseNumber={nextExerciseNumber}
+                        />
+                    </div>
+                )
+            }
+            <div class="exercises-list list-group">
                 {
                     exercises.map(
                         e =>
