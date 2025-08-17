@@ -59,7 +59,7 @@ const options = computed((): CalendarOptions => {
 
 <template>
     <div class="overflow-y-auto">
-        <div class="calendar-wrapper" style="min-width: 660px">
+        <div class="calendar-wrapper" style="min-width: 480px">
             <FullCalendar :options />
         </div>
     </div>
