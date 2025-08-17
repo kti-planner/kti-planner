@@ -103,19 +103,6 @@ const classroomsData: ClassroomData[] = classrooms.map(classroom => ({
         </div>
         <div class="col-12 col-lg-3 order-1 order-lg-2">
             <h2 class="text-center fs-5 mt-lg-4">{translate('Exercises')}</h2>
-            {
-                user && (
-                    <div class="my-2">
-                        <AddExercise
-                            client:only="vue"
-                            semester={semesterData}
-                            subject={subjectData}
-                            classrooms={classroomsData}
-                            nextExerciseNumber={nextExerciseNumber}
-                        />
-                    </div>
-                )
-            }
             <div class="exercises-list list-group mx-auto my-2">
                 {
                     exercises.map(
@@ -131,6 +118,19 @@ const classroomsData: ClassroomData[] = classrooms.map(classroom => ({
                     )
                 }
             </div>
+            {
+                user && (
+                    <div class="my-2">
+                        <AddExercise
+                            client:only="vue"
+                            semester={semesterData}
+                            subject={subjectData}
+                            classrooms={classroomsData}
+                            nextExerciseNumber={nextExerciseNumber}
+                        />
+                    </div>
+                )
+            }
         </div>
     </div>
 </Layout>
