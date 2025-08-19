@@ -2,7 +2,7 @@ import { defineMiddleware } from 'astro:middleware';
 import { isLangId, langIds } from '@backend/lang';
 import { User } from '@backend/user';
 
-export const onRequest = defineMiddleware(async ({ request, locals, cookies, session }, next) => {
+export const onRequest = defineMiddleware(async ({ request, locals, cookies, session, url, redirect }, next) => {
     const contentType = request.headers.get('Content-Type')?.split(';', 1)[0];
 
     if (contentType === 'application/x-www-form-urlencoded' || contentType === 'multipart/form-data') {
@@ -42,6 +42,14 @@ export const onRequest = defineMiddleware(async ({ request, locals, cookies, ses
     } else {
         locals.user = null;
     }
+
+    locals.redirectToLoginPage = () => {
+        if (url.pathname === '/semesters/') {
+            return redirect('/login/');
+        } else {
+            return redirect(`/login/?${new URLSearchParams({ next: url.pathname + url.search })}`);
+        }
+    };
 
     return await next();
 });
