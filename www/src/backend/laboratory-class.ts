@@ -3,6 +3,7 @@ import { db } from '@backend/db';
 import type { Exercise } from '@backend/exercise';
 import type { LaboratoryGroup } from '@backend/laboratory-group';
 import type { Subject } from '@backend/subject';
+import type { User } from '@backend/user';
 
 interface DbLaboratoryClass {
     id: string;
@@ -10,6 +11,7 @@ interface DbLaboratoryClass {
     laboratory_group_id: string;
     start_date: Date;
     end_date: Date;
+    teacher_id: string;
 }
 
 export interface LaboratoryClassCreateData {
@@ -17,11 +19,13 @@ export interface LaboratoryClassCreateData {
     laboratoryGroup: LaboratoryGroup;
     startDate: Date;
     endDate: Date;
+    teacher: User;
 }
 
 export interface LaboratoryClassEditData {
     startDate?: Date | undefined;
     endDate?: Date | undefined;
+    teacher?: User | undefined;
 }
 
 export class LaboratoryClass {
@@ -30,6 +34,7 @@ export class LaboratoryClass {
     laboratoryGroupId: string;
     startDate: Date;
     endDate: Date;
+    teacherId: string;
 
     constructor(data: DbLaboratoryClass) {
         this.id = data.id;
@@ -37,6 +42,7 @@ export class LaboratoryClass {
         this.laboratoryGroupId = data.laboratory_group_id;
         this.startDate = data.start_date;
         this.endDate = data.end_date;
+        this.teacherId = data.teacher_id;
     }
 
     static async fetch(id: string): Promise<LaboratoryClass | null> {
@@ -70,9 +76,16 @@ export class LaboratoryClass {
     static async create(data: LaboratoryClassCreateData): Promise<LaboratoryClass> {
         const result = (
             await db.query<DbLaboratoryClass>(
-                'INSERT INTO laboratory_classes (id, exercise_id, laboratory_group_id, start_date, end_date)' +
-                    ' VALUES ($1, $2, $3, $4, $5) RETURNING *',
-                [crypto.randomUUID(), data.exercise.id, data.laboratoryGroup.id, data.startDate, data.endDate],
+                'INSERT INTO laboratory_classes (id, exercise_id, laboratory_group_id, start_date, end_date, teacher_id)' +
+                    ' VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
+                [
+                    crypto.randomUUID(),
+                    data.exercise.id,
+                    data.laboratoryGroup.id,
+                    data.startDate,
+                    data.endDate,
+                    data.teacher.id,
+                ],
             )
         ).rows[0];
 
@@ -90,10 +103,15 @@ export class LaboratoryClass {
             this.endDate = data.endDate;
         }
 
-        await db.query('UPDATE laboratory_classes SET start_date = $2, end_date = $3 WHERE id = $1', [
+        if (data.teacher !== undefined) {
+            this.teacherId = data.teacher.id;
+        }
+
+        await db.query('UPDATE laboratory_classes SET start_date = $2, end_date = $3, teacher_id = $4 WHERE id = $1', [
             this.id,
             this.startDate,
             this.endDate,
+            this.teacherId,
         ]);
     }
 }

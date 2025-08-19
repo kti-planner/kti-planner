@@ -1,37 +1,51 @@
 import assert from 'node:assert';
 import { db } from '@backend/db';
 import type { Semester } from '@backend/semester';
+import { User } from '@backend/user';
 import { toHyphenatedLowercase } from '@components/utils';
 
 interface DbSubject {
     id: string;
     name: string;
     semester_id: string;
+    teacher_ids: string[];
 }
 
 export interface SubjectCreateData {
     name: string;
     semester: Semester;
+    teachers: User[];
 }
 
 export interface SubjectEditData {
     name?: string | undefined;
     semester?: Semester | undefined;
+    teachers?: User[] | undefined;
 }
 
 export class Subject {
     id: string;
     name: string;
     semesterId: string;
+    teacherIds: string[];
 
     constructor(data: DbSubject) {
         this.id = data.id;
         this.name = data.name;
         this.semesterId = data.semester_id;
+        this.teacherIds = data.teacher_ids;
     }
 
     get slug(): string {
         return toHyphenatedLowercase(this.name);
+    }
+
+    async getTeachers(): Promise<User[]> {
+        const teachers = await User.fetchBulk(this.teacherIds);
+
+        assert(teachers.every(teacher => teacher !== null));
+
+        return teachers;
     }
 
     static async fetch(id: string): Promise<Subject | null> {
@@ -66,11 +80,10 @@ export class Subject {
         }
 
         const result = (
-            await db.query<DbSubject>('INSERT INTO subjects (id, name, semester_id) VALUES ($1, $2, $3) RETURNING *', [
-                crypto.randomUUID(),
-                data.name,
-                data.semester.id,
-            ])
+            await db.query<DbSubject>(
+                'INSERT INTO subjects (id, name, semester_id, teacher_ids) VALUES ($1, $2, $3, $4) RETURNING *',
+                [crypto.randomUUID(), data.name, data.semester.id, data.teachers.map(user => user.id)],
+            )
         ).rows[0];
 
         assert(result);
@@ -87,10 +100,15 @@ export class Subject {
             this.semesterId = data.semester.id;
         }
 
-        await db.query('UPDATE subjects SET name = $2, semester_id = $3 WHERE id = $1', [
+        if (data.teachers !== undefined) {
+            this.teacherIds = data.teachers.map(user => user.id);
+        }
+
+        await db.query('UPDATE subjects SET name = $2, semester_id = $3, teacher_ids = $4 WHERE id = $1', [
             this.id,
             this.name,
             this.semesterId,
+            this.teacherIds,
         ]);
     }
 }

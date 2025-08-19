@@ -3,11 +3,14 @@ import { computed, ref } from 'vue';
 import { langId } from '@components/frontend/lang';
 import type { SemesterData } from '@components/semesters/types';
 import type { SubjectData } from '@components/subjects/types';
+import type { UserData } from '@components/users/types';
 import { toHyphenatedLowercase } from '@components/utils';
+import UserMultiSelector from '@components/users/UserMultiSelector.vue';
 
 const props = defineProps<{
     semester: SemesterData;
     subject?: SubjectData;
+    allUsers: UserData[];
 }>();
 
 const isEditing = computed(() => props.subject !== undefined);
@@ -15,6 +18,7 @@ const isEditing = computed(() => props.subject !== undefined);
 const addingFailed = ref(false);
 
 const subjectName = ref<string | undefined>(props.subject?.name);
+const teachers = ref<UserData[]>(props.subject?.teachers ?? []);
 
 async function submit() {
     try {
@@ -25,6 +29,7 @@ async function submit() {
                   body: JSON.stringify({
                       name: subjectName.value,
                       semesterId: props.semester.id,
+                      teacherIds: teachers.value.map(user => user.id),
                   }),
               })
             : await fetch('/semesters/api/subjects/', {
@@ -33,6 +38,7 @@ async function submit() {
                   body: JSON.stringify({
                       id: props.subject?.id,
                       name: subjectName.value,
+                      teacherIds: teachers.value.map(user => user.id),
                   }),
               });
 
@@ -62,12 +68,14 @@ async function submit() {
 const translations = {
     'en': {
         'Subject name': 'Subject name',
+        'Teachers': 'Teachers',
         'Save': 'Save',
         'Add': 'Add',
         'Subject with this name already exists.': 'Subject with this name already exists.',
     },
     'pl': {
         'Subject name': 'Nazwa przedmiotu',
+        'Teachers': 'Nauczyciele',
         'Save': 'Zapisz',
         'Add': 'Dodaj',
         'Subject with this name already exists.': 'Przedmiot o podanej nazwie już isnieje.',
@@ -84,6 +92,11 @@ function translate(text: keyof (typeof translations)[LangId]): string {
         <div>
             <label for="subjectName" class="form-label">{{ translate('Subject name') }}</label>
             <input id="subjectName" v-model="subjectName" type="text" class="form-control" required autofocus />
+        </div>
+
+        <div>
+            <label for="subjectTeachers" class="form-label">{{ translate('Teachers') }}</label>
+            <UserMultiSelector id="subjectTeachers" v-model="teachers" :options="allUsers" required />
         </div>
 
         <div class="text-center">

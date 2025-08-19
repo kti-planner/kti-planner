@@ -5,6 +5,8 @@ import type { ClassroomData } from '@components/classrooms/types';
 import type { ExerciseData } from '@components/exercises/types';
 import type { SemesterData } from '@components/semesters/types';
 import type { SubjectData } from '@components/subjects/types';
+import type { UserData } from '@components/users/types';
+import UserSelector from '@components/users/UserSelector.vue';
 
 const props = defineProps<{
     semester: SemesterData;
@@ -20,6 +22,7 @@ const addingFailed = ref(false);
 const exerciseName = ref<string | undefined>(props.exercise?.name);
 const exerciseNumber = ref<number | undefined>(props.exercise?.exerciseNumber);
 const exerciseClassroomId = ref<string | undefined>(props.exercise?.classroomId);
+const teacher = ref<UserData | null>(props.exercise?.teacher ?? props.subject.teachers[0] ?? null);
 
 async function submit() {
     try {
@@ -32,6 +35,7 @@ async function submit() {
                       exerciseNumber: exerciseNumber.value,
                       subjectId: props.subject.id,
                       classroomId: exerciseClassroomId.value,
+                      teacherId: teacher.value?.id,
                   }),
               })
             : await fetch('/semesters/api/exercises/', {
@@ -42,6 +46,7 @@ async function submit() {
                       name: exerciseName.value,
                       exerciseNumber: exerciseNumber.value,
                       classroomId: exerciseClassroomId.value,
+                      teacherId: teacher.value?.id,
                   }),
               });
 
@@ -70,8 +75,9 @@ async function submit() {
 
 const translations = {
     'en': {
-        'Exercise name': 'Exercise name',
         'Exercise number': 'Exercise number',
+        'Exercise name': 'Exercise name',
+        'Teacher': 'Teacher',
         'Classroom': 'Classroom',
         'Save': 'Save',
         'Add': 'Add',
@@ -79,8 +85,9 @@ const translations = {
         'Manage classrooms': 'Manage classrooms',
     },
     'pl': {
-        'Exercise name': 'Nazwa ćwiczenia',
         'Exercise number': 'Numer ćwiczenia',
+        'Exercise name': 'Nazwa ćwiczenia',
+        'Teacher': 'Nauczyciel',
         'Classroom': 'Sala',
         'Save': 'Zapisz',
         'Add': 'Dodaj',
@@ -97,13 +104,18 @@ function translate(text: keyof (typeof translations)[LangId]): string {
 <template>
     <form class="vstack gap-3 mx-auto" style="max-width: 500px" @submit.prevent="submit">
         <div>
+            <label for="exerciseNumber" class="form-label">{{ translate('Exercise number') }}</label>
+            <input id="exerciseNumber" v-model="exerciseNumber" type="number" :min="0" class="form-control" required />
+        </div>
+
+        <div>
             <label for="exerciseName" class="form-label">{{ translate('Exercise name') }}</label>
             <input id="exerciseName" v-model="exerciseName" type="text" class="form-control" required autofocus />
         </div>
 
         <div>
-            <label for="exerciseNumber" class="form-label">{{ translate('Exercise number') }}</label>
-            <input id="exerciseNumber" v-model="exerciseNumber" type="number" :min="0" class="form-control" required />
+            <label for="exerciseTeacher" class="form-label">{{ translate('Teacher') }}</label>
+            <UserSelector id="exerciseTeacher" v-model="teacher" :options="subject.teachers" required />
         </div>
 
         <div>

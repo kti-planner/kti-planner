@@ -47,6 +47,8 @@ test('Can add new subject and prevent duplicate subject creation', async ({ page
 
     await page.getByRole('textbox', { name: 'Subject name' }).fill('Sieci komputerowe');
 
+    await page.getByRole('combobox', { name: 'Teachers' }).selectOption('Jan Kowalski');
+
     await page.getByRole('button', { name: 'Add', exact: true }).click();
 
     await expect(page.locator('.breadcrumb')).toContainText('Sieci komputerowe');
@@ -63,6 +65,8 @@ test('Can add new subject and prevent duplicate subject creation', async ({ page
     await expect(page.locator('#subject-modal')).toContainText('Add new subject');
 
     await page.getByRole('textbox', { name: 'Subject name' }).fill('Sieci komputerowe');
+
+    await page.getByRole('combobox', { name: 'Teachers' }).selectOption('Jan Kowalski');
 
     await page.getByRole('button', { name: 'Add', exact: true }).click();
 
@@ -118,6 +122,8 @@ test('Can edit subject and prevent duplicate subject', async ({ page }) => {
     );
 
     await page.getByRole('textbox', { name: 'Subject name' }).fill('Sieci Ethernet i IP');
+
+    await page.getByRole('combobox', { name: 'Teachers' }).selectOption('Admin');
 
     await page.getByRole('button', { name: 'Save' }).click();
 

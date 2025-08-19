@@ -2,6 +2,7 @@ import { expect, test } from 'vitest';
 import { LaboratoryGroup } from '@backend/laboratory-group';
 import { Semester } from '@backend/semester';
 import { Subject } from '@backend/subject';
+import { User } from '@backend/user';
 
 test('Laboratory groups', async () => {
     expect(await LaboratoryGroup.fetchAll()).toStrictEqual([]);
@@ -21,14 +22,28 @@ test('Laboratory groups', async () => {
         endDate: new Date('2025-06-15T00:00:00'),
     });
 
+    const user1 = await User.create({
+        name: 'Jan Kowalski',
+        email: 'jan@kowalski.pl',
+        password: null,
+    });
+
+    const user2 = await User.create({
+        name: 'Bogdan Nowak',
+        email: 'bogdan@nowak.pl',
+        password: null,
+    });
+
     const subject1 = await Subject.create({
         name: 'Sieci komputerowe',
         semester: semester1,
+        teachers: [user1],
     });
 
     const subject2 = await Subject.create({
         name: 'Zarządzanie bezpieczeństwem sieci',
         semester: semester2,
+        teachers: [user1, user2],
     });
 
     const laboratoryGroup1 = await LaboratoryGroup.create({

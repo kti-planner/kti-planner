@@ -3,6 +3,7 @@ import { Classroom } from '@backend/classroom';
 import { Exercise } from '@backend/exercise';
 import { Semester } from '@backend/semester';
 import { Subject } from '@backend/subject';
+import { makeUserData, User } from '@backend/user';
 import type { ClassroomData } from '@components/classrooms/types';
 import type { SemesterData } from '@components/semesters/types';
 import type { SubjectData } from '@components/subjects/types';
@@ -64,6 +65,7 @@ const subjectData: SubjectData = {
     name: subject.name,
     semesterId: subject.semesterId,
     slug: subject.slug,
+    teachers: (await subject.getTeachers()).map(makeUserData),
 };
 
 const exercises = await Exercise.fetchAllFromSubject(subject);
@@ -75,6 +77,8 @@ const classroomsData: ClassroomData[] = classrooms.map(classroom => ({
     id: classroom.id,
     name: classroom.name,
 }));
+
+const allUsers = await User.fetchAll();
 ---
 
 <Layout
@@ -95,7 +99,7 @@ const classroomsData: ClassroomData[] = classrooms.map(classroom => ({
 >
     <h1 class="text-center fs-4 mb-3">
         {subject.name}
-        {user && <EditSubject client:only="vue" semester={semesterData} subject={subjectData} />}
+        {user && <EditSubject client:only="vue" semester={semesterData} subject={subjectData} allUsers={allUsers} />}
     </h1>
     <div class="row g-4">
         <div class="col-12 col-lg-9 mb-2 order-2 order-lg-1">
