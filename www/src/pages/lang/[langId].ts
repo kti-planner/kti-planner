@@ -8,12 +8,15 @@ export const GET: APIRoute = ({ cookies, params, url, redirect }) => {
         return new Response(null, { status: 404 });
     }
 
-    const nextPage = url.searchParams.get('next');
+    let nextPage = url.searchParams.get('next') ?? '/';
+    if (new URL(nextPage, url).origin !== url.origin) {
+        nextPage = '/';
+    }
 
     cookies.set('langId', langId, {
         path: '/',
         secure: true,
     });
 
-    return redirect(nextPage ?? '/', 303);
+    return redirect(nextPage, 303);
 };

@@ -7,6 +7,10 @@ export const POST: APIRoute = ({ redirect, session, url }) => {
 
     session.destroy();
 
-    const nextPage = url.searchParams.get('next') ?? '/';
+    let nextPage = url.searchParams.get('next') ?? '/';
+    if (new URL(nextPage, url).origin !== url.origin) {
+        nextPage = '/';
+    }
+
     return redirect(nextPage, 303);
 };

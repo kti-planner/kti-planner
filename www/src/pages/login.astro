@@ -4,11 +4,14 @@ import LoginForm from '@components/LoginForm.vue';
 
 const { langId, user } = Astro.locals;
 
-if (user) {
-    return Astro.redirect('/');
+let nextPage = Astro.url.searchParams.get('next') ?? '/';
+if (new URL(nextPage, Astro.url).origin !== Astro.url.origin) {
+    nextPage = '/';
 }
 
-const nextPage = Astro.url.searchParams.get('next') ?? '/';
+if (user) {
+    return Astro.redirect(nextPage);
+}
 
 const translations = {
     'en': {
