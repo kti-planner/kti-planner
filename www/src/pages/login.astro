@@ -1,13 +1,11 @@
 ---
+import { getNextPage } from 'src/utils';
 import Layout from '@layouts/Layout.astro';
 import LoginForm from '@components/LoginForm.vue';
 
 const { langId, user } = Astro.locals;
 
-let nextPage = Astro.url.searchParams.get('next') ?? '/';
-if (new URL(nextPage, Astro.url).origin !== Astro.url.origin) {
-    nextPage = '/';
-}
+const nextPage = getNextPage(Astro.url);
 
 if (user) {
     return Astro.redirect(nextPage);

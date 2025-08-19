@@ -1,4 +1,5 @@
 import type { APIRoute } from 'astro';
+import { getNextPage } from 'src/utils';
 
 export const POST: APIRoute = ({ redirect, session, url }) => {
     if (!session) {
@@ -7,10 +8,5 @@ export const POST: APIRoute = ({ redirect, session, url }) => {
 
     session.destroy();
 
-    let nextPage = url.searchParams.get('next') ?? '/';
-    if (new URL(nextPage, url).origin !== url.origin) {
-        nextPage = '/';
-    }
-
-    return redirect(nextPage, 303);
+    return redirect(getNextPage(url), 303);
 };
