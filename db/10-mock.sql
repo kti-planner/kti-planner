@@ -1,10 +1,20 @@
-INSERT INTO users (id, name, email, password_hash)
-VALUES (
+INSERT INTO users (id, name, email, password_hash, role)
+VALUES
+ (
   '9f4eacbf-9cfc-4a08-8c35-fb8eabcdd897',
   'Admin',
   'admin@admin.com',
-  '$2b$10$RRdybUw9Ypxd.HR38l8UGORzd36eE.KbVXMUq1ICwBXnoxjAw8g8S' -- bcrypt hash of word kti
+  '$2b$10$RRdybUw9Ypxd.HR38l8UGORzd36eE.KbVXMUq1ICwBXnoxjAw8g8S', -- bcrypt hash of word kti
+  'admin'
+),
+(
+  '116836cd-65e7-40f6-8180-9bfdb2c9eed1',
+  'Teacher',
+  'teacher@teacher.com',
+  '$2b$10$RRdybUw9Ypxd.HR38l8UGORzd36eE.KbVXMUq1ICwBXnoxjAw8g8S', -- bcrypt hash of word kti
+  'teacher'
 );
+
 
 INSERT INTO semesters (id, year, type, start_date, end_date)
 VALUES
