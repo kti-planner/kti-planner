@@ -1,4 +1,5 @@
 import { defineMiddleware } from 'astro:middleware';
+import { makeLoginNextParam } from 'src/utils';
 import { isLangId, langIds } from '@backend/lang';
 import { User } from '@backend/user';
 
@@ -44,11 +45,7 @@ export const onRequest = defineMiddleware(async ({ request, locals, cookies, ses
     }
 
     locals.redirectToLoginPage = () => {
-        if (url.pathname === '/semesters/') {
-            return redirect('/login/');
-        } else {
-            return redirect(`/login/?${new URLSearchParams({ next: url.pathname + url.search })}`);
-        }
+        return redirect(`/login/${makeLoginNextParam(url)}`);
     };
 
     return await next();

@@ -1,11 +1,12 @@
 ---
+import { makeLoginNextParam } from 'src/utils';
+
 interface Props {
     breadcrumbs: Breadcrumb[];
 }
 
 const { breadcrumbs } = Astro.props;
 const { langId, user } = Astro.locals;
-const { pathname, search } = Astro.url;
 
 const translations = {
     'en': {
@@ -31,7 +32,7 @@ const languageLabels: Record<LangId, string> = {
     'pl': 'Polski',
 };
 
-const loginParams = pathname !== '/semesters/' ? `?${new URLSearchParams({ next: pathname + search })}` : '';
+const loginParams = makeLoginNextParam(Astro.url);
 ---
 
 <nav class="navbar navbar-expand-md bg-body-tertiary border-bottom border-secondary-subtle">

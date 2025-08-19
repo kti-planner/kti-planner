@@ -7,3 +7,11 @@ export function getNextPage(url: URL): string {
 
     return nextPage;
 }
+
+export function makeLoginNextParam(url: URL): string {
+    if (url.pathname === '/semesters/') {
+        return '';
+    } else {
+        return `?${new URLSearchParams({ next: url.pathname + url.search })}`;
+    }
+}
