@@ -8,6 +8,8 @@ if (user) {
     return Astro.redirect('/');
 }
 
+const nextPage = Astro.url.searchParams.get('next') ?? '/';
+
 const translations = {
     'en': {
         'Sign in to Lab KTI': 'Sign in to Lab KTI',
@@ -24,5 +26,5 @@ function translate(text: keyof (typeof translations)[LangId]): string {
 
 <Layout breadcrumbs={[]}>
     <h2 class="text-center mb-4">{translate('Sign in to Lab KTI')}</h2>
-    <LoginForm client:only="vue" />
+    <LoginForm client:only="vue" nextPage={nextPage} />
 </Layout>
