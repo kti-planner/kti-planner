@@ -48,8 +48,6 @@ test('Can add new exercise and prevent duplicate exercise creation', async ({ pa
     await page.goto('/semesters/2024-winter/');
     await login(page);
 
-    await page.getByText('Winter semester 2024/2025').click();
-    await page.waitForURL('/semesters/2024-winter/');
     await expect(page.locator('.breadcrumb')).toContainText('Winter semester 2024/2025');
 
     await page.getByText('Sieci komputerowe').click();
