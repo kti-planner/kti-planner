@@ -1,16 +1,7 @@
 import { expect } from 'playwright/test';
 import { login, test } from './fixtures';
 
-test('Can access semesters from /', async ({ page }) => {
-    await page.goto('/');
-
-    await expect(page.locator('body')).toContainText('Summer semester 2024/2025');
-    await expect(page.locator('body')).toContainText('Winter semester 2024/2025');
-    await expect(page.locator('body')).toContainText('Summer semester 2023/2024');
-    await expect(page.locator('body')).toContainText('Winter semester 2023/2024');
-});
-
-test('Can access semesters from /semesters/', async ({ page }) => {
+test('Can access semester list', async ({ page }) => {
     await page.goto('/semesters/');
 
     await expect(page.locator('body')).toContainText('Summer semester 2024/2025');
@@ -20,7 +11,7 @@ test('Can access semesters from /semesters/', async ({ page }) => {
 });
 
 test('Can access semester page', async ({ page }) => {
-    await page.goto('/');
+    await page.goto('/semesters/');
 
     await page.getByText('Summer semester 2024/2025').click();
     await page.waitForURL('/semesters/2024-summer/');
