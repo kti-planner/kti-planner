@@ -61,7 +61,7 @@ function translate(text: keyof (typeof translations)[LangId]): string {
 </script>
 
 <template>
-    <form class="vstack gap-3 mx-auto" style="max-width: 500px" @submit.prevent="submit" autocomplete="off">
+    <form class="vstack gap-3 mx-auto" style="max-width: 500px" @submit.prevent="submit">
         <div>
             <label for="role" class="form-label">{{ translate('Role') }}</label>
             <select id="role" v-model="role" class="form-select" required>

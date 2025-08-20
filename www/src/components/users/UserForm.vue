@@ -92,7 +92,7 @@ function translate(text: keyof (typeof translations)[LangId]): string {
 </script>
 
 <template>
-    <form class="vstack gap-3 mx-auto" style="max-width: 500px" @submit.prevent="submit" autocomplete="off">
+    <form class="vstack gap-3 mx-auto" style="max-width: 500px" autocomplete="off" @submit.prevent="submit">
         <div>
             <label for="name" class="form-label">{{ translate('Name') }}</label>
             <input

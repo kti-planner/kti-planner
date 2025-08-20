@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { langId } from '@components/frontend/lang';
+import type { UserData } from '@components/users/types';
 import IconButton from '@components/IconButton.vue';
 import Modal from '@components/Modal.vue';
 import UserForm from '@components/users/UserForm.vue';
-import type { UserData } from '@components/users/types';
 
 const props = defineProps<{
     user: UserData;

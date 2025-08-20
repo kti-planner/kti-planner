@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { langId } from '@components/frontend/lang';
-import Modal from '@components/Modal.vue';
 import type { UserData } from '@components/users/types';
+import Modal from '@components/Modal.vue';
 import RoleForm from '@components/users/RoleForm.vue';
 
 const props = defineProps<{
