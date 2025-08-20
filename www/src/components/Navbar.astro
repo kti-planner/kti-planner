@@ -11,11 +11,15 @@ const translations = {
         'Sign in': 'Sign in',
         'Sign out': 'Sign out',
         "You're logged in as": "You're logged in as",
+        'Profile': 'Profile',
+        'Users': 'Users',
     },
     'pl': {
         'Sign in': 'Zaloguj się',
         'Sign out': 'Wyloguj się',
         "You're logged in as": 'Jesteś zalogowany jako',
+        'Profile': 'Profil',
+        'Users': 'Użytkownicy',
     },
 };
 
@@ -79,6 +83,12 @@ const languageLabels: Record<LangId, string> = {
                 ) : (
                     <>
                         <div class="d-none d-sm-block">{`${translate("You're logged in as")} ${user.name}`}</div>
+                        <a href={`/profile/`} role="button" class="btn btn-success btn-sm text-nowrap">
+                            {translate('Profile')}
+                        </a>
+                        <a href={`/users/`} role="button" class="btn btn-success btn-sm text-nowrap">
+                            {translate('Users')}
+                        </a>
                         <form action="/api/logout/" method="post">
                             <button type="submit" class="btn btn-success btn-sm text-nowrap">
                                 {translate('Sign out')}

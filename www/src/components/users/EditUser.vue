@@ -1,22 +1,20 @@
 <script setup lang="ts">
 import { langId } from '@components/frontend/lang';
-import type { SemesterData } from '@components/semesters/types';
-import type { SubjectData } from '@components/subjects/types';
 import IconButton from '@components/IconButton.vue';
 import Modal from '@components/Modal.vue';
-import SubjectForm from '@components/subjects/SubjectForm.vue';
+import UserForm from '@components/users/UserForm.vue';
+import type { UserData } from '@components/users/types';
 
 const props = defineProps<{
-    semester: SemesterData;
-    subject: SubjectData;
+    user: UserData;
 }>();
 
 const translations = {
     'en': {
-        'Edit subject': 'Edit subject',
+        'Edit user': 'Edit user',
     },
     'pl': {
-        'Edit subject': 'Edytuj przedmiot',
+        'Edit user': 'Edytuj użytkownika',
     },
 };
 
@@ -24,23 +22,23 @@ function translate(text: keyof (typeof translations)[LangId]): string {
     return translations[langId][text];
 }
 
-const modalId = `edit-subject-modal-${props.semester.slug}-${props.subject.slug}`;
+const modalId = `edit-user-modal-${props.user.id}`;
 </script>
 
 <template>
     <IconButton
         icon="pencil"
         position="absolute"
-        aria-label="Edit subject"
+        aria-label="Edit user"
         class="ms-1"
         style="margin-top: -0.25rem"
         data-bs-toggle="modal"
         :data-bs-target="`#${modalId}`"
-        :title="translate('Edit subject')"
+        :title="translate('Edit user')"
     />
 
     <Modal :id="modalId">
-        <template #header>{{ translate('Edit subject') }} {{ subject.name }}</template>
-        <SubjectForm :semester="semester" :subject="subject" />
+        <template #header> {{ translate('Edit user') }} {{ props.user.name }} </template>
+        <UserForm :user="user" />
     </Modal>
 </template>

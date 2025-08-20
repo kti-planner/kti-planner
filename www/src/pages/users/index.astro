@@ -1,0 +1,49 @@
+---
+import { User } from '@backend/user';
+import Layout from '@layouts/Layout.astro';
+import AddUser from '@components/users/AddUser.vue';
+
+const { langId, user } = Astro.locals;
+
+if (!user) {
+    return Astro.redirect('/login/');
+}
+
+const translations = {
+    'en': {
+        'Users': 'Users',
+    },
+    'pl': {
+        'Users': 'Użytkownicy',
+    },
+};
+
+function translate(text: keyof (typeof translations)[LangId]): string {
+    return translations[langId][text];
+}
+
+const users = await User.fetchAll();
+---
+
+<Layout breadcrumbs={[{ text: translate('Users'), href: '#' }]}>
+    {user.role === 'admin' && <AddUser client:only="vue" />}
+
+    <div class="users-list list-group mx-auto my-4">
+        {
+            users.map(
+                s =>
+                    (
+                        <a class="list-group-item list-group-item-action" href={`/users/${s.id}/`}>
+                            {s.name}
+                        </a>
+                    ) as unknown,
+            )
+        }
+    </div>
+</Layout>
+
+<style>
+    .users-list {
+        max-width: 600px;
+    }
+</style>

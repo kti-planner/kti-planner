@@ -1,0 +1,83 @@
+---
+import { User } from '@backend/user';
+import type { UserData } from '@components/users/types';
+import Layout from '@layouts/Layout.astro';
+import EditRole from '@components/users/EditRole.vue';
+import EditUser from '@components/users/EditUser.vue';
+
+const { userId } = Astro.params;
+const { langId, user } = Astro.locals;
+
+if (!user) {
+    return Astro.redirect('/login/');
+}
+
+const translations = {
+    'en': {
+        'Users': 'Users',
+        'User profile': 'User profile',
+        'Name': 'Name',
+        'Role': 'Role',
+        'admin': 'admin',
+        'teacher': 'teacher',
+    },
+    'pl': {
+        'Users': 'Użytkownicy',
+        'User profile': 'Profil użytkownika',
+        'Name': 'Nazwa',
+        'Role': 'Rola',
+        'admin': 'admin',
+        'teacher': 'prowadzący',
+    },
+};
+
+function translate(text: keyof (typeof translations)[LangId]): string {
+    return translations[langId][text];
+}
+
+if (userId === undefined) {
+    return new Response(null, { status: 404 });
+}
+
+const targetUser = await User.fetch(userId);
+
+if (!targetUser) {
+    return new Response(null, { status: 404 });
+}
+
+const userData: UserData = {
+    id: targetUser.id,
+    name: targetUser.name,
+    email: targetUser.email,
+    role: targetUser.role,
+};
+---
+
+<Layout
+    breadcrumbs={[
+        {
+            text: translate('Users'),
+            href: '/users/',
+        },
+        {
+            text: targetUser.name,
+            href: '#',
+        },
+    ]}
+>
+    <h1 class="text-center fs-4 mb-3">
+        {translate('User profile')}
+        {(user.role === 'admin' || user.id === targetUser.id) && <EditUser client:only="vue" user={userData} />}
+    </h1>
+    <p class="text-center fs-5">
+        {translate('Name')}: {targetUser.name}
+    </p>
+    <p class="text-center fs-5">
+        Email: {targetUser.email}
+    </p>
+    <p class="text-center fs-5">
+        {translate('Role')}: {translate(targetUser.role as 'admin' | 'teacher')}
+    </p>
+
+    {user.role === 'admin' && <EditRole client:only="vue" user={userData} />}
+</Layout>
