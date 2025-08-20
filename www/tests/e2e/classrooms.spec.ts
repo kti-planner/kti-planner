@@ -3,7 +3,7 @@ import { login, test } from './fixtures';
 
 test('Cannot access classrooms list when logged-out', async ({ page }) => {
     await page.goto('/classrooms/');
-    await expect(page).toHaveURL('/login/');
+    await expect(page).toHaveURL('/login/?next=%2Fclassrooms%2F');
 });
 
 test('Can access classrooms list when logged-in', async ({ page }) => {

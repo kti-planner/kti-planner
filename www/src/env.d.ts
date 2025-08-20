@@ -8,6 +8,7 @@ declare namespace App {
         jsonData?: unknown;
         langId: LangId;
         user: import('@backend/user').User | null;
+        redirectToLoginPage: () => Response;
     }
 
     interface SessionData {
