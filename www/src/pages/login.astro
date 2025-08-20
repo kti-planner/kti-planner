@@ -1,11 +1,14 @@
 ---
+import { getNextPage } from 'src/utils';
 import Layout from '@layouts/Layout.astro';
 import LoginForm from '@components/LoginForm.vue';
 
 const { langId, user } = Astro.locals;
 
+const nextPage = getNextPage(Astro.url);
+
 if (user) {
-    return Astro.redirect('/');
+    return Astro.redirect(nextPage);
 }
 
 const translations = {
@@ -24,5 +27,5 @@ function translate(text: keyof (typeof translations)[LangId]): string {
 
 <Layout breadcrumbs={[]}>
     <h2 class="text-center mb-4">{translate('Sign in to Lab KTI')}</h2>
-    <LoginForm client:only="vue" />
+    <LoginForm client:only="vue" nextPage={nextPage} />
 </Layout>

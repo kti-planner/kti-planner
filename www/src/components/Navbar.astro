@@ -1,4 +1,6 @@
 ---
+import { makeLoginNextParam } from 'src/utils';
+
 interface Props {
     breadcrumbs: Breadcrumb[];
 }
@@ -29,6 +31,8 @@ const languageLabels: Record<LangId, string> = {
     'en': 'English',
     'pl': 'Polski',
 };
+
+const loginParams = makeLoginNextParam(Astro.url);
 ---
 
 <nav class="navbar navbar-expand-md bg-body-tertiary border-bottom border-secondary-subtle">
@@ -73,13 +77,13 @@ const languageLabels: Record<LangId, string> = {
         <div class="d-flex align-items-center gap-3 order-first order-md-last px-3 ms-auto">
             {
                 user === null ? (
-                    <a href="/login/" role="button" class="btn btn-success btn-sm text-nowrap">
+                    <a href={`/login/${loginParams}`} role="button" class="btn btn-success btn-sm text-nowrap">
                         {translate('Sign in')}
                     </a>
                 ) : (
                     <>
                         <div class="d-none d-sm-block">{`${translate("You're logged in as")} ${user.name}`}</div>
-                        <form action="/api/logout/" method="post">
+                        <form action={`/api/logout/${loginParams}`} method="post">
                             <button type="submit" class="btn btn-success btn-sm text-nowrap">
                                 {translate('Sign out')}
                             </button>

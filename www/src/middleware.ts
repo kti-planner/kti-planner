@@ -1,8 +1,9 @@
 import { defineMiddleware } from 'astro:middleware';
+import { makeLoginNextParam } from 'src/utils';
 import { isLangId, langIds } from '@backend/lang';
 import { User } from '@backend/user';
 
-export const onRequest = defineMiddleware(async ({ request, locals, cookies, session }, next) => {
+export const onRequest = defineMiddleware(async ({ request, locals, cookies, session, url, redirect }, next) => {
     const contentType = request.headers.get('Content-Type')?.split(';', 1)[0];
 
     if (contentType === 'application/x-www-form-urlencoded' || contentType === 'multipart/form-data') {
@@ -42,6 +43,10 @@ export const onRequest = defineMiddleware(async ({ request, locals, cookies, ses
     } else {
         locals.user = null;
     }
+
+    locals.redirectToLoginPage = () => {
+        return redirect(`/login/${makeLoginNextParam(url)}`);
+    };
 
     return await next();
 });
