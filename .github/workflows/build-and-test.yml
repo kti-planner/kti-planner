@@ -35,7 +35,7 @@ jobs:
 
       - name: Run app
         run: |
-          ASTRO_MODE=testing docker compose up --build -d --wait
+          docker compose up --build -d --wait
 
       - name: Unit test
         run: npm run test-unit

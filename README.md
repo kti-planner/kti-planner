@@ -57,13 +57,7 @@ Make sure you install the necessary binaries for your system:
 npx playwright install
 ```
 
-Then run the app with Docker Compose and set the `testing` mode:
-
-```bash
-ASTRO_MODE=testing docker compose up --build -d
-```
-
-Once the app is running, you can start the tests:
+Then when the app is running with Docker Compose run the following command:
 
 ```bash
 npm run test-e2e

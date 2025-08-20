@@ -6,7 +6,6 @@ services:
       context: .
       args:
         REDIS_URL: redis://redis
-        ASTRO_MODE: $ASTRO_MODE
     depends_on:
       - postgres
       - redis

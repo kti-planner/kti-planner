@@ -4,9 +4,6 @@ FROM node:22-alpine AS builder
 # It is set in compose.yaml
 ARG REDIS_URL
 
-# This is used by build-www script from package.json
-ARG ASTRO_MODE
-
 RUN mkdir -p /home/node/build && chown -R node:node /home/node/build
 WORKDIR /home/node/build
 USER node

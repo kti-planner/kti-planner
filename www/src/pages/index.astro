@@ -1,9 +1,7 @@
 ---
 import { Semester } from '@backend/semester';
 
-const currentSemester = await Semester.fetchByDate(
-    import.meta.env.MODE !== 'testing' ? new Date() : new Date('2025-08-20T19:29:55'),
-);
+const currentSemester = await Semester.fetchByDate(new Date());
 
 return Astro.redirect(currentSemester ? `/semesters/${currentSemester.slug}/` : '/semesters/');
 ---
