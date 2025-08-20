@@ -36,8 +36,6 @@ test('Can add new subject and prevent duplicate subject creation', async ({ page
     await page.goto('/semesters/2024-summer/');
     await login(page);
 
-    await page.getByText('Summer semester 2024/2025').click();
-    await page.waitForURL('/semesters/2024-summer/');
     await expect(page.locator('.breadcrumb')).toContainText('Summer semester 2024/2025');
 
     await page.getByRole('button', { name: 'Add new subject' }).click();

@@ -4,10 +4,10 @@ import Layout from '@layouts/Layout.astro';
 import AddClassroom from '@components/classrooms/AddClassroom.vue';
 import EditClassroom from '@components/classrooms/EditClassroom.vue';
 
-const { langId, user } = Astro.locals;
+const { langId, user, redirectToLoginPage } = Astro.locals;
 
 if (!user) {
-    return Astro.redirect('/login/');
+    return redirectToLoginPage();
 }
 
 const translations = {
