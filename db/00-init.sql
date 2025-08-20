@@ -51,5 +51,5 @@ CREATE TABLE laboratory_classes (
     laboratory_group_id uuid REFERENCES laboratory_groups NOT NULL,
     start_date          timestamptz NOT NULL,
     end_date            timestamptz NOT NULL,
-    teacher_id      uuid REFERENCES users NOT NULL
+    teacher_id          uuid REFERENCES users NOT NULL
 );
