@@ -2,6 +2,7 @@ import assert from 'node:assert';
 import type { Classroom } from '@backend/classroom';
 import { db } from '@backend/db';
 import type { Subject } from '@backend/subject';
+import { User } from '@backend/user';
 
 interface DbExercise {
     id: string;
@@ -9,6 +10,7 @@ interface DbExercise {
     subject_id: string;
     exercise_number: number;
     classroom_id: string;
+    teacher_id: string;
 }
 
 export interface ExerciseCreateData {
@@ -16,12 +18,14 @@ export interface ExerciseCreateData {
     subject: Subject;
     exerciseNumber: number;
     classroom: Classroom;
+    teacher: User;
 }
 
 export interface ExerciseEditData {
     name?: string | undefined;
     exerciseNumber?: number | undefined;
     classroom?: Classroom | undefined;
+    teacher?: User | undefined;
 }
 
 export class Exercise {
@@ -30,6 +34,7 @@ export class Exercise {
     subjectId: string;
     exerciseNumber: number;
     classroomId: string;
+    teacherId: string;
 
     constructor(data: DbExercise) {
         this.id = data.id;
@@ -37,6 +42,15 @@ export class Exercise {
         this.subjectId = data.subject_id;
         this.exerciseNumber = data.exercise_number;
         this.classroomId = data.classroom_id;
+        this.teacherId = data.teacher_id;
+    }
+
+    async getTeacher(): Promise<User> {
+        const teacher = await User.fetch(this.teacherId);
+
+        assert(teacher);
+
+        return teacher;
     }
 
     static async fetch(id: string): Promise<Exercise | null> {
@@ -76,8 +90,15 @@ export class Exercise {
     static async create(data: ExerciseCreateData): Promise<Exercise> {
         const result = (
             await db.query<DbExercise>(
-                'INSERT INTO exercises (id, name, subject_id, exercise_number, classroom_id) VALUES ($1, $2, $3, $4, $5) RETURNING *',
-                [crypto.randomUUID(), data.name, data.subject.id, data.exerciseNumber, data.classroom.id],
+                'INSERT INTO exercises (id, name, subject_id, exercise_number, classroom_id, teacher_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
+                [
+                    crypto.randomUUID(),
+                    data.name,
+                    data.subject.id,
+                    data.exerciseNumber,
+                    data.classroom.id,
+                    data.teacher.id,
+                ],
             )
         ).rows[0];
 
@@ -99,9 +120,13 @@ export class Exercise {
             this.classroomId = data.classroom.id;
         }
 
+        if (data.teacher !== undefined) {
+            this.teacherId = data.teacher.id;
+        }
+
         await db.query(
-            'UPDATE exercises SET name = $2, subject_id = $3, exercise_number = $4, classroom_id = $5 WHERE id = $1',
-            [this.id, this.name, this.subjectId, this.exerciseNumber, this.classroomId],
+            'UPDATE exercises SET name = $2, subject_id = $3, exercise_number = $4, classroom_id = $5, teacher_id = $6 WHERE id = $1',
+            [this.id, this.name, this.subjectId, this.exerciseNumber, this.classroomId, this.teacherId],
         );
     }
 }

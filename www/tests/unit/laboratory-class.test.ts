@@ -5,6 +5,7 @@ import { LaboratoryClass } from '@backend/laboratory-class';
 import { LaboratoryGroup } from '@backend/laboratory-group';
 import { Semester } from '@backend/semester';
 import { Subject } from '@backend/subject';
+import { User } from '@backend/user';
 
 test('Laboratory classes', async () => {
     expect(await LaboratoryClass.fetchAll()).toStrictEqual([]);
@@ -24,6 +25,18 @@ test('Laboratory classes', async () => {
         endDate: new Date('2025-06-15T00:00:00'),
     });
 
+    const user1 = await User.create({
+        name: 'Jan Kowalski',
+        email: 'jan@kowalski.pl',
+        password: null,
+    });
+
+    const user2 = await User.create({
+        name: 'Bogdan Nowak',
+        email: 'bogdan@nowak.pl',
+        password: null,
+    });
+
     const classroom1 = await Classroom.create({
         name: 'EA 142',
     });
@@ -35,11 +48,13 @@ test('Laboratory classes', async () => {
     const subject1 = await Subject.create({
         name: 'Sieci komputerowe',
         semester: semester1,
+        teachers: [user1],
     });
 
     const subject2 = await Subject.create({
         name: 'Zarządzanie bezpieczeństwem sieci',
         semester: semester2,
+        teachers: [user1, user2],
     });
 
     const exercise1 = await Exercise.create({
@@ -47,6 +62,7 @@ test('Laboratory classes', async () => {
         subject: subject1,
         exerciseNumber: 1,
         classroom: classroom1,
+        teacher: user1,
     });
 
     const exercise2 = await Exercise.create({
@@ -54,6 +70,7 @@ test('Laboratory classes', async () => {
         subject: subject2,
         exerciseNumber: 2,
         classroom: classroom2,
+        teacher: user2,
     });
 
     const laboratoryGroup1 = await LaboratoryGroup.create({
@@ -71,12 +88,14 @@ test('Laboratory classes', async () => {
         laboratoryGroup: laboratoryGroup1,
         startDate: new Date('2024-10-23T11:00:00'),
         endDate: new Date('2024-10-23T13:00:00'),
+        teacher: user1,
     });
 
     expect(laboratoryClass1).toHaveProperty('exerciseId', exercise1.id);
     expect(laboratoryClass1).toHaveProperty('laboratoryGroupId', laboratoryGroup1.id);
     expect(laboratoryClass1).toHaveProperty('startDate', new Date('2024-10-23T11:00:00'));
     expect(laboratoryClass1).toHaveProperty('endDate', new Date('2024-10-23T13:00:00'));
+    expect(laboratoryClass1).toHaveProperty('teacherId', user1.id);
 
     expect(await LaboratoryClass.fetch(laboratoryClass1.id)).toStrictEqual(laboratoryClass1);
     expect(await LaboratoryClass.fetchAll()).toStrictEqual([laboratoryClass1]);
@@ -87,12 +106,14 @@ test('Laboratory classes', async () => {
         laboratoryGroup: laboratoryGroup2,
         startDate: new Date('2025-03-11T13:00:00'),
         endDate: new Date('2025-03-11T15:00:00'),
+        teacher: user1,
     });
 
     expect(laboratoryClass2).toHaveProperty('exerciseId', exercise2.id);
     expect(laboratoryClass2).toHaveProperty('laboratoryGroupId', laboratoryGroup2.id);
     expect(laboratoryClass2).toHaveProperty('startDate', new Date('2025-03-11T13:00:00'));
     expect(laboratoryClass2).toHaveProperty('endDate', new Date('2025-03-11T15:00:00'));
+    expect(laboratoryClass2).toHaveProperty('teacherId', user1.id);
 
     expect(await LaboratoryClass.fetch(laboratoryClass2.id)).toStrictEqual(laboratoryClass2);
     expect(await LaboratoryClass.fetch(laboratoryClass1.id)).toStrictEqual(laboratoryClass1);
@@ -105,23 +126,27 @@ test('Laboratory classes', async () => {
     await laboratoryClass2.edit({
         startDate: new Date('2025-03-12T09:00:00'),
         endDate: new Date('2025-03-12T11:00:00'),
+        teacher: user2,
     });
 
     expect(laboratoryClass2).toHaveProperty('exerciseId', exercise2.id);
     expect(laboratoryClass2).toHaveProperty('laboratoryGroupId', laboratoryGroup2.id);
     expect(laboratoryClass2).toHaveProperty('startDate', new Date('2025-03-12T09:00:00'));
     expect(laboratoryClass2).toHaveProperty('endDate', new Date('2025-03-12T11:00:00'));
+    expect(laboratoryClass2).toHaveProperty('teacherId', user2.id);
 
     expect(laboratoryClass1).toHaveProperty('exerciseId', exercise1.id);
     expect(laboratoryClass1).toHaveProperty('laboratoryGroupId', laboratoryGroup1.id);
     expect(laboratoryClass1).toHaveProperty('startDate', new Date('2024-10-23T11:00:00'));
     expect(laboratoryClass1).toHaveProperty('endDate', new Date('2024-10-23T13:00:00'));
+    expect(laboratoryClass1).toHaveProperty('teacherId', user1.id);
 
     const laboratoryClass3 = await LaboratoryClass.create({
         exercise: exercise1,
         laboratoryGroup: laboratoryGroup1,
         startDate: new Date('2024-10-30T11:00:00'),
         endDate: new Date('2024-10-30T13:00:00'),
+        teacher: user1,
     });
 
     expect(await LaboratoryClass.fetch(laboratoryClass2.id)).toStrictEqual(laboratoryClass2);

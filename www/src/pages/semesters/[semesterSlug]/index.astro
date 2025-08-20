@@ -1,6 +1,7 @@
 ---
 import { Semester } from '@backend/semester';
 import { Subject } from '@backend/subject';
+import { User } from '@backend/user';
 import type { SemesterData } from '@components/semesters/types';
 import { formatDateLocalYyyyMmDd } from '@components/utils';
 import Layout from '@layouts/Layout.astro';
@@ -48,6 +49,8 @@ const semesterData: SemesterData = {
 };
 
 const subjects = await Subject.fetchAllFromSemester(semester);
+
+const allUsers = await User.fetchAll();
 ---
 
 <Layout
@@ -69,7 +72,7 @@ const subjects = await Subject.fetchAllFromSemester(semester);
     {
         user && (
             <div class="my-2">
-                <AddSubject client:only="vue" semester={semesterData} />
+                <AddSubject client:only="vue" semester={semesterData} allUsers={allUsers} />
             </div>
         )
     }

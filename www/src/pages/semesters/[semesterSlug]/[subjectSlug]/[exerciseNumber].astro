@@ -3,6 +3,7 @@ import { Classroom } from '@backend/classroom';
 import { Exercise } from '@backend/exercise';
 import { Semester } from '@backend/semester';
 import { Subject } from '@backend/subject';
+import { makeUserData } from '@backend/user';
 import type { ClassroomData } from '@components/classrooms/types';
 import type { ExerciseData } from '@components/exercises/types';
 import type { SemesterData } from '@components/semesters/types';
@@ -71,6 +72,7 @@ const subjectData: SubjectData = {
     name: subject.name,
     semesterId: subject.semesterId,
     slug: subject.slug,
+    teachers: (await subject.getTeachers()).map(makeUserData),
 };
 
 const exerciseData: ExerciseData = {
@@ -79,6 +81,7 @@ const exerciseData: ExerciseData = {
     exerciseNumber: exercise.exerciseNumber,
     subjectId: exercise.subjectId,
     classroomId: exercise.classroomId,
+    teacher: makeUserData(await exercise.getTeacher()),
 };
 
 const classrooms = await Classroom.fetchAll();
