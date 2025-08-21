@@ -2,6 +2,10 @@
 import { ref } from 'vue';
 import { langId } from '@components/frontend/lang';
 
+const { nextPage } = defineProps<{
+    nextPage: string;
+}>();
+
 const email = ref<string>('');
 const password = ref<string>('');
 
@@ -30,7 +34,7 @@ async function submit() {
         password.value = '';
 
         if (loginSuccess) {
-            window.location.href = '/';
+            window.location.href = nextPage;
         }
     } catch (error) {
         console.log(error);

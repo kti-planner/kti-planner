@@ -1,3 +1,7 @@
 ---
-return Astro.rewrite('/semesters/');
+import { Semester } from '@backend/semester';
+
+const currentSemester = await Semester.fetchByDate(new Date());
+
+return Astro.redirect(currentSemester ? `/semesters/${currentSemester.slug}/` : '/semesters/');
 ---

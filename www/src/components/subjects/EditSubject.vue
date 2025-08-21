@@ -2,6 +2,7 @@
 import { langId } from '@components/frontend/lang';
 import type { SemesterData } from '@components/semesters/types';
 import type { SubjectData } from '@components/subjects/types';
+import type { UserData } from '@components/users/types';
 import IconButton from '@components/IconButton.vue';
 import Modal from '@components/Modal.vue';
 import SubjectForm from '@components/subjects/SubjectForm.vue';
@@ -9,6 +10,7 @@ import SubjectForm from '@components/subjects/SubjectForm.vue';
 const props = defineProps<{
     semester: SemesterData;
     subject: SubjectData;
+    allUsers: UserData[];
 }>();
 
 const translations = {
@@ -41,6 +43,6 @@ const modalId = `edit-subject-modal-${props.semester.slug}-${props.subject.slug}
 
     <Modal :id="modalId">
         <template #header>{{ translate('Edit subject') }} {{ subject.name }}</template>
-        <SubjectForm :semester="semester" :subject="subject" />
+        <SubjectForm :semester="semester" :subject="subject" :all-users />
     </Modal>
 </template>

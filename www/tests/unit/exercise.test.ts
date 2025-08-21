@@ -3,6 +3,7 @@ import { Classroom } from '@backend/classroom';
 import { Exercise } from '@backend/exercise';
 import { Semester } from '@backend/semester';
 import { Subject } from '@backend/subject';
+import { User } from '@backend/user';
 
 test('Exercises', async () => {
     expect(await Exercise.fetchAll()).toStrictEqual([]);
@@ -22,6 +23,20 @@ test('Exercises', async () => {
         endDate: new Date('2025-06-15T00:00:00'),
     });
 
+    const user1 = await User.create({
+        name: 'Jan Kowalski',
+        email: 'jan@kowalski.pl',
+        password: null,
+        role: 'teacher',
+    });
+
+    const user2 = await User.create({
+        name: 'Bogdan Nowak',
+        email: 'bogdan@nowak.pl',
+        password: null,
+        role: 'teacher',
+    });
+
     const classroom1 = await Classroom.create({
         name: 'EA 142',
     });
@@ -33,11 +48,13 @@ test('Exercises', async () => {
     const subject1 = await Subject.create({
         name: 'Sieci komputerowe',
         semester: semester1,
+        teachers: [user1],
     });
 
     const subject2 = await Subject.create({
         name: 'Zarządzanie bezpieczeństwem sieci',
         semester: semester2,
+        teachers: [user1, user2],
     });
 
     const exercise1 = await Exercise.create({
@@ -45,12 +62,16 @@ test('Exercises', async () => {
         subject: subject1,
         exerciseNumber: 1,
         classroom: classroom1,
+        teacher: user1,
     });
 
     expect(exercise1).toHaveProperty('name', 'Diagnostyka sieci IP');
     expect(exercise1).toHaveProperty('subjectId', subject1.id);
     expect(exercise1).toHaveProperty('exerciseNumber', 1);
     expect(exercise1).toHaveProperty('classroomId', classroom1.id);
+    expect(exercise1).toHaveProperty('teacherId', user1.id);
+
+    expect(await exercise1.getTeacher()).toStrictEqual(user1);
 
     expect(await Exercise.fetch(exercise1.id)).toStrictEqual(exercise1);
     expect(await Exercise.fetchAll()).toStrictEqual([exercise1]);
@@ -63,12 +84,16 @@ test('Exercises', async () => {
         subject: subject2,
         exerciseNumber: 2,
         classroom: classroom2,
+        teacher: user1,
     });
 
     expect(exercise2).toHaveProperty('name', 'Firewall');
     expect(exercise2).toHaveProperty('subjectId', subject2.id);
     expect(exercise2).toHaveProperty('exerciseNumber', 2);
     expect(exercise2).toHaveProperty('classroomId', classroom2.id);
+    expect(exercise2).toHaveProperty('teacherId', user1.id);
+
+    expect(await exercise2.getTeacher()).toStrictEqual(user1);
 
     expect(await Exercise.fetch(exercise2.id)).toStrictEqual(exercise2);
     expect(await Exercise.fetch(exercise1.id)).toStrictEqual(exercise1);
@@ -88,23 +113,31 @@ test('Exercises', async () => {
         name: 'IPv6',
         exerciseNumber: 4,
         classroom: classroom1,
+        teacher: user2,
     });
 
     expect(exercise2).toHaveProperty('name', 'IPv6');
     expect(exercise2).toHaveProperty('subjectId', subject2.id);
     expect(exercise2).toHaveProperty('exerciseNumber', 4);
     expect(exercise2).toHaveProperty('classroomId', classroom1.id);
+    expect(exercise2).toHaveProperty('teacherId', user2.id);
+
+    expect(await exercise2.getTeacher()).toStrictEqual(user2);
 
     expect(exercise1).toHaveProperty('name', 'Diagnostyka sieci IP');
     expect(exercise1).toHaveProperty('subjectId', subject1.id);
     expect(exercise1).toHaveProperty('exerciseNumber', 1);
     expect(exercise1).toHaveProperty('classroomId', classroom1.id);
+    expect(exercise1).toHaveProperty('teacherId', user1.id);
+
+    expect(await exercise1.getTeacher()).toStrictEqual(user1);
 
     const exercise3 = await Exercise.create({
         name: 'Firewall',
         subject: subject1,
         exerciseNumber: 2,
         classroom: classroom2,
+        teacher: user1,
     });
 
     expect(await Exercise.fetch(exercise2.id)).toStrictEqual(exercise2);

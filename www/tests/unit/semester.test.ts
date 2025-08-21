@@ -65,20 +65,20 @@ test('Semesters', async () => {
     await semester2.edit({
         year: 2025,
         type: 'winter',
-        startDate: new Date('2025-01-02T00:00:00'),
-        endDate: new Date('2026-03-04T00:00:00'),
+        startDate: new Date('2025-03-02T00:00:00'),
+        endDate: new Date('2026-09-10T00:00:00'),
     });
 
     expect(semester2).toHaveProperty('year', 2025);
     expect(semester2).toHaveProperty('type', 'winter');
-    expect(semester2).toHaveProperty('startDate', new Date('2025-01-02T00:00:00'));
+    expect(semester2).toHaveProperty('startDate', new Date('2025-03-02T00:00:00'));
     expect(semester2.startDate.getFullYear()).toBe(2025);
-    expect(semester2.startDate.getMonth()).toBe(0);
+    expect(semester2.startDate.getMonth()).toBe(2);
     expect(semester2.startDate.getDate()).toBe(2);
-    expect(semester2).toHaveProperty('endDate', new Date('2026-03-04T00:00:00'));
+    expect(semester2).toHaveProperty('endDate', new Date('2026-09-10T00:00:00'));
     expect(semester2.endDate.getFullYear()).toBe(2026);
-    expect(semester2.endDate.getMonth()).toBe(2);
-    expect(semester2.endDate.getDate()).toBe(4);
+    expect(semester2.endDate.getMonth()).toBe(8);
+    expect(semester2.endDate.getDate()).toBe(10);
     expect(semester2).toHaveProperty('slug', '2025-winter');
 
     expect(semester1).toHaveProperty('year', 2024);
@@ -103,4 +103,15 @@ test('Semesters', async () => {
     expect(await Semester.fetchBySlug('2024-summer')).toStrictEqual(null);
     expect(await Semester.fetchBySlug('2025-winter')).toStrictEqual(semester2);
     expect(await Semester.fetchBySlug('2025-summer')).toStrictEqual(null);
+
+    expect(await Semester.fetchByDate(new Date('2024-10-01T00:00:00'))).toStrictEqual(semester1);
+    expect(await Semester.fetchByDate(new Date('2024-12-04T00:00:00'))).toStrictEqual(semester1);
+    expect(await Semester.fetchByDate(new Date('2025-01-30T00:00:00'))).toStrictEqual(semester1);
+    expect(await Semester.fetchByDate(new Date('2024-09-30T00:00:00'))).toStrictEqual(null);
+    expect(await Semester.fetchByDate(new Date('2025-01-31T00:00:00'))).toStrictEqual(null);
+    expect(await Semester.fetchByDate(new Date('2025-03-01T00:00:00'))).toStrictEqual(null);
+    expect(await Semester.fetchByDate(new Date('2025-03-02T00:00:00'))).toStrictEqual(semester2);
+    expect(await Semester.fetchByDate(new Date('2026-04-30T00:00:00'))).toStrictEqual(semester2);
+    expect(await Semester.fetchByDate(new Date('2026-09-10T00:00:00'))).toStrictEqual(semester2);
+    expect(await Semester.fetchByDate(new Date('2026-09-11T00:00:00'))).toStrictEqual(null);
 });

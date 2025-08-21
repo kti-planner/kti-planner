@@ -3,12 +3,14 @@ import { z } from 'zod';
 import { Classroom } from '@backend/classroom';
 import { Exercise } from '@backend/exercise';
 import { Subject } from '@backend/subject';
+import { User } from '@backend/user';
 
 const schema = z.object({
     name: z.string().trim().nonempty(),
     exerciseNumber: z.number().int().min(0),
     subjectId: z.uuid(),
     classroomId: z.uuid(),
+    teacherId: z.uuid(),
 });
 
 export const POST: APIRoute = async ({ locals }) => {
@@ -36,6 +38,12 @@ export const POST: APIRoute = async ({ locals }) => {
         return Response.json(false, { status: 404 });
     }
 
+    const teacher = await User.fetch(data.teacherId);
+
+    if (teacher === null) {
+        return Response.json(false, { status: 404 });
+    }
+
     const subjectExercises = await Exercise.fetchAllFromSubject(subject);
 
     if (subjectExercises.find(e => e.name.toLowerCase() === data.name.toLowerCase())) {
@@ -51,6 +59,7 @@ export const POST: APIRoute = async ({ locals }) => {
         exerciseNumber: data.exerciseNumber,
         subject: subject,
         classroom: classroom,
+        teacher: teacher,
     });
 
     return Response.json(true, { status: 201 });
@@ -61,6 +70,7 @@ const schemaEdit = z.object({
     name: z.string().optional(),
     exerciseNumber: z.number().optional(),
     classroomId: z.uuid().optional(),
+    teacherId: z.uuid().optional(),
 });
 
 export const PATCH: APIRoute = async ({ locals }) => {
@@ -88,6 +98,12 @@ export const PATCH: APIRoute = async ({ locals }) => {
         return Response.json(false, { status: 404 });
     }
 
+    const teacher = data.teacherId === undefined ? undefined : await User.fetch(data.teacherId);
+
+    if (teacher === null) {
+        return Response.json(false, { status: 404 });
+    }
+
     const subject = await Subject.fetch(exercise.subjectId);
 
     if (subject === null) {
@@ -112,6 +128,7 @@ export const PATCH: APIRoute = async ({ locals }) => {
         name: data.name,
         exerciseNumber: data.exerciseNumber,
         classroom: classroom,
+        teacher: teacher,
     });
 
     return Response.json(true, { status: 200 });
