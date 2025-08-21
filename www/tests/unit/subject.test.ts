@@ -1,6 +1,7 @@
 import { expect, test } from 'vitest';
 import { Semester } from '@backend/semester';
 import { Subject } from '@backend/subject';
+import { User } from '@backend/user';
 
 test('Subjects', async () => {
     expect(await Subject.fetchAll()).toStrictEqual([]);
@@ -20,14 +21,30 @@ test('Subjects', async () => {
         endDate: new Date('2025-06-15T00:00:00'),
     });
 
+    const user1 = await User.create({
+        name: 'Jan Kowalski',
+        email: 'jan@kowalski.pl',
+        password: null,
+    });
+
+    const user2 = await User.create({
+        name: 'Bogdan Nowak',
+        email: 'bogdan@nowak.pl',
+        password: null,
+    });
+
     const subject1 = await Subject.create({
         name: 'Sieci komputerowe',
         semester: semester1,
+        teachers: [user1],
     });
 
     expect(subject1).toHaveProperty('name', 'Sieci komputerowe');
     expect(subject1).toHaveProperty('semesterId', semester1.id);
     expect(subject1).toHaveProperty('slug', 'sieci-komputerowe');
+    expect(subject1).toHaveProperty('teacherIds', [user1.id]);
+
+    expect(await subject1.getTeachers()).toStrictEqual([user1]);
 
     expect(await Subject.fetch(subject1.id)).toStrictEqual(subject1);
     expect(await Subject.fetchAll()).toStrictEqual([subject1]);
@@ -39,11 +56,15 @@ test('Subjects', async () => {
     const subject2 = await Subject.create({
         name: 'Zarządzanie bezpieczeństwem sieci',
         semester: semester2,
+        teachers: [user1, user2],
     });
 
     expect(subject2).toHaveProperty('name', 'Zarządzanie bezpieczeństwem sieci');
     expect(subject2).toHaveProperty('semesterId', semester2.id);
     expect(subject2).toHaveProperty('slug', 'zarządzanie-bezpieczeństwem-sieci');
+    expect(subject2).toHaveProperty('teacherIds', [user1.id, user2.id]);
+
+    expect(await subject2.getTeachers()).toStrictEqual([user1, user2]);
 
     expect(await Subject.fetch(subject2.id)).toStrictEqual(subject2);
     expect(await Subject.fetch(subject1.id)).toStrictEqual(subject1);
@@ -58,15 +79,22 @@ test('Subjects', async () => {
     await subject2.edit({
         name: 'Lokalne sieci bezprzewodowe',
         semester: semester1,
+        teachers: [user2],
     });
 
     expect(subject2).toHaveProperty('name', 'Lokalne sieci bezprzewodowe');
     expect(subject2).toHaveProperty('semesterId', semester1.id);
     expect(subject2).toHaveProperty('slug', 'lokalne-sieci-bezprzewodowe');
+    expect(subject2).toHaveProperty('teacherIds', [user2.id]);
+
+    expect(await subject2.getTeachers()).toStrictEqual([user2]);
 
     expect(subject1).toHaveProperty('name', 'Sieci komputerowe');
     expect(subject1).toHaveProperty('semesterId', semester1.id);
     expect(subject1).toHaveProperty('slug', 'sieci-komputerowe');
+    expect(subject1).toHaveProperty('teacherIds', [user1.id]);
+
+    expect(await subject1.getTeachers()).toStrictEqual([user1]);
 
     expect(await Subject.fetch(subject2.id)).toStrictEqual(subject2);
     expect(await Subject.fetch(subject1.id)).toStrictEqual(subject1);

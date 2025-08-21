@@ -24,7 +24,8 @@ CREATE TABLE classrooms (
 CREATE TABLE subjects (
     id          uuid PRIMARY KEY,
     name        text NOT NULL,
-    semester_id uuid REFERENCES semesters NOT NULL
+    semester_id uuid REFERENCES semesters NOT NULL,
+    teacher_ids uuid[] NOT NULL
 );
 
 CREATE TABLE exercises (
@@ -33,6 +34,7 @@ CREATE TABLE exercises (
     subject_id      uuid REFERENCES subjects NOT NULL,
     exercise_number integer NOT NULL,
     classroom_id    uuid REFERENCES classrooms NOT NULL,
+    teacher_id      uuid REFERENCES users NOT NULL,
     UNIQUE (subject_id, exercise_number)
 );
 
@@ -48,5 +50,6 @@ CREATE TABLE laboratory_classes (
     exercise_id         uuid REFERENCES exercises NOT NULL,
     laboratory_group_id uuid REFERENCES laboratory_groups NOT NULL,
     start_date          timestamptz NOT NULL,
-    end_date            timestamptz NOT NULL
+    end_date            timestamptz NOT NULL,
+    teacher_id          uuid REFERENCES users NOT NULL
 );
