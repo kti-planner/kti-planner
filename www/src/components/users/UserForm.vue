@@ -78,7 +78,7 @@ const translations = {
         'Password': 'Hasło',
         'Repeat Password': 'Powtórz Hasło',
         'Role': 'Rola',
-        'Teacher': 'Prowadzący',
+        'Teacher': 'Nauczyciel',
         'Add': 'Dodaj',
         'Save': 'Zapisz',
         'Adding new user failed.': 'Dodawanie nowego użytkownika nie powiodło się.',

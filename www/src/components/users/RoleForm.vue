@@ -49,7 +49,7 @@ const translations = {
     },
     'pl': {
         'Role': 'Rola',
-        'Teacher': 'Prowadzący',
+        'Teacher': 'Nauczyciel',
         'Admin': 'Admin',
         'Save': 'Zapisz',
     },
