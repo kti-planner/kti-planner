@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest';
-import { User, type UserCreateData } from '@backend/user';
+import { User, type UserCreateData, type UserEditData } from '@backend/user';
 
 interface UserCreateTestData extends UserCreateData {
     id: string;
@@ -11,6 +11,7 @@ const exampleUser: UserCreateTestData = {
     name: 'First',
     email: 'first@test.com',
     password: 'pass1',
+    role: 'admin',
 };
 
 const secondUser: UserCreateTestData = {
@@ -18,6 +19,7 @@ const secondUser: UserCreateTestData = {
     name: 'Second',
     email: 'second@test.com',
     password: 'pass2',
+    role: 'teacher',
 };
 
 test('Can create users', async () => {
@@ -26,12 +28,14 @@ test('Can create users', async () => {
 
     expect(user).toHaveProperty('name', exampleUser.name);
     expect(user).toHaveProperty('email', exampleUser.email);
+    expect(user).toHaveProperty('role', exampleUser.role);
 
     const user2 = await User.create(secondUser);
     secondUser.id = user2.id;
 
     expect(user2).toHaveProperty('name', secondUser.name);
     expect(user2).toHaveProperty('email', secondUser.email);
+    expect(user2).toHaveProperty('role', secondUser.role);
 });
 
 test('Cannot create duplicate users', async () => {
@@ -43,6 +47,7 @@ test('Can fetch by id', async () => {
 
     expect(user).toHaveProperty('name', exampleUser.name);
     expect(user).toHaveProperty('email', exampleUser.email);
+    expect(user).toHaveProperty('role', exampleUser.role);
 });
 
 test('Can fetch by email', async () => {
@@ -50,6 +55,7 @@ test('Can fetch by email', async () => {
 
     expect(user).toHaveProperty('name', exampleUser.name);
     expect(user).toHaveProperty('email', exampleUser.email);
+    expect(user).toHaveProperty('role', exampleUser.role);
 });
 
 test('Cannot fetch nonexistant', async () => {
@@ -65,9 +71,11 @@ test('Can fetch all', async () => {
 
     expect(users[0]).toHaveProperty('name', exampleUser.name);
     expect(users[0]).toHaveProperty('email', exampleUser.email);
+    expect(users[0]).toHaveProperty('role', exampleUser.role);
 
     expect(users[1]).toHaveProperty('name', secondUser.name);
     expect(users[1]).toHaveProperty('email', secondUser.email);
+    expect(users[1]).toHaveProperty('role', secondUser.role);
 });
 
 test('Can fetch bulk', async () => {
@@ -80,29 +88,34 @@ test('Can fetch bulk', async () => {
     expect(users).toHaveLength(1);
     expect(users[0]).toHaveProperty('name', exampleUser.name);
     expect(users[0]).toHaveProperty('email', exampleUser.email);
+    expect(users[0]).toHaveProperty('role', exampleUser.role);
 
     users = await User.fetchBulk([secondUser.id]);
 
     expect(users).toHaveLength(1);
     expect(users[0]).toHaveProperty('name', secondUser.name);
     expect(users[0]).toHaveProperty('email', secondUser.email);
+    expect(users[0]).toHaveProperty('role', secondUser.role);
 
     users = await User.fetchBulk([secondUser.id, exampleUser.id]);
 
     expect(users[0]).toHaveProperty('name', secondUser.name);
     expect(users[0]).toHaveProperty('email', secondUser.email);
+    expect(users[0]).toHaveProperty('role', secondUser.role);
     expect(users[1]).toHaveProperty('name', exampleUser.name);
     expect(users[1]).toHaveProperty('email', exampleUser.email);
+    expect(users[1]).toHaveProperty('role', exampleUser.role);
 });
 
 test('Can edit', async () => {
     let user = await User.fetch(exampleUser.id);
     expect(user).not.toBeNull();
 
-    const editSpec = {
+    const editSpec: UserEditData = {
         name: 'e' + exampleUser.name,
         email: 'e' + exampleUser.email,
         password: 'e' + exampleUser.password,
+        role: user?.role === 'admin' ? 'teacher' : 'admin',
     };
 
     await user!.edit(editSpec);
@@ -110,6 +123,7 @@ test('Can edit', async () => {
     user = await User.fetch(exampleUser.id);
     expect(user).toHaveProperty('name', editSpec.name);
     expect(user).toHaveProperty('email', editSpec.email);
+    expect(user).toHaveProperty('role', editSpec.role);
 });
 
 test('Recognises password', async () => {

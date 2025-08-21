@@ -25,12 +25,14 @@ test('Subjects', async () => {
         name: 'Jan Kowalski',
         email: 'jan@kowalski.pl',
         password: null,
+        role: 'teacher',
     });
 
     const user2 = await User.create({
         name: 'Bogdan Nowak',
         email: 'bogdan@nowak.pl',
         password: null,
+        role: 'teacher',
     });
 
     const subject1 = await Subject.create({
