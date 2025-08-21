@@ -1,17 +1,14 @@
 ---
-import { Classroom } from '@backend/classroom';
-import { Exercise } from '@backend/exercise';
+import { Classroom, makeClassroomData } from '@backend/classroom';
+import { Exercise, makeExerciseData } from '@backend/exercise';
 import { Semester } from '@backend/semester';
 import { Subject } from '@backend/subject';
 import { makeUserData, User } from '@backend/user';
-import type { ClassroomData } from '@components/classrooms/types';
 import type { SemesterData } from '@components/semesters/types';
 import type { SubjectData } from '@components/subjects/types';
 import { formatDateLocalYyyyMmDd } from '@components/utils';
 import Layout from '@layouts/Layout.astro';
-import AddExercise from '@components/exercises/AddExercise.vue';
-import EditSubject from '@components/subjects/EditSubject.vue';
-import SubjectCalendar from '@components/subjects/SubjectCalendar.vue';
+import SubjectApp from '@components/subjects/SubjectApp.vue';
 
 const { semesterSlug, subjectSlug } = Astro.params;
 const { langId, user } = Astro.locals;
@@ -21,13 +18,11 @@ const translations = {
         'Semesters': 'Semesters',
         'Winter semester': 'Winter semester',
         'Summer semester': 'Summer semester',
-        'Exercises': 'Exercises',
     },
     'pl': {
         'Semesters': 'Semestry',
         'Winter semester': 'Semestr zimowy',
         'Summer semester': 'Semestr letni',
-        'Exercises': 'Ćwiczenia',
     },
 };
 
@@ -68,17 +63,24 @@ const subjectData: SubjectData = {
     teachers: (await subject.getTeachers()).map(makeUserData),
 };
 
+const allUsers = await User.fetchAll();
+const allUsersData = allUsers.map(makeUserData);
+
 const exercises = await Exercise.fetchAllFromSubject(subject);
+
+const exercisesData = exercises.map(exercise => {
+    const teacher = allUsers.find(user => user.id === exercise.teacherId);
+    if (teacher === undefined) {
+        throw new Error('Exercise teacher not found');
+    }
+
+    return makeExerciseData(exercise, teacher);
+});
+
 const nextExerciseNumber = exercises.reduce((max, e) => Math.max(max, e.exerciseNumber), 0) + 1;
 
 const classrooms = await Classroom.fetchAll();
-
-const classroomsData: ClassroomData[] = classrooms.map(classroom => ({
-    id: classroom.id,
-    name: classroom.name,
-}));
-
-const allUsers = await User.fetchAll();
+const classroomsData = classrooms.map(makeClassroomData);
 ---
 
 <Layout
@@ -97,50 +99,14 @@ const allUsers = await User.fetchAll();
         },
     ]}
 >
-    <h1 class="text-center fs-4 mb-3">
-        {subject.name}
-        {user && <EditSubject client:only="vue" semester={semesterData} subject={subjectData} allUsers={allUsers} />}
-    </h1>
-    <div class="row g-4">
-        <div class="col-12 col-lg-9 mb-2 order-2 order-lg-1">
-            <SubjectCalendar client:only="vue" />
-        </div>
-        <div class="col-12 col-lg-3 order-1 order-lg-2">
-            <h2 class="text-center fs-5">{translate('Exercises')}</h2>
-            <div class="exercises-list list-group mx-auto my-2">
-                {
-                    exercises.map(
-                        e =>
-                            (
-                                <a
-                                    href={`/semesters/${semesterSlug}/${subjectSlug}/${e.exerciseNumber}/`}
-                                    class="list-group-item list-group-item-action"
-                                >
-                                    {e.exerciseNumber}. {e.name}
-                                </a>
-                            ) as unknown,
-                    )
-                }
-            </div>
-            {
-                user && (
-                    <div class="my-2">
-                        <AddExercise
-                            client:only="vue"
-                            semester={semesterData}
-                            subject={subjectData}
-                            classrooms={classroomsData}
-                            nextExerciseNumber={nextExerciseNumber}
-                        />
-                    </div>
-                )
-            }
-        </div>
-    </div>
+    <SubjectApp
+        client:only="vue"
+        subject={subjectData}
+        semester={semesterData}
+        isLoggedIn={user !== null}
+        allUsers={allUsersData}
+        exercises={exercisesData}
+        classrooms={classroomsData}
+        nextExerciseNumber={nextExerciseNumber}
+    />
 </Layout>
-
-<style>
-    .exercises-list {
-        max-width: 600px;
-    }
-</style>
