@@ -1,16 +1,11 @@
 import type { APIRoute } from 'astro';
-import { z } from 'zod';
 import { User } from '@backend/user';
-
-const schema = z.object({
-    email: z.string(),
-    password: z.string(),
-});
+import { loginApiSchema } from '@components/users/types';
 
 export const POST: APIRoute = async ({ locals, session }) => {
     const { jsonData } = locals;
 
-    const data = schema.nullable().catch(null).parse(jsonData);
+    const data = loginApiSchema.nullable().catch(null).parse(jsonData);
 
     if (!data) {
         return Response.json(null, { status: 400 });

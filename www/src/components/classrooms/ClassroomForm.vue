@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 import { langId } from '@components/frontend/lang';
 import { apiPatch, apiPost } from '@components/api';
-import type { ClassroomData } from '@components/classrooms/types';
+import type { ClassroomCreateApiData, ClassroomData, ClassroomEditApiData } from '@components/classrooms/types';
 
 const props = defineProps<{
     classroom?: ClassroomData;
@@ -10,13 +10,16 @@ const props = defineProps<{
 
 const submitFailed = ref(false);
 
-const name = ref<string | undefined>(props.classroom?.name);
+const name = ref<string>(props.classroom?.name ?? '');
 
 async function submit() {
     const success =
         props.classroom === undefined
-            ? await apiPost<boolean>('/classrooms/api/', { name: name.value })
-            : await apiPatch<boolean>('/classrooms/api/', { id: props.classroom.id, name: name.value });
+            ? await apiPost<boolean>('/classrooms/api/', { name: name.value } satisfies ClassroomCreateApiData)
+            : await apiPatch<boolean>('/classrooms/api/', {
+                  id: props.classroom.id,
+                  name: name.value,
+              } satisfies ClassroomEditApiData);
 
     if (success === undefined) {
         return;

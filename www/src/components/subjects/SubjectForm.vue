@@ -3,7 +3,7 @@ import { computed, ref } from 'vue';
 import { langId } from '@components/frontend/lang';
 import { apiPatch, apiPost } from '@components/api';
 import type { SemesterData } from '@components/semesters/types';
-import type { SubjectData } from '@components/subjects/types';
+import type { SubjectCreateApiData, SubjectData, SubjectEditApiData } from '@components/subjects/types';
 import type { UserData } from '@components/users/types';
 import { toHyphenatedLowercase } from '@components/utils';
 import UserMultiSelector from '@components/users/UserMultiSelector.vue';
@@ -18,21 +18,26 @@ const isEditing = computed(() => props.subject !== undefined);
 
 const submitFailed = ref(false);
 
-const subjectName = ref<string | undefined>(props.subject?.name);
+const subjectName = ref<string>(props.subject?.name ?? '');
 const teachers = ref<UserData[]>(props.subject?.teachers ?? []);
 
 async function submit() {
-    const success = !isEditing.value
-        ? await apiPost<boolean>('/semesters/api/subjects/', {
-              name: subjectName.value,
-              semesterId: props.semester.id,
-              teacherIds: teachers.value.map(user => user.id),
-          })
-        : await apiPatch<boolean>('/semesters/api/subjects/', {
-              id: props.subject?.id,
-              name: subjectName.value,
-              teacherIds: teachers.value.map(user => user.id),
-          });
+    const success =
+        props.subject === undefined
+            ? await apiPost<boolean>('/semesters/api/subjects/', {
+                  name: subjectName.value,
+                  semesterId: props.semester.id,
+                  teacherIds: teachers.value.map(user => user.id),
+              } satisfies SubjectCreateApiData)
+            : await apiPatch<boolean>('/semesters/api/subjects/', {
+                  id: props.subject.id,
+                  name: subjectName.value,
+                  teacherIds: teachers.value.map(user => user.id),
+              } satisfies SubjectEditApiData);
+
+    if (success === undefined) {
+        return;
+    }
 
     submitFailed.value = !success;
 

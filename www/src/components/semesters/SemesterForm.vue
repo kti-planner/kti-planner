@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 import { langId } from '@components/frontend/lang';
 import { apiPatch, apiPost } from '@components/api';
-import type { SemesterData } from '@components/semesters/types';
+import type { SemesterCreateApiData, SemesterData, SemesterEditApiData } from '@components/semesters/types';
 
 const props = defineProps<{
     semester?: SemesterData;
@@ -16,6 +16,15 @@ const startDate = ref<string | undefined>(props.semester?.startDate);
 const endDate = ref<string | undefined>(props.semester?.endDate);
 
 async function submit() {
+    if (
+        type.value === undefined ||
+        year.value === undefined ||
+        startDate.value === undefined ||
+        endDate.value === undefined
+    ) {
+        return;
+    }
+
     const success =
         props.semester === undefined
             ? await apiPost<boolean>('/semesters/api/semesters/', {
@@ -23,14 +32,18 @@ async function submit() {
                   year: year.value,
                   startDate: startDate.value,
                   endDate: endDate.value,
-              })
+              } satisfies SemesterCreateApiData)
             : await apiPatch<boolean>('/semesters/api/semesters/', {
                   id: props.semester.id,
                   type: type.value,
                   year: year.value,
                   startDate: startDate.value,
                   endDate: endDate.value,
-              });
+              } satisfies SemesterEditApiData);
+
+    if (success === undefined) {
+        return;
+    }
 
     submitFailed.value = !success;
 

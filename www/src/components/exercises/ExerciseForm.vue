@@ -3,7 +3,7 @@ import { computed, ref } from 'vue';
 import { langId } from '@components/frontend/lang';
 import { apiPatch, apiPost } from '@components/api';
 import type { ClassroomData } from '@components/classrooms/types';
-import type { ExerciseData } from '@components/exercises/types';
+import type { ExerciseCreateApiData, ExerciseData, ExerciseEditApiData } from '@components/exercises/types';
 import type { SemesterData } from '@components/semesters/types';
 import type { SubjectData } from '@components/subjects/types';
 import type { UserData } from '@components/users/types';
@@ -26,21 +26,35 @@ const exerciseClassroomId = ref<string | undefined>(props.exercise?.classroomId)
 const teacher = ref<UserData | null>(props.exercise?.teacher ?? props.subject.teachers[0] ?? null);
 
 async function submit() {
-    const success = !isEditing.value
-        ? await apiPost<boolean>('/semesters/api/exercises/', {
-              name: exerciseName.value,
-              exerciseNumber: exerciseNumber.value,
-              subjectId: props.subject.id,
-              classroomId: exerciseClassroomId.value,
-              teacherId: teacher.value?.id,
-          })
-        : await apiPatch<boolean>('/semesters/api/exercises/', {
-              id: props.exercise?.id,
-              name: exerciseName.value,
-              exerciseNumber: exerciseNumber.value,
-              classroomId: exerciseClassroomId.value,
-              teacherId: teacher.value?.id,
-          });
+    if (
+        exerciseName.value === undefined ||
+        exerciseNumber.value === undefined ||
+        exerciseClassroomId.value === undefined ||
+        teacher.value?.id === undefined
+    ) {
+        return;
+    }
+
+    const success =
+        props.exercise?.id === undefined
+            ? await apiPost<boolean>('/semesters/api/exercises/', {
+                  name: exerciseName.value,
+                  exerciseNumber: exerciseNumber.value,
+                  subjectId: props.subject.id,
+                  classroomId: exerciseClassroomId.value,
+                  teacherId: teacher.value?.id,
+              } satisfies ExerciseCreateApiData)
+            : await apiPatch<boolean>('/semesters/api/exercises/', {
+                  id: props.exercise.id,
+                  name: exerciseName.value,
+                  exerciseNumber: exerciseNumber.value,
+                  classroomId: exerciseClassroomId.value,
+                  teacherId: teacher.value?.id,
+              } satisfies ExerciseEditApiData);
+
+    if (success === undefined) {
+        return;
+    }
 
     submitFailed.value = !success;
 

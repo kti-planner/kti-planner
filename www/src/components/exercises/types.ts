@@ -1,3 +1,4 @@
+import z from 'zod';
 import type { UserData } from '@components/users/types';
 
 export interface ExerciseData {
@@ -8,3 +9,23 @@ export interface ExerciseData {
     classroomId: string;
     teacher: UserData;
 }
+
+export const exerciseCreateApiSchema = z.object({
+    name: z.string().trim().nonempty(),
+    exerciseNumber: z.number().int().min(0),
+    subjectId: z.uuid(),
+    classroomId: z.uuid(),
+    teacherId: z.uuid(),
+});
+
+export type ExerciseCreateApiData = z.input<typeof exerciseCreateApiSchema>;
+
+export const exerciseEditApiSchema = z.object({
+    id: z.uuid(),
+    name: z.string().optional(),
+    exerciseNumber: z.number().optional(),
+    classroomId: z.uuid().optional(),
+    teacherId: z.uuid().optional(),
+});
+
+export type ExerciseEditApiData = z.input<typeof exerciseEditApiSchema>;

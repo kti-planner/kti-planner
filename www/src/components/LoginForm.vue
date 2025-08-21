@@ -2,6 +2,7 @@
 import { ref } from 'vue';
 import { langId } from '@components/frontend/lang';
 import { apiPost } from '@components/api';
+import type { LoginApiData } from '@components/users/types';
 
 const { nextPage } = defineProps<{
     nextPage: string;
@@ -16,7 +17,7 @@ async function submit() {
     const loginSuccess = await apiPost<boolean>('/api/login/', {
         email: email.value.trim(),
         password: password.value,
-    });
+    } satisfies LoginApiData);
 
     if (loginSuccess === undefined) {
         return;
