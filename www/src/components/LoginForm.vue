@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { langId } from '@components/frontend/lang';
+import { apiPost } from '@components/api';
 
 const { nextPage } = defineProps<{
     nextPage: string;
@@ -12,32 +13,20 @@ const password = ref<string>('');
 const loginFailed = ref<boolean>(false);
 
 async function submit() {
-    try {
-        const result = await fetch('/api/login/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                email: email.value.trim(),
-                password: password.value,
-            }),
-        });
+    const loginSuccess = await apiPost<boolean>('/api/login/', {
+        email: email.value.trim(),
+        password: password.value,
+    });
 
-        if (!result.ok) {
-            console.error('API request failed!');
-            return;
-        }
+    if (loginSuccess === undefined) {
+        return;
+    }
 
-        const loginSuccess = (await result.json()) as boolean;
-        loginFailed.value = !loginSuccess;
-        password.value = '';
+    loginFailed.value = !loginSuccess;
+    password.value = '';
 
-        if (loginSuccess) {
-            window.location.href = nextPage;
-        }
-    } catch (error) {
-        console.log(error);
+    if (loginSuccess) {
+        window.location.href = nextPage;
     }
 }
 

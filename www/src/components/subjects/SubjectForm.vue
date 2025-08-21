@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import { langId } from '@components/frontend/lang';
+import { apiPatch, apiPost } from '@components/api';
 import type { SemesterData } from '@components/semesters/types';
 import type { SubjectData } from '@components/subjects/types';
 import type { UserData } from '@components/users/types';
@@ -15,53 +16,35 @@ const props = defineProps<{
 
 const isEditing = computed(() => props.subject !== undefined);
 
-const addingFailed = ref(false);
+const submitFailed = ref(false);
 
 const subjectName = ref<string | undefined>(props.subject?.name);
 const teachers = ref<UserData[]>(props.subject?.teachers ?? []);
 
 async function submit() {
-    try {
-        const result = !isEditing.value
-            ? await fetch('/semesters/api/subjects/', {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({
-                      name: subjectName.value,
-                      semesterId: props.semester.id,
-                      teacherIds: teachers.value.map(user => user.id),
-                  }),
-              })
-            : await fetch('/semesters/api/subjects/', {
-                  method: 'PATCH',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({
-                      id: props.subject?.id,
-                      name: subjectName.value,
-                      teacherIds: teachers.value.map(user => user.id),
-                  }),
-              });
+    const success = !isEditing.value
+        ? await apiPost<boolean>('/semesters/api/subjects/', {
+              name: subjectName.value,
+              semesterId: props.semester.id,
+              teacherIds: teachers.value.map(user => user.id),
+          })
+        : await apiPatch<boolean>('/semesters/api/subjects/', {
+              id: props.subject?.id,
+              name: subjectName.value,
+              teacherIds: teachers.value.map(user => user.id),
+          });
 
-        if (!result.ok) {
-            console.error('API request failed!');
-            return;
+    submitFailed.value = !success;
+
+    if (success) {
+        const newUrl = `/semesters/${props.semester.slug}/${toHyphenatedLowercase(subjectName.value ?? '')}/`;
+
+        if (isEditing.value) {
+            window.history.replaceState({}, '', newUrl);
+            window.location.reload();
+        } else {
+            window.location.assign(newUrl);
         }
-
-        const addingSuccess = (await result.json()) as boolean;
-        addingFailed.value = !addingSuccess;
-
-        if (addingSuccess) {
-            const newUrl = `/semesters/${props.semester.slug}/${toHyphenatedLowercase(subjectName.value ?? '')}/`;
-
-            if (isEditing.value) {
-                window.history.replaceState({}, '', newUrl);
-                window.location.reload();
-            } else {
-                window.location.assign(newUrl);
-            }
-        }
-    } catch (error) {
-        console.log(error);
     }
 }
 
@@ -103,7 +86,7 @@ function translate(text: keyof (typeof translations)[LangId]): string {
             <button type="submit" class="btn btn-success">{{ translate(isEditing ? 'Save' : 'Add') }}</button>
         </div>
 
-        <div v-if="addingFailed" class="text-center text-danger">
+        <div v-if="submitFailed" class="text-center text-danger">
             {{ translate('Subject with this name already exists.') }}
         </div>
     </form>
