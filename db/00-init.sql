@@ -1,11 +1,11 @@
-CREATE TYPE role_type AS ENUM ('admin', 'teacher');
+CREATE TYPE user_role AS ENUM ('admin', 'teacher');
 
 CREATE TABLE users (
     id            uuid PRIMARY KEY,
     name          text NOT NULL,
     email         text UNIQUE,
     password_hash text,
-    role          role_type NOT NULL
+    role          user_role NOT NULL
 );
 
 CREATE TYPE semester_type AS ENUM ('winter', 'summer');

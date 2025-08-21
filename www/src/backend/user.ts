@@ -3,28 +3,28 @@ import bcrypt from 'bcrypt';
 import { db } from '@backend/db';
 import type { UserData } from '@components/users/types';
 
-export type RoleType = 'admin' | 'teacher';
+export type UserRole = 'admin' | 'teacher';
 
 interface DbUser {
     id: string;
     name: string;
     email: string;
     password_hash: string | null;
-    role: RoleType;
+    role: UserRole;
 }
 
 export interface UserCreateData {
     name: string;
     email: string;
     password: string | null;
-    role: RoleType;
+    role: UserRole;
 }
 
 export interface UserEditData {
     name?: string | undefined;
     email?: string | undefined;
     password?: string | null | undefined;
-    role?: RoleType | undefined;
+    role?: UserRole | undefined;
 }
 
 export class User {
@@ -32,7 +32,7 @@ export class User {
     name: string;
     email: string;
     passwordHash: string | null;
-    role: RoleType;
+    role: UserRole;
 
     constructor(data: DbUser) {
         this.id = data.id;
