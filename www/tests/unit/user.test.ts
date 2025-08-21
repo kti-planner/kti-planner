@@ -66,20 +66,45 @@ test('Cannot fetch nonexistant', async () => {
     expect(user2).toBeNull();
 });
 
-test('Can fetch multiple', async () => {
+test('Can fetch all', async () => {
     const users = await User.fetchAll();
 
-    const user1 = users.find(u => u.id === exampleUser.id);
+    expect(users[0]).toHaveProperty('name', exampleUser.name);
+    expect(users[0]).toHaveProperty('email', exampleUser.email);
+    expect(users[0]).toHaveProperty('role', exampleUser.role);
 
-    expect(user1).toHaveProperty('name', exampleUser.name);
-    expect(user1).toHaveProperty('email', exampleUser.email);
-    expect(user1).toHaveProperty('role', exampleUser.role);
+    expect(users[1]).toHaveProperty('name', secondUser.name);
+    expect(users[1]).toHaveProperty('email', secondUser.email);
+    expect(users[1]).toHaveProperty('role', secondUser.role);
+});
 
-    const user2 = users.find(u => u.id === secondUser.id);
+test('Can fetch bulk', async () => {
+    let users = await User.fetchBulk([]);
 
-    expect(user2).toHaveProperty('name', secondUser.name);
-    expect(user2).toHaveProperty('email', secondUser.email);
-    expect(user2).toHaveProperty('role', secondUser.role);
+    expect(users).toStrictEqual([]);
+
+    users = await User.fetchBulk([exampleUser.id]);
+
+    expect(users).toHaveLength(1);
+    expect(users[0]).toHaveProperty('name', exampleUser.name);
+    expect(users[0]).toHaveProperty('email', exampleUser.email);
+    expect(users[0]).toHaveProperty('role', exampleUser.role);
+
+    users = await User.fetchBulk([secondUser.id]);
+
+    expect(users).toHaveLength(1);
+    expect(users[0]).toHaveProperty('name', secondUser.name);
+    expect(users[0]).toHaveProperty('email', secondUser.email);
+    expect(users[0]).toHaveProperty('role', secondUser.role);
+
+    users = await User.fetchBulk([secondUser.id, exampleUser.id]);
+
+    expect(users[0]).toHaveProperty('name', secondUser.name);
+    expect(users[0]).toHaveProperty('email', secondUser.email);
+    expect(users[0]).toHaveProperty('role', secondUser.role);
+    expect(users[1]).toHaveProperty('name', exampleUser.name);
+    expect(users[1]).toHaveProperty('email', exampleUser.email);
+    expect(users[1]).toHaveProperty('role', exampleUser.role);
 });
 
 test('Can edit', async () => {

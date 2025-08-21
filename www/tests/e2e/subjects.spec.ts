@@ -36,8 +36,6 @@ test('Can add new subject and prevent duplicate subject creation', async ({ page
     await page.goto('/semesters/2024-summer/');
     await login(page);
 
-    await page.getByText('Summer semester 2024/2025').click();
-    await page.waitForURL('/semesters/2024-summer/');
     await expect(page.locator('.breadcrumb')).toContainText('Summer semester 2024/2025');
 
     await page.getByRole('button', { name: 'Add new subject' }).click();
@@ -46,6 +44,8 @@ test('Can add new subject and prevent duplicate subject creation', async ({ page
     await expect(page.locator('#subject-modal')).toContainText('Add new subject');
 
     await page.getByRole('textbox', { name: 'Subject name' }).fill('Sieci komputerowe');
+
+    await page.getByRole('combobox', { name: 'Teachers' }).selectOption('Jan Kowalski');
 
     await page.getByRole('button', { name: 'Add', exact: true }).click();
 
@@ -63,6 +63,8 @@ test('Can add new subject and prevent duplicate subject creation', async ({ page
     await expect(page.locator('#subject-modal')).toContainText('Add new subject');
 
     await page.getByRole('textbox', { name: 'Subject name' }).fill('Sieci komputerowe');
+
+    await page.getByRole('combobox', { name: 'Teachers' }).selectOption('Jan Kowalski');
 
     await page.getByRole('button', { name: 'Add', exact: true }).click();
 
@@ -118,6 +120,8 @@ test('Can edit subject and prevent duplicate subject', async ({ page }) => {
     );
 
     await page.getByRole('textbox', { name: 'Subject name' }).fill('Sieci Ethernet i IP');
+
+    await page.getByRole('combobox', { name: 'Teachers' }).selectOption('Admin');
 
     await page.getByRole('button', { name: 'Save' }).click();
 

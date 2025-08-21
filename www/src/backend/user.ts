@@ -1,6 +1,7 @@
 import assert from 'node:assert';
 import bcrypt from 'bcrypt';
 import { db } from '@backend/db';
+import type { UserData } from '@components/users/types';
 
 export type RoleType = 'admin' | 'teacher';
 
@@ -54,9 +55,15 @@ export class User {
     }
 
     static async fetchAll(): Promise<User[]> {
-        const records = (await db.query<DbUser>('SELECT * FROM users')).rows;
+        const records = (await db.query<DbUser>('SELECT * FROM users ORDER BY name')).rows;
 
         return records.map(record => new User(record));
+    }
+
+    static async fetchBulk(ids: string[]): Promise<(User | null)[]> {
+        const users = await User.fetchAll();
+
+        return ids.map(id => users.find(user => user.id === id) ?? null);
     }
 
     static async create(data: UserCreateData): Promise<User> {
@@ -108,4 +115,11 @@ export class User {
         const saltRounds = 10;
         return await bcrypt.hash(password, saltRounds);
     }
+}
+
+export function makeUserData(user: User): UserData {
+    return {
+        id: user.id,
+        name: user.name,
+    };
 }
