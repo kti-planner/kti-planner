@@ -71,6 +71,14 @@ export class Semester {
         return await Semester.fetchByYearAndType(parseInt(year), type);
     }
 
+    static async fetchByDate(date: Date): Promise<Semester | null> {
+        const data = (
+            await db.query<DbSemester>('SELECT * FROM semesters WHERE $1 BETWEEN start_date AND end_date', [date])
+        ).rows[0];
+
+        return data ? new Semester(data) : null;
+    }
+
     static async fetchAll(): Promise<Semester[]> {
         const records = (await db.query<DbSemester>('SELECT * FROM semesters ORDER BY year DESC, type DESC')).rows;
 

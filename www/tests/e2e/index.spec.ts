@@ -1,6 +1,11 @@
 import { expect } from 'playwright/test';
 import { test } from './fixtures';
 
+test('Does / redirect to correct page', async ({ page }) => {
+    await page.goto('/');
+    await expect(page).toHaveURL(/\/semesters\/([0-9]{4}-(summer|winter)\/)?/);
+});
+
 test('Can switch languages', async ({ page }) => {
     await page.goto('/');
     await expect(page.getByRole('navigation')).toContainText('Sign in');
