@@ -27,12 +27,14 @@ test('Exercises', async () => {
         name: 'Jan Kowalski',
         email: 'jan@kowalski.pl',
         password: null,
+        role: 'teacher',
     });
 
     const user2 = await User.create({
         name: 'Bogdan Nowak',
         email: 'bogdan@nowak.pl',
         password: null,
+        role: 'teacher',
     });
 
     const classroom1 = await Classroom.create({
