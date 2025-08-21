@@ -3,10 +3,10 @@ import { User } from '@backend/user';
 import Layout from '@layouts/Layout.astro';
 import AddUser from '@components/users/AddUser.vue';
 
-const { langId, user } = Astro.locals;
+const { langId, user, redirectToLoginPage } = Astro.locals;
 
 if (!user) {
-    return Astro.redirect('/login/');
+    return redirectToLoginPage();
 }
 
 const translations = {

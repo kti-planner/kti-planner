@@ -1,8 +1,8 @@
 ---
-const { user } = Astro.locals;
+const { user, redirectToLoginPage } = Astro.locals;
 
 if (!user) {
-    return Astro.redirect('/login/');
+    return redirectToLoginPage();
 }
 
 return Astro.rewrite(`/users/${user.id}/`);

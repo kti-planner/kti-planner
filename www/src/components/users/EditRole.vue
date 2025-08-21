@@ -34,7 +34,7 @@ const modalId = `edit-role-modal-${props.user.id}`;
 
         <Modal :id="modalId">
             <template #header>{{ translate('Edit role') }}</template>
-            <RoleForm :user="props.user" />
+            <RoleForm :user="user" />
         </Modal>
     </div>
 </template>
