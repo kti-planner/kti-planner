@@ -1,14 +1,6 @@
 import type { APIRoute } from 'astro';
-import { z } from 'zod';
 import { User } from '@backend/user';
-
-const schema = z.object({
-    name: z.string().trim().nonempty(),
-    email: z.string().trim().nonempty(),
-    password: z.string().nonempty(),
-    passwordRepeated: z.string().nonempty(),
-    role: z.enum(['teacher', 'admin']),
-});
+import { userCreateApiSchema, userEditApiSchema } from '@components/users/types';
 
 export const POST: APIRoute = async ({ locals }) => {
     const { jsonData, user } = locals;
@@ -17,7 +9,7 @@ export const POST: APIRoute = async ({ locals }) => {
         return Response.json(null, { status: 404 });
     }
 
-    const data = schema.nullable().catch(null).parse(jsonData);
+    const data = userCreateApiSchema.nullable().catch(null).parse(jsonData);
 
     if (!data) {
         return Response.json(null, { status: 400 });
@@ -38,12 +30,6 @@ export const POST: APIRoute = async ({ locals }) => {
     return Response.json(true, { status: 201 });
 };
 
-const schemaEdit = z.object({
-    id: z.uuid(),
-    name: z.string().trim().optional(),
-    email: z.string().trim().optional(),
-});
-
 export const PATCH: APIRoute = async ({ locals }) => {
     const { jsonData, user } = locals;
 
@@ -51,7 +37,7 @@ export const PATCH: APIRoute = async ({ locals }) => {
         return Response.json(null, { status: 404 });
     }
 
-    const data = schemaEdit.nullable().catch(null).parse(jsonData);
+    const data = userEditApiSchema.nullable().catch(null).parse(jsonData);
 
     if (!data) {
         return Response.json(null, { status: 400 });

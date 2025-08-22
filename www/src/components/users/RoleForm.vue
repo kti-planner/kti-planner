@@ -1,42 +1,28 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { langId } from '@components/frontend/lang';
-import type { UserData } from '@components/users/types';
+import { apiPatch } from '@components/api';
+import type { UserData, UserEditRoleApiData } from '@components/users/types';
+import type { UserRole } from '@backend/user';
 
 const props = defineProps<{
     user: UserData;
 }>();
 
-const editFailed = ref<boolean>(false);
-
-const role = ref<string>(props.user.role);
+const role = ref<UserRole>(props.user.role);
 
 async function submit() {
-    try {
-        const result = await fetch('/users/api/roles/', {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                id: props.user?.id,
-                role: role.value,
-            }),
-        });
+    const success = await apiPatch<boolean>('/users/api/roles/', {
+        id: props.user?.id,
+        role: role.value,
+    } satisfies UserEditRoleApiData);
 
-        if (!result.ok) {
-            console.error('API request failed!');
-            return;
-        }
+    if (success === undefined) {
+        return;
+    }
 
-        const editSuccess = (await result.json()) as boolean;
-        editFailed.value = !editSuccess;
-
-        if (editSuccess) {
-            window.location.reload();
-        }
-    } catch (error) {
-        console.log(error);
+    if (success) {
+        window.location.reload();
     }
 }
 

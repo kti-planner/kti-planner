@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import { langId } from '@components/frontend/lang';
-import type { UserData } from '@components/users/types';
+import type { UserCreateApiData, UserEditApiData, UserData } from '@components/users/types';
+import { apiPatch, apiPost } from '@components/api';
+import type { UserRole } from '@backend/user';
 
 const props = defineProps<{
     user?: UserData;
@@ -9,55 +11,42 @@ const props = defineProps<{
 
 const isEditing = computed(() => props.user !== undefined);
 
-const addingFailed = ref<boolean>(false);
+const submitFailed = ref(false);
 
 const name = ref<string | undefined>(props.user?.name);
 const email = ref<string | undefined>(props.user?.email);
 const password = ref<string>('');
 const passwordRepeated = ref<string>('');
-const role = ref<string>('teacher');
+const role = ref<UserRole>('teacher');
 
 async function submit() {
-    try {
-        const result = !isEditing.value
-            ? await fetch('/users/api/users/', {
-                  method: 'POST',
-                  headers: {
-                      'Content-Type': 'application/json',
-                  },
-                  body: JSON.stringify({
-                      name: name.value?.trim(),
-                      email: email.value?.trim(),
-                      password: password.value,
-                      passwordRepeated: passwordRepeated.value,
-                      role: role.value,
-                  }),
-              })
-            : await fetch('/users/api/users/', {
-                  method: 'PATCH',
-                  headers: {
-                      'Content-Type': 'application/json',
-                  },
-                  body: JSON.stringify({
-                      id: props.user?.id,
-                      name: name.value?.trim(),
-                      email: email.value?.trim(),
-                  }),
-              });
+    if (name.value === undefined || email.value === undefined) {
+        return;
+    }
 
-        if (!result.ok) {
-            console.error('API request failed!');
-            return;
-        }
+    const success =
+        props.user === undefined
+            ? await apiPost<boolean>('/users/api/users/', {
+                  name: name.value,
+                  email: email.value,
+                  password: password.value,
+                  passwordRepeated: passwordRepeated.value,
+                  role: role.value,
+              } satisfies UserCreateApiData)
+            : await apiPatch<boolean>('/users/api/users/', {
+                  id: props.user.id,
+                  name: name.value,
+                  email: email.value,
+              } satisfies UserEditApiData);
 
-        const addingSuccess = (await result.json()) as boolean;
-        addingFailed.value = !addingSuccess;
+    if (success === undefined) {
+        return;
+    }
 
-        if (addingSuccess) {
-            window.location.reload();
-        }
-    } catch (error) {
-        console.log(error);
+    submitFailed.value = !success;
+
+    if (success) {
+        window.location.reload();
     }
 }
 
@@ -147,7 +136,7 @@ function translate(text: keyof (typeof translations)[LangId]): string {
             <button type="submit" class="btn btn-success">{{ translate(isEditing ? 'Save' : 'Add') }}</button>
         </div>
 
-        <div v-if="addingFailed" class="text-center text-danger">
+        <div v-if="submitFailed" class="text-center text-danger">
             {{ translate(isEditing ? 'User with that email already exists.' : 'Adding new user failed.') }}
         </div>
     </form>

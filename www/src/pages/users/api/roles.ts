@@ -1,11 +1,6 @@
 import type { APIRoute } from 'astro';
-import { z } from 'zod';
 import { User } from '@backend/user';
-
-const schemaEdit = z.object({
-    id: z.uuid(),
-    role: z.enum(['teacher', 'admin']),
-});
+import { userEditRoleApiSchema } from '@components/users/types';
 
 export const PATCH: APIRoute = async ({ locals }) => {
     const { jsonData, user } = locals;
@@ -14,7 +9,7 @@ export const PATCH: APIRoute = async ({ locals }) => {
         return Response.json(null, { status: 404 });
     }
 
-    const data = schemaEdit.nullable().catch(null).parse(jsonData);
+    const data = userEditRoleApiSchema.nullable().catch(null).parse(jsonData);
 
     if (!data) {
         return Response.json(null, { status: 400 });
