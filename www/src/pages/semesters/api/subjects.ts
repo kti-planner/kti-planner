@@ -1,14 +1,8 @@
 import type { APIRoute } from 'astro';
-import { z } from 'zod';
 import { Semester } from '@backend/semester';
 import { Subject } from '@backend/subject';
 import { User } from '@backend/user';
-
-const schema = z.object({
-    name: z.string().trim().nonempty(),
-    semesterId: z.uuid(),
-    teacherIds: z.uuid().array(),
-});
+import { subjectCreateApiSchema, subjectEditApiSchema } from '@components/subjects/types';
 
 export const POST: APIRoute = async ({ locals }) => {
     const { jsonData, user } = locals;
@@ -17,7 +11,7 @@ export const POST: APIRoute = async ({ locals }) => {
         return Response.json(null, { status: 404 });
     }
 
-    const data = schema.nullable().catch(null).parse(jsonData);
+    const data = subjectCreateApiSchema.nullable().catch(null).parse(jsonData);
 
     if (!data) {
         return Response.json(null, { status: 400 });
@@ -50,12 +44,6 @@ export const POST: APIRoute = async ({ locals }) => {
     return Response.json(true, { status: 201 });
 };
 
-const schemaEdit = z.object({
-    id: z.uuid(),
-    name: z.string().optional(),
-    teacherIds: z.uuid().array().optional(),
-});
-
 export const PATCH: APIRoute = async ({ locals }) => {
     const { jsonData, user } = locals;
 
@@ -63,7 +51,7 @@ export const PATCH: APIRoute = async ({ locals }) => {
         return Response.json(null, { status: 404 });
     }
 
-    const data = schemaEdit.nullable().catch(null).parse(jsonData);
+    const data = subjectEditApiSchema.nullable().catch(null).parse(jsonData);
 
     if (!data) {
         return Response.json(null, { status: 400 });
