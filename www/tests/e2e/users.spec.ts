@@ -206,3 +206,18 @@ test('Edit user role button is visible for admin user', async ({ page }) => {
 
     await expect(page.getByRole('button', { name: 'Edit role' })).toHaveCount(1);
 });
+
+test('Can edit user role', async ({ page }) => {
+    await page.goto('/users/feeaa186-3d69-4801-a580-88be10d53553/');
+    await login(page);
+
+    await expect(page.getByRole('navigation')).toContainText('Bogdan Nowak');
+
+    await page.getByRole('button', { name: 'Edit role' }).click();
+
+    await page.getByRole('combobox', { name: 'Role' }).selectOption('admin');
+
+    await page.getByRole('button', { name: 'Save' }).click();
+
+    await expect(page.locator('body')).toContainText('Role: admin');
+});
