@@ -1,21 +1,29 @@
 <script setup lang="ts">
-import { inject, reactive, ref, useId, watch } from 'vue';
+import { computed, inject, reactive, ref, useId, watch } from 'vue';
 import { langId } from '@components/frontend/lang';
-import { apiPost, useApiFetch } from '@components/api';
+import { apiPatch, apiPost, useApiFetch } from '@components/api';
 import { isLoggedInKey } from '@components/is-logged-in';
-import type { LaboratoryGroupCreateApiData, LaboratoryGroupData } from '@components/laboratory-groups/types';
+import type {
+    LaboratoryGroupCreateApiData,
+    LaboratoryGroupData,
+    LaboratoryGroupEditApiData,
+} from '@components/laboratory-groups/types';
 
 const translations = {
     'en': {
         'Laboratory groups': 'Laboratory groups',
         'New group': 'New group',
+        'Edit name': 'Edit name',
         'Add': 'Add',
+        'Save': 'Save',
         'This group already exists': 'This group already exists',
     },
     'pl': {
         'Laboratory groups': 'Grupy laboratoryjne',
         'New group': 'Nowa grupa',
+        'Edit name': 'Edytuj nazwę',
         'Add': 'Dodaj',
+        'Save': 'Zapisz',
         'This group already exists': 'Ta grupa już istnieje',
     },
 };
@@ -32,11 +40,17 @@ const isLoggedIn = inject(isLoggedInKey, false);
 
 const { data: groups, execute: refreshGroups } = useApiFetch<LaboratoryGroupData[]>(apiUrl, { clone: true });
 
-const newGroupName = ref('');
-const addingFailed = ref(false);
+const groupName = ref('');
+const submitFailed = ref(false);
 const selectedGroupIds = reactive(new Set<string>());
 
-watch(newGroupName, () => (addingFailed.value = false));
+const selectedGroups = computed<LaboratoryGroupData[] | null>(
+    () => groups.value?.filter(g => selectedGroupIds.has(g.id)) ?? null,
+);
+
+const isAdding = computed<boolean>(() => selectedGroupIds.size !== 1);
+
+watch(groupName, () => (submitFailed.value = false));
 
 watch(groups, () => {
     selectedGroupIds.forEach(id => {
@@ -46,27 +60,56 @@ watch(groups, () => {
     });
 });
 
+watch(isAdding, () => (groupName.value = ''));
+
 async function addGroup() {
-    if (newGroupName.value === '' || !groups.value) {
+    if (groupName.value === '' || !groups.value) {
         return;
     }
 
-    addingFailed.value = false;
+    submitFailed.value = false;
 
     const group = await apiPost<LaboratoryGroupData | null>(apiUrl, {
-        name: newGroupName.value,
+        name: groupName.value,
     } satisfies LaboratoryGroupCreateApiData);
 
     if (group === undefined) {
         return;
     }
 
-    addingFailed.value = group === null;
+    submitFailed.value = group === null;
 
     if (group !== null) {
-        newGroupName.value = '';
+        groupName.value = '';
         groups.value.push(group);
         groups.value.sort((a, b) => a.name.localeCompare(b.name));
+    }
+
+    void refreshGroups();
+}
+
+async function editGroup(group: LaboratoryGroupData) {
+    if (groupName.value === '' || !groups.value) {
+        return;
+    }
+
+    submitFailed.value = false;
+
+    const success = await apiPatch<boolean>(apiUrl, {
+        id: group.id,
+        name: groupName.value,
+    } satisfies LaboratoryGroupEditApiData);
+
+    if (success === undefined) {
+        return;
+    }
+
+    submitFailed.value = !success;
+
+    if (success) {
+        groups.value = groups.value.map(g => (g.id === group.id ? { id: g.id, name: groupName.value } : g));
+        groups.value.sort((a, b) => a.name.localeCompare(b.name));
+        groupName.value = '';
     }
 
     void refreshGroups();
@@ -80,7 +123,7 @@ function toggleSelectGroup(group: LaboratoryGroupData) {
     }
 }
 
-const addBtnId = useId();
+const submitBtnId = useId();
 </script>
 
 <template>
@@ -99,33 +142,33 @@ const addBtnId = useId();
             {{ group.name }}
         </button>
     </div>
-    <form v-if="isLoggedIn" @submit.prevent="addGroup">
+    <form v-if="isLoggedIn" @submit.prevent="isAdding ? addGroup() : editGroup(selectedGroups![0]!)">
         <div class="input-group">
             <input
-                v-model.trim="newGroupName"
+                v-model.trim="groupName"
                 type="text"
                 class="form-control"
                 :class="{
-                    'border': addingFailed,
-                    'border-danger': addingFailed,
+                    'border': submitFailed,
+                    'border-danger': submitFailed,
                 }"
-                :placeholder="translate('New group')"
+                :placeholder="isAdding ? translate('New group') : translate('Edit name')"
                 required
-                :aria-label="translate('New group')"
-                :aria-describedby="addBtnId"
-                :aria-invalid="addingFailed"
+                :aria-label="isAdding ? translate('New group') : translate('Edit name')"
+                :aria-describedby="submitBtnId"
+                :aria-invalid="submitFailed"
             />
             <button
-                :id="addBtnId"
+                :id="submitBtnId"
                 class="btn btn-success"
                 type="submit"
-                :title="translate('Add')"
-                :disabled="newGroupName === ''"
+                :title="isAdding ? translate('Add') : translate('Save')"
+                :disabled="groupName === ''"
             >
-                <i class="bi bi-plus-lg"></i>
+                <i class="bi" :class="isAdding ? 'bi-plus-lg' : 'bi-pencil-fill'"></i>
             </button>
         </div>
-        <p v-if="addingFailed" class="text-danger mt-2">
+        <p v-if="submitFailed" class="text-danger mt-2">
             {{ translate('This group already exists') }}
         </p>
     </form>
