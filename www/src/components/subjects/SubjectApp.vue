@@ -1,11 +1,14 @@
 <script setup lang="ts">
+import { computed, provide } from 'vue';
 import { langId } from '@components/frontend/lang';
 import type { ClassroomData } from '@components/classrooms/types';
 import type { ExerciseData } from '@components/exercises/types';
+import { isLoggedInKey } from '@components/is-logged-in';
 import type { SemesterData } from '@components/semesters/types';
 import type { SubjectData } from '@components/subjects/types';
 import type { UserData } from '@components/users/types';
 import AddExercise from '@components/exercises/AddExercise.vue';
+import LaboratoryGroupList from '@components/laboratory-groups/LaboratoryGroupList.vue';
 import EditSubject from '@components/subjects/EditSubject.vue';
 import SubjectCalendar from '@components/subjects/SubjectCalendar.vue';
 
@@ -22,7 +25,7 @@ function translate(text: keyof (typeof translations)[LangId]): string {
     return translations[langId][text];
 }
 
-defineProps<{
+const { subject, semester, isLoggedIn } = defineProps<{
     subject: SubjectData;
     semester: SemesterData;
     isLoggedIn: boolean;
@@ -31,6 +34,10 @@ defineProps<{
     classrooms: ClassroomData[];
     nextExerciseNumber: number;
 }>();
+
+provide(isLoggedInKey, isLoggedIn);
+
+const subjectUrl = computed(() => `/semesters/${semester.slug}/${subject.slug}`);
 </script>
 
 <template>
@@ -43,12 +50,13 @@ defineProps<{
             <SubjectCalendar />
         </div>
         <div class="col-12 col-lg-3 order-1 order-lg-2">
-            <h2 class="text-center fs-5">{{ translate('Exercises') }}</h2>
+            <LaboratoryGroupList :api-url="`${subjectUrl}/api/laboratory-groups/`" />
+            <h2 class="text-center fs-5 mt-3">{{ translate('Exercises') }}</h2>
             <div class="exercises-list list-group mx-auto my-2">
                 <a
                     v-for="exercise in exercises"
                     :key="exercise.id"
-                    :href="`/semesters/${semester.slug}/${subject.slug}/${exercise.exerciseNumber}/`"
+                    :href="`${subjectUrl}/${exercise.exerciseNumber}/`"
                     class="list-group-item list-group-item-action"
                 >
                     {{ `${exercise.exerciseNumber}. ${exercise.name}` }}
