@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ref } from 'vue';
+import type { UserRole } from '@backend/user';
 import { langId } from '@components/frontend/lang';
 import { apiPatch } from '@components/api';
 import type { UserData, UserEditRoleApiData } from '@components/users/types';
-import type { UserRole } from '@backend/user';
 
 const props = defineProps<{
     user: UserData;

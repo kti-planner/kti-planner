@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import { langId } from '@components/frontend/lang';
-import type { UserCreateApiData, UserEditApiData, UserData } from '@components/users/types';
-import { apiPatch, apiPost } from '@components/api';
 import type { UserRole } from '@backend/user';
+import { langId } from '@components/frontend/lang';
+import { apiPatch, apiPost } from '@components/api';
+import type { UserCreateApiData, UserData, UserEditApiData } from '@components/users/types';
 
 const props = defineProps<{
     user?: UserData;
