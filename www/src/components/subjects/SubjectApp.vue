@@ -31,8 +31,6 @@ defineProps<{
     classrooms: ClassroomData[];
     nextExerciseNumber: number;
 }>();
-
-const url = window.location.pathname;
 </script>
 
 <template>
@@ -50,7 +48,7 @@ const url = window.location.pathname;
                 <a
                     v-for="exercise in exercises"
                     :key="exercise.id"
-                    :href="`${url}${exercise.exerciseNumber}/`"
+                    :href="`/semesters/${semester.slug}/${subject.slug}/${exercise.exerciseNumber}/`"
                     class="list-group-item list-group-item-action"
                 >
                     {{ `${exercise.exerciseNumber}. ${exercise.name}` }}
