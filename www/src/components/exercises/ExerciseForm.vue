@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import { langId } from '@components/frontend/lang';
+import { apiPatch, apiPost } from '@components/api';
 import type { ClassroomData } from '@components/classrooms/types';
-import type { ExerciseData } from '@components/exercises/types';
+import type { ExerciseCreateApiData, ExerciseData, ExerciseEditApiData } from '@components/exercises/types';
 import type { SemesterData } from '@components/semesters/types';
 import type { SubjectData } from '@components/subjects/types';
 import type { UserData } from '@components/users/types';
@@ -17,7 +18,7 @@ const props = defineProps<{
 
 const isEditing = computed(() => props.exercise?.id !== undefined);
 
-const addingFailed = ref(false);
+const submitFailed = ref(false);
 
 const exerciseName = ref<string | undefined>(props.exercise?.name);
 const exerciseNumber = ref<number | undefined>(props.exercise?.exerciseNumber);
@@ -25,51 +26,47 @@ const exerciseClassroomId = ref<string | undefined>(props.exercise?.classroomId)
 const teacher = ref<UserData | null>(props.exercise?.teacher ?? props.subject.teachers[0] ?? null);
 
 async function submit() {
-    try {
-        const result = !isEditing.value
-            ? await fetch('/semesters/api/exercises/', {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({
-                      name: exerciseName.value,
-                      exerciseNumber: exerciseNumber.value,
-                      subjectId: props.subject.id,
-                      classroomId: exerciseClassroomId.value,
-                      teacherId: teacher.value?.id,
-                  }),
-              })
-            : await fetch('/semesters/api/exercises/', {
-                  method: 'PATCH',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({
-                      id: props.exercise?.id,
-                      name: exerciseName.value,
-                      exerciseNumber: exerciseNumber.value,
-                      classroomId: exerciseClassroomId.value,
-                      teacherId: teacher.value?.id,
-                  }),
-              });
+    if (
+        exerciseName.value === undefined ||
+        exerciseNumber.value === undefined ||
+        exerciseClassroomId.value === undefined ||
+        teacher.value?.id === undefined
+    ) {
+        return;
+    }
 
-        if (!result.ok) {
-            console.error('API request failed!');
-            return;
+    const success =
+        props.exercise?.id === undefined
+            ? await apiPost<boolean>('/semesters/api/exercises/', {
+                  name: exerciseName.value,
+                  exerciseNumber: exerciseNumber.value,
+                  subjectId: props.subject.id,
+                  classroomId: exerciseClassroomId.value,
+                  teacherId: teacher.value?.id,
+              } satisfies ExerciseCreateApiData)
+            : await apiPatch<boolean>('/semesters/api/exercises/', {
+                  id: props.exercise.id,
+                  name: exerciseName.value,
+                  exerciseNumber: exerciseNumber.value,
+                  classroomId: exerciseClassroomId.value,
+                  teacherId: teacher.value?.id,
+              } satisfies ExerciseEditApiData);
+
+    if (success === undefined) {
+        return;
+    }
+
+    submitFailed.value = !success;
+
+    if (success) {
+        const newUrl = `/semesters/${props.semester.slug}/${props.subject.slug}/${exerciseNumber.value}/`;
+
+        if (isEditing.value) {
+            window.history.replaceState({}, '', newUrl);
+            window.location.reload();
+        } else {
+            window.location.assign(newUrl);
         }
-
-        const addingSuccess = (await result.json()) as boolean;
-        addingFailed.value = !addingSuccess;
-
-        if (addingSuccess) {
-            const newUrl = `/semesters/${props.semester.slug}/${props.subject.slug}/${exerciseNumber.value}/`;
-
-            if (isEditing.value) {
-                window.history.replaceState({}, '', newUrl);
-                window.location.reload();
-            } else {
-                window.location.assign(newUrl);
-            }
-        }
-    } catch (error) {
-        console.log(error);
     }
 }
 
@@ -136,7 +133,7 @@ function translate(text: keyof (typeof translations)[LangId]): string {
             <button type="submit" class="btn btn-success">{{ translate(isEditing ? 'Save' : 'Add') }}</button>
         </div>
 
-        <div v-if="addingFailed" class="text-center text-danger">
+        <div v-if="submitFailed" class="text-center text-danger">
             {{ translate('Exercise with this name or number already exists.') }}
         </div>
     </form>

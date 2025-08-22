@@ -1,10 +1,6 @@
 import type { APIRoute } from 'astro';
-import z from 'zod';
 import { Classroom } from '@backend/classroom';
-
-const schema = z.object({
-    name: z.string().trim().nonempty(),
-});
+import { classroomCreateApiSchema, classroomEditApiSchema } from '@components/classrooms/types';
 
 export const POST: APIRoute = async ({ locals }) => {
     const { jsonData, user } = locals;
@@ -13,7 +9,7 @@ export const POST: APIRoute = async ({ locals }) => {
         return Response.json(null, { status: 404 });
     }
 
-    const data = schema.nullable().catch(null).parse(jsonData);
+    const data = classroomCreateApiSchema.nullable().catch(null).parse(jsonData);
 
     if (!data) {
         return Response.json(null, { status: 400 });
@@ -31,11 +27,6 @@ export const POST: APIRoute = async ({ locals }) => {
     return Response.json(true, { status: 201 });
 };
 
-const schemaEdit = z.object({
-    id: z.uuid(),
-    name: z.string().trim().nonempty().optional(),
-});
-
 export const PATCH: APIRoute = async ({ locals }) => {
     const { jsonData, user } = locals;
 
@@ -43,7 +34,7 @@ export const PATCH: APIRoute = async ({ locals }) => {
         return Response.json(null, { status: 404 });
     }
 
-    const data = schemaEdit.nullable().catch(null).parse(jsonData);
+    const data = classroomEditApiSchema.nullable().catch(null).parse(jsonData);
 
     if (!data) {
         return Response.json(null, { status: 400 });

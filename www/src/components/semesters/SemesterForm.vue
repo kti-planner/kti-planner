@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { langId } from '@components/frontend/lang';
-import type { SemesterData } from '@components/semesters/types';
+import { apiPatch, apiPost } from '@components/api';
+import type { SemesterCreateApiData, SemesterData, SemesterEditApiData } from '@components/semesters/types';
 
 const props = defineProps<{
     semester?: SemesterData;
 }>();
 
-const addingFailed = ref(false);
+const submitFailed = ref(false);
 
 const type = ref<'summer' | 'winter' | undefined>(props.semester?.type);
 const year = ref<number | undefined>(props.semester?.year);
@@ -15,44 +16,39 @@ const startDate = ref<string | undefined>(props.semester?.startDate);
 const endDate = ref<string | undefined>(props.semester?.endDate);
 
 async function submit() {
-    try {
-        const result =
-            props.semester === undefined
-                ? await fetch('/semesters/api/semesters/', {
-                      method: 'POST',
-                      headers: { 'Content-Type': 'application/json' },
-                      body: JSON.stringify({
-                          type: type.value,
-                          year: year.value,
-                          startDate: startDate.value,
-                          endDate: endDate.value,
-                      }),
-                  })
-                : await fetch('/semesters/api/semesters/', {
-                      method: 'PATCH',
-                      headers: { 'Content-Type': 'application/json' },
-                      body: JSON.stringify({
-                          id: props.semester.id,
-                          type: type.value,
-                          year: year.value,
-                          startDate: startDate.value,
-                          endDate: endDate.value,
-                      }),
-                  });
+    if (
+        type.value === undefined ||
+        year.value === undefined ||
+        startDate.value === undefined ||
+        endDate.value === undefined
+    ) {
+        return;
+    }
 
-        if (!result.ok) {
-            console.error('API request failed!');
-            return;
-        }
+    const success =
+        props.semester === undefined
+            ? await apiPost<boolean>('/semesters/api/semesters/', {
+                  type: type.value,
+                  year: year.value,
+                  startDate: startDate.value,
+                  endDate: endDate.value,
+              } satisfies SemesterCreateApiData)
+            : await apiPatch<boolean>('/semesters/api/semesters/', {
+                  id: props.semester.id,
+                  type: type.value,
+                  year: year.value,
+                  startDate: startDate.value,
+                  endDate: endDate.value,
+              } satisfies SemesterEditApiData);
 
-        const addingSuccess = (await result.json()) as boolean;
-        addingFailed.value = !addingSuccess;
+    if (success === undefined) {
+        return;
+    }
 
-        if (addingSuccess) {
-            window.location.assign(`/semesters/${year.value}-${type.value}/`);
-        }
-    } catch (error) {
-        console.log(error);
+    submitFailed.value = !success;
+
+    if (success) {
+        window.location.assign(`/semesters/${year.value}-${type.value}/`);
     }
 }
 
@@ -115,7 +111,7 @@ function translate(text: keyof (typeof translations)[LangId]): string {
             <button type="submit" class="btn btn-success">{{ translate(semester ? 'Save' : 'Add') }}</button>
         </div>
 
-        <div v-if="addingFailed" class="text-center text-danger">
+        <div v-if="submitFailed" class="text-center text-danger">
             {{ translate('Semester with this year and type already exists.') }}
         </div>
     </form>
