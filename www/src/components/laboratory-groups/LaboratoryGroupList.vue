@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { inject, ref, useId, watch } from 'vue';
+import { inject, reactive, ref, useId, watch } from 'vue';
 import { langId } from '@components/frontend/lang';
 import { apiPost, useApiFetch } from '@components/api';
 import { isLoggedInKey } from '@components/is-logged-in';
@@ -34,8 +34,17 @@ const { data: groups, execute: refreshGroups } = useApiFetch<LaboratoryGroupData
 
 const newGroupName = ref('');
 const addingFailed = ref(false);
+const selectedGroupIds = reactive(new Set<string>());
 
 watch(newGroupName, () => (addingFailed.value = false));
+
+watch(groups, () => {
+    selectedGroupIds.forEach(id => {
+        if (!groups.value?.some(g => g.id === id)) {
+            selectedGroupIds.delete(id);
+        }
+    });
+});
 
 async function addGroup() {
     if (newGroupName.value === '' || !groups.value) {
@@ -63,6 +72,14 @@ async function addGroup() {
     void refreshGroups();
 }
 
+function toggleSelectGroup(group: LaboratoryGroupData) {
+    if (selectedGroupIds.has(group.id)) {
+        selectedGroupIds.delete(group.id);
+    } else {
+        selectedGroupIds.add(group.id);
+    }
+}
+
 const addBtnId = useId();
 </script>
 
@@ -71,7 +88,16 @@ const addBtnId = useId();
         {{ translate('Laboratory groups') }}
     </h2>
     <div v-if="groups && groups.length > 0" class="d-flex flex-wrap gap-2 mb-3">
-        <button v-for="group in groups" :key="group.id" type="button" class="btn btn-light">{{ group.name }}</button>
+        <button
+            v-for="group in groups"
+            :key="group.id"
+            type="button"
+            class="btn"
+            :class="selectedGroupIds.has(group.id) ? 'btn-success' : 'btn-light'"
+            @click="toggleSelectGroup(group)"
+        >
+            {{ group.name }}
+        </button>
     </div>
     <form v-if="isLoggedIn" @submit.prevent="addGroup">
         <div class="input-group">
