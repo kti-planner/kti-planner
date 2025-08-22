@@ -30,7 +30,7 @@ const { apiUrl } = defineProps<{
 
 const isLoggedIn = inject(isLoggedInKey, false);
 
-const { data: groups, execute: refreshGroups } = useApiFetch<LaboratoryGroupData[]>(apiUrl);
+const { data: groups, execute: refreshGroups } = useApiFetch<LaboratoryGroupData[]>(apiUrl, { clone: true });
 
 const newGroupName = ref('');
 const addingFailed = ref(false);
@@ -38,26 +38,29 @@ const addingFailed = ref(false);
 watch(newGroupName, () => (addingFailed.value = false));
 
 async function addGroup() {
-    if (newGroupName.value === '') {
+    if (newGroupName.value === '' || !groups.value) {
         return;
     }
 
     addingFailed.value = false;
 
-    const success = await apiPost<boolean>(apiUrl, {
+    const group = await apiPost<LaboratoryGroupData | null>(apiUrl, {
         name: newGroupName.value,
     } satisfies LaboratoryGroupCreateApiData);
 
-    if (success === undefined) {
+    if (group === undefined) {
         return;
     }
 
-    addingFailed.value = !success;
-    void refreshGroups();
+    addingFailed.value = group === null;
 
-    if (success) {
+    if (group !== null) {
         newGroupName.value = '';
+        groups.value.push(group);
+        groups.value.sort((a, b) => a.name.localeCompare(b.name));
     }
+
+    void refreshGroups();
 }
 
 const addBtnId = useId();
