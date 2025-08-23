@@ -14,16 +14,16 @@ const translations = {
         'Laboratory groups': 'Laboratory groups',
         'New group': 'New group',
         'Edit name': 'Edit name',
-        'Add': 'Add',
-        'Save': 'Save',
+        'Add group': 'Add group',
+        'Save group name': 'Save group name',
         'This group already exists': 'This group already exists',
     },
     'pl': {
         'Laboratory groups': 'Grupy laboratoryjne',
         'New group': 'Nowa grupa',
         'Edit name': 'Edytuj nazwę',
-        'Add': 'Dodaj',
-        'Save': 'Zapisz',
+        'Add group': 'Dodaj grupę',
+        'Save group name': 'Zapisz nazwę grupy',
         'This group already exists': 'Ta grupa już istnieje',
     },
 };
@@ -160,7 +160,8 @@ const submitBtnId = useId();
                 :id="submitBtnId"
                 class="btn btn-success"
                 type="submit"
-                :title="isAdding ? translate('Add') : translate('Save')"
+                :title="isAdding ? translate('Add group') : translate('Save group name')"
+                :aria-label="isAdding ? translate('Add group') : translate('Save group name')"
                 :disabled="groupName === ''"
             >
                 <i class="bi" :class="isAdding ? 'bi-plus-lg' : 'bi-pencil-fill'"></i>
