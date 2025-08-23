@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import { langId } from '@components/frontend/lang';
 import { currentUser } from '@components/frontend/user';
 import type { ClassroomData } from '@components/classrooms/types';
 import type { ExerciseData } from '@components/exercises/types';
+import type { LaboratoryGroupData } from '@components/laboratory-groups/types';
 import type { SemesterData } from '@components/semesters/types';
 import type { SubjectData } from '@components/subjects/types';
 import type { UserData } from '@components/users/types';
@@ -34,6 +35,7 @@ const { subject, semester } = defineProps<{
     nextExerciseNumber: number;
 }>();
 
+const selectedLaboratoryGroups = ref<LaboratoryGroupData[]>([]);
 const subjectUrl = computed(() => `/semesters/${semester.slug}/${subject.slug}`);
 </script>
 
@@ -47,7 +49,7 @@ const subjectUrl = computed(() => `/semesters/${semester.slug}/${subject.slug}`)
             <SubjectCalendar />
         </div>
         <div class="col-12 col-lg-3 order-1 order-lg-2 d-flex gap-3 flex-column-reverse flex-lg-column">
-            <LaboratoryGroupList :api-url="`${subjectUrl}/api/laboratory-groups/`" />
+            <LaboratoryGroupList v-model="selectedLaboratoryGroups" :api-url="`${subjectUrl}/api/laboratory-groups/`" />
             <div>
                 <h2 class="text-center fs-5">{{ translate('Exercises') }}</h2>
                 <div class="exercises-list list-group mx-auto my-2">

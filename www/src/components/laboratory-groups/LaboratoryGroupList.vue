@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, useId, watch } from 'vue';
+import { computed, ref, useId, watch, watchEffect } from 'vue';
 import { useSorted } from '@vueuse/core';
 import { langId } from '@components/frontend/lang';
 import { currentUser } from '@components/frontend/user';
@@ -33,6 +33,8 @@ function translate(text: keyof (typeof translations)[LangId]): string {
     return translations[langId][text];
 }
 
+const model = defineModel<LaboratoryGroupData[]>({ required: true });
+
 const { apiUrl } = defineProps<{
     apiUrl: string;
 }>();
@@ -53,6 +55,10 @@ const isAdding = computed<boolean>(() => selectedGroups.value.length !== 1);
 
 watch(groupName, () => (submitFailed.value = false));
 watch(isAdding, () => (groupName.value = ''));
+
+watchEffect(() => {
+    model.value = selectedGroups.value;
+});
 
 async function addGroup() {
     if (groupName.value === '' || !groups.value) {
