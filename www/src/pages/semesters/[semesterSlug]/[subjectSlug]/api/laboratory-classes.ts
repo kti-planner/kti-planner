@@ -52,12 +52,14 @@ export const POST: APIRoute = async ({ locals }) => {
     const data = laboratoryClassCreateApiSchema.nullable().catch(null).parse(jsonData);
 
     if (!data) {
+        console.warn('no data');
         return Response.json(null, { status: 400 });
     }
 
     const exercise = await Exercise.fetch(data.exerciseId);
 
     if (!exercise) {
+        console.warn('no exercise');
         return Response.json(null, { status: 400 });
     }
 
@@ -66,6 +68,7 @@ export const POST: APIRoute = async ({ locals }) => {
     const group = await LaboratoryGroup.fetch(data.laboratoryGroupId);
 
     if (!group) {
+        console.warn('no group');
         return Response.json(null, { status: 400 });
     }
 

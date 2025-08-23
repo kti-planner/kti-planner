@@ -26,6 +26,11 @@ const { group } = defineProps<{
     group: LaboratoryGroupData | null;
     exercises: ExerciseData[];
     semester: SemesterData;
+    apiUrl: string;
+}>();
+
+const emit = defineEmits<{
+    done: [];
 }>();
 
 const modal = useTemplateRef('modal');
@@ -38,6 +43,11 @@ watch(
         }
     },
 );
+
+function handleFormDone() {
+    modal.value?.hide();
+    emit('done');
+}
 </script>
 
 <template>
@@ -58,7 +68,7 @@ watch(
             <template v-if="group" #header>
                 {{ `${translate('Plan classes for group')} ${group.name}` }}
             </template>
-            <GenerateClassesForm v-if="group" :group :semester :exercises />
+            <GenerateClassesForm v-if="group" :group :semester :exercises :api-url @done="handleFormDone" />
         </Modal>
     </div>
 </template>

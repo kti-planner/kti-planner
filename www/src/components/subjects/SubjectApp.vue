@@ -60,6 +60,7 @@ const subjectUrl = computed(() => `/semesters/${semester.slug}/${subject.slug}`)
                     :group="selectedLaboratoryGroups.length === 1 ? (selectedLaboratoryGroups[0] ?? null) : null"
                     :exercises
                     :semester
+                    :api-url="`${subjectUrl}/api/laboratory-classes/`"
                     class="mt-3"
                 />
             </div>

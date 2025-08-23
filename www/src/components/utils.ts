@@ -27,6 +27,6 @@ export const dateStringSchema = z.iso.date().transform(str => {
     return new Date(`${str}T00:00:00`);
 });
 
-export const dateTimeStringSchema = z.iso.date().transform(str => {
+export const dateTimeStringSchema = z.iso.datetime({ local: true }).transform(str => {
     return new Date(str);
 });

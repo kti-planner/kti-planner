@@ -1,9 +1,12 @@
 <script setup lang="ts">
 import { computed, ref, useId, watchEffect } from 'vue';
 import { langId } from '@components/frontend/lang';
+import { apiPost } from '@components/api';
 import type { ExerciseData } from '@components/exercises/types';
+import type { LaboratoryClassCreateApiData } from '@components/laboratory-classes/types';
 import type { LaboratoryGroupData } from '@components/laboratory-groups/types';
 import type { SemesterData } from '@components/semesters/types';
+import { formatDateLocalYyyyMmDdHhMm } from '@components/utils';
 import PlannedClassCard from '@components/laboratory-classes/PlannedClassCard.vue';
 
 const translations = {
@@ -31,10 +34,15 @@ function translate(text: keyof (typeof translations)[LangId]): string {
     return translations[langId][text];
 }
 
-const { exercises } = defineProps<{
+const { group, exercises, apiUrl } = defineProps<{
     group: LaboratoryGroupData;
     exercises: ExerciseData[];
     semester: SemesterData;
+    apiUrl: string;
+}>();
+
+const emit = defineEmits<{
+    done: [];
 }>();
 
 const firstClassDateStr = ref<string>();
@@ -84,7 +92,32 @@ const plannedClasses = computed<PlannedClass[]>(() => {
 
 watchEffect(() => console.log(plannedClasses.value));
 
-async function generate() {}
+async function generate() {
+    if (plannedClasses.value.length === 0) {
+        return;
+    }
+
+    const results = await Promise.all(
+        plannedClasses.value.map(plannedClass =>
+            apiPost<boolean>(apiUrl, {
+                exerciseId: plannedClass.exercise.id,
+                laboratoryGroupId: group.id,
+                startDate: formatDateLocalYyyyMmDdHhMm(plannedClass.start),
+                endDate: formatDateLocalYyyyMmDdHhMm(plannedClass.end),
+            } satisfies LaboratoryClassCreateApiData),
+        ),
+    );
+
+    if (results.some(r => r === undefined)) {
+        return;
+    }
+
+    firstClassDateStr.value = undefined;
+    firstClassStartTime.value = undefined;
+    firstClassEndTime.value = undefined;
+    repeatWeeks.value = 1;
+    emit('done');
+}
 
 const dateId = useId();
 const startTimeId = useId();
