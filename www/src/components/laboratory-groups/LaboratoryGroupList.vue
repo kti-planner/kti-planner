@@ -42,22 +42,13 @@ const groupName = ref('');
 const submitFailed = ref(false);
 const selectedGroupIds = ref(new Set<string>());
 
-const selectedGroups = computed<LaboratoryGroupData[] | null>(
-    () => groups.value?.filter(g => selectedGroupIds.value.has(g.id)) ?? null,
+const selectedGroups = computed<LaboratoryGroupData[]>(() =>
+    (groups.value ?? []).filter(g => selectedGroupIds.value.has(g.id)),
 );
 
-const isAdding = computed<boolean>(() => selectedGroupIds.value.size !== 1);
+const isAdding = computed<boolean>(() => selectedGroups.value.length !== 1);
 
 watch(groupName, () => (submitFailed.value = false));
-
-watch(groups, () => {
-    selectedGroupIds.value.forEach(id => {
-        if (!groups.value?.some(g => g.id === id)) {
-            selectedGroupIds.value.delete(id);
-        }
-    });
-});
-
 watch(isAdding, () => (groupName.value = ''));
 
 async function addGroup() {
@@ -140,7 +131,10 @@ const submitBtnId = useId();
             {{ group.name }}
         </button>
     </div>
-    <form v-if="currentUser !== null" @submit.prevent="isAdding ? addGroup() : editGroup(selectedGroups![0]!)">
+    <form
+        v-if="currentUser !== null"
+        @submit.prevent="isAdding || selectedGroups[0] === undefined ? addGroup() : editGroup(selectedGroups[0])"
+    >
         <div class="input-group">
             <input
                 v-model.trim="groupName"
