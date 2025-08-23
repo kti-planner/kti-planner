@@ -4,7 +4,7 @@ import { langId } from '@components/frontend/lang';
 import type { ExerciseData } from '@components/exercises/types';
 import type { LaboratoryGroupData } from '@components/laboratory-groups/types';
 import type { SemesterData } from '@components/semesters/types';
-import { formatDateLocalHhMm, formatDateLocalYyyyMmDd } from '@components/utils';
+import PlannedClassCard from '@components/laboratory-classes/PlannedClassCard.vue';
 
 const translations = {
     'en': {
@@ -42,7 +42,7 @@ const firstClassStartTime = ref<string>();
 const firstClassEndTime = ref<string>();
 const repeatWeeks = ref(1);
 
-interface PlannedClass {
+export interface PlannedClass {
     id: string;
     exercise: ExerciseData;
     start: Date;
@@ -125,26 +125,7 @@ const repeatId = useId();
         <div v-if="plannedClasses.length > 0">
             <h2 class="fs-6">{{ translate('Summary') }}</h2>
             <div class="d-flex flex-column gap-2">
-                <div v-for="plannedClass in plannedClasses" :key="plannedClass.id" class="card">
-                    <div class="card-body">
-                        <h3 class="card-title fs-6">
-                            {{ `${plannedClass.exercise.exerciseNumber}. ${plannedClass.exercise.name}` }}
-                        </h3>
-                        <h4 class="card-subtitle mb-2 text-body-secondary fs-6">
-                            {{
-                                `${formatDateLocalYyyyMmDd(plannedClass.start)} ${formatDateLocalHhMm(plannedClass.start)} - ${formatDateLocalHhMm(plannedClass.end)}`
-                            }}
-                        </h4>
-                        <div class="d-flex gap-1">
-                            <i class="bi bi-person-fill"></i>
-                            <span>{{ plannedClass.exercise.teacher.name }}</span>
-                        </div>
-                        <div class="d-flex gap-1">
-                            <i class="bi bi-building-fill"></i>
-                            <span>{{ plannedClass.exercise.classroom.name }}</span>
-                        </div>
-                    </div>
-                </div>
+                <PlannedClassCard v-for="plannedClass in plannedClasses" :key="plannedClass.id" :planned-class />
             </div>
             <p class="text-secondary mt-2">
                 {{ translate('You can edit the classes later from the calendar') }}
