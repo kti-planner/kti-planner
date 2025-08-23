@@ -1,5 +1,5 @@
 import assert from 'node:assert';
-import type { Classroom } from '@backend/classroom';
+import { type Classroom, makeClassroomData } from '@backend/classroom';
 import { db } from '@backend/db';
 import type { Subject } from '@backend/subject';
 import { makeUserData, User } from '@backend/user';
@@ -132,13 +132,13 @@ export class Exercise {
     }
 }
 
-export function makeExerciseData(exercise: Exercise, teacher: User): ExerciseData {
+export function makeExerciseData(exercise: Exercise, classroom: Classroom, teacher: User): ExerciseData {
     return {
         id: exercise.id,
         name: exercise.name,
         subjectId: exercise.subjectId,
         exerciseNumber: exercise.exerciseNumber,
-        classroomId: exercise.classroomId,
+        classroom: makeClassroomData(classroom),
         teacher: makeUserData(teacher),
     };
 }

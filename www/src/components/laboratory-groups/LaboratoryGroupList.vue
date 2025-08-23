@@ -139,7 +139,7 @@ const invalidFeedbackId = useId();
             </template>
         </div>
         <form
-            v-if="currentUser !== null"
+            v-if="currentUser"
             @submit.prevent="isAdding || selectedGroups[0] === undefined ? addGroup() : editGroup(selectedGroups[0])"
         >
             <div class="input-group has-validation">
