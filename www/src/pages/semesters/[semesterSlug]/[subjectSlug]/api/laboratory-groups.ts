@@ -1,24 +1,7 @@
 import type { APIRoute } from 'astro';
 import { LaboratoryGroup, makeLaboratoryGroupData } from '@backend/laboratory-group';
-import { Semester } from '@backend/semester';
-import { Subject } from '@backend/subject';
 import { laboratoryGroupCreateApiSchema, laboratoryGroupEditApiSchema } from '@components/laboratory-groups/types';
-
-async function getSubjectFromParams(params: Record<string, string | undefined>): Promise<Subject | null> {
-    const { semesterSlug, subjectSlug } = params;
-
-    if (semesterSlug === undefined || subjectSlug === undefined) {
-        return null;
-    }
-
-    const semester = await Semester.fetchBySlug(semesterSlug);
-
-    if (!semester) {
-        return null;
-    }
-
-    return await Subject.fetchBySlug(semester, subjectSlug);
-}
+import { getSubjectFromParams } from '@pages/semesters/[semesterSlug]/[subjectSlug]/api/subject-utils';
 
 export const GET: APIRoute = async ({ url, params }) => {
     const subject = await getSubjectFromParams(params);

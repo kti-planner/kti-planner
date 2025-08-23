@@ -1,9 +1,12 @@
 import assert from 'node:assert';
 import { db } from '@backend/db';
 import type { Exercise } from '@backend/exercise';
-import type { LaboratoryGroup } from '@backend/laboratory-group';
+import { type LaboratoryGroup, makeLaboratoryGroupData } from '@backend/laboratory-group';
 import type { Subject } from '@backend/subject';
-import type { User } from '@backend/user';
+import { makeUserData, type User } from '@backend/user';
+import type { ExerciseData } from '@components/exercises/types';
+import type { LaboratoryClassData } from '@components/laboratory-classes/types';
+import { formatDateLocalYyyyMmDdHhMm } from '@components/utils';
 
 interface DbLaboratoryClass {
     id: string;
@@ -114,4 +117,20 @@ export class LaboratoryClass {
             this.teacherId,
         ]);
     }
+}
+
+export function makeLaboratoryClassData(
+    laboratoryClass: LaboratoryClass,
+    exerciseData: ExerciseData,
+    group: LaboratoryGroup,
+    teacher: User,
+): LaboratoryClassData {
+    return {
+        id: laboratoryClass.id,
+        exercise: exerciseData,
+        laboratoryGroup: makeLaboratoryGroupData(group),
+        startDate: formatDateLocalYyyyMmDdHhMm(laboratoryClass.startDate),
+        endDate: formatDateLocalYyyyMmDdHhMm(laboratoryClass.endDate),
+        teacher: makeUserData(teacher),
+    };
 }
