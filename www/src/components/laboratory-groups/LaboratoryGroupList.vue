@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { computed, inject, ref, useId, watch } from 'vue';
+import { computed, ref, useId, watch } from 'vue';
 import { langId } from '@components/frontend/lang';
+import { currentUser } from '@components/frontend/user';
 import { apiPatch, apiPost, useApiFetch } from '@components/api';
-import { isLoggedInKey } from '@components/is-logged-in';
 import type {
     LaboratoryGroupCreateApiData,
     LaboratoryGroupData,
@@ -35,8 +35,6 @@ function translate(text: keyof (typeof translations)[LangId]): string {
 const { apiUrl } = defineProps<{
     apiUrl: string;
 }>();
-
-const isLoggedIn = inject(isLoggedInKey, false);
 
 const { data: groups, execute: refreshGroups } = useApiFetch<LaboratoryGroupData[]>(apiUrl, { clone: true });
 
@@ -142,7 +140,7 @@ const submitBtnId = useId();
             {{ group.name }}
         </button>
     </div>
-    <form v-if="isLoggedIn" @submit.prevent="isAdding ? addGroup() : editGroup(selectedGroups![0]!)">
+    <form v-if="currentUser !== null" @submit.prevent="isAdding ? addGroup() : editGroup(selectedGroups![0]!)">
         <div class="input-group">
             <input
                 v-model.trim="groupName"

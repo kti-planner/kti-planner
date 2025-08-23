@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { computed, provide } from 'vue';
+import { computed } from 'vue';
 import { langId } from '@components/frontend/lang';
+import { currentUser } from '@components/frontend/user';
 import type { ClassroomData } from '@components/classrooms/types';
 import type { ExerciseData } from '@components/exercises/types';
-import { isLoggedInKey } from '@components/is-logged-in';
 import type { SemesterData } from '@components/semesters/types';
 import type { SubjectData } from '@components/subjects/types';
 import type { UserData } from '@components/users/types';
@@ -25,17 +25,14 @@ function translate(text: keyof (typeof translations)[LangId]): string {
     return translations[langId][text];
 }
 
-const { subject, semester, isLoggedIn } = defineProps<{
+const { subject, semester } = defineProps<{
     subject: SubjectData;
     semester: SemesterData;
-    isLoggedIn: boolean;
     allUsers: UserData[];
     exercises: ExerciseData[];
     classrooms: ClassroomData[];
     nextExerciseNumber: number;
 }>();
-
-provide(isLoggedInKey, isLoggedIn);
 
 const subjectUrl = computed(() => `/semesters/${semester.slug}/${subject.slug}`);
 </script>
@@ -43,7 +40,7 @@ const subjectUrl = computed(() => `/semesters/${semester.slug}/${subject.slug}`)
 <template>
     <h1 class="text-center fs-4 mb-3">
         {{ subject.name }}
-        <EditSubject v-if="isLoggedIn" :semester :subject :all-users />
+        <EditSubject v-if="currentUser !== null" :semester :subject :all-users />
     </h1>
     <div class="row g-4">
         <div class="col-12 col-lg-9 mb-2 order-2 order-lg-1">
@@ -62,7 +59,7 @@ const subjectUrl = computed(() => `/semesters/${semester.slug}/${subject.slug}`)
                     {{ `${exercise.exerciseNumber}. ${exercise.name}` }}
                 </a>
             </div>
-            <div v-if="isLoggedIn" class="my-2">
+            <div v-if="currentUser !== null" class="my-2">
                 <AddExercise :semester :subject :classrooms :next-exercise-number />
             </div>
         </div>

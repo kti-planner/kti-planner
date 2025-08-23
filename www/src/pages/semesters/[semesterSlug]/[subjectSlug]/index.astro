@@ -11,7 +11,7 @@ import Layout from '@layouts/Layout.astro';
 import SubjectApp from '@components/subjects/SubjectApp.vue';
 
 const { semesterSlug, subjectSlug } = Astro.params;
-const { langId, user } = Astro.locals;
+const { langId } = Astro.locals;
 
 const translations = {
     'en': {
@@ -103,7 +103,6 @@ const classroomsData = classrooms.map(makeClassroomData);
         client:only="vue"
         subject={subjectData}
         semester={semesterData}
-        isLoggedIn={user !== null}
         allUsers={allUsersData}
         exercises={exercisesData}
         classrooms={classroomsData}
