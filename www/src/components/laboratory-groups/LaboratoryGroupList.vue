@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, inject, reactive, ref, useId, watch } from 'vue';
+import { computed, inject, ref, useId, watch } from 'vue';
 import { langId } from '@components/frontend/lang';
 import { apiPatch, apiPost, useApiFetch } from '@components/api';
 import { isLoggedInKey } from '@components/is-logged-in';
@@ -42,20 +42,20 @@ const { data: groups, execute: refreshGroups } = useApiFetch<LaboratoryGroupData
 
 const groupName = ref('');
 const submitFailed = ref(false);
-const selectedGroupIds = reactive(new Set<string>());
+const selectedGroupIds = ref(new Set<string>());
 
 const selectedGroups = computed<LaboratoryGroupData[] | null>(
-    () => groups.value?.filter(g => selectedGroupIds.has(g.id)) ?? null,
+    () => groups.value?.filter(g => selectedGroupIds.value.has(g.id)) ?? null,
 );
 
-const isAdding = computed<boolean>(() => selectedGroupIds.size !== 1);
+const isAdding = computed<boolean>(() => selectedGroupIds.value.size !== 1);
 
 watch(groupName, () => (submitFailed.value = false));
 
 watch(groups, () => {
-    selectedGroupIds.forEach(id => {
+    selectedGroupIds.value.forEach(id => {
         if (!groups.value?.some(g => g.id === id)) {
-            selectedGroupIds.delete(id);
+            selectedGroupIds.value.delete(id);
         }
     });
 });
@@ -116,10 +116,10 @@ async function editGroup(group: LaboratoryGroupData) {
 }
 
 function toggleSelectGroup(group: LaboratoryGroupData) {
-    if (selectedGroupIds.has(group.id)) {
-        selectedGroupIds.delete(group.id);
+    if (selectedGroupIds.value.has(group.id)) {
+        selectedGroupIds.value.delete(group.id);
     } else {
-        selectedGroupIds.add(group.id);
+        selectedGroupIds.value.add(group.id);
     }
 }
 
