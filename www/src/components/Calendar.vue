@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, useTemplateRef, watch } from 'vue';
 import bootstrap5Plugin from '@fullcalendar/bootstrap5';
-import type { CalendarOptions, DateSelectArg, EventClickArg } from '@fullcalendar/core';
+import type { CalendarOptions, DateInput, DateSelectArg, EventClickArg, EventSourceInput } from '@fullcalendar/core';
 import enGbLocale from '@fullcalendar/core/locales/en-gb';
 import plLocale from '@fullcalendar/core/locales/pl';
 import dayGridPlugin from '@fullcalendar/daygrid';
@@ -10,8 +10,10 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import FullCalendar from '@fullcalendar/vue3';
 import { langId } from '@components/frontend/lang';
 
-const { selectable } = defineProps<{
+const { selectable, events, initialDate } = defineProps<{
     selectable?: boolean | undefined;
+    events?: EventSourceInput | undefined;
+    initialDate?: DateInput | undefined;
 }>();
 
 const emit = defineEmits<{
@@ -22,11 +24,23 @@ const emit = defineEmits<{
 // Customize buttons
 bootstrap5Plugin.themeClasses.bootstrap5!.prototype.classes.button = 'btn btn-success btn-sm';
 
+const calendar = useTemplateRef('calendar');
+
+watch(
+    () => initialDate,
+    (newDate, oldDate) => {
+        if (oldDate === undefined && newDate !== undefined) {
+            const api = calendar.value?.getApi();
+            api?.gotoDate(newDate);
+        }
+    },
+);
+
 const options = computed((): CalendarOptions => {
     return {
         plugins: [dayGridPlugin, timeGridPlugin, bootstrap5Plugin, interactionPlugin],
         themeSystem: 'bootstrap5',
-        initialView: 'dayGridMonth',
+        initialView: 'timeGridWeek',
         height: '80vh',
         headerToolbar: {
             left: 'prev,next today',
@@ -41,9 +55,11 @@ const options = computed((): CalendarOptions => {
         slotDuration: '01:00:00',
         businessHours: {
             daysOfWeek: [1, 2, 3, 4, 5],
-            startTime: '8:00',
-            endTime: '16:00',
+            startTime: '7:00',
+            endTime: '21:00',
         },
+        slotMinTime: '07:00:00',
+        slotMaxTime: '21:00:00',
         eventClick: event => emit('eventClick', event),
         selectable,
         select: event => emit('select', event),
@@ -53,6 +69,10 @@ const options = computed((): CalendarOptions => {
             minute: '2-digit',
             meridiem: false,
         },
+        expandRows: true,
+        eventBackgroundColor: 'var(--bs-success)',
+        ...(events ? { events } : {}),
+        ...(initialDate ? { initialDate } : {}),
     };
 });
 </script>
@@ -60,7 +80,7 @@ const options = computed((): CalendarOptions => {
 <template>
     <div class="overflow-y-auto">
         <div class="calendar-wrapper" style="min-width: 480px">
-            <FullCalendar :options />
+            <FullCalendar ref="calendar" :options />
         </div>
     </div>
 </template>

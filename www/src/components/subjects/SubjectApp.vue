@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, ref, useTemplateRef } from 'vue';
 import { langId } from '@components/frontend/lang';
 import { currentUser } from '@components/frontend/user';
 import type { ClassroomData } from '@components/classrooms/types';
@@ -37,6 +37,7 @@ const { subject, semester } = defineProps<{
 }>();
 
 const selectedLaboratoryGroups = ref<LaboratoryGroupData[]>([]);
+const calendar = useTemplateRef('calendar');
 const subjectUrl = computed(() => `/semesters/${semester.slug}/${subject.slug}`);
 </script>
 
@@ -47,7 +48,11 @@ const subjectUrl = computed(() => `/semesters/${semester.slug}/${subject.slug}`)
     </h1>
     <div class="row g-4">
         <div class="col-12 col-lg-9 mb-2 order-2 order-lg-1">
-            <SubjectCalendar />
+            <SubjectCalendar
+                ref="calendar"
+                :api-url="`${subjectUrl}/api/laboratory-classes/`"
+                :selected-laboratory-groups
+            />
         </div>
         <div class="col-12 col-lg-3 order-1 order-lg-2 d-flex gap-3 flex-column-reverse flex-lg-column">
             <div>
@@ -62,6 +67,7 @@ const subjectUrl = computed(() => `/semesters/${semester.slug}/${subject.slug}`)
                     :semester
                     :api-url="`${subjectUrl}/api/laboratory-classes/`"
                     class="mt-3"
+                    @done="calendar?.refreshClasses()"
                 />
             </div>
             <div>
