@@ -1,7 +1,7 @@
 import type { APIRoute } from 'astro';
 import { LaboratoryGroup, makeLaboratoryGroupData } from '@backend/laboratory-group';
 import { laboratoryGroupCreateApiSchema, laboratoryGroupEditApiSchema } from '@components/laboratory-groups/types';
-import { getSubjectFromParams } from '@pages/semesters/[semesterSlug]/[subjectSlug]/api/subject-utils';
+import { getSubjectFromParams } from '@pages/semesters/[semesterSlug]/[subjectSlug]/api/_subject-utils';
 
 export const GET: APIRoute = async ({ url, params }) => {
     const subject = await getSubjectFromParams(params);

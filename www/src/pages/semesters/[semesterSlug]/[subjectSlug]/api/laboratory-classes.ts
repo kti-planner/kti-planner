@@ -6,9 +6,9 @@ import { LaboratoryClass, makeLaboratoryClassData } from '@backend/laboratory-cl
 import { LaboratoryGroup } from '@backend/laboratory-group';
 import { User } from '@backend/user';
 import { laboratoryClassCreateApiSchema, type LaboratoryClassData } from '@components/laboratory-classes/types';
-import { getSubjectFromParams } from '@pages/semesters/[semesterSlug]/[subjectSlug]/api/subject-utils';
+import { getSubjectFromParams } from '@pages/semesters/[semesterSlug]/[subjectSlug]/api/_subject-utils';
 
-export const GET: APIRoute = async ({ params }) => {
+export const GET: APIRoute = async ({ params, url }) => {
     const subject = await getSubjectFromParams(params);
     if (!subject) {
         return Response.json(null, { status: 404 });
