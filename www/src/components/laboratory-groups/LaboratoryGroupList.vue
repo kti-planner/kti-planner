@@ -43,7 +43,7 @@ const submitFailed = ref(false);
 const selectedGroupIds = ref(new Set<string>());
 
 const selectedGroups = computed<LaboratoryGroupData[]>(() =>
-    (groups.value ?? []).filter(g => selectedGroupIds.value.has(g.id)),
+    (groups.value ?? []).filter(group => selectedGroupIds.value.has(group.id)),
 );
 
 const isAdding = computed<boolean>(() => selectedGroups.value.length !== 1);
@@ -104,14 +104,6 @@ async function editGroup(group: LaboratoryGroupData) {
     void refreshGroups();
 }
 
-function toggleSelectGroup(group: LaboratoryGroupData) {
-    if (selectedGroupIds.value.has(group.id)) {
-        selectedGroupIds.value.delete(group.id);
-    } else {
-        selectedGroupIds.value.add(group.id);
-    }
-}
-
 const submitBtnId = useId();
 </script>
 
@@ -121,16 +113,22 @@ const submitBtnId = useId();
             {{ translate('Laboratory groups') }}
         </h2>
         <div v-if="groups && groups.length > 0" class="d-flex flex-wrap gap-2 mb-3">
-            <button
-                v-for="group in groups"
-                :key="group.id"
-                type="button"
-                class="btn"
-                :class="selectedGroupIds.has(group.id) ? 'btn-success' : 'btn-light'"
-                @click="toggleSelectGroup(group)"
-            >
-                {{ group.name }}
-            </button>
+            <template v-for="group in groups" :key="group.id">
+                <input
+                    :id="group.id"
+                    v-model="selectedGroupIds"
+                    :value="group.id"
+                    type="checkbox"
+                    class="btn-check"
+                    autocomplete="off"
+                />
+                <label
+                    class="btn group-btn"
+                    :class="selectedGroupIds.has(group.id) ? 'btn-success' : 'btn-light'"
+                    :for="group.id"
+                    >{{ group.name }}</label
+                >
+            </template>
         </div>
         <form
             v-if="currentUser !== null"
@@ -168,3 +166,11 @@ const submitBtnId = useId();
         </form>
     </div>
 </template>
+
+<style scoped lang="scss">
+.group-btn:hover {
+    color: var(--bs-btn-hover-color);
+    background-color: var(--bs-btn-hover-bg);
+    border-color: var(--bs-btn-hover-border-color);
+}
+</style>
