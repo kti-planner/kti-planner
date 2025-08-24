@@ -43,7 +43,6 @@ test('Can add new user and prevent duplicate user creation', async ({ page }) =>
     await page.getByRole('textbox', { name: 'Name' }).fill('Test User');
     await page.getByRole('textbox', { name: 'Email' }).fill('test@test.com');
     await page.getByRole('textbox', { name: 'Password', exact: true }).fill('password');
-    await page.getByRole('textbox', { name: 'Repeat Password', exact: true }).fill('password');
     await page.getByRole('combobox', { name: 'Role' }).selectOption('teacher');
 
     await page.getByRole('button', { name: 'Add', exact: true }).click();
@@ -58,7 +57,6 @@ test('Can add new user and prevent duplicate user creation', async ({ page }) =>
     await page.getByRole('textbox', { name: 'Name' }).fill('Test User');
     await page.getByRole('textbox', { name: 'Email' }).fill('test@test.com');
     await page.getByRole('textbox', { name: 'Password', exact: true }).fill('password');
-    await page.getByRole('textbox', { name: 'Repeat Password', exact: true }).fill('password');
     await page.getByRole('combobox', { name: 'Role' }).selectOption('teacher');
 
     await page.getByRole('button', { name: 'Add', exact: true }).click();
@@ -79,7 +77,7 @@ test('Can add new user and prevent duplicate user creation', async ({ page }) =>
     await expect(page.getByRole('navigation')).toContainText("You're logged in as Test User");
 });
 
-test('Password and repeated password must match', async ({ page }) => {
+test('Can generate random password when adding new user', async ({ page }) => {
     await page.goto('/users/');
     await login(page);
 
@@ -87,20 +85,17 @@ test('Password and repeated password must match', async ({ page }) => {
 
     await expect(page.getByRole('heading', { name: 'Add new user' })).toBeVisible();
 
-    await page.getByRole('textbox', { name: 'Name' }).fill('Test User');
-    await page.getByRole('textbox', { name: 'Email' }).fill('test@test.com');
-    await page.getByRole('textbox', { name: 'Password', exact: true }).fill('password');
-    await page.getByRole('textbox', { name: 'Repeat Password', exact: true }).fill('passwordBad');
-    await page.getByRole('combobox', { name: 'Role' }).selectOption('teacher');
+    await page.getByRole('button', { name: 'Generate random password' }).click();
 
-    await page.getByRole('button', { name: 'Add', exact: true }).click();
+    const password = await page.getByRole('textbox', { name: 'Password', exact: true }).inputValue();
+    expect(password).toHaveLength(16);
 
-    await expect(page.locator('#user-modal').locator('form')).toContainText('Adding new user failed.');
+    await page.getByRole('button', { name: 'Generate random password' }).click();
 
-    await page.getByRole('button', { name: 'Close' }).click();
+    const secondPassword = await page.getByRole('textbox', { name: 'Password', exact: true }).inputValue();
+    expect(secondPassword).toHaveLength(16);
 
-    await expect(page.getByRole('button', { name: 'Add new user' })).toBeVisible();
-    await expect(page.getByRole('link', { name: 'Test User' })).toHaveCount(0);
+    expect(password).not.toBe(secondPassword);
 });
 
 test('Cannot access user profile when logged-out', async ({ page }) => {

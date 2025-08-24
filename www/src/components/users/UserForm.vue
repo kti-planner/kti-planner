@@ -4,6 +4,7 @@ import type { UserRole } from '@backend/user';
 import { langId } from '@components/frontend/lang';
 import { apiPatch, apiPost } from '@components/api';
 import type { UserCreateApiData, UserData, UserEditApiData } from '@components/users/types';
+import { generatePassword } from '@components/utils';
 
 const props = defineProps<{
     user?: UserData;
@@ -16,7 +17,6 @@ const submitFailed = ref(false);
 const name = ref<string | undefined>(props.user?.name);
 const email = ref<string | undefined>(props.user?.email);
 const password = ref<string>('');
-const passwordRepeated = ref<string>('');
 const role = ref<UserRole>('teacher');
 
 async function submit() {
@@ -30,7 +30,6 @@ async function submit() {
                   name: name.value,
                   email: email.value,
                   password: password.value,
-                  passwordRepeated: passwordRepeated.value,
                   role: role.value,
               } satisfies UserCreateApiData)
             : await apiPatch<boolean>('/users/api/users/', {
@@ -54,8 +53,8 @@ const translations = {
     'en': {
         'Name': 'Name',
         'Password': 'Password',
-        'Repeat Password': 'Repeat Password',
         'Role': 'Role',
+        'Generate random password': 'Generate random password',
         'Teacher': 'Teacher',
         'Add': 'Add',
         'Save': 'Save',
@@ -65,7 +64,7 @@ const translations = {
     'pl': {
         'Name': 'Nazwa',
         'Password': 'Hasło',
-        'Repeat Password': 'Powtórz Hasło',
+        'Generate random password': 'Wygeneruj losowe hasło',
         'Role': 'Rola',
         'Teacher': 'Nauczyciel',
         'Add': 'Dodaj',
@@ -81,7 +80,7 @@ function translate(text: keyof (typeof translations)[LangId]): string {
 </script>
 
 <template>
-    <form class="vstack gap-3 mx-auto" style="max-width: 500px" autocomplete="off" @submit.prevent="submit">
+    <form class="vstack gap-3 mx-auto" style="max-width: 500px" @submit.prevent="submit">
         <div>
             <label for="name" class="form-label">{{ translate('Name') }}</label>
             <input
@@ -104,24 +103,14 @@ function translate(text: keyof (typeof translations)[LangId]): string {
             <input
                 id="password"
                 v-model="password"
-                type="password"
+                type="text"
                 class="form-control"
                 :placeholder="translate('Password')"
                 required
-                autocomplete="new-password"
             />
-        </div>
-
-        <div v-if="!isEditing">
-            <label for="passwordRepeated" class="form-label">{{ translate('Repeat Password') }}</label>
-            <input
-                id="passwordRepeated"
-                v-model="passwordRepeated"
-                type="password"
-                class="form-control"
-                :placeholder="translate('Repeat Password')"
-                required
-            />
+            <button type="button" class="btn btn-success btn-sm my-2" @click="() => (password = generatePassword())">
+                {{ translate('Generate random password') }}
+            </button>
         </div>
 
         <div v-if="!isEditing">

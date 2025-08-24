@@ -15,10 +15,6 @@ export const POST: APIRoute = async ({ locals }) => {
         return Response.json(null, { status: 400 });
     }
 
-    if (data.password !== data.passwordRepeated) {
-        return Response.json(false, { status: 200 });
-    }
-
     const otherUser = await User.fetchByEmail(data.email);
 
     if (otherUser) {

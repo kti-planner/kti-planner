@@ -19,7 +19,6 @@ export const userCreateApiSchema = z.object({
     name: z.string().trim().nonempty(),
     email: z.string().trim().nonempty(),
     password: z.string().nonempty(),
-    passwordRepeated: z.string().nonempty(),
     role: z.enum(['teacher', 'admin']),
 });
 
