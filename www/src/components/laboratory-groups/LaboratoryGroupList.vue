@@ -116,53 +116,55 @@ const submitBtnId = useId();
 </script>
 
 <template>
-    <h2 class="text-center fs-5">
-        {{ translate('Laboratory groups') }}
-    </h2>
-    <div v-if="groups && groups.length > 0" class="d-flex flex-wrap gap-2 mb-3">
-        <button
-            v-for="group in groups"
-            :key="group.id"
-            type="button"
-            class="btn"
-            :class="selectedGroupIds.has(group.id) ? 'btn-success' : 'btn-light'"
-            @click="toggleSelectGroup(group)"
-        >
-            {{ group.name }}
-        </button>
-    </div>
-    <form
-        v-if="currentUser !== null"
-        @submit.prevent="isAdding || selectedGroups[0] === undefined ? addGroup() : editGroup(selectedGroups[0])"
-    >
-        <div class="input-group">
-            <input
-                v-model.trim="groupName"
-                type="text"
-                class="form-control"
-                :class="{
-                    'border': submitFailed,
-                    'border-danger': submitFailed,
-                }"
-                :placeholder="isAdding ? translate('New group') : translate('Edit name')"
-                required
-                :aria-label="isAdding ? translate('New group') : translate('Edit name')"
-                :aria-describedby="submitBtnId"
-                :aria-invalid="submitFailed"
-            />
+    <div>
+        <h2 class="text-center fs-5">
+            {{ translate('Laboratory groups') }}
+        </h2>
+        <div v-if="groups && groups.length > 0" class="d-flex flex-wrap gap-2 mb-3">
             <button
-                :id="submitBtnId"
-                class="btn btn-success"
-                type="submit"
-                :title="isAdding ? translate('Add group') : translate('Save group name')"
-                :aria-label="isAdding ? translate('Add group') : translate('Save group name')"
-                :disabled="groupName === ''"
+                v-for="group in groups"
+                :key="group.id"
+                type="button"
+                class="btn"
+                :class="selectedGroupIds.has(group.id) ? 'btn-success' : 'btn-light'"
+                @click="toggleSelectGroup(group)"
             >
-                <i class="bi" :class="isAdding ? 'bi-plus-lg' : 'bi-pencil-fill'"></i>
+                {{ group.name }}
             </button>
         </div>
-        <p v-if="submitFailed" class="text-danger mt-2">
-            {{ translate('This group already exists') }}
-        </p>
-    </form>
+        <form
+            v-if="currentUser !== null"
+            @submit.prevent="isAdding || selectedGroups[0] === undefined ? addGroup() : editGroup(selectedGroups[0])"
+        >
+            <div class="input-group">
+                <input
+                    v-model.trim="groupName"
+                    type="text"
+                    class="form-control"
+                    :class="{
+                        'border': submitFailed,
+                        'border-danger': submitFailed,
+                    }"
+                    :placeholder="isAdding ? translate('New group') : translate('Edit name')"
+                    required
+                    :aria-label="isAdding ? translate('New group') : translate('Edit name')"
+                    :aria-describedby="submitBtnId"
+                    :aria-invalid="submitFailed"
+                />
+                <button
+                    :id="submitBtnId"
+                    class="btn btn-success"
+                    type="submit"
+                    :title="isAdding ? translate('Add group') : translate('Save group name')"
+                    :aria-label="isAdding ? translate('Add group') : translate('Save group name')"
+                    :disabled="groupName === ''"
+                >
+                    <i class="bi" :class="isAdding ? 'bi-plus-lg' : 'bi-pencil-fill'"></i>
+                </button>
+            </div>
+            <p v-if="submitFailed" class="text-danger mt-2">
+                {{ translate('This group already exists') }}
+            </p>
+        </form>
+    </div>
 </template>

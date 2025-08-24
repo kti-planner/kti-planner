@@ -46,21 +46,23 @@ const subjectUrl = computed(() => `/semesters/${semester.slug}/${subject.slug}`)
         <div class="col-12 col-lg-9 mb-2 order-2 order-lg-1">
             <SubjectCalendar />
         </div>
-        <div class="col-12 col-lg-3 order-1 order-lg-2">
+        <div class="col-12 col-lg-3 order-1 order-lg-2 d-flex gap-3 flex-column-reverse flex-lg-column">
             <LaboratoryGroupList :api-url="`${subjectUrl}/api/laboratory-groups/`" />
-            <h2 class="text-center fs-5 mt-3">{{ translate('Exercises') }}</h2>
-            <div class="exercises-list list-group mx-auto my-2">
-                <a
-                    v-for="exercise in exercises"
-                    :key="exercise.id"
-                    :href="`${subjectUrl}/${exercise.exerciseNumber}/`"
-                    class="list-group-item list-group-item-action"
-                >
-                    {{ `${exercise.exerciseNumber}. ${exercise.name}` }}
-                </a>
-            </div>
-            <div v-if="currentUser !== null" class="my-2">
-                <AddExercise :semester :subject :classrooms :next-exercise-number />
+            <div>
+                <h2 class="text-center fs-5">{{ translate('Exercises') }}</h2>
+                <div class="exercises-list list-group mx-auto my-2">
+                    <a
+                        v-for="exercise in exercises"
+                        :key="exercise.id"
+                        :href="`${subjectUrl}/${exercise.exerciseNumber}/`"
+                        class="list-group-item list-group-item-action"
+                    >
+                        {{ `${exercise.exerciseNumber}. ${exercise.name}` }}
+                    </a>
+                </div>
+                <div v-if="currentUser !== null" class="my-2">
+                    <AddExercise :semester :subject :classrooms :next-exercise-number />
+                </div>
             </div>
         </div>
     </div>
