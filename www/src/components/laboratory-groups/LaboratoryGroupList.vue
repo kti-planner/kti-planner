@@ -136,7 +136,7 @@ const invalidFeedbackId = useId();
             v-if="currentUser !== null"
             @submit.prevent="isAdding || selectedGroups[0] === undefined ? addGroup() : editGroup(selectedGroups[0])"
         >
-            <div class="input-group has-validation">
+            <div class="input-group" :class="{ 'has-validation': submitFailed }">
                 <input
                     v-model.trim="groupName"
                     type="text"
