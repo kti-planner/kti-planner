@@ -7,12 +7,27 @@ export function isSemesterType(key: unknown): key is SemesterType {
     return key === 'winter' || key === 'summer';
 }
 
+export type ScheduleChangeType =
+    | 'holiday'
+    | 'monday'
+    | 'tuesday'
+    | 'wednesday'
+    | 'thursday'
+    | 'friday'
+    | 'saturday'
+    | 'sunday';
+
 interface DbSemester {
     id: string;
     year: number;
     type: SemesterType;
     start_date: Date;
     end_date: Date;
+}
+
+interface DbScheduleChange {
+    date: Date;
+    type: ScheduleChangeType;
 }
 
 export interface SemesterCreateData {
@@ -27,6 +42,11 @@ export interface SemesterEditData {
     type?: SemesterType | undefined;
     startDate?: Date | undefined;
     endDate?: Date | undefined;
+}
+
+export interface ScheduleChange {
+    date: Date;
+    type: ScheduleChangeType;
 }
 
 export class Semester {
@@ -122,5 +142,31 @@ export class Semester {
             this.startDate,
             this.endDate,
         ]);
+    }
+
+    static async getAllScheduleChanges(): Promise<ScheduleChange[]> {
+        const data = await db.query<DbScheduleChange>('SELECT * FROM schedule_changes ORDER BY date');
+
+        return data.rows;
+    }
+
+    async getScheduleChanges(): Promise<ScheduleChange[]> {
+        const data = await db.query<DbScheduleChange>(
+            'SELECT * FROM schedule_changes WHERE date BETWEEN $1 AND $2 ORDER BY date',
+            [this.startDate, this.endDate],
+        );
+
+        return data.rows;
+    }
+
+    static async setScheduleChange(date: Date, type: ScheduleChangeType | null): Promise<void> {
+        if (type) {
+            await db.query<DbScheduleChange>(
+                'INSERT INTO schedule_changes (date, type) VALUES ($1, $2) ON CONFLICT (date) DO UPDATE SET type = $2',
+                [date, type],
+            );
+        } else {
+            await db.query<DbScheduleChange>('DELETE FROM schedule_changes WHERE date = $1', [date]);
+        }
     }
 }

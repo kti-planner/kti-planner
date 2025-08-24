@@ -19,6 +19,13 @@ CREATE TABLE semesters (
     UNIQUE (year, type)
 );
 
+CREATE TYPE schedule_change_type AS ENUM ('holiday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday');
+
+CREATE TABLE schedule_changes (
+    date date PRIMARY KEY,
+    type schedule_change_type
+);
+
 CREATE TABLE classrooms (
     id   uuid PRIMARY KEY,
     name text NOT NULL UNIQUE
