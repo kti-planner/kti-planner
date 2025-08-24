@@ -9,3 +9,7 @@ export function formatDateLocalYyyyMmDd(date: Date): string {
 export function toHyphenatedLowercase(str: string): string {
     return str.trim().toLocaleLowerCase().replaceAll(/\s+/g, '-');
 }
+
+export function generatePassword() {
+    return btoa(String.fromCharCode(...crypto.getRandomValues(new Uint8Array(12))));
+}
