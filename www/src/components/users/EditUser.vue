@@ -6,6 +6,7 @@ import Modal from '@components/Modal.vue';
 import UserForm from '@components/users/UserForm.vue';
 
 const props = defineProps<{
+    isAdmin: boolean;
     user: UserData;
 }>();
 
@@ -39,6 +40,6 @@ const modalId = `edit-user-modal-${props.user.id}`;
 
     <Modal :id="modalId">
         <template #header> {{ translate('Edit user') }} {{ props.user.name }} </template>
-        <UserForm :user="user" />
+        <UserForm :user="user" :is-admin="isAdmin" />
     </Modal>
 </template>

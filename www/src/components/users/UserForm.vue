@@ -7,6 +7,7 @@ import type { UserCreateApiData, UserData, UserEditApiData } from '@components/u
 import { generatePassword } from '@components/utils';
 
 const props = defineProps<{
+    isAdmin: boolean;
     user?: UserData;
 }>();
 
@@ -17,7 +18,7 @@ const submitFailed = ref(false);
 const name = ref<string | undefined>(props.user?.name);
 const email = ref<string | undefined>(props.user?.email);
 const password = ref<string>('');
-const role = ref<UserRole>('teacher');
+const role = ref<UserRole>(props.user?.role ?? 'teacher');
 
 async function submit() {
     if (name.value === undefined || email.value === undefined) {
@@ -36,6 +37,7 @@ async function submit() {
                   id: props.user.id,
                   name: name.value,
                   email: email.value,
+                  role: props.isAdmin ? role.value : undefined,
               } satisfies UserEditApiData);
 
     if (success === undefined) {
@@ -113,7 +115,7 @@ function translate(text: keyof (typeof translations)[LangId]): string {
             </button>
         </div>
 
-        <div v-if="!isEditing">
+        <div v-if="isAdmin">
             <label for="role" class="form-label">{{ translate('Role') }}</label>
             <select id="role" v-model="role" class="form-select" required>
                 <option value="teacher">{{ translate('Teacher') }}</option>

@@ -39,10 +39,14 @@ export const PATCH: APIRoute = async ({ locals }) => {
         return Response.json(null, { status: 400 });
     }
 
+    if (data.role && user.role !== 'admin') {
+        return Response.json(null, { status: 403 });
+    }
+
     const userToEdit = await User.fetch(data.id);
 
     if (!userToEdit) {
-        return Response.json(false, { status: 200 });
+        return Response.json(null, { status: 404 });
     }
 
     if (userToEdit.id !== user.id && user.role !== 'admin') {
@@ -55,7 +59,7 @@ export const PATCH: APIRoute = async ({ locals }) => {
         return Response.json(false, { status: 200 });
     }
 
-    await userToEdit.edit({ name: data.name, email: data.email });
+    await userToEdit.edit({ name: data.name, email: data.email, role: data.role });
 
     return Response.json(true, { status: 200 });
 };

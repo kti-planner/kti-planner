@@ -116,7 +116,7 @@ test('Can access user profile when logged-in', async ({ page }) => {
     await expect(page.locator('body')).toContainText('User profile');
     await expect(page.locator('body')).toContainText('Name: Jan Kowalski');
     await expect(page.locator('body')).toContainText('Email: jan@kowalski.pl');
-    await expect(page.locator('body')).toContainText('Role: teacher');
+    await expect(page.locator('body')).toContainText('Role: Teacher');
 
     await page.goto('/profile/');
 
@@ -126,13 +126,14 @@ test('Can access user profile when logged-in', async ({ page }) => {
     await expect(page.locator('body')).toContainText('User profile');
     await expect(page.locator('body')).toContainText('Name: Admin');
     await expect(page.locator('body')).toContainText('Email: admin@admin.com');
-    await expect(page.locator('body')).toContainText('Role: admin');
+    await expect(page.locator('body')).toContainText('Role: Admin');
 });
 
 test('Edit user button is hidden for non-admin user whose profile is not theirs', async ({ page }) => {
     await page.goto('/users/c393c524-453c-4b02-bfad-5114fe828200/');
     await loginAsTeacher(page);
 
+    await expect(page.getByRole('navigation')).toContainText('Jan Kowalski');
     await expect(page.getByRole('button', { name: 'Edit user' })).toHaveCount(0);
 });
 
@@ -141,6 +142,7 @@ test('Edit user button is visible for admin user and user whose profile is their
     await page.goto('/users/feeaa186-3d69-4801-a580-88be10d53553/');
     await login(page);
 
+    await expect(page.getByRole('navigation')).toContainText('Bogdan Nowak');
     await expect(page.getByRole('button', { name: 'Edit user' })).toHaveCount(1);
 
     // As teacher
@@ -148,12 +150,70 @@ test('Edit user button is visible for admin user and user whose profile is their
     await page.goto('/users/feeaa186-3d69-4801-a580-88be10d53553/');
     await loginAsTeacher(page);
 
+    await expect(page.getByRole('navigation')).toContainText('Bogdan Nowak');
     await expect(page.getByRole('button', { name: 'Edit user' })).toHaveCount(1);
 });
 
-test('Can edit user data and prevent duplicate user', async ({ page }) => {
+test('Edit user role is hidden for non-admin user', async ({ page }) => {
+    await page.goto('/profile/');
+    await loginAsTeacher(page);
+
+    await page.getByRole('button', { name: 'Edit user' }).click();
+
+    await expect(page.getByRole('combobox', { name: 'Role' })).toHaveCount(0);
+});
+
+test('Edit user role is visible for admin user', async ({ page }) => {
+    await page.goto('/users/c393c524-453c-4b02-bfad-5114fe828200/');
+    await login(page);
+
+    await page.getByRole('button', { name: 'Edit user' }).click();
+
+    await expect(page.getByRole('combobox', { name: 'Role' })).toHaveCount(1);
+});
+
+test('Can edit user data and prevent duplicate user as admin', async ({ page }) => {
     await page.goto('/users/feeaa186-3d69-4801-a580-88be10d53553/');
     await login(page);
+
+    await expect(page.getByRole('navigation')).toContainText('Bogdan Nowak');
+
+    await page.getByRole('button', { name: 'Edit user' }).click();
+
+    await page.getByRole('textbox', { name: 'Name' }).fill('BogdanX NowakX');
+    await page.getByRole('textbox', { name: 'Email' }).fill('bogdanx@nowakx.pl');
+    await page.getByRole('combobox', { name: 'Role' }).selectOption('admin');
+
+    await page.getByRole('button', { name: 'Save' }).click();
+
+    await expect(page.locator('body')).toContainText('Name: BogdanX NowakX');
+    await expect(page.locator('body')).toContainText('Email: bogdanx@nowakx.pl');
+    await expect(page.locator('body')).toContainText('Role: Admin');
+
+    // Cannot edit user with data that match already existing user
+    await page.getByRole('button', { name: 'Edit user' }).click();
+
+    // Existing email
+    await page.getByRole('textbox', { name: 'Name' }).fill('BogdanX NowakX');
+    await page.getByRole('textbox', { name: 'Email' }).fill('jan@kowalski.pl');
+    await page.getByRole('combobox', { name: 'Role' }).selectOption('teacher');
+
+    await page.getByRole('button', { name: 'Save' }).click();
+
+    await expect(page.locator('#edit-user-modal-feeaa186-3d69-4801-a580-88be10d53553').locator('form')).toContainText(
+        'User with that email already exists.',
+    );
+
+    await page.getByRole('button', { name: 'Close' }).click();
+
+    await expect(page.locator('body')).toContainText('Name: BogdanX NowakX');
+    await expect(page.locator('body')).toContainText('Email: bogdanx@nowakx.pl');
+    await expect(page.locator('body')).toContainText('Role: Admin');
+});
+
+test('Can edit user data and prevent duplicate user as teacher', async ({ page }) => {
+    await page.goto('/profile/');
+    await loginAsTeacher(page);
 
     await expect(page.getByRole('navigation')).toContainText('Bogdan Nowak');
 
@@ -166,7 +226,7 @@ test('Can edit user data and prevent duplicate user', async ({ page }) => {
 
     await expect(page.locator('body')).toContainText('Name: BogdanX NowakX');
     await expect(page.locator('body')).toContainText('Email: bogdanx@nowakx.pl');
-    await expect(page.locator('body')).toContainText('Role: teacher');
+    await expect(page.locator('body')).toContainText('Role: Teacher');
 
     // Cannot edit user with data that match already existing user
     await page.getByRole('button', { name: 'Edit user' }).click();
@@ -185,34 +245,5 @@ test('Can edit user data and prevent duplicate user', async ({ page }) => {
 
     await expect(page.locator('body')).toContainText('Name: BogdanX NowakX');
     await expect(page.locator('body')).toContainText('Email: bogdanx@nowakx.pl');
-    await expect(page.locator('body')).toContainText('Role: teacher');
-});
-
-test('Edit user role button is hidden for non-admin user', async ({ page }) => {
-    await page.goto('/users/feeaa186-3d69-4801-a580-88be10d53553/');
-    await loginAsTeacher(page);
-
-    await expect(page.getByRole('button', { name: 'Edit role' })).toHaveCount(0);
-});
-
-test('Edit user role button is visible for admin user', async ({ page }) => {
-    await page.goto('/users/c393c524-453c-4b02-bfad-5114fe828200/');
-    await login(page);
-
-    await expect(page.getByRole('button', { name: 'Edit role' })).toHaveCount(1);
-});
-
-test('Can edit user role', async ({ page }) => {
-    await page.goto('/users/feeaa186-3d69-4801-a580-88be10d53553/');
-    await login(page);
-
-    await expect(page.getByRole('navigation')).toContainText('Bogdan Nowak');
-
-    await page.getByRole('button', { name: 'Edit role' }).click();
-
-    await page.getByRole('combobox', { name: 'Role' }).selectOption('admin');
-
-    await page.getByRole('button', { name: 'Save' }).click();
-
-    await expect(page.locator('body')).toContainText('Role: admin');
+    await expect(page.locator('body')).toContainText('Role: Teacher');
 });

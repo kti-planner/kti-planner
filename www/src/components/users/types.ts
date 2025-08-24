@@ -28,13 +28,7 @@ export const userEditApiSchema = z.object({
     id: z.uuid(),
     name: z.string().trim().optional(),
     email: z.string().trim().optional(),
+    role: z.enum(['teacher', 'admin']).optional(),
 });
 
 export type UserEditApiData = z.input<typeof userEditApiSchema>;
-
-export const userEditRoleApiSchema = z.object({
-    id: z.uuid(),
-    role: z.enum(['teacher', 'admin']),
-});
-
-export type UserEditRoleApiData = z.input<typeof userEditRoleApiSchema>;

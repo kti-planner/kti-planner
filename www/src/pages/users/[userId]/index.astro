@@ -1,7 +1,6 @@
 ---
 import { makeUserData, User } from '@backend/user';
 import Layout from '@layouts/Layout.astro';
-import EditRole from '@components/users/EditRole.vue';
 import EditUser from '@components/users/EditUser.vue';
 
 const { userId } = Astro.params;
@@ -17,16 +16,16 @@ const translations = {
         'User profile': 'User profile',
         'Name': 'Name',
         'Role': 'Role',
-        'admin': 'admin',
-        'teacher': 'teacher',
+        'admin': 'Admin',
+        'teacher': 'Teacher',
     },
     'pl': {
         'Users': 'Użytkownicy',
         'User profile': 'Profil użytkownika',
         'Name': 'Nazwa',
         'Role': 'Rola',
-        'admin': 'admin',
-        'teacher': 'nauczyciel',
+        'admin': 'Admin',
+        'teacher': 'Nauczyciel',
     },
 };
 
@@ -61,7 +60,11 @@ const userData = makeUserData(targetUser);
 >
     <h1 class="text-center fs-4 mb-3">
         {translate('User profile')}
-        {(user.role === 'admin' || user.id === targetUser.id) && <EditUser client:only="vue" user={userData} />}
+        {
+            (user.role === 'admin' || user.id === targetUser.id) && (
+                <EditUser client:only="vue" user={userData} isAdmin={user.role === 'admin'} />
+            )
+        }
     </h1>
     <p class="text-center fs-5">
         {translate('Name')}: {targetUser.name}
@@ -72,6 +75,4 @@ const userData = makeUserData(targetUser);
     <p class="text-center fs-5">
         {translate('Role')}: {translate(targetUser.role as 'admin' | 'teacher')}
     </p>
-
-    {user.role === 'admin' && <EditRole client:only="vue" user={userData} />}
 </Layout>
