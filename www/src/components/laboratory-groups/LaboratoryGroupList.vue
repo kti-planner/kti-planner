@@ -105,6 +105,7 @@ async function editGroup(group: LaboratoryGroupData) {
 }
 
 const submitBtnId = useId();
+const invalidFeedbackId = useId();
 </script>
 
 <template>
@@ -134,20 +135,18 @@ const submitBtnId = useId();
             v-if="currentUser !== null"
             @submit.prevent="isAdding || selectedGroups[0] === undefined ? addGroup() : editGroup(selectedGroups[0])"
         >
-            <div class="input-group">
+            <div class="input-group has-validation">
                 <input
                     v-model.trim="groupName"
                     type="text"
                     class="form-control"
                     :class="{
-                        'border': submitFailed,
-                        'border-danger': submitFailed,
+                        'is-invalid': submitFailed,
                     }"
                     :placeholder="isAdding ? translate('New group') : translate('Edit name')"
                     required
                     :aria-label="isAdding ? translate('New group') : translate('Edit name')"
-                    :aria-describedby="submitBtnId"
-                    :aria-invalid="submitFailed"
+                    :aria-describedby="`${submitBtnId} ${invalidFeedbackId}`"
                 />
                 <button
                     :id="submitBtnId"
@@ -159,10 +158,10 @@ const submitBtnId = useId();
                 >
                     <i class="bi" :class="isAdding ? 'bi-plus-lg' : 'bi-pencil-fill'"></i>
                 </button>
+                <div v-if="submitFailed" :id="invalidFeedbackId" class="invalid-feedback">
+                    {{ translate('This group already exists') }}
+                </div>
             </div>
-            <p v-if="submitFailed" class="text-danger mt-2">
-                {{ translate('This group already exists') }}
-            </p>
         </form>
     </div>
 </template>
