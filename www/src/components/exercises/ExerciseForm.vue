@@ -22,7 +22,7 @@ const submitFailed = ref(false);
 
 const exerciseName = ref<string | undefined>(props.exercise?.name);
 const exerciseNumber = ref<number | undefined>(props.exercise?.exerciseNumber);
-const exerciseClassroomId = ref<string | undefined>(props.exercise?.classroomId);
+const exerciseClassroomId = ref<string | undefined>(props.exercise?.classroom?.id);
 const teacher = ref<UserData | null>(props.exercise?.teacher ?? props.subject.teachers[0] ?? null);
 
 async function submit() {
