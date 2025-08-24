@@ -2,12 +2,10 @@ import { expect, test } from 'vitest';
 import { User, type UserCreateData, type UserEditData } from '@backend/user';
 
 interface UserCreateTestData extends UserCreateData {
-    id: string;
     password: string;
 }
 
 const exampleUser: UserCreateTestData = {
-    id: '',
     name: 'First',
     email: 'first@test.com',
     password: 'pass1',
@@ -15,129 +13,103 @@ const exampleUser: UserCreateTestData = {
 };
 
 const secondUser: UserCreateTestData = {
-    id: '',
     name: 'Second',
     email: 'second@test.com',
     password: 'pass2',
     role: 'teacher',
 };
 
-test('Can create users', async () => {
-    const user = await User.create(exampleUser);
-    exampleUser.id = user.id;
+test('Users', async () => {
+    const user1 = await User.create(exampleUser);
 
-    expect(user).toHaveProperty('name', exampleUser.name);
-    expect(user).toHaveProperty('email', exampleUser.email);
-    expect(user).toHaveProperty('role', exampleUser.role);
+    expect(user1).toHaveProperty('name', exampleUser.name);
+    expect(user1).toHaveProperty('email', exampleUser.email);
+    expect(user1).toHaveProperty('role', exampleUser.role);
 
     const user2 = await User.create(secondUser);
-    secondUser.id = user2.id;
 
     expect(user2).toHaveProperty('name', secondUser.name);
     expect(user2).toHaveProperty('email', secondUser.email);
     expect(user2).toHaveProperty('role', secondUser.role);
-});
 
-test('Cannot create duplicate users', async () => {
+    // Cannot create duplicate users
     await expect(User.create(exampleUser)).rejects.toThrow();
-});
 
-test('Can fetch by id', async () => {
-    const user = await User.fetch(exampleUser.id);
+    // Can fetch by id
+    expect(await User.fetch(user1.id)).toStrictEqual(user1);
 
-    expect(user).toHaveProperty('name', exampleUser.name);
-    expect(user).toHaveProperty('email', exampleUser.email);
-    expect(user).toHaveProperty('role', exampleUser.role);
-});
+    // Can fetch by email
+    expect(await User.fetchByEmail(exampleUser.email)).toStrictEqual(user1);
 
-test('Can fetch by email', async () => {
-    const user = await User.fetchByEmail(exampleUser.email);
+    // Cannot fetch nonexistant
+    expect(await User.fetch(crypto.randomUUID())).toBeNull();
+    expect(await User.fetchByEmail('unknown@test.com')).toBeNull();
 
-    expect(user).toHaveProperty('name', exampleUser.name);
-    expect(user).toHaveProperty('email', exampleUser.email);
-    expect(user).toHaveProperty('role', exampleUser.role);
-});
+    {
+        // Can fetch all
+        const users = await User.fetchAll();
 
-test('Cannot fetch nonexistant', async () => {
-    const user = await User.fetch(crypto.randomUUID());
-    expect(user).toBeNull();
+        expect(users[0]).toHaveProperty('name', exampleUser.name);
+        expect(users[0]).toHaveProperty('email', exampleUser.email);
+        expect(users[0]).toHaveProperty('role', exampleUser.role);
 
-    const user2 = await User.fetchByEmail('unknown@test.com');
-    expect(user2).toBeNull();
-});
+        expect(users[1]).toHaveProperty('name', secondUser.name);
+        expect(users[1]).toHaveProperty('email', secondUser.email);
+        expect(users[1]).toHaveProperty('role', secondUser.role);
+    }
 
-test('Can fetch all', async () => {
-    const users = await User.fetchAll();
+    {
+        // Can fetch bulk
+        let users = await User.fetchBulk([]);
 
-    expect(users[0]).toHaveProperty('name', exampleUser.name);
-    expect(users[0]).toHaveProperty('email', exampleUser.email);
-    expect(users[0]).toHaveProperty('role', exampleUser.role);
+        expect(users).toStrictEqual([]);
 
-    expect(users[1]).toHaveProperty('name', secondUser.name);
-    expect(users[1]).toHaveProperty('email', secondUser.email);
-    expect(users[1]).toHaveProperty('role', secondUser.role);
-});
+        users = await User.fetchBulk([user1.id]);
 
-test('Can fetch bulk', async () => {
-    let users = await User.fetchBulk([]);
+        expect(users).toHaveLength(1);
+        expect(users[0]).toHaveProperty('name', exampleUser.name);
+        expect(users[0]).toHaveProperty('email', exampleUser.email);
+        expect(users[0]).toHaveProperty('role', exampleUser.role);
 
-    expect(users).toStrictEqual([]);
+        users = await User.fetchBulk([user2.id]);
 
-    users = await User.fetchBulk([exampleUser.id]);
+        expect(users).toHaveLength(1);
+        expect(users[0]).toHaveProperty('name', secondUser.name);
+        expect(users[0]).toHaveProperty('email', secondUser.email);
+        expect(users[0]).toHaveProperty('role', secondUser.role);
 
-    expect(users).toHaveLength(1);
-    expect(users[0]).toHaveProperty('name', exampleUser.name);
-    expect(users[0]).toHaveProperty('email', exampleUser.email);
-    expect(users[0]).toHaveProperty('role', exampleUser.role);
+        users = await User.fetchBulk([user2.id, user1.id]);
 
-    users = await User.fetchBulk([secondUser.id]);
+        expect(users[0]).toHaveProperty('name', secondUser.name);
+        expect(users[0]).toHaveProperty('email', secondUser.email);
+        expect(users[0]).toHaveProperty('role', secondUser.role);
+        expect(users[1]).toHaveProperty('name', exampleUser.name);
+        expect(users[1]).toHaveProperty('email', exampleUser.email);
+        expect(users[1]).toHaveProperty('role', exampleUser.role);
+    }
 
-    expect(users).toHaveLength(1);
-    expect(users[0]).toHaveProperty('name', secondUser.name);
-    expect(users[0]).toHaveProperty('email', secondUser.email);
-    expect(users[0]).toHaveProperty('role', secondUser.role);
-
-    users = await User.fetchBulk([secondUser.id, exampleUser.id]);
-
-    expect(users[0]).toHaveProperty('name', secondUser.name);
-    expect(users[0]).toHaveProperty('email', secondUser.email);
-    expect(users[0]).toHaveProperty('role', secondUser.role);
-    expect(users[1]).toHaveProperty('name', exampleUser.name);
-    expect(users[1]).toHaveProperty('email', exampleUser.email);
-    expect(users[1]).toHaveProperty('role', exampleUser.role);
-});
-
-test('Can edit', async () => {
-    let user = await User.fetch(exampleUser.id);
-    expect(user).not.toBeNull();
-
+    // Can edit
     const editSpec: UserEditData = {
         name: 'e' + exampleUser.name,
         email: 'e' + exampleUser.email,
         password: 'e' + exampleUser.password,
-        role: user?.role === 'admin' ? 'teacher' : 'admin',
+        role: user1.role === 'admin' ? 'teacher' : 'admin',
     };
 
-    await user!.edit(editSpec);
+    await user1.edit(editSpec);
 
-    user = await User.fetch(exampleUser.id);
-    expect(user).toHaveProperty('name', editSpec.name);
-    expect(user).toHaveProperty('email', editSpec.email);
-    expect(user).toHaveProperty('role', editSpec.role);
-});
+    expect(user1).toHaveProperty('name', editSpec.name);
+    expect(user1).toHaveProperty('email', editSpec.email);
+    expect(user1).toHaveProperty('role', editSpec.role);
 
-test('Recognises password', async () => {
-    const user = await User.fetch(secondUser.id);
-    expect(user).not.toBeNull();
+    const user1c = await User.fetch(user1.id);
+    expect(user1c).toHaveProperty('name', editSpec.name);
+    expect(user1c).toHaveProperty('email', editSpec.email);
+    expect(user1c).toHaveProperty('role', editSpec.role);
 
-    const valid = await user!.checkPassword(secondUser.password);
-    expect(valid).toBe(true);
-});
+    // Recognises password
+    expect(await user2.checkPassword(secondUser.password)).toBe(true);
 
-test('Rejects invalid password', async () => {
-    const user = await User.fetch(secondUser.id);
-    expect(user).not.toBeNull();
-
-    const valid = await user!.checkPassword(secondUser.password + ' ');
-    expect(valid).toBe(false);
+    // Rejects invalid password
+    expect(await user2.checkPassword(secondUser.password + ' ')).toBe(false);
 });
