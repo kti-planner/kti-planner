@@ -15,6 +15,7 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import FullCalendar from '@fullcalendar/vue3';
+import { useWindowSize } from '@vueuse/core';
 import { langId } from '@components/frontend/lang';
 
 const { selectable, events, initialDate } = defineProps<{
@@ -51,16 +52,18 @@ watch(
     },
 );
 
+const { width: windowWidth } = useWindowSize();
+
 const options = computed((): CalendarOptions => {
     return {
         plugins: [dayGridPlugin, timeGridPlugin, bootstrap5Plugin, interactionPlugin],
         themeSystem: 'bootstrap5',
-        initialView: 'timeGridWeek',
+        initialView: windowWidth.value >= 992 ? 'timeGridWeek' : 'timeGridDay',
         height: '80vh',
         headerToolbar: {
             left: 'prev,next today',
             center: 'title',
-            right: 'dayGridYear,dayGridMonth,timeGridWeek',
+            right: 'timeGridDay,timeGridWeek,dayGridMonth',
         },
         firstDay: 1,
         locale: langId === 'pl' ? plLocale : enGbLocale,
