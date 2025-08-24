@@ -1,5 +1,6 @@
 import assert from 'node:assert';
 import { db } from '@backend/db';
+import type { ClassroomData } from '@components/classrooms/types';
 
 interface DbClassroom {
     id: string;
@@ -55,4 +56,11 @@ export class Classroom {
 
         await db.query('UPDATE classrooms SET name = $2 WHERE id = $1', [this.id, this.name]);
     }
+}
+
+export function makeClassroomData(classroom: Classroom): ClassroomData {
+    return {
+        id: classroom.id,
+        name: classroom.name,
+    };
 }

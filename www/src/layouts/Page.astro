@@ -1,11 +1,15 @@
 ---
+import { makeUserData } from '@backend/user';
+
 interface Props {
     title?: string | undefined;
     description?: string | null | undefined;
 }
 
 const { title = 'KTI Planner', description = null } = Astro.props;
-const { langId } = Astro.locals;
+const { langId, user } = Astro.locals;
+
+const userData = user ? makeUserData(user) : null;
 ---
 
 <!doctype html>
@@ -23,8 +27,9 @@ const { langId } = Astro.locals;
         <link rel="stylesheet" href="/assets/css/bootstrap.min.css?ver=5.3.3" />
         <link rel="stylesheet" href="/assets/css/bootstrap-icons.min.css?ver=1.11.3" />
 
-        <script is:inline define:vars={{ langId }}>
+        <script is:inline define:vars={{ langId, userData }}>
             globalThis.langId = langId;
+            globalThis.user = userData;
         </script>
         <script is:inline src="/assets/js/bootstrap.bundle.min.js?ver=5.3.3"></script>
     </head>
