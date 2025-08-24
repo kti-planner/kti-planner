@@ -1,13 +1,15 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, ref, useTemplateRef } from 'vue';
 import { langId } from '@components/frontend/lang';
 import { currentUser } from '@components/frontend/user';
 import type { ClassroomData } from '@components/classrooms/types';
 import type { ExerciseData } from '@components/exercises/types';
+import type { LaboratoryGroupData } from '@components/laboratory-groups/types';
 import type { SemesterData } from '@components/semesters/types';
 import type { SubjectData } from '@components/subjects/types';
 import type { UserData } from '@components/users/types';
 import AddExercise from '@components/exercises/AddExercise.vue';
+import GenerateClasses from '@components/laboratory-classes/GenerateClasses.vue';
 import LaboratoryGroupList from '@components/laboratory-groups/LaboratoryGroupList.vue';
 import EditSubject from '@components/subjects/EditSubject.vue';
 import SubjectCalendar from '@components/subjects/SubjectCalendar.vue';
@@ -34,20 +36,40 @@ const { subject, semester } = defineProps<{
     nextExerciseNumber: number;
 }>();
 
+const selectedLaboratoryGroups = ref<LaboratoryGroupData[]>([]);
+const calendar = useTemplateRef('calendar');
 const subjectUrl = computed(() => `/semesters/${semester.slug}/${subject.slug}`);
 </script>
 
 <template>
     <h1 class="text-center fs-4 mb-3">
         {{ subject.name }}
-        <EditSubject v-if="currentUser !== null" :semester :subject :all-users />
+        <EditSubject v-if="currentUser" :semester :subject :all-users />
     </h1>
     <div class="row g-4">
         <div class="col-12 col-lg-9 mb-2 order-2 order-lg-1">
-            <SubjectCalendar />
+            <SubjectCalendar
+                ref="calendar"
+                :api-url="`${subjectUrl}/api/laboratory-classes/`"
+                :selected-laboratory-groups
+            />
         </div>
         <div class="col-12 col-lg-3 order-1 order-lg-2 d-flex gap-3 flex-column-reverse flex-lg-column">
-            <LaboratoryGroupList :api-url="`${subjectUrl}/api/laboratory-groups/`" />
+            <div>
+                <LaboratoryGroupList
+                    v-model="selectedLaboratoryGroups"
+                    :api-url="`${subjectUrl}/api/laboratory-groups/`"
+                />
+                <GenerateClasses
+                    v-if="currentUser"
+                    :group="selectedLaboratoryGroups.length === 1 ? (selectedLaboratoryGroups[0] ?? null) : null"
+                    :exercises
+                    :semester
+                    :api-url="`${subjectUrl}/api/laboratory-classes/`"
+                    class="mt-3"
+                    @done="calendar?.refreshClasses()"
+                />
+            </div>
             <div>
                 <h2 class="text-center fs-5">{{ translate('Exercises') }}</h2>
                 <div class="exercises-list list-group mx-auto my-2">
