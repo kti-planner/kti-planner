@@ -73,10 +73,14 @@ const plannedClasses = computed<PlannedClass[]>(() => {
             ? new Date(lastStart)
             : new Date(`${firstClassDateStr.value}T${firstClassStartTime.value}`);
 
-        start.setDate(start.getDate() + 7 * repeatWeeks.value);
+        if (lastStart) {
+            start.setDate(start.getDate() + 7 * repeatWeeks.value);
+        }
 
         const end = lastEnd ? new Date(lastEnd) : new Date(`${firstClassDateStr.value}T${firstClassEndTime.value}`);
-        end.setDate(end.getDate() + 7 * repeatWeeks.value);
+        if (lastEnd) {
+            end.setDate(end.getDate() + 7 * repeatWeeks.value);
+        }
 
         lastStart = start;
         lastEnd = end;
