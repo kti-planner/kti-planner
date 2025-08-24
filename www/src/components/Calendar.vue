@@ -1,7 +1,14 @@
-<script setup lang="ts">
+<script setup lang="ts" generic="CalendarEvent extends EventInput">
 import { computed, useTemplateRef, watch } from 'vue';
 import bootstrap5Plugin from '@fullcalendar/bootstrap5';
-import type { CalendarOptions, DateInput, DateSelectArg, EventClickArg, EventSourceInput } from '@fullcalendar/core';
+import type {
+    CalendarOptions,
+    DateInput,
+    DateSelectArg,
+    EventClickArg,
+    EventContentArg,
+    EventInput,
+} from '@fullcalendar/core';
 import enGbLocale from '@fullcalendar/core/locales/en-gb';
 import plLocale from '@fullcalendar/core/locales/pl';
 import dayGridPlugin from '@fullcalendar/daygrid';
@@ -12,13 +19,21 @@ import { langId } from '@components/frontend/lang';
 
 const { selectable, events, initialDate } = defineProps<{
     selectable?: boolean | undefined;
-    events?: EventSourceInput | undefined;
+    events?: CalendarEvent[] | undefined;
     initialDate?: DateInput | undefined;
 }>();
 
 const emit = defineEmits<{
     eventClick: [event: EventClickArg];
     select: [event: DateSelectArg];
+}>();
+
+type CalendarEventArg = EventContentArg & {
+    event: CalendarEvent;
+};
+
+defineSlots<{
+    eventContent(ev: CalendarEventArg): any;
 }>();
 
 // Customize buttons
@@ -80,7 +95,12 @@ const options = computed((): CalendarOptions => {
 <template>
     <div class="overflow-y-auto">
         <div class="calendar-wrapper" style="min-width: 480px">
-            <FullCalendar ref="calendar" :options />
+            <FullCalendar ref="calendar" :options>
+                <!-- eslint-disable-next-line vue/no-unused-vars -->
+                <template #eventContent="arg">
+                    <slot name="eventContent" :="arg"></slot>
+                </template>
+            </FullCalendar>
         </div>
     </div>
 </template>
