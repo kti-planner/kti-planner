@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, useId, watch } from 'vue';
+import { useSorted } from '@vueuse/core';
 import { langId } from '@components/frontend/lang';
 import { currentUser } from '@components/frontend/user';
 import { apiPatch, apiPost, useApiFetch } from '@components/api';
@@ -37,6 +38,8 @@ const { apiUrl } = defineProps<{
 }>();
 
 const { data: groups, execute: refreshGroups } = useApiFetch<LaboratoryGroupData[]>(apiUrl, { clone: true });
+const nonNullGroups = computed<LaboratoryGroupData[]>(() => groups.value ?? []);
+const sortedGroups = useSorted<LaboratoryGroupData>(nonNullGroups, (a, b) => a.name.localeCompare(b.name));
 
 const groupName = ref('');
 const submitFailed = ref(false);
@@ -71,7 +74,6 @@ async function addGroup() {
     if (group !== null) {
         groupName.value = '';
         groups.value.push(group);
-        groups.value.sort((a, b) => a.name.localeCompare(b.name));
     }
 
     void refreshGroups();
@@ -97,7 +99,6 @@ async function editGroup(group: LaboratoryGroupData) {
 
     if (success) {
         groups.value = groups.value.map(g => (g.id === group.id ? { id: g.id, name: groupName.value } : g));
-        groups.value.sort((a, b) => a.name.localeCompare(b.name));
         groupName.value = '';
     }
 
@@ -114,7 +115,7 @@ const invalidFeedbackId = useId();
             {{ translate('Laboratory groups') }}
         </h2>
         <div v-if="groups && groups.length > 0" class="d-flex flex-wrap gap-2 mb-3">
-            <template v-for="group in groups" :key="group.id">
+            <template v-for="group in sortedGroups" :key="group.id">
                 <input
                     :id="group.id"
                     v-model="selectedGroupIds"
