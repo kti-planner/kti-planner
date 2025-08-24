@@ -14,32 +14,37 @@ export const GET: APIRoute = async ({ params, url }) => {
         return Response.json(null, { status: 404 });
     }
 
+    const groupsFilter = url.searchParams.getAll('laboratoryGroup');
+
     const classes = await LaboratoryClass.fetchAllFromSubject(subject);
     const groups = await LaboratoryGroup.fetchAllFromSubject(subject);
+    const filteredGroups = groupsFilter.length > 0 ? groups.filter(g => groupsFilter.includes(g.name)) : groups;
     const users = await User.fetchAll();
     const classrooms = await Classroom.fetchAll();
     const exercises = await Exercise.fetchAllFromSubject(subject);
 
     return Response.json(
-        classes.map<LaboratoryClassData>(laboratoryClass => {
-            const exercise = exercises.find(e => e.id === laboratoryClass.exerciseId);
-            const group = groups.find(g => g.id === laboratoryClass.laboratoryGroupId);
-            const classTeacher = users.find(u => u.id === laboratoryClass.teacherId);
-            assert(exercise && group && classTeacher);
+        classes
+            .filter(c => filteredGroups.some(g => g.id === c.laboratoryGroupId))
+            .map<LaboratoryClassData>(laboratoryClass => {
+                const exercise = exercises.find(e => e.id === laboratoryClass.exerciseId);
+                const group = groups.find(g => g.id === laboratoryClass.laboratoryGroupId);
+                const classTeacher = users.find(u => u.id === laboratoryClass.teacherId);
+                assert(exercise && group && classTeacher);
 
-            const exerciseClassroom = classrooms.find(c => c.id === exercise.classroomId);
-            const exerciseTeacher = users.find(u => u.id === exercise.teacherId);
-            assert(exerciseClassroom && exerciseTeacher);
+                const exerciseClassroom = classrooms.find(c => c.id === exercise.classroomId);
+                const exerciseTeacher = users.find(u => u.id === exercise.teacherId);
+                assert(exerciseClassroom && exerciseTeacher);
 
-            return makeLaboratoryClassData(
-                laboratoryClass,
-                exercise,
-                exerciseClassroom,
-                exerciseTeacher,
-                group,
-                classTeacher,
-            );
-        }) satisfies LaboratoryClassData[],
+                return makeLaboratoryClassData(
+                    laboratoryClass,
+                    exercise,
+                    exerciseClassroom,
+                    exerciseTeacher,
+                    group,
+                    classTeacher,
+                );
+            }) satisfies LaboratoryClassData[],
         { status: 200 },
     );
 };
