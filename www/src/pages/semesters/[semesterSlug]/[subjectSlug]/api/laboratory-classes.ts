@@ -1,11 +1,10 @@
 import assert from 'node:assert';
 import type { APIRoute } from 'astro';
 import { Classroom } from '@backend/classroom';
-import { Exercise, makeExerciseData } from '@backend/exercise';
+import { Exercise } from '@backend/exercise';
 import { LaboratoryClass, makeLaboratoryClassData } from '@backend/laboratory-class';
 import { LaboratoryGroup } from '@backend/laboratory-group';
 import { User } from '@backend/user';
-import type { ExerciseData } from '@components/exercises/types';
 import { laboratoryClassCreateApiSchema, type LaboratoryClassData } from '@components/laboratory-classes/types';
 import { getSubjectFromParams } from '@pages/semesters/[semesterSlug]/[subjectSlug]/api/subject-utils';
 
@@ -21,22 +20,25 @@ export const GET: APIRoute = async ({ params }) => {
     const classrooms = await Classroom.fetchAll();
     const exercises = await Exercise.fetchAllFromSubject(subject);
 
-    const exercisesData = exercises.map<ExerciseData>(e => {
-        const classroom = classrooms.find(c => c.id === e.classroomId);
-        const teacher = users.find(u => u.id === e.teacherId);
-        assert(classroom && teacher);
-
-        return makeExerciseData(e, classroom, teacher);
-    });
-
     return Response.json(
         classes.map<LaboratoryClassData>(laboratoryClass => {
-            const exerciseData = exercisesData.find(e => e.id === laboratoryClass.exerciseId);
+            const exercise = exercises.find(e => e.id === laboratoryClass.exerciseId);
             const group = groups.find(g => g.id === laboratoryClass.laboratoryGroupId);
-            const teacher = users.find(u => u.id === laboratoryClass.teacherId);
-            assert(exerciseData && group && teacher);
+            const classTeacher = users.find(u => u.id === laboratoryClass.teacherId);
+            assert(exercise && group && classTeacher);
 
-            return makeLaboratoryClassData(laboratoryClass, exerciseData, group, teacher);
+            const exerciseClassroom = classrooms.find(c => c.id === exercise.classroomId);
+            const exerciseTeacher = users.find(u => u.id === exercise.teacherId);
+            assert(exerciseClassroom && exerciseTeacher);
+
+            return makeLaboratoryClassData(
+                laboratoryClass,
+                exercise,
+                exerciseClassroom,
+                exerciseTeacher,
+                group,
+                classTeacher,
+            );
         }) satisfies LaboratoryClassData[],
         { status: 200 },
     );
