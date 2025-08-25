@@ -66,13 +66,13 @@ const userData = makeUserData(targetUser);
             )
         }
     </h1>
-    <p class="text-center fs-5">
+    <p class="text-center">
         {translate('Name')}: {targetUser.name}
     </p>
-    <p class="text-center fs-5">
+    <p class="text-center">
         Email: {targetUser.email}
     </p>
-    <p class="text-center fs-5">
-        {translate('Role')}: {translate(targetUser.role as 'admin' | 'teacher')}
+    <p class="text-center">
+        {translate('Role')}: {translate(targetUser.role)}
     </p>
 </Layout>
