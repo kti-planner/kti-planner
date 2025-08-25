@@ -87,13 +87,13 @@ test('Can generate random password when adding new user', async ({ page }) => {
 
     await page.getByRole('button', { name: 'Generate random password' }).click();
 
+    await expect(page.getByRole('textbox', { name: 'Password', exact: true })).toHaveValue(/^.{16}$/);
     const password = await page.getByRole('textbox', { name: 'Password', exact: true }).inputValue();
-    expect(password).toHaveLength(16);
 
     await page.getByRole('button', { name: 'Generate random password' }).click();
 
+    await expect(page.getByRole('textbox', { name: 'Password', exact: true })).toHaveValue(/^.{16}$/);
     const secondPassword = await page.getByRole('textbox', { name: 'Password', exact: true }).inputValue();
-    expect(secondPassword).toHaveLength(16);
 
     expect(password).not.toBe(secondPassword);
 });
