@@ -2,7 +2,7 @@ import pg from 'pg';
 
 const env = import.meta.env.PROD ? process.env : import.meta.env;
 
-export const dbOptions: pg.PoolConfig = Object.freeze({
+export const dbOptions = Object.freeze<pg.PoolConfig>({
     database: env.POSTGRES_DB,
     user: env.POSTGRES_USER,
     password: env.POSTGRES_PASSWORD,
