@@ -57,7 +57,7 @@ function translate(text: keyof (typeof translations)[LangId]): string {
         </div>
 
         <div>
-            <label for="password" class="form-label">{{ 'Password' }}</label>
+            <label for="password" class="form-label">{{ translate('Password') }}</label>
             <input
                 id="password"
                 v-model="password"
