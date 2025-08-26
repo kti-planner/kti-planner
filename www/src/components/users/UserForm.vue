@@ -20,6 +20,8 @@ const email = ref<string | undefined>(props.user?.email);
 const password = ref<string>('');
 const role = ref<UserRole>(props.user?.role ?? 'teacher');
 
+const passwordVisible = ref<boolean>(false);
+
 async function submit() {
     if (name.value === undefined || email.value === undefined) {
         return;
@@ -49,6 +51,11 @@ async function submit() {
     if (success) {
         window.location.reload();
     }
+}
+
+function regeneratePassword(): void {
+    password.value = generatePassword();
+    passwordVisible.value = true;
 }
 
 const translations = {
@@ -97,20 +104,34 @@ function translate(text: keyof (typeof translations)[LangId]): string {
 
         <div>
             <label for="email" class="form-label">Email</label>
-            <input id="email" v-model="email" type="email" class="form-control" placeholder="Email" required />
+            <input
+                id="email"
+                v-model="email"
+                type="email"
+                class="form-control"
+                placeholder="Email"
+                autocomplete="off"
+                required
+            />
         </div>
 
         <div v-if="!isEditing">
             <label for="password" class="form-label">{{ translate('Password') }}</label>
-            <input
-                id="password"
-                v-model="password"
-                type="text"
-                class="form-control"
-                :placeholder="translate('Password')"
-                required
-            />
-            <button type="button" class="btn btn-success btn-sm my-2" @click="() => (password = generatePassword())">
+            <div class="input-group">
+                <input
+                    id="password"
+                    v-model="password"
+                    :type="passwordVisible ? 'text' : 'password'"
+                    class="form-control"
+                    :placeholder="translate('Password')"
+                    autocomplete="new-password"
+                    required
+                />
+                <button type="button" class="btn border" @click="passwordVisible = !passwordVisible">
+                    <i class="bi" :class="`bi-${passwordVisible ? 'eye-slash' : 'eye'}`"></i>
+                </button>
+            </div>
+            <button type="button" class="btn btn-success btn-sm my-2" @click="regeneratePassword()">
                 {{ translate('Generate random password') }}
             </button>
         </div>
