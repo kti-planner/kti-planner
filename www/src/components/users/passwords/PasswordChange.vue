@@ -1,0 +1,40 @@
+<script setup lang="ts">
+import { langId } from '@components/frontend/lang';
+import Modal from '@components/Modal.vue';
+import PasswordChangeForm from '@components/users/passwords/PasswordChangeForm.vue';
+
+const translations = {
+    'en': {
+        'Change password': 'Change password',
+    },
+    'pl': {
+        'Change password': 'Zmień hasło',
+    },
+};
+
+function translate(text: keyof (typeof translations)[LangId]): string {
+    return translations[langId][text];
+}
+</script>
+
+<template>
+    <div>
+        <div class="d-flex justify-content-center mb-3">
+            <button
+                type="button"
+                class="btn btn-success"
+                data-bs-toggle="modal"
+                data-bs-target="#password-change-modal"
+            >
+                {{ translate('Change password') }}
+            </button>
+        </div>
+
+        <Modal id="password-change-modal">
+            <template #header>
+                {{ translate('Change password') }}
+            </template>
+            <PasswordChangeForm />
+        </Modal>
+    </div>
+</template>

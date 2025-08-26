@@ -62,7 +62,7 @@ const userData = makeUserData(targetUser);
         {translate('User profile')}
         {
             (user.role === 'admin' || user.id === targetUser.id) && (
-                <EditUser client:only="vue" user={userData} isAdmin={user.role === 'admin'} />
+                <EditUser client:only="vue" userToEdit={userData} userEditing={makeUserData(user)} />
             )
         }
     </h1>
