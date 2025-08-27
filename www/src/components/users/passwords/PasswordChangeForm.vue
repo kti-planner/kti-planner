@@ -26,6 +26,7 @@ async function submit() {
     }
 
     submitFailed.value = !success;
+
     if (success) {
         window.location.reload();
     }
