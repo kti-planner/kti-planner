@@ -11,6 +11,7 @@ const props = defineProps<{
 }>();
 
 const password = ref<string>('');
+
 const passwordVisible = ref<boolean>(false);
 
 async function submit() {
@@ -54,6 +55,7 @@ function translate(text: keyof (typeof translations)[LangId]): string {
 <template>
     <form class="vstack gap-3 mx-auto" style="max-width: 500px" @submit.prevent="submit">
         <div>
+            <label for="password" class="form-label">{{ translate('New password') }}</label>
             <div class="input-group">
                 <input
                     id="password"
