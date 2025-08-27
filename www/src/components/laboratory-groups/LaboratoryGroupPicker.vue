@@ -16,7 +16,7 @@ watchEffect(() => {
 </script>
 
 <template>
-    <div v-if="groups && groups.length > 0" class="d-flex flex-wrap gap-2 mb-3">
+    <div v-if="groups && groups.length > 0" class="d-flex flex-wrap gap-2">
         <template v-for="group in groups" :key="group.id">
             <input
                 :id="group.id"

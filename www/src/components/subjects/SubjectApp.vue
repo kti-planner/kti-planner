@@ -51,7 +51,7 @@ const subjectUrl = computed(() => `/semesters/${semester.slug}/${subject.slug}`)
         <div class="col-12 col-lg-9 mb-2 order-2 order-lg-1">
             <SubjectCalendar />
         </div>
-        <div class="col-12 col-lg-3 order-1 order-lg-2 d-flex flex-column-reverse flex-lg-column">
+        <div class="col-12 col-lg-3 order-1 order-lg-2 d-flex gap-3 flex-column-reverse flex-lg-column">
             <div>
                 <h2 class="text-center fs-5">
                     {{ translate('Laboratory groups') }}
