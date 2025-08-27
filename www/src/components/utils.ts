@@ -23,6 +23,10 @@ export function toHyphenatedLowercase(str: string): string {
     return str.trim().toLocaleLowerCase().replaceAll(/\s+/g, '-');
 }
 
+export function generatePassword() {
+    return btoa(String.fromCharCode(...crypto.getRandomValues(new Uint8Array(12))));
+}
+
 export const dateStringSchema = z.iso.date().transform(str => {
     return new Date(`${str}T00:00:00`);
 });

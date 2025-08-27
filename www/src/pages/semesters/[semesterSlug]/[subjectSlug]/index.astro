@@ -1,6 +1,7 @@
 ---
 import { Classroom, makeClassroomData } from '@backend/classroom';
 import { Exercise, makeExerciseData } from '@backend/exercise';
+import { LaboratoryGroup, makeLaboratoryGroupData } from '@backend/laboratory-group';
 import { Semester } from '@backend/semester';
 import { Subject } from '@backend/subject';
 import { makeUserData, User } from '@backend/user';
@@ -86,6 +87,9 @@ const exercisesData = exercises.map(exercise => {
 });
 
 const nextExerciseNumber = exercises.reduce((max, e) => Math.max(max, e.exerciseNumber), 0) + 1;
+
+const groups = await LaboratoryGroup.fetchAll();
+const groupData = groups.map(makeLaboratoryGroupData);
 ---
 
 <Layout
@@ -111,6 +115,7 @@ const nextExerciseNumber = exercises.reduce((max, e) => Math.max(max, e.exercise
         allUsers={allUsersData}
         exercises={exercisesData}
         classrooms={classroomsData}
+        laboratoryGroups={groupData}
         nextExerciseNumber={nextExerciseNumber}
     />
 </Layout>

@@ -1,0 +1,35 @@
+<script setup lang="ts">
+import { langId } from '@components/frontend/lang';
+import Modal from '@components/Modal.vue';
+import UserForm from '@components/users/UserForm.vue';
+
+const translations = {
+    'en': {
+        'Add new user': 'Add new user',
+    },
+    'pl': {
+        'Add new user': 'Dodaj nowego użytkownika',
+    },
+};
+
+function translate(text: keyof (typeof translations)[LangId]): string {
+    return translations[langId][text];
+}
+</script>
+
+<template>
+    <div>
+        <div class="d-flex justify-content-center mb-3">
+            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#user-modal">
+                {{ translate('Add new user') }}
+            </button>
+        </div>
+
+        <Modal id="user-modal">
+            <template #header>
+                {{ translate('Add new user') }}
+            </template>
+            <UserForm :is-admin="true" />
+        </Modal>
+    </div>
+</template>

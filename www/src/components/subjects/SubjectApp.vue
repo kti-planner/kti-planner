@@ -10,15 +10,18 @@ import type { SubjectData } from '@components/subjects/types';
 import type { UserData } from '@components/users/types';
 import AddExercise from '@components/exercises/AddExercise.vue';
 import GenerateClasses from '@components/laboratory-classes/GenerateClasses.vue';
-import LaboratoryGroupList from '@components/laboratory-groups/LaboratoryGroupList.vue';
+import LaboratoryGroupListModal from '@components/laboratory-groups/LaboratoryGroupListModal.vue';
+import LaboratoryGroupPicker from '@components/laboratory-groups/LaboratoryGroupPicker.vue';
 import EditSubject from '@components/subjects/EditSubject.vue';
 import SubjectCalendar from '@components/subjects/SubjectCalendar.vue';
 
 const translations = {
     'en': {
+        'Laboratory groups': 'Laboratory groups',
         'Exercises': 'Exercises',
     },
     'pl': {
+        'Laboratory groups': 'Grupy laboratoryjne',
         'Exercises': 'Ćwiczenia',
     },
 };
@@ -33,6 +36,7 @@ const { subject, semester } = defineProps<{
     allUsers: UserData[];
     exercises: ExerciseData[];
     classrooms: ClassroomData[];
+    laboratoryGroups: LaboratoryGroupData[];
     nextExerciseNumber: number;
 }>();
 
@@ -56,10 +60,15 @@ const subjectUrl = computed(() => `/semesters/${semester.slug}/${subject.slug}`)
         </div>
         <div class="col-12 col-lg-3 order-1 order-lg-2 d-flex gap-3 flex-column-reverse flex-lg-column">
             <div>
-                <LaboratoryGroupList
-                    v-model="selectedLaboratoryGroups"
-                    :api-url="`${subjectUrl}/api/laboratory-groups/`"
-                />
+                <h2 class="text-center fs-5">
+                    {{ translate('Laboratory groups') }}
+                    <LaboratoryGroupListModal
+                        v-if="currentUser"
+                        :groups="laboratoryGroups"
+                        :api-url="`${subjectUrl}/api/laboratory-groups/`"
+                    />
+                </h2>
+                <LaboratoryGroupPicker v-model:selected="selectedLaboratoryGroups" :groups="laboratoryGroups" />
                 <GenerateClasses
                     v-if="currentUser"
                     :group="selectedLaboratoryGroups.length === 1 ? (selectedLaboratoryGroups[0] ?? null) : null"
