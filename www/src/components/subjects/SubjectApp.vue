@@ -4,19 +4,23 @@ import { langId } from '@components/frontend/lang';
 import { currentUser } from '@components/frontend/user';
 import type { ClassroomData } from '@components/classrooms/types';
 import type { ExerciseData } from '@components/exercises/types';
+import type { LaboratoryGroupData } from '@components/laboratory-groups/types';
 import type { SemesterData } from '@components/semesters/types';
 import type { SubjectData } from '@components/subjects/types';
 import type { UserData } from '@components/users/types';
 import AddExercise from '@components/exercises/AddExercise.vue';
-import LaboratoryGroupList from '@components/laboratory-groups/LaboratoryGroupList.vue';
+import LaboratoryGroupListModal from '@components/laboratory-groups/LaboratoryGroupListModal.vue';
+import LaboratoryGroupPicker from '@components/laboratory-groups/LaboratoryGroupPicker.vue';
 import EditSubject from '@components/subjects/EditSubject.vue';
 import SubjectCalendar from '@components/subjects/SubjectCalendar.vue';
 
 const translations = {
     'en': {
+        'Laboratory groups': 'Laboratory groups',
         'Exercises': 'Exercises',
     },
     'pl': {
+        'Laboratory groups': 'Grupy laboratoryjne',
         'Exercises': 'Ćwiczenia',
     },
 };
@@ -31,6 +35,7 @@ const { subject, semester } = defineProps<{
     allUsers: UserData[];
     exercises: ExerciseData[];
     classrooms: ClassroomData[];
+    laboratoryGroups: LaboratoryGroupData[];
     nextExerciseNumber: number;
 }>();
 
@@ -47,7 +52,17 @@ const subjectUrl = computed(() => `/semesters/${semester.slug}/${subject.slug}`)
             <SubjectCalendar />
         </div>
         <div class="col-12 col-lg-3 order-1 order-lg-2 d-flex gap-3 flex-column-reverse flex-lg-column">
-            <LaboratoryGroupList :api-url="`${subjectUrl}/api/laboratory-groups/`" />
+            <div>
+                <h2 class="text-center fs-5">
+                    {{ translate('Laboratory groups') }}
+                    <LaboratoryGroupListModal
+                        v-if="currentUser"
+                        :groups="laboratoryGroups"
+                        :api-url="`${subjectUrl}/api/laboratory-groups/`"
+                    />
+                </h2>
+                <LaboratoryGroupPicker :groups="laboratoryGroups" />
+            </div>
             <div>
                 <h2 class="text-center fs-5">{{ translate('Exercises') }}</h2>
                 <div class="exercises-list list-group mx-auto my-2">

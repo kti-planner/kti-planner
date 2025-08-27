@@ -53,15 +53,15 @@ export const POST: APIRoute = async ({ locals, params }) => {
 
     const groups = await LaboratoryGroup.fetchAllFromSubject(subject);
     if (groups.some(group => group.name === data.name)) {
-        return Response.json(null, { status: 200 });
+        return Response.json(false, { status: 200 });
     }
 
-    const group = await LaboratoryGroup.create({
+    await LaboratoryGroup.create({
         name: data.name,
         subject,
     });
 
-    return Response.json(makeLaboratoryGroupData(group), { status: 201 });
+    return Response.json(true, { status: 201 });
 };
 
 export const PATCH: APIRoute = async ({ locals, params }) => {
