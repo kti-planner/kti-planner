@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, useId, watchEffect } from 'vue';
+import { computed, ref, useId } from 'vue';
 import { langId } from '@components/frontend/lang';
 import { apiPost } from '@components/api';
 import type { ExerciseData } from '@components/exercises/types';
@@ -14,8 +14,8 @@ const translations = {
     'en': {
         'Laboratory group': 'Laboratory group',
         'First class date': 'First class date',
-        'First class start time': 'First class start time',
-        'First class end time': 'First class end time',
+        'Class start time': 'Class start time',
+        'Class end time': 'Class end time',
         'How many weeks are between classes?': 'How many weeks are between classes?',
         'Summary': 'Summary',
         'Generate classes': 'Generate classes',
@@ -24,8 +24,8 @@ const translations = {
     'pl': {
         'Laboratory group': 'Grupa laboratoryjna',
         'First class date': 'Data pierwszych zajęć',
-        'First class start time': 'Godzina rozpoczęcia pierwszych zajęć',
-        'First class end time': 'Godzina zakończenia pierwszych zajęć',
+        'Class start time': 'Godzina rozpoczęcia zajęć',
+        'Class end time': 'Godzina zakończenia zajęć',
         'How many weeks are between classes?': 'Co ile tygodni zajęcia się powtarzają?',
         'Summary': 'Podsumowanie',
         'Generate classes': 'Wygeneruj zajęcia',
@@ -51,8 +51,8 @@ const emit = defineEmits<{
 }>();
 
 const firstClassDateStr = ref<string>();
-const firstClassStartTime = ref<string>();
-const firstClassEndTime = ref<string>();
+const classStartTime = ref<string>();
+const classEndTime = ref<string>();
 const repeatWeeks = ref(1);
 
 export interface PlannedClass {
@@ -65,8 +65,8 @@ export interface PlannedClass {
 const plannedClasses = computed<PlannedClass[]>(() => {
     if (
         firstClassDateStr.value === undefined ||
-        firstClassStartTime.value === undefined ||
-        firstClassEndTime.value === undefined ||
+        classStartTime.value === undefined ||
+        classEndTime.value === undefined ||
         group.value === undefined
     ) {
         return [];
@@ -75,15 +75,13 @@ const plannedClasses = computed<PlannedClass[]>(() => {
     let lastStart: Date | undefined;
     let lastEnd: Date | undefined;
     return exercises.map<PlannedClass>(exercise => {
-        const start = lastStart
-            ? new Date(lastStart)
-            : new Date(`${firstClassDateStr.value}T${firstClassStartTime.value}`);
+        const start = lastStart ? new Date(lastStart) : new Date(`${firstClassDateStr.value}T${classStartTime.value}`);
 
         if (lastStart) {
             start.setDate(start.getDate() + 7 * repeatWeeks.value);
         }
 
-        const end = lastEnd ? new Date(lastEnd) : new Date(`${firstClassDateStr.value}T${firstClassEndTime.value}`);
+        const end = lastEnd ? new Date(lastEnd) : new Date(`${firstClassDateStr.value}T${classEndTime.value}`);
         if (lastEnd) {
             end.setDate(end.getDate() + 7 * repeatWeeks.value);
         }
@@ -99,8 +97,6 @@ const plannedClasses = computed<PlannedClass[]>(() => {
         };
     });
 });
-
-watchEffect(() => console.log(plannedClasses.value));
 
 async function generate() {
     if (plannedClasses.value.length === 0 || group.value === undefined) {
@@ -123,8 +119,8 @@ async function generate() {
     }
 
     firstClassDateStr.value = undefined;
-    firstClassStartTime.value = undefined;
-    firstClassEndTime.value = undefined;
+    classStartTime.value = undefined;
+    classEndTime.value = undefined;
     repeatWeeks.value = 1;
     emit('done');
 }
@@ -157,13 +153,13 @@ const repeatId = useId();
         </div>
 
         <div>
-            <label :for="startTimeId" class="form-label">{{ translate('First class start time') }}</label>
-            <input :id="startTimeId" v-model="firstClassStartTime" type="time" class="form-control" required />
+            <label :for="startTimeId" class="form-label">{{ translate('Class start time') }}</label>
+            <input :id="startTimeId" v-model="classStartTime" type="time" class="form-control" required />
         </div>
 
         <div>
-            <label :for="endTimeId" class="form-label">{{ translate('First class end time') }}</label>
-            <input :id="endTimeId" v-model="firstClassEndTime" type="time" class="form-control" required />
+            <label :for="endTimeId" class="form-label">{{ translate('Class end time') }}</label>
+            <input :id="endTimeId" v-model="classEndTime" type="time" class="form-control" required />
         </div>
 
         <div>
