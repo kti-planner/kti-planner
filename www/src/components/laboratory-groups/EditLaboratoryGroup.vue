@@ -30,7 +30,7 @@ const modalId = useId();
 <template>
     <IconButton
         icon="pencil"
-        aria-label="Edit exercise"
+        :aria-label="translate('Edit group')"
         class="ms-1 justify-content-between"
         style="margin-top: -0.25rem"
         data-bs-toggle="modal"
