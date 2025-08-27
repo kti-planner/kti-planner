@@ -10,6 +10,10 @@ const currentPassword = ref<string>('');
 const newPassword = ref<string>('');
 const newPasswordRepeated = ref<string>('');
 
+const currentPasswordVisible = ref<boolean>(false);
+const newPasswordVisible = ref<boolean>(false);
+const newPasswordRepeatedVisible = ref<boolean>(false);
+
 async function submit() {
     const success = await apiPatch<boolean>('/users/api/password-change/', {
         currentPassword: currentPassword.value,
@@ -53,38 +57,57 @@ function translate(text: keyof (typeof translations)[LangId]): string {
     <form class="vstack gap-3 mx-auto" style="max-width: 500px" @submit.prevent="submit">
         <div>
             <label for="currentPassword" class="form-label">{{ translate('Current password') }}</label>
-            <input
-                id="currentPassword"
-                v-model="currentPassword"
-                type="password"
-                class="form-control"
-                :placeholder="translate('Current password')"
-                required
-            />
+            <div class="input-group">
+                <input
+                    id="currentPassword"
+                    v-model="currentPassword"
+                    :type="currentPasswordVisible ? 'text' : 'password'"
+                    class="form-control"
+                    :placeholder="translate('Current password')"
+                    required
+                />
+                <button type="button" class="btn border" @click="currentPasswordVisible = !currentPasswordVisible">
+                    <i class="bi" :class="`bi-${currentPasswordVisible ? 'eye-slash' : 'eye'}`"></i>
+                </button>
+            </div>
         </div>
 
         <div>
             <label for="newPassword" class="form-label">{{ translate('New password') }}</label>
-            <input
-                id="newPassword"
-                v-model="newPassword"
-                type="password"
-                class="form-control"
-                :placeholder="translate('New password')"
-                required
-            />
+            <div class="input-group">
+                <input
+                    id="newPassword"
+                    v-model="newPassword"
+                    :type="newPasswordVisible ? 'text' : 'password'"
+                    class="form-control"
+                    :placeholder="translate('New password')"
+                    required
+                />
+                <button type="button" class="btn border" @click="newPasswordVisible = !newPasswordVisible">
+                    <i class="bi" :class="`bi-${newPasswordVisible ? 'eye-slash' : 'eye'}`"></i>
+                </button>
+            </div>
         </div>
 
         <div>
             <label for="newPasswordRepeated" class="form-label">{{ translate('Repeat new password') }}</label>
-            <input
-                id="newPasswordRepeated"
-                v-model="newPasswordRepeated"
-                type="password"
-                class="form-control"
-                :placeholder="translate('Repeat new password')"
-                required
-            />
+            <div class="input-group">
+                <input
+                    id="newPasswordRepeated"
+                    v-model="newPasswordRepeated"
+                    :type="newPasswordRepeatedVisible ? 'text' : 'password'"
+                    class="form-control"
+                    :placeholder="translate('Repeat new password')"
+                    required
+                />
+                <button
+                    type="button"
+                    class="btn border"
+                    @click="newPasswordRepeatedVisible = !newPasswordRepeatedVisible"
+                >
+                    <i class="bi" :class="`bi-${newPasswordRepeatedVisible ? 'eye-slash' : 'eye'}`"></i>
+                </button>
+            </div>
         </div>
 
         <div class="text-center">
