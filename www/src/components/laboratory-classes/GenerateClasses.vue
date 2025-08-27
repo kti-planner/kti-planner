@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { useTemplateRef, watch } from 'vue';
+import { computed, useTemplateRef } from 'vue';
+import { useCloned } from '@vueuse/core';
 import { langId } from '@components/frontend/lang';
 import type { ExerciseData } from '@components/exercises/types';
 import type { LaboratoryGroupData } from '@components/laboratory-groups/types';
@@ -22,11 +23,12 @@ function translate(text: keyof (typeof translations)[LangId]): string {
     return translations[langId][text];
 }
 
-const { group } = defineProps<{
-    group: LaboratoryGroupData | null;
+const { initialGroup } = defineProps<{
+    initialGroup: LaboratoryGroupData | null;
     exercises: ExerciseData[];
     semester: SemesterData;
     apiUrl: string;
+    laboratoryGroups: LaboratoryGroupData[];
 }>();
 
 const emit = defineEmits<{
@@ -34,15 +36,7 @@ const emit = defineEmits<{
 }>();
 
 const modal = useTemplateRef('modal');
-
-watch(
-    () => group,
-    () => {
-        if (!group) {
-            modal.value?.hide();
-        }
-    },
-);
+const { cloned: group } = useCloned(computed(() => initialGroup));
 
 function handleFormDone() {
     modal.value?.hide();
@@ -52,23 +46,24 @@ function handleFormDone() {
 
 <template>
     <div>
-        <div class="d-flex justify-content-center mb-3">
-            <button
-                type="button"
-                class="btn btn-success"
-                :disabled="group === null"
-                data-bs-toggle="modal"
-                data-bs-target="#plan-classes-modal"
-            >
+        <div class="d-flex justify-content-center">
+            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#plan-classes-modal">
                 {{ translate('Plan classes') }}
             </button>
         </div>
 
         <Modal ref="modal" id="plan-classes-modal" scrollable>
-            <template v-if="group" #header>
-                {{ `${translate('Plan classes for group')} ${group.name}` }}
+            <template #header>
+                {{ group ? `${translate('Plan classes for group')} ${group.name}` : translate('Plan classes') }}
             </template>
-            <GenerateClassesForm v-if="group" :group :semester :exercises :api-url @done="handleFormDone" />
+            <GenerateClassesForm
+                v-model:group="group"
+                :semester
+                :exercises
+                :api-url
+                :laboratory-groups
+                @done="handleFormDone"
+            />
         </Modal>
     </div>
 </template>

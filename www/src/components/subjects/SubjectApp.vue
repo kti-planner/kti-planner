@@ -71,9 +71,12 @@ const subjectUrl = computed(() => `/semesters/${semester.slug}/${subject.slug}`)
                 <LaboratoryGroupPicker v-model:selected="selectedLaboratoryGroups" :groups="laboratoryGroups" />
                 <GenerateClasses
                     v-if="currentUser"
-                    :group="selectedLaboratoryGroups.length === 1 ? (selectedLaboratoryGroups[0] ?? null) : null"
+                    :initial-group="
+                        selectedLaboratoryGroups.length === 1 ? (selectedLaboratoryGroups[0] ?? null) : null
+                    "
                     :exercises
                     :semester
+                    :laboratory-groups
                     :api-url="`${subjectUrl}/api/laboratory-classes/`"
                     class="mt-3"
                     @done="calendar?.refreshClasses()"

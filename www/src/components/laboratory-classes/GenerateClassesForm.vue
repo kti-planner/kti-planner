@@ -8,9 +8,11 @@ import type { LaboratoryGroupData } from '@components/laboratory-groups/types';
 import type { SemesterData } from '@components/semesters/types';
 import { formatDateLocalYyyyMmDdHhMm } from '@components/utils';
 import PlannedClassCard from '@components/laboratory-classes/PlannedClassCard.vue';
+import LaboratoryGroupSelector from '@components/laboratory-groups/LaboratoryGroupSelector.vue';
 
 const translations = {
     'en': {
+        'Laboratory group': 'Laboratory group',
         'First class date': 'First class date',
         'First class start time': 'First class start time',
         'First class end time': 'First class end time',
@@ -20,6 +22,7 @@ const translations = {
         'You can edit the classes later from the calendar': 'You can edit the classes later from the calendar',
     },
     'pl': {
+        'Laboratory group': 'Grupa laboratoryjna',
         'First class date': 'Data pierwszych zajęć',
         'First class start time': 'Godzina rozpoczęcia pierwszych zajęć',
         'First class end time': 'Godzina zakończenia pierwszych zajęć',
@@ -34,11 +37,13 @@ function translate(text: keyof (typeof translations)[LangId]): string {
     return translations[langId][text];
 }
 
-const { group, exercises, apiUrl } = defineProps<{
-    group: LaboratoryGroupData;
+const group = defineModel<LaboratoryGroupData | null>('group', { default: null });
+
+const { exercises, apiUrl } = defineProps<{
     exercises: ExerciseData[];
     semester: SemesterData;
     apiUrl: string;
+    laboratoryGroups: LaboratoryGroupData[];
 }>();
 
 const emit = defineEmits<{
@@ -61,7 +66,8 @@ const plannedClasses = computed<PlannedClass[]>(() => {
     if (
         firstClassDateStr.value === undefined ||
         firstClassStartTime.value === undefined ||
-        firstClassEndTime.value === undefined
+        firstClassEndTime.value === undefined ||
+        group.value === undefined
     ) {
         return [];
     }
@@ -97,7 +103,7 @@ const plannedClasses = computed<PlannedClass[]>(() => {
 watchEffect(() => console.log(plannedClasses.value));
 
 async function generate() {
-    if (plannedClasses.value.length === 0) {
+    if (plannedClasses.value.length === 0 || group.value === undefined) {
         return;
     }
 
@@ -105,7 +111,7 @@ async function generate() {
         plannedClasses.value.map(plannedClass =>
             apiPost<boolean>(apiUrl, {
                 exerciseId: plannedClass.exercise.id,
-                laboratoryGroupId: group.id,
+                laboratoryGroupId: group.value!.id,
                 startDate: formatDateLocalYyyyMmDdHhMm(plannedClass.start),
                 endDate: formatDateLocalYyyyMmDdHhMm(plannedClass.end),
             } satisfies LaboratoryClassCreateApiData),
@@ -123,6 +129,7 @@ async function generate() {
     emit('done');
 }
 
+const groupId = useId();
 const dateId = useId();
 const startTimeId = useId();
 const endTimeId = useId();
@@ -131,6 +138,11 @@ const repeatId = useId();
 
 <template>
     <form class="vstack gap-3 mx-auto" style="max-width: 500px" @submit.prevent="generate">
+        <div>
+            <label :for="groupId">{{ translate('Laboratory group') }}</label>
+            <LaboratoryGroupSelector :id="groupId" v-model="group" :options="laboratoryGroups" />
+        </div>
+
         <div>
             <label :for="dateId" class="form-label">{{ translate('First class date') }}</label>
             <input
