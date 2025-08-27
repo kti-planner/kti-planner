@@ -2,15 +2,17 @@ import pg from 'pg';
 
 const env = import.meta.env.PROD ? process.env : import.meta.env;
 
-export const dbOptions: pg.ClientConfig = {
+export const dbOptions = Object.freeze<pg.PoolConfig>({
     database: env.POSTGRES_DB,
     user: env.POSTGRES_USER,
     password: env.POSTGRES_PASSWORD,
     host: env.POSTGRES_HOST,
     port: parseInt(env.POSTGRES_PORT ?? '5432'),
-};
-
-export const db = new pg.Pool({
-    ...dbOptions,
     max: 10,
 });
+
+export let db = new pg.Pool(dbOptions);
+
+export function setDatabase(options: pg.ClientConfig = dbOptions) {
+    db = new pg.Pool(options);
+}
