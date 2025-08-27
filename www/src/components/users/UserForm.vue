@@ -127,7 +127,7 @@ function translate(text: keyof (typeof translations)[LangId]): string {
                     autocomplete="new-password"
                     required
                 />
-                <button type="button" class="btn border" @click="passwordVisible = !passwordVisible">
+                <button type="button" class="btn border focus-ring" @click="passwordVisible = !passwordVisible">
                     <i class="bi" :class="`bi-${passwordVisible ? 'eye-slash' : 'eye'}`"></i>
                 </button>
             </div>

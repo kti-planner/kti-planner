@@ -66,7 +66,11 @@ function translate(text: keyof (typeof translations)[LangId]): string {
                     :placeholder="translate('Current password')"
                     required
                 />
-                <button type="button" class="btn border" @click="currentPasswordVisible = !currentPasswordVisible">
+                <button
+                    type="button"
+                    class="btn border focus-ring"
+                    @click="currentPasswordVisible = !currentPasswordVisible"
+                >
                     <i class="bi" :class="`bi-${currentPasswordVisible ? 'eye-slash' : 'eye'}`"></i>
                 </button>
             </div>
@@ -83,7 +87,7 @@ function translate(text: keyof (typeof translations)[LangId]): string {
                     :placeholder="translate('New password')"
                     required
                 />
-                <button type="button" class="btn border" @click="newPasswordVisible = !newPasswordVisible">
+                <button type="button" class="btn border focus-ring" @click="newPasswordVisible = !newPasswordVisible">
                     <i class="bi" :class="`bi-${newPasswordVisible ? 'eye-slash' : 'eye'}`"></i>
                 </button>
             </div>
@@ -102,7 +106,7 @@ function translate(text: keyof (typeof translations)[LangId]): string {
                 />
                 <button
                     type="button"
-                    class="btn border"
+                    class="btn border focus-ring"
                     @click="newPasswordRepeatedVisible = !newPasswordRepeatedVisible"
                 >
                     <i class="bi" :class="`bi-${newPasswordRepeatedVisible ? 'eye-slash' : 'eye'}`"></i>
