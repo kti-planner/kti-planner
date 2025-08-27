@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useId } from 'vue';
+import { useId, useTemplateRef } from 'vue';
 import { langId } from '@components/frontend/lang';
 import type { LaboratoryGroupData } from '@components/laboratory-groups/types';
 import IconButton from '@components/IconButton.vue';
@@ -27,6 +27,7 @@ function translate(text: keyof (typeof translations)[LangId]): string {
     return translations[langId][text];
 }
 
+const modal = useTemplateRef('modal');
 const modalId = useId();
 </script>
 
@@ -41,7 +42,7 @@ const modalId = useId();
         :title="translate('Edit groups')"
     />
 
-    <Modal :id="modalId">
+    <Modal ref="modal" :id="modalId">
         <template #header>{{ translate('Laboratory groups') }}</template>
         <div class="list-group mx-auto mb-3">
             <div
@@ -50,10 +51,10 @@ const modalId = useId();
                 class="list-group-item d-flex justify-content-between align-items-center"
             >
                 <span>{{ group.name }}</span>
-                <EditLaboratoryGroup :group :api-url />
+                <EditLaboratoryGroup :group :api-url @hide="modal?.show()" />
             </div>
         </div>
-        <AddLaboratoryGroup :api-url />
+        <AddLaboratoryGroup :api-url @hide="modal?.show()" />
     </Modal>
 </template>
 

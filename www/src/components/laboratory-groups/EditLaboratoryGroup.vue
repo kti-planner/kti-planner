@@ -38,7 +38,7 @@ const modalId = useId();
         :title="translate('Edit group')"
     />
 
-    <Modal :id="modalId">
+    <Modal :id="modalId" :="$attrs">
         <template #header>{{ translate('Edit group') }} {{ group.name }}</template>
         <LaboratoryGroupForm :group :api-url />
     </Modal>

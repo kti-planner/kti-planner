@@ -32,7 +32,7 @@ const modalId = useId();
             </button>
         </div>
 
-        <Modal :id="modalId">
+        <Modal :id="modalId" :="$attrs">
             <template #header>
                 {{ translate('Add new laboratory group') }}
             </template>
