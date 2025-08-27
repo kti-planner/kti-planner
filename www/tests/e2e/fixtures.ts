@@ -31,3 +31,10 @@ export async function login(page: Page) {
     await page.getByRole('textbox', { name: 'Password' }).fill('kti');
     await page.locator('form').getByRole('button', { name: 'Sign in' }).click();
 }
+
+export async function loginAsTeacher(page: Page) {
+    await page.locator('.navbar').getByRole('button', { name: 'Sign in' }).click();
+    await page.getByRole('textbox', { name: 'Email' }).fill('bogdan@nowak.pl');
+    await page.getByRole('textbox', { name: 'Password' }).fill('kti');
+    await page.locator('form').getByRole('button', { name: 'Sign in' }).click();
+}

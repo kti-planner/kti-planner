@@ -1,0 +1,78 @@
+---
+import { makeUserData, User } from '@backend/user';
+import Layout from '@layouts/Layout.astro';
+import EditUser from '@components/users/EditUser.vue';
+
+const { userId } = Astro.params;
+const { langId, user, redirectToLoginPage } = Astro.locals;
+
+if (!user) {
+    return redirectToLoginPage();
+}
+
+const translations = {
+    'en': {
+        'Users': 'Users',
+        'User profile': 'User profile',
+        'Name': 'Name',
+        'Role': 'Role',
+        'admin': 'Admin',
+        'teacher': 'Teacher',
+    },
+    'pl': {
+        'Users': 'Użytkownicy',
+        'User profile': 'Profil użytkownika',
+        'Name': 'Nazwa',
+        'Role': 'Rola',
+        'admin': 'Admin',
+        'teacher': 'Nauczyciel',
+    },
+};
+
+function translate(text: keyof (typeof translations)[LangId]): string {
+    return translations[langId][text];
+}
+
+if (userId === undefined) {
+    return new Response(null, { status: 404 });
+}
+
+const targetUser = await User.fetch(userId);
+
+if (!targetUser) {
+    return new Response(null, { status: 404 });
+}
+
+const userData = makeUserData(targetUser);
+---
+
+<Layout
+    breadcrumbs={[
+        {
+            text: translate('Users'),
+            href: '/users/',
+        },
+        {
+            text: targetUser.name,
+            href: '#',
+        },
+    ]}
+>
+    <h1 class="text-center fs-4 mb-3">
+        {translate('User profile')}
+        {
+            (user.role === 'admin' || user.id === targetUser.id) && (
+                <EditUser client:only="vue" user={userData} isAdmin={user.role === 'admin'} />
+            )
+        }
+    </h1>
+    <p class="text-center">
+        {translate('Name')}: {targetUser.name}
+    </p>
+    <p class="text-center">
+        Email: {targetUser.email}
+    </p>
+    <p class="text-center">
+        {translate('Role')}: {translate(targetUser.role)}
+    </p>
+</Layout>
