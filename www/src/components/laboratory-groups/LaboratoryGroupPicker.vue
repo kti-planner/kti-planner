@@ -30,8 +30,9 @@ watchEffect(() => {
                 class="btn group-btn"
                 :class="selectedGroupIds.has(group.id) ? 'btn-success' : 'btn-light'"
                 :for="group.id"
-                >{{ group.name }}</label
             >
+                {{ group.name }}
+            </label>
         </template>
     </div>
 </template>

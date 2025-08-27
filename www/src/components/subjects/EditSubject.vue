@@ -33,7 +33,7 @@ const modalId = `edit-subject-modal-${props.semester.slug}-${props.subject.slug}
     <IconButton
         icon="pencil"
         position="absolute"
-        aria-label="Edit subject"
+        :aria-label="translate('Edit subject')"
         class="ms-1"
         style="margin-top: -0.25rem"
         data-bs-toggle="modal"

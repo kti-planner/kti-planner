@@ -30,7 +30,7 @@ const modalId = `edit-user-modal-${props.user.id}`;
     <IconButton
         icon="pencil"
         position="absolute"
-        aria-label="Edit user"
+        :aria-label="translate('Edit user')"
         class="ms-1"
         style="margin-top: -0.25rem"
         data-bs-toggle="modal"

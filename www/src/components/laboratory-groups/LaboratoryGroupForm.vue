@@ -20,7 +20,9 @@ const name = ref<string>(props.group?.name ?? '');
 async function submit() {
     const success =
         props.group === undefined
-            ? await apiPost<boolean>(props.apiUrl, { name: name.value } satisfies LaboratoryGroupCreateApiData)
+            ? await apiPost<boolean>(props.apiUrl, {
+                  name: name.value,
+              } satisfies LaboratoryGroupCreateApiData)
             : await apiPatch<boolean>(props.apiUrl, {
                   id: props.group.id,
                   name: name.value,
@@ -67,7 +69,9 @@ const nameId = useId();
         </div>
 
         <div class="text-center">
-            <button type="submit" class="btn btn-success">{{ translate(group ? 'Save' : 'Add') }}</button>
+            <button type="submit" class="btn btn-success">
+                {{ translate(group ? 'Save' : 'Add') }}
+            </button>
         </div>
 
         <div v-if="submitFailed" class="text-center text-danger">
