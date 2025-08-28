@@ -35,7 +35,7 @@ const modalId = `edit-exercise-modal-${props.semester.slug}-${props.subject.slug
     <IconButton
         icon="pencil"
         position="absolute"
-        aria-label="Edit exercise"
+        :aria-label="translate('Edit exercise')"
         class="ms-1"
         style="margin-top: -0.25rem"
         data-bs-toggle="modal"

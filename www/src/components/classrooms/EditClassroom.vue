@@ -28,9 +28,8 @@ const modalId = `edit-classroom-modal-${props.classroom.id}`;
 <template>
     <IconButton
         icon="pencil"
-        aria-label="Edit exercise"
-        class="ms-1 justify-content-between"
-        style="margin-top: -0.25rem"
+        :aria-label="translate('Edit classroom')"
+        class="ms-1"
         data-bs-toggle="modal"
         :data-bs-target="`#${modalId}`"
         :title="translate('Edit classroom')"
