@@ -44,7 +44,6 @@ if (!targetUser) {
 }
 
 const userData = makeUserData(targetUser);
-const userEditingData = makeUserData(user);
 ---
 
 <Layout
@@ -61,11 +60,7 @@ const userEditingData = makeUserData(user);
 >
     <h1 class="text-center fs-4 mb-3">
         {translate('User profile')}
-        {
-            (user.role === 'admin' || user.id === targetUser.id) && (
-                <EditUser client:only="vue" userToEdit={userData} userEditing={userEditingData} />
-            )
-        }
+        {(user.role === 'admin' || user.id === targetUser.id) && <EditUser client:only="vue" user={userData} />}
     </h1>
     <p class="text-center">
         {translate('Name')}: {targetUser.name}

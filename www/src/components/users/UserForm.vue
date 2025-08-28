@@ -2,12 +2,12 @@
 import { computed, ref } from 'vue';
 import type { UserRole } from '@backend/user';
 import { langId } from '@components/frontend/lang';
+import { currentUser } from '@components/frontend/user';
 import { apiPatch, apiPost } from '@components/api';
 import type { UserCreateApiData, UserData, UserEditApiData } from '@components/users/types';
 import { generatePassword } from '@components/utils';
 
 const props = defineProps<{
-    isAdmin: boolean;
     user?: UserData;
 }>();
 
@@ -39,7 +39,7 @@ async function submit() {
                   id: props.user.id,
                   name: name.value,
                   email: email.value,
-                  role: props.isAdmin ? role.value : undefined,
+                  role: currentUser?.role === 'admin' ? role.value : undefined,
               } satisfies UserEditApiData);
 
     if (success === undefined) {
@@ -136,7 +136,7 @@ function translate(text: keyof (typeof translations)[LangId]): string {
             </button>
         </div>
 
-        <div v-if="isAdmin">
+        <div v-if="currentUser?.role === 'admin'">
             <label for="role" class="form-label">{{ translate('Role') }}</label>
             <select id="role" v-model="role" class="form-select" required>
                 <option value="teacher">{{ translate('Teacher') }}</option>
