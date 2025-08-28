@@ -1,6 +1,7 @@
 import assert from 'node:assert';
 import { db } from '@backend/db';
 import type { Subject } from '@backend/subject';
+import type { LaboratoryGroupData } from '@components/laboratory-groups/types';
 
 interface DbLaboratoryGroup {
     id: string;
@@ -71,4 +72,11 @@ export class LaboratoryGroup {
 
         await db.query('UPDATE laboratory_groups SET name = $2 WHERE id = $1', [this.id, this.name]);
     }
+}
+
+export function makeLaboratoryGroupData(group: LaboratoryGroup): LaboratoryGroupData {
+    return {
+        id: group.id,
+        name: group.name,
+    };
 }

@@ -139,3 +139,12 @@ VALUES
   ( '2a31cf55-f926-42e2-a985-50849bafe939', 'Zarządzanie sprzętem sieciowym', '981c68ba-3f6a-459e-83af-f9fc578adc85', 2, '2affdc99-7dd6-47f0-b26c-3c413bf063dd', 'c393c524-453c-4b02-bfad-5114fe828200' ),
   ( 'a263264d-1d2d-42de-939e-ee9553961b17', 'IPv6', '981c68ba-3f6a-459e-83af-f9fc578adc85', 3, '2affdc99-7dd6-47f0-b26c-3c413bf063dd', 'c393c524-453c-4b02-bfad-5114fe828200' ),
   ( '805124e6-2595-4fe6-ad91-93f2a6c5762e', 'IPv6 cz. II', '981c68ba-3f6a-459e-83af-f9fc578adc85', 4, '2affdc99-7dd6-47f0-b26c-3c413bf063dd', 'c393c524-453c-4b02-bfad-5114fe828200' );
+
+INSERT INTO laboratory_groups (id, name, subject_id)
+VALUES
+  ( 'bb9309c2-6a67-4f65-bcc9-fa9547d9ffe9', 'inf1a', '25108321-0391-4c7a-b4d8-5ea20388e813' ),
+  ( '1bae5961-9ad4-4cfc-8240-f213deea65a4', 'inf1b', '25108321-0391-4c7a-b4d8-5ea20388e813' ),
+  ( 'edf46299-620d-4ce7-9495-ad52ae6553b4', 'inf2a', '25108321-0391-4c7a-b4d8-5ea20388e813' ),
+  ( '4dd6eb8b-94e0-4d04-8cc7-bdbcf873bea8', 'inf2b', '25108321-0391-4c7a-b4d8-5ea20388e813' ),
+  ( '155fefc9-2702-428a-b8c2-be492233b037', 'inf3a', '25108321-0391-4c7a-b4d8-5ea20388e813' ),
+  ( '88a0b530-7535-455c-8d20-385acce8a728', 'inf3b', '25108321-0391-4c7a-b4d8-5ea20388e813' );
