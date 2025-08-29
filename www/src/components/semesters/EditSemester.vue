@@ -29,7 +29,7 @@ const modalId = `edit-semester-modal-${props.semester.slug}`;
     <IconButton
         icon="pencil"
         position="absolute"
-        aria-label="Edit semester"
+        :aria-label="translate('Edit semester')"
         class="ms-1"
         style="margin-top: -0.25rem"
         data-bs-toggle="modal"

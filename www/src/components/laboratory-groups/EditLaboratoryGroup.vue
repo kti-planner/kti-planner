@@ -31,8 +31,7 @@ const modalId = useId();
     <IconButton
         icon="pencil"
         :aria-label="translate('Edit group')"
-        class="ms-1 justify-content-between"
-        style="margin-top: -0.25rem"
+        class="ms-1"
         data-bs-toggle="modal"
         :data-bs-target="`#${modalId}`"
         :title="translate('Edit group')"
