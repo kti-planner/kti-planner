@@ -3,16 +3,13 @@ import { ref } from 'vue';
 import { langId } from '@components/frontend/lang';
 import { apiPatch } from '@components/api';
 import type { PasswordChangeApiData } from '@components/users/passwords/types';
+import PasswordInputField from '@components/users/passwords/PasswordInputField.vue';
 
 const submitFailed = ref(false);
 
 const currentPassword = ref<string>('');
 const newPassword = ref<string>('');
 const newPasswordRepeated = ref<string>('');
-
-const currentPasswordVisible = ref<boolean>(false);
-const newPasswordVisible = ref<boolean>(false);
-const newPasswordRepeatedVisible = ref<boolean>(false);
 
 async function submit() {
     const success = await apiPatch<boolean>('/users/api/password-change/', {
@@ -58,64 +55,32 @@ function translate(text: keyof (typeof translations)[LangId]): string {
     <form class="vstack gap-3 mx-auto" style="max-width: 500px" @submit.prevent="submit">
         <div>
             <label for="currentPassword" class="form-label">{{ translate('Current password') }}</label>
-            <div class="input-group">
-                <input
-                    id="currentPassword"
-                    v-model="currentPassword"
-                    :type="currentPasswordVisible ? 'text' : 'password'"
-                    class="form-control"
-                    :placeholder="translate('Current password')"
-                    autocomplete="current-password"
-                    required
-                />
-                <button
-                    type="button"
-                    class="btn border focus-ring"
-                    @click="currentPasswordVisible = !currentPasswordVisible"
-                >
-                    <i class="bi" :class="`bi-${currentPasswordVisible ? 'eye-slash' : 'eye'}`"></i>
-                </button>
-            </div>
+            <PasswordInputField
+                id="currentPassword"
+                v-model="currentPassword"
+                :placeholder="translate('Current password')"
+                autocomplete="current-password"
+            />
         </div>
 
         <div>
             <label for="newPassword" class="form-label">{{ translate('New password') }}</label>
-            <div class="input-group">
-                <input
-                    id="newPassword"
-                    v-model="newPassword"
-                    :type="newPasswordVisible ? 'text' : 'password'"
-                    class="form-control"
-                    :placeholder="translate('New password')"
-                    autocomplete="new-password"
-                    required
-                />
-                <button type="button" class="btn border focus-ring" @click="newPasswordVisible = !newPasswordVisible">
-                    <i class="bi" :class="`bi-${newPasswordVisible ? 'eye-slash' : 'eye'}`"></i>
-                </button>
-            </div>
+            <PasswordInputField
+                id="newPassword"
+                v-model="newPassword"
+                :placeholder="translate('New password')"
+                autocomplete="new-password"
+            />
         </div>
 
         <div>
             <label for="newPasswordRepeated" class="form-label">{{ translate('Repeat new password') }}</label>
-            <div class="input-group">
-                <input
-                    id="newPasswordRepeated"
-                    v-model="newPasswordRepeated"
-                    :type="newPasswordRepeatedVisible ? 'text' : 'password'"
-                    class="form-control"
-                    :placeholder="translate('Repeat new password')"
-                    autocomplete="new-password"
-                    required
-                />
-                <button
-                    type="button"
-                    class="btn border focus-ring"
-                    @click="newPasswordRepeatedVisible = !newPasswordRepeatedVisible"
-                >
-                    <i class="bi" :class="`bi-${newPasswordRepeatedVisible ? 'eye-slash' : 'eye'}`"></i>
-                </button>
-            </div>
+            <PasswordInputField
+                id="newPasswordRepeated"
+                v-model="newPasswordRepeated"
+                :placeholder="translate('Repeat new password')"
+                autocomplete="new-password"
+            />
         </div>
 
         <div class="text-center">

@@ -5,6 +5,7 @@ import { apiPatch } from '@components/api';
 import type { PasswordResetApiData } from '@components/users/passwords/types';
 import type { UserData } from '@components/users/types';
 import { generatePassword } from '@components/utils';
+import PasswordInputField from '@components/users/passwords/PasswordInputField.vue';
 
 const props = defineProps<{
     user: UserData;
@@ -56,20 +57,13 @@ function translate(text: keyof (typeof translations)[LangId]): string {
     <form class="vstack gap-3 mx-auto" style="max-width: 500px" @submit.prevent="submit">
         <div>
             <label for="password" class="form-label">{{ translate('New password') }}</label>
-            <div class="input-group">
-                <input
-                    id="password"
-                    v-model="password"
-                    :type="passwordVisible ? 'text' : 'password'"
-                    class="form-control"
-                    :placeholder="translate('New password')"
-                    autocomplete="new-password"
-                    required
-                />
-                <button type="button" class="btn border" @click="passwordVisible = !passwordVisible">
-                    <i class="bi" :class="`bi-${passwordVisible ? 'eye-slash' : 'eye'}`"></i>
-                </button>
-            </div>
+            <PasswordInputField
+                id="password"
+                v-model="password"
+                v-model:visible="passwordVisible"
+                :placeholder="translate('New password')"
+                autocomplete="new-password"
+            />
             <button type="button" class="btn btn-success btn-sm my-2" @click="regeneratePassword()">
                 {{ translate('Generate random password') }}
             </button>
