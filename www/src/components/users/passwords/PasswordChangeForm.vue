@@ -65,6 +65,7 @@ function translate(text: keyof (typeof translations)[LangId]): string {
                     :type="currentPasswordVisible ? 'text' : 'password'"
                     class="form-control"
                     :placeholder="translate('Current password')"
+                    autocomplete="current-password"
                     required
                 />
                 <button
@@ -86,6 +87,7 @@ function translate(text: keyof (typeof translations)[LangId]): string {
                     :type="newPasswordVisible ? 'text' : 'password'"
                     class="form-control"
                     :placeholder="translate('New password')"
+                    autocomplete="new-password"
                     required
                 />
                 <button type="button" class="btn border focus-ring" @click="newPasswordVisible = !newPasswordVisible">
@@ -103,6 +105,7 @@ function translate(text: keyof (typeof translations)[LangId]): string {
                     :type="newPasswordRepeatedVisible ? 'text' : 'password'"
                     class="form-control"
                     :placeholder="translate('Repeat new password')"
+                    autocomplete="new-password"
                     required
                 />
                 <button
