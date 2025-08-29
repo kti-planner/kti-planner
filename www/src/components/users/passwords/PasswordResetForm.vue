@@ -79,5 +79,4 @@ function translate(text: keyof (typeof translations)[LangId]): string {
             <button type="submit" class="btn btn-success">{{ translate('Save') }}</button>
         </div>
     </form>
-    <br />
 </template>

@@ -152,5 +152,4 @@ function translate(text: keyof (typeof translations)[LangId]): string {
             {{ translate(isEditing ? 'User with that email already exists.' : 'Adding new user failed.') }}
         </div>
     </form>
-    <br />
 </template>
