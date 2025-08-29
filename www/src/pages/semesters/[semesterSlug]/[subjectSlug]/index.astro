@@ -2,7 +2,7 @@
 import { Classroom, makeClassroomData } from '@backend/classroom';
 import { Exercise, makeExerciseData } from '@backend/exercise';
 import { LaboratoryGroup, makeLaboratoryGroupData } from '@backend/laboratory-group';
-import { Semester } from '@backend/semester';
+import { makeScheduleChangeData, Semester } from '@backend/semester';
 import { Subject } from '@backend/subject';
 import { makeUserData, User } from '@backend/user';
 import type { SemesterData } from '@components/semesters/types';
@@ -55,6 +55,9 @@ const semesterData: SemesterData = {
     startDate: formatDateLocalYyyyMmDd(semester.startDate),
     endDate: formatDateLocalYyyyMmDd(semester.endDate),
 };
+
+const scheduleChanges = await semester.getScheduleChanges();
+const scheduleChangesData = scheduleChanges.map(makeScheduleChangeData);
 
 const subjectData: SubjectData = {
     id: subject.id,
@@ -117,5 +120,6 @@ const groupData = groups.map(makeLaboratoryGroupData);
         classrooms={classroomsData}
         laboratoryGroups={groupData}
         nextExerciseNumber={nextExerciseNumber}
+        scheduleChanges={scheduleChangesData}
     />
 </Layout>

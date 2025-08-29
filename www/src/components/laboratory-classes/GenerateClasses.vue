@@ -4,7 +4,7 @@ import { useCloned } from '@vueuse/core';
 import { langId } from '@components/frontend/lang';
 import type { ExerciseData } from '@components/exercises/types';
 import type { LaboratoryGroupData } from '@components/laboratory-groups/types';
-import type { SemesterData } from '@components/semesters/types';
+import type { ScheduleChangeData, SemesterData } from '@components/semesters/types';
 import GenerateClassesForm from '@components/laboratory-classes/GenerateClassesForm.vue';
 import Modal from '@components/Modal.vue';
 
@@ -29,6 +29,7 @@ const { initialGroup } = defineProps<{
     semester: SemesterData;
     apiUrl: string;
     laboratoryGroups: LaboratoryGroupData[];
+    scheduleChanges: ScheduleChangeData[];
 }>();
 
 const emit = defineEmits<{
@@ -62,6 +63,7 @@ function handleFormDone() {
                 :exercises
                 :api-url
                 :laboratory-groups
+                :schedule-changes
                 @done="handleFormDone"
             />
         </Modal>

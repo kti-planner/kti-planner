@@ -5,7 +5,7 @@ import { currentUser } from '@components/frontend/user';
 import type { ClassroomData } from '@components/classrooms/types';
 import type { ExerciseData } from '@components/exercises/types';
 import type { LaboratoryGroupData } from '@components/laboratory-groups/types';
-import type { SemesterData } from '@components/semesters/types';
+import type { ScheduleChangeData, SemesterData } from '@components/semesters/types';
 import type { SubjectData } from '@components/subjects/types';
 import type { UserData } from '@components/users/types';
 import AddExercise from '@components/exercises/AddExercise.vue';
@@ -38,6 +38,7 @@ const { subject, semester } = defineProps<{
     classrooms: ClassroomData[];
     laboratoryGroups: LaboratoryGroupData[];
     nextExerciseNumber: number;
+    scheduleChanges: ScheduleChangeData[];
 }>();
 
 const selectedLaboratoryGroups = ref<LaboratoryGroupData[]>([]);
@@ -77,6 +78,7 @@ const subjectUrl = computed(() => `/semesters/${semester.slug}/${subject.slug}`)
                     :exercises
                     :semester
                     :laboratory-groups
+                    :schedule-changes
                     :api-url="`${subjectUrl}/api/laboratory-classes/`"
                     class="mt-3"
                     @done="calendar?.refreshClasses()"

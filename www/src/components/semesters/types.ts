@@ -1,5 +1,5 @@
 import z from 'zod';
-import type { SemesterType } from '@backend/semester';
+import type { ScheduleChangeType, SemesterType } from '@backend/semester';
 import { dateStringSchema } from '@components/utils';
 
 export interface SemesterData {
@@ -29,3 +29,8 @@ export const semesterEditApiSchema = z.object({
 });
 
 export type SemesterEditApiData = z.input<typeof semesterEditApiSchema>;
+
+export interface ScheduleChangeData {
+    date: string;
+    type: ScheduleChangeType;
+}

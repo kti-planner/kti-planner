@@ -1,12 +1,13 @@
 <script setup lang="ts">
-import { computed, ref, useId } from 'vue';
+import { computed, ref, useId, watchEffect } from 'vue';
 import { langId } from '@components/frontend/lang';
 import { apiPost } from '@components/api';
 import type { ExerciseData } from '@components/exercises/types';
+import { getNextDayOfTheWeekOccurance } from '@components/laboratory-classes/dates';
 import type { LaboratoryClassCreateApiData } from '@components/laboratory-classes/types';
 import type { LaboratoryGroupData } from '@components/laboratory-groups/types';
-import type { SemesterData } from '@components/semesters/types';
-import { formatDateLocalYyyyMmDdHhMm } from '@components/utils';
+import type { ScheduleChangeData, SemesterData } from '@components/semesters/types';
+import { formatDateLocalYyyyMmDd, formatDateLocalYyyyMmDdHhMm } from '@components/utils';
 import PlannedClassCard from '@components/laboratory-classes/PlannedClassCard.vue';
 import LaboratoryGroupSelector from '@components/laboratory-groups/LaboratoryGroupSelector.vue';
 
@@ -20,6 +21,7 @@ const translations = {
         'Summary': 'Summary',
         'Generate classes': 'Generate classes',
         'You can edit the classes later from the calendar': 'You can edit the classes later from the calendar',
+        'The date you selected is a holiday': 'The date you selected is a holiday',
     },
     'pl': {
         'Laboratory group': 'Grupa laboratoryjna',
@@ -30,6 +32,7 @@ const translations = {
         'Summary': 'Podsumowanie',
         'Generate classes': 'Wygeneruj zajęcia',
         'You can edit the classes later from the calendar': 'Możesz później edytować te zajęcia w kalendarzu',
+        'The date you selected is a holiday': 'Wybrana data jest dniem wolnym od zajęć',
     },
 };
 
@@ -39,11 +42,12 @@ function translate(text: keyof (typeof translations)[LangId]): string {
 
 const group = defineModel<LaboratoryGroupData | null>('group', { default: null });
 
-const { exercises, apiUrl } = defineProps<{
+const { exercises, apiUrl, scheduleChanges } = defineProps<{
     exercises: ExerciseData[];
     semester: SemesterData;
     apiUrl: string;
     laboratoryGroups: LaboratoryGroupData[];
+    scheduleChanges: ScheduleChangeData[];
 }>();
 
 const emit = defineEmits<{
@@ -54,6 +58,17 @@ const firstClassDateStr = ref<string>();
 const classStartTime = ref<string>();
 const classEndTime = ref<string>();
 const repeatWeeks = ref(1);
+
+const firstDateHoliday = computed(() => {
+    if (firstClassDateStr.value === undefined) {
+        return false;
+    }
+
+    const firstClassDate = new Date(firstClassDateStr.value);
+    return scheduleChanges.some(
+        change => change.type === 'holiday' && firstClassDate.getTime() === new Date(change.date).getTime(),
+    );
+});
 
 export interface PlannedClass {
     id: string;
@@ -72,31 +87,28 @@ const plannedClasses = computed<PlannedClass[]>(() => {
         return [];
     }
 
-    let lastStart: Date | undefined;
-    let lastEnd: Date | undefined;
+    let last: Date | undefined;
     return exercises.map<PlannedClass>(exercise => {
-        const start = lastStart ? new Date(lastStart) : new Date(`${firstClassDateStr.value}T${classStartTime.value}`);
+        let date = last ? new Date(last) : new Date(firstClassDateStr.value!);
 
-        if (lastStart) {
-            start.setDate(start.getDate() + 7 * repeatWeeks.value);
+        if (last) {
+            for (let i = 0; i < repeatWeeks.value; i++) {
+                date = getNextDayOfTheWeekOccurance(date, scheduleChanges);
+            }
         }
 
-        const end = lastEnd ? new Date(lastEnd) : new Date(`${firstClassDateStr.value}T${classEndTime.value}`);
-        if (lastEnd) {
-            end.setDate(end.getDate() + 7 * repeatWeeks.value);
-        }
-
-        lastStart = start;
-        lastEnd = end;
+        last = date;
 
         return {
             id: crypto.randomUUID(),
             exercise,
-            start,
-            end,
+            start: new Date(`${formatDateLocalYyyyMmDd(date)}T${classStartTime.value}`),
+            end: new Date(`${formatDateLocalYyyyMmDd(date)}T${classEndTime.value}`),
         };
     });
 });
+
+watchEffect(() => console.log(plannedClasses.value));
 
 async function generate() {
     if (plannedClasses.value.length === 0 || group.value === undefined) {
@@ -130,6 +142,7 @@ const dateId = useId();
 const startTimeId = useId();
 const endTimeId = useId();
 const repeatId = useId();
+const dateFeedback = useId();
 </script>
 
 <template>
@@ -148,8 +161,15 @@ const repeatId = useId();
                 :max="semester.endDate"
                 type="date"
                 class="form-control"
+                :class="{
+                    'is-invalid': firstDateHoliday,
+                }"
+                :="{ ...(firstDateHoliday ? { 'aria-describedby': dateFeedback } : {}) }"
                 required
             />
+            <div v-if="firstDateHoliday" :id="dateFeedback" class="invalid-feedback">
+                {{ translate('The date you selected is a holiday') }}
+            </div>
         </div>
 
         <div>
