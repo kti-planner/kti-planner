@@ -23,18 +23,16 @@ function translate(text: keyof (typeof translations)[LangId]): string {
 </script>
 
 <template>
-    <div>
-        <div class="d-flex justify-content-center mb-3">
-            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#password-reset-modal">
-                {{ translate('Reset password') }}
-            </button>
-        </div>
-
-        <Modal id="password-reset-modal">
-            <template #header>
-                {{ translate('Reset password') }}
-            </template>
-            <PasswordResetForm :user="user" />
-        </Modal>
+    <div class="mx-auto">
+        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#password-reset-modal">
+            {{ translate('Reset password') }}
+        </button>
     </div>
+
+    <Modal id="password-reset-modal">
+        <template #header>
+            {{ translate('Reset password') }}
+        </template>
+        <PasswordResetForm :user="user" />
+    </Modal>
 </template>

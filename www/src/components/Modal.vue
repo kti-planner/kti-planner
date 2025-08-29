@@ -7,7 +7,6 @@ const { id = useId() } = defineProps<{
     centered?: boolean | undefined;
     scrollable?: boolean | undefined;
     staticBackdrop?: boolean | undefined;
-    footerClass?: string | undefined;
 }>();
 
 const emit = defineEmits<{
@@ -93,7 +92,7 @@ function shownHandler() {
                     <div class="modal-body">
                         <slot></slot>
                     </div>
-                    <div v-if="$slots.footer" class="modal-footer" :class="footerClass">
+                    <div v-if="$slots.footer" class="modal-footer">
                         <slot name="footer"></slot>
                     </div>
                 </div>

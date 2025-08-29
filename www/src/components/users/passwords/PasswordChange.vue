@@ -18,23 +18,16 @@ function translate(text: keyof (typeof translations)[LangId]): string {
 </script>
 
 <template>
-    <div>
-        <div class="d-flex justify-content-center mb-3">
-            <button
-                type="button"
-                class="btn btn-success"
-                data-bs-toggle="modal"
-                data-bs-target="#password-change-modal"
-            >
-                {{ translate('Change password') }}
-            </button>
-        </div>
-
-        <Modal id="password-change-modal">
-            <template #header>
-                {{ translate('Change password') }}
-            </template>
-            <PasswordChangeForm />
-        </Modal>
+    <div class="mx-auto">
+        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#password-change-modal">
+            {{ translate('Change password') }}
+        </button>
     </div>
+
+    <Modal id="password-change-modal">
+        <template #header>
+            {{ translate('Change password') }}
+        </template>
+        <PasswordChangeForm />
+    </Modal>
 </template>

@@ -40,12 +40,12 @@ const modalId = `edit-user-modal-${props.user.id}`;
         :title="translate('Edit user')"
     />
 
-    <Modal :id="modalId" footer-class="justify-content-center">
+    <Modal :id="modalId">
         <template #header> {{ translate('Edit user') }} {{ props.user.name }} </template>
         <UserForm :user />
         <template #footer>
-            <PasswordReset v-if="currentUser?.role === 'admin'" :user />
-            <PasswordChange v-if="currentUser?.id === user.id && currentUser?.role === 'teacher'" />
+            <PasswordChange v-if="currentUser?.id === user.id" />
+            <PasswordReset v-else-if="currentUser?.role === 'admin'" :user />
         </template>
     </Modal>
 </template>
