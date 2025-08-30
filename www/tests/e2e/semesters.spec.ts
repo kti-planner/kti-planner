@@ -150,10 +150,10 @@ test('Can edit semester and prevent duplicate semester', async ({ page }) => {
 });
 
 test.describe('API fetch tests', () => {
-    test('Logged-out user cannot create semester', async ({ page }) => {
+    test('Logged-out user cannot create new semester', async ({ page }) => {
         await page.goto('/semesters/');
 
-        const response = await page.request.patch('/semesters/api/semesters/', {
+        const response = await page.request.post('/semesters/api/semesters/', {
             data: {
                 year: 2069,
                 type: 'summer',

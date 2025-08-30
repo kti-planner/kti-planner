@@ -152,10 +152,10 @@ test('Can edit subject and prevent duplicate subject', async ({ page }) => {
 });
 
 test.describe('API fetch tests', () => {
-    test('Logged-out user cannot create subject', async ({ page }) => {
+    test('Logged-out user cannot create new subject', async ({ page }) => {
         await page.goto('/semesters/2024-summer/');
 
-        const response = await page.request.patch('/semesters/api/subjects/', {
+        const response = await page.request.post('/semesters/api/subjects/', {
             data: {
                 name: 'New Subject',
                 semesterId: '094f8324-7c58-4566-b5d7-e4fe8ed03a18',
