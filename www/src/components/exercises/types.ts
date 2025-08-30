@@ -1,4 +1,5 @@
 import z from 'zod';
+import type { ClassroomData } from '@components/classrooms/types';
 import type { UserData } from '@components/users/types';
 
 export interface ExerciseData {
@@ -6,7 +7,7 @@ export interface ExerciseData {
     name: string;
     subjectId: string;
     exerciseNumber: number;
-    classroomId: string;
+    classroom: ClassroomData;
     teacher: UserData;
 }
 
