@@ -368,6 +368,122 @@ test('User can change their password', async ({ page }) => {
 });
 
 test.describe('API fetch tests', () => {
+    test('Logged-out user cannot create new user', async ({ page }) => {
+        await page.goto('/users/');
+
+        const response = await page.request.post('/users/api/users/', {
+            data: {
+                name: 'New User',
+                email: 'newuser@example.com',
+                password: 'NewUserPassword',
+                role: 'teacher',
+            },
+        });
+
+        expect(response.status()).toBe(404);
+    });
+
+    test('Teacher cannot create new user', async ({ page }) => {
+        await page.goto('/users/');
+        await loginAsTeacher(page);
+
+        const response = await page.request.post('/users/api/users/', {
+            data: {
+                name: 'New User',
+                email: 'newuser@example.com',
+                password: 'NewUserPassword',
+                role: 'teacher',
+            },
+        });
+
+        expect(response.status()).toBe(404);
+    });
+
+    test('Admin can create new user', async ({ page }) => {
+        await page.goto('/users/');
+        await loginAsAdmin(page);
+
+        const response = await page.request.post('/users/api/users/', {
+            data: {
+                name: 'New User',
+                email: 'newuser@example.com',
+                password: 'NewUserPassword',
+                role: 'teacher',
+            },
+        });
+
+        expect(response.status()).toBe(201);
+    });
+
+    test('Logged-out user cannot edit user data', async ({ page }) => {
+        await page.goto('/profile/');
+
+        const response = await page.request.patch('/users/api/users/', {
+            data: {
+                id: 'feeaa186-3d69-4801-a580-88be10d53553',
+                name: 'New Name',
+                email: 'newemail@example.com',
+            },
+        });
+
+        expect(response.status()).toBe(404);
+    });
+
+    test('Teacher can edit their data except role', async ({ page }) => {
+        await page.goto('/profile/');
+        await loginAsTeacher(page);
+
+        const response = await page.request.patch('/users/api/users/', {
+            data: {
+                id: 'feeaa186-3d69-4801-a580-88be10d53553',
+                name: 'New Name',
+                email: 'newemail@example.com',
+            },
+        });
+
+        expect(response.status()).toBe(200);
+
+        const failResponse = await page.request.patch('/users/api/users/', {
+            data: {
+                id: 'feeaa186-3d69-4801-a580-88be10d53553',
+                role: 'admin',
+            },
+        });
+
+        expect(failResponse.status()).toBe(403);
+    });
+
+    test('Teacher cannot edit other user data', async ({ page }) => {
+        await page.goto('/profile/');
+        await loginAsTeacher(page);
+
+        const response = await page.request.patch('/users/api/users/', {
+            data: {
+                id: 'c393c524-453c-4b02-bfad-5114fe828200',
+                name: 'New Name',
+                email: 'newemail@example.com',
+            },
+        });
+
+        expect(response.status()).toBe(403);
+    });
+
+    test('Admin can edit other user data', async ({ page }) => {
+        await page.goto('/users/');
+        await loginAsAdmin(page);
+
+        const response = await page.request.patch('/users/api/users/', {
+            data: {
+                id: 'c393c524-453c-4b02-bfad-5114fe828200',
+                name: 'New Name',
+                email: 'newemail@example.com',
+                role: 'admin',
+            },
+        });
+
+        expect(response.status()).toBe(200);
+    });
+
     test('Logged-out user cannot change password', async ({ page }) => {
         await page.goto('/profile/');
 
