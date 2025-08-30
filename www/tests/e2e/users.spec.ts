@@ -367,66 +367,92 @@ test('User can change their password', async ({ page }) => {
     await expect(page.getByRole('navigation')).toContainText("You're logged in as Bogdan Nowak");
 });
 
-test('Logged-out user cannot change password', async ({ page, context }) => {
+test('Logged-out user cannot change password', async ({ page }) => {
     await page.goto('/profile/');
 
-    await context.route('/users/api/password-change/', async route => {
-        const response = await context.request.post(route.request().url(), {
-            data: {
+    const status = await page.evaluate(async () => {
+        const response = await fetch('/users/api/password-change/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
                 currentPassword: 'kti',
                 newPassword: 'NewPassword',
                 newPasswordRepeated: 'NewPassword',
-            },
+            }),
         });
 
-        expect(response.status()).toBe(404);
+        return response.status;
     });
+
+    expect(status).toBe(404);
 });
 
-test('Logged-in user can change password', async ({ page, context }) => {
+test('Logged-in user can change password', async ({ page }) => {
     await page.goto('/profile/');
     await loginAsTeacher(page);
 
-    await context.route('/users/api/password-change/', async route => {
-        const response = await context.request.post(route.request().url(), {
-            data: {
+    const status = await page.evaluate(async () => {
+        const response = await fetch('/users/api/password-change/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
                 currentPassword: 'kti',
                 newPassword: 'NewPassword',
                 newPasswordRepeated: 'NewPassword',
-            },
+            }),
         });
 
-        expect(response.status()).toBe(200);
+        return response.status;
     });
+
+    expect(status).toBe(200);
 });
 
-test('Logged-out user cannot reset user password', async ({ page, context }) => {
+test('Logged-out user cannot reset user password', async ({ page }) => {
     await page.goto('/profile/');
 
-    await context.route('/users/api/password-reset/', async route => {
-        const response = await context.request.post(route.request().url(), {
-            data: {
+    const status = await page.evaluate(async () => {
+        const response = await fetch('/users/api/password-reset/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
                 id: 'c393c524-453c-4b02-bfad-5114fe828200',
                 password: 'NewPassword',
-            },
+            }),
         });
 
-        expect(response.status()).toBe(404);
+        return response.status;
     });
+
+    expect(status).toBe(404);
 });
 
-test('Teacher cannot reset other user password', async ({ page, context }) => {
+test('Teacher cannot reset other user password', async ({ page }) => {
     await page.goto('/profile/');
     await loginAsTeacher(page);
 
-    const response = await page.request.post('/users/api/password-reset/', {
-        data: {
-            id: 'c393c524-453c-4b02-bfad-5114fe828200',
-            password: 'NewPassword',
-        },
+    const status = await page.evaluate(async () => {
+        const response = await fetch('/users/api/password-reset/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                id: 'c393c524-453c-4b02-bfad-5114fe828200',
+                password: 'NewPassword',
+            }),
+        });
+
+        return response.status;
     });
 
-    expect(response.status()).toBe(404);
+    expect(status).toBe(404);
 });
 
 test('Admin can reset other user password', async ({ page }) => {
@@ -435,12 +461,20 @@ test('Admin can reset other user password', async ({ page }) => {
 
     await expect(page).toHaveURL('/profile/');
 
-    const response = await page.request.post('/users/api/password-reset/', {
-        data: {
-            id: 'c393c524-453c-4b02-bfad-5114fe828200',
-            password: 'NewPassword',
-        },
+    const status = await page.evaluate(async () => {
+        const response = await fetch('/users/api/password-reset/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                id: 'c393c524-453c-4b02-bfad-5114fe828200',
+                password: 'NewPassword',
+            }),
+        });
+
+        return response.status;
     });
 
-    expect(response.status()).toBe(200);
+    expect(status).toBe(200);
 });
