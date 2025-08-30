@@ -63,3 +63,27 @@ test('Cannot generate classes starting at a holiday', async ({ page }) => {
     await page.getByRole('textbox', { name: 'First class date' }).fill('2025-04-18');
     await expect(page.getByText('The date you selected is a holiday')).toBeVisible();
 });
+
+test('Can plan classes with two weeks between each one', async ({ page }) => {
+    await page.goto('/semesters/2024-summer/lokalne-sieci-bezprzewodowe/');
+    await loginAsTeacher(page);
+
+    await page.getByRole('button', { name: 'Plan classes' }).click();
+    await page.getByRole('combobox', { name: 'Laboratory group' }).selectOption('inf1a');
+    await page.getByRole('textbox', { name: 'First class date' }).fill('2025-04-08');
+    await page.getByRole('textbox', { name: 'Class start time' }).fill('11:15');
+    await page.getByRole('textbox', { name: 'Class end time' }).fill('13:00');
+    await page.getByRole('spinbutton', { name: 'How many weeks are between classes?' }).fill('2');
+
+    await expect(page.getByText('2025-04-08 11:15 - 13:00')).toBeVisible();
+    await expect(page.getByText('2025-04-29 11:15 - 13:00')).toBeVisible();
+    await expect(page.getByText('2025-05-13 11:15 - 13:00')).toBeVisible();
+    await expect(page.getByText('2025-05-27 11:15 - 13:00')).toBeVisible();
+    await expect(page.getByText('2025-06-10 11:15 - 13:00')).toBeVisible();
+    await expect(page.getByText('2025-06-24 11:15 - 13:00')).toBeVisible();
+
+    await page.getByRole('button', { name: 'Generate classes' }).click();
+
+    await expect(page.getByText('23 – 29 Jun 2025')).toBeVisible();
+    await expect(page.getByText('11:15 - 13:00')).toBeVisible();
+});
