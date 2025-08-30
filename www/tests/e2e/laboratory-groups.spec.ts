@@ -1,5 +1,5 @@
 import { expect } from 'playwright/test';
-import { login, test } from './fixtures';
+import { loginAsAdmin, test } from './fixtures';
 
 test('Can view and select groups', async ({ page }) => {
     await page.goto('/semesters/2024-summer/lokalne-sieci-bezprzewodowe/');
@@ -27,7 +27,7 @@ test('Can view and select groups', async ({ page }) => {
 
 test('Can add groups and prevent duplicates', async ({ page }) => {
     await page.goto('/semesters/2024-summer/lokalne-sieci-bezprzewodowe/');
-    await login(page);
+    await loginAsAdmin(page);
 
     await page.getByRole('button', { name: 'Edit groups' }).click();
     await page.getByRole('button', { name: 'Add new laboratory group' }).click();
@@ -44,7 +44,7 @@ test('Can add groups and prevent duplicates', async ({ page }) => {
 
 test('Can edit groups and prevent duplicates', async ({ page }) => {
     await page.goto('/semesters/2024-summer/lokalne-sieci-bezprzewodowe/');
-    await login(page);
+    await loginAsAdmin(page);
 
     await page.getByRole('button', { name: 'Edit groups' }).click();
     await page.locator('.list-group-item', { hasText: 'inf1a' }).hover();

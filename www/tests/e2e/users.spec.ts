@@ -1,5 +1,5 @@
 import { expect } from 'playwright/test';
-import { login, loginAsTeacher, test } from './fixtures';
+import { loginAsAdmin, loginAsTeacher, test } from './fixtures';
 
 test('Cannot access users page when logged-out', async ({ page }) => {
     await page.goto('/users/');
@@ -8,7 +8,7 @@ test('Cannot access users page when logged-out', async ({ page }) => {
 
 test('Can access users page when logged-in', async ({ page }) => {
     await page.goto('/users/');
-    await login(page);
+    await loginAsAdmin(page);
 
     await expect(page).toHaveURL('/users/');
     await expect(page.getByRole('navigation')).toContainText('Users');
@@ -27,14 +27,14 @@ test('Add new user button is hidden for non-admin user', async ({ page }) => {
 
 test('Add new user button is visible for admin user', async ({ page }) => {
     await page.goto('/users/');
-    await login(page);
+    await loginAsAdmin(page);
 
     await expect(page.getByRole('button', { name: 'Add new user' })).toHaveCount(1);
 });
 
 test('Can add new user and prevent duplicate user creation', async ({ page }) => {
     await page.goto('/users/');
-    await login(page);
+    await loginAsAdmin(page);
 
     await page.getByRole('button', { name: 'Add new user' }).click();
 
@@ -79,7 +79,7 @@ test('Can add new user and prevent duplicate user creation', async ({ page }) =>
 
 test('Can generate random password when adding new user', async ({ page }) => {
     await page.goto('/users/');
-    await login(page);
+    await loginAsAdmin(page);
 
     await page.getByRole('button', { name: 'Add new user' }).click();
 
@@ -108,7 +108,7 @@ test('Cannot access user profile when logged-out', async ({ page }) => {
 
 test('Can access user profile when logged-in', async ({ page }) => {
     await page.goto('/users/c393c524-453c-4b02-bfad-5114fe828200/');
-    await login(page);
+    await loginAsAdmin(page);
 
     await expect(page).toHaveURL('/users/c393c524-453c-4b02-bfad-5114fe828200/');
     await expect(page.getByRole('navigation')).toContainText('Jan Kowalski');
@@ -140,7 +140,7 @@ test('Edit user button is hidden for non-admin user whose profile is not theirs'
 test('Edit user button is visible for admin user and user whose profile is theirs', async ({ page }) => {
     // As admin
     await page.goto('/users/feeaa186-3d69-4801-a580-88be10d53553/');
-    await login(page);
+    await loginAsAdmin(page);
 
     await expect(page.getByRole('navigation')).toContainText('Bogdan Nowak');
     await expect(page.getByRole('button', { name: 'Edit user' })).toHaveCount(1);
@@ -165,7 +165,7 @@ test('Edit user role is hidden for non-admin user', async ({ page }) => {
 
 test('Edit user role is visible for admin user', async ({ page }) => {
     await page.goto('/users/c393c524-453c-4b02-bfad-5114fe828200/');
-    await login(page);
+    await loginAsAdmin(page);
 
     await page.getByRole('button', { name: 'Edit user' }).click();
 
@@ -174,7 +174,7 @@ test('Edit user role is visible for admin user', async ({ page }) => {
 
 test('Can edit user data and prevent duplicate user as admin', async ({ page }) => {
     await page.goto('/users/feeaa186-3d69-4801-a580-88be10d53553/');
-    await login(page);
+    await loginAsAdmin(page);
 
     await expect(page.getByRole('navigation')).toContainText('Bogdan Nowak');
 
@@ -246,4 +246,195 @@ test('Can edit user data and prevent duplicate user as teacher', async ({ page }
     await expect(page.locator('body')).toContainText('Name: BogdanX NowakX');
     await expect(page.locator('body')).toContainText('Email: bogdanx@nowakx.pl');
     await expect(page.locator('body')).toContainText('Role: Teacher');
+});
+
+test('Password reset button is hidden for non-admin user', async ({ page }) => {
+    await page.goto('/profile/');
+    await loginAsTeacher(page);
+
+    await expect(page.getByRole('navigation')).toContainText('Bogdan Nowak');
+
+    await page.getByRole('button', { name: 'Edit user' }).click();
+
+    await expect(page.getByRole('button', { name: 'Password reset' })).not.toBeVisible();
+});
+
+test('Password reset button is visible for admin user', async ({ page }) => {
+    await page.goto('/users/feeaa186-3d69-4801-a580-88be10d53553/');
+    await loginAsAdmin(page);
+
+    await expect(page.getByRole('navigation')).toContainText('Bogdan Nowak');
+
+    await page.getByRole('button', { name: 'Edit user' }).click();
+
+    await expect(page.getByRole('button', { name: 'Reset password' })).toBeVisible();
+});
+
+test('Can generate random password when reseting user password', async ({ page }) => {
+    await page.goto('/users/feeaa186-3d69-4801-a580-88be10d53553/');
+    await loginAsAdmin(page);
+
+    await expect(page.getByRole('navigation')).toContainText('Bogdan Nowak');
+
+    await page.getByRole('button', { name: 'Edit user' }).click();
+
+    await page.getByRole('button', { name: 'Reset password' }).click();
+
+    await page.getByRole('button', { name: 'Generate random password' }).click();
+
+    await expect(page.getByRole('textbox', { name: 'New password', exact: true })).toHaveValue(/^.{16}$/);
+    const password = await page.getByRole('textbox', { name: 'New password', exact: true }).inputValue();
+
+    await page.getByRole('button', { name: 'Generate random password' }).click();
+
+    await expect(page.getByRole('textbox', { name: 'New password', exact: true })).toHaveValue(/^.{16}$/);
+    const secondPassword = await page.getByRole('textbox', { name: 'New password', exact: true }).inputValue();
+
+    expect(password).not.toBe(secondPassword);
+});
+
+test('Can reset user password', async ({ page }) => {
+    await page.goto('/users/feeaa186-3d69-4801-a580-88be10d53553/');
+    await loginAsAdmin(page);
+
+    await expect(page.getByRole('navigation')).toContainText('Bogdan Nowak');
+
+    await page.getByRole('button', { name: 'Edit user' }).click();
+
+    await page.getByRole('button', { name: 'Reset password' }).click();
+
+    await page.getByRole('textbox', { name: 'Password' }).fill('NewPassword');
+
+    await page.getByRole('button', { name: 'Save' }).click();
+
+    // Can login with new password
+    await page.getByRole('button', { name: 'Sign out' }).click();
+    await page.getByRole('button', { name: 'Sign in' }).click();
+    await page.getByRole('textbox', { name: 'Email' }).fill('bogdan@nowak.pl');
+    await page.getByRole('textbox', { name: 'Password' }).fill('NewPassword');
+    await page.locator('form').getByRole('button', { name: 'Sign in' }).click();
+    await expect(page.getByRole('navigation')).toContainText("You're logged in as Bogdan Nowak");
+});
+
+test('Change password button is visible for user whose profile is theirs', async ({ page }) => {
+    // As teacher
+    await page.goto('/profile/');
+    await loginAsTeacher(page);
+
+    await expect(page.getByRole('navigation')).toContainText('Bogdan Nowak');
+
+    await page.getByRole('button', { name: 'Edit user' }).click();
+
+    await expect(page.getByRole('button', { name: 'Change password' })).toBeVisible();
+
+    await page.getByRole('button', { name: 'Close' }).click();
+
+    // As Admin
+    await page.getByRole('button', { name: 'Sign out' }).click();
+
+    await page.goto('/profile/');
+    await loginAsAdmin(page);
+
+    await expect(page.getByRole('navigation')).toContainText('Admin');
+
+    await page.getByRole('button', { name: 'Edit user' }).click();
+
+    await expect(page.getByRole('button', { name: 'Change password' })).toBeVisible();
+});
+
+test('User can change their password', async ({ page }) => {
+    await page.goto('/profile/');
+    await loginAsTeacher(page);
+
+    await expect(page.getByRole('navigation')).toContainText('Bogdan Nowak');
+
+    await page.getByRole('button', { name: 'Edit user' }).click();
+
+    await page.getByRole('button', { name: 'Change password' }).click();
+
+    await page.getByRole('textbox', { name: 'Current password' }).fill('kti');
+    await page.getByRole('textbox', { name: 'New password', exact: true }).fill('NewPassword');
+    await page.getByRole('textbox', { name: 'Repeat new password', exact: true }).fill('NewPassword');
+
+    await page.getByRole('button', { name: 'Save' }).click();
+
+    // Can login with new password
+    await page.getByRole('button', { name: 'Sign out' }).click();
+    await page.getByRole('button', { name: 'Sign in' }).click();
+    await page.getByRole('textbox', { name: 'Email' }).fill('bogdan@nowak.pl');
+    await page.getByRole('textbox', { name: 'Password' }).fill('NewPassword');
+    await page.locator('form').getByRole('button', { name: 'Sign in' }).click();
+    await expect(page.getByRole('navigation')).toContainText("You're logged in as Bogdan Nowak");
+});
+
+test.describe('API fetch tests', () => {
+    test('Logged-out user cannot change password', async ({ page }) => {
+        await page.goto('/profile/');
+
+        const response = await page.request.patch('/users/api/password-change/', {
+            data: {
+                currentPassword: 'kti',
+                newPassword: 'NewPassword',
+                newPasswordRepeated: 'NewPassword',
+            },
+        });
+
+        expect(response.status()).toBe(404);
+    });
+
+    test('Logged-in user can change password', async ({ page }) => {
+        await page.goto('/profile/');
+        await loginAsTeacher(page);
+
+        const response = await page.request.patch('/users/api/password-change/', {
+            data: {
+                currentPassword: 'kti',
+                newPassword: 'NewPassword',
+                newPasswordRepeated: 'NewPassword',
+            },
+        });
+
+        expect(response.status()).toBe(200);
+    });
+
+    test('Logged-out user cannot reset user password', async ({ page }) => {
+        await page.goto('/profile/');
+
+        const response = await page.request.patch('/users/api/password-reset/', {
+            data: {
+                id: 'c393c524-453c-4b02-bfad-5114fe828200',
+                password: 'NewPassword',
+            },
+        });
+
+        expect(response.status()).toBe(404);
+    });
+
+    test('Teacher cannot reset other user password', async ({ page }) => {
+        await page.goto('/profile/');
+        await loginAsTeacher(page);
+
+        const response = await page.request.patch('/users/api/password-reset/', {
+            data: {
+                id: 'c393c524-453c-4b02-bfad-5114fe828200',
+                password: 'NewPassword',
+            },
+        });
+
+        expect(response.status()).toBe(404);
+    });
+
+    test('Admin can reset other user password', async ({ page }) => {
+        await page.goto('/profile/');
+        await loginAsAdmin(page);
+
+        const response = await page.request.patch('/users/api/password-reset/', {
+            data: {
+                id: 'c393c524-453c-4b02-bfad-5114fe828200',
+                password: 'NewPassword',
+            },
+        });
+
+        expect(response.status()).toBe(200);
+    });
 });
