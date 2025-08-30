@@ -15,6 +15,7 @@ const translations = {
         "You're logged in as": "You're logged in as",
         'Profile': 'Profile',
         'Users': 'Users',
+        'Classrooms': 'Classrooms',
     },
     'pl': {
         'Sign in': 'Zaloguj się',
@@ -22,6 +23,7 @@ const translations = {
         "You're logged in as": 'Jesteś zalogowany jako',
         'Profile': 'Profil',
         'Users': 'Użytkownicy',
+        'Classrooms': 'Sale',
     },
 };
 
@@ -37,6 +39,11 @@ const languageLabels: Record<LangId, string> = {
 };
 
 const loginParams = makeLoginNextParam(Astro.url);
+
+const initials = user?.name
+    .split(' ')
+    .map(word => word.charAt(0).toUpperCase())
+    .join('');
 ---
 
 <nav class="navbar navbar-expand-md bg-body-tertiary border-bottom border-secondary-subtle">
@@ -87,12 +94,33 @@ const loginParams = makeLoginNextParam(Astro.url);
                 ) : (
                     <>
                         <div class="d-none d-sm-block">{`${translate("You're logged in as")} ${user.name}`}</div>
-                        <a href={`/profile/`} role="button" class="btn btn-success btn-sm text-nowrap">
-                            {translate('Profile')}
-                        </a>
-                        <a href={`/users/`} role="button" class="btn btn-success btn-sm text-nowrap">
-                            {translate('Users')}
-                        </a>
+                        <div class="dropdown">
+                            <div
+                                class="d-flex align-items-center justify-content-center gap-1"
+                                data-bs-toggle="dropdown"
+                                aria-expanded="false"
+                            >
+                                <span class="initials btn btn-light border rounded-circle">{initials}</span>
+                                <span class="dropdown-toggle" />
+                            </div>
+                            <ul class="dropdown-menu dropdown-menu-end bg-body-tertiary">
+                                <li>
+                                    <a class="dropdown-item" href="/profile/">
+                                        {translate('Profile')}
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="/users/">
+                                        {translate('Users')}
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="/classrooms/">
+                                        {translate('Classrooms')}
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
                         <form action={`/api/logout/${loginParams}`} method="post">
                             <button type="submit" class="btn btn-success btn-sm text-nowrap">
                                 {translate('Sign out')}
@@ -115,5 +143,13 @@ const loginParams = makeLoginNextParam(Astro.url);
     nav {
         margin-inline: calc((100vw - 100%) / -2);
         padding-inline: calc((100vw - 100%) / 2);
+    }
+
+    .initials {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 </style>
