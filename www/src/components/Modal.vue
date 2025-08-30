@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { onBeforeUnmount, ref, useId } from 'vue';
+import { computed, onBeforeUnmount, ref, useId } from 'vue';
 
-const { id = useId() } = defineProps<{
+const { id = useId(), contentRendering = 'when-open' } = defineProps<{
     id?: string;
+    contentRendering?: 'always' | 'when-open' | undefined;
     size?: 'sm' | null | 'lg' | 'xl' | undefined;
     centered?: boolean | undefined;
     scrollable?: boolean | undefined;
@@ -41,7 +42,24 @@ onBeforeUnmount(() => {
     }
 });
 
-function shownHandler() {
+const contentVisible = ref<boolean>(false);
+const renderContent = computed(() => contentVisible.value || contentRendering === 'always');
+
+function onHide() {
+    emit('hide');
+}
+
+function onHidden() {
+    emit('hidden');
+    contentVisible.value = false;
+}
+
+function onShow() {
+    contentVisible.value = true;
+    emit('show');
+}
+
+function onShown() {
     emit('shown');
 
     if (!el.value) {
@@ -66,10 +84,10 @@ function shownHandler() {
             :aria-labelledby="`${id}-label`"
             aria-hidden="true"
             v-on="{
-                'hide.bs.modal': () => emit('hide'),
-                'hidden.bs.modal': () => emit('hidden'),
-                'show.bs.modal': () => emit('show'),
-                'shown.bs.modal': shownHandler,
+                'hide.bs.modal': onHide,
+                'hidden.bs.modal': onHidden,
+                'show.bs.modal': onShow,
+                'shown.bs.modal': onShown,
             }"
         >
             <div
@@ -85,15 +103,15 @@ function shownHandler() {
                 <div class="modal-content">
                     <div class="modal-header">
                         <h1 :id="`${id}-label`" class="modal-title fs-5">
-                            <slot name="header"></slot>
+                            <slot v-if="renderContent" name="header"></slot>
                         </h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <slot></slot>
+                        <slot v-if="renderContent"></slot>
                     </div>
                     <div v-if="$slots.footer" class="modal-footer">
-                        <slot name="footer"></slot>
+                        <slot v-if="renderContent" name="footer"></slot>
                     </div>
                 </div>
             </div>
