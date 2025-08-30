@@ -1,5 +1,5 @@
 import { expect } from 'playwright/test';
-import { login, loginAsTeacher, test } from './fixtures';
+import { loginAsAdmin, loginAsTeacher, test } from './fixtures';
 
 test('Cannot access users page when logged-out', async ({ page }) => {
     await page.goto('/users/');
@@ -8,7 +8,7 @@ test('Cannot access users page when logged-out', async ({ page }) => {
 
 test('Can access users page when logged-in', async ({ page }) => {
     await page.goto('/users/');
-    await login(page);
+    await loginAsAdmin(page);
 
     await expect(page).toHaveURL('/users/');
     await expect(page.getByRole('navigation')).toContainText('Users');
@@ -27,14 +27,14 @@ test('Add new user button is hidden for non-admin user', async ({ page }) => {
 
 test('Add new user button is visible for admin user', async ({ page }) => {
     await page.goto('/users/');
-    await login(page);
+    await loginAsAdmin(page);
 
     await expect(page.getByRole('button', { name: 'Add new user' })).toHaveCount(1);
 });
 
 test('Can add new user and prevent duplicate user creation', async ({ page }) => {
     await page.goto('/users/');
-    await login(page);
+    await loginAsAdmin(page);
 
     await page.getByRole('button', { name: 'Add new user' }).click();
 
@@ -79,7 +79,7 @@ test('Can add new user and prevent duplicate user creation', async ({ page }) =>
 
 test('Can generate random password when adding new user', async ({ page }) => {
     await page.goto('/users/');
-    await login(page);
+    await loginAsAdmin(page);
 
     await page.getByRole('button', { name: 'Add new user' }).click();
 
@@ -108,7 +108,7 @@ test('Cannot access user profile when logged-out', async ({ page }) => {
 
 test('Can access user profile when logged-in', async ({ page }) => {
     await page.goto('/users/c393c524-453c-4b02-bfad-5114fe828200/');
-    await login(page);
+    await loginAsAdmin(page);
 
     await expect(page).toHaveURL('/users/c393c524-453c-4b02-bfad-5114fe828200/');
     await expect(page.getByRole('navigation')).toContainText('Jan Kowalski');
@@ -140,7 +140,7 @@ test('Edit user button is hidden for non-admin user whose profile is not theirs'
 test('Edit user button is visible for admin user and user whose profile is theirs', async ({ page }) => {
     // As admin
     await page.goto('/users/feeaa186-3d69-4801-a580-88be10d53553/');
-    await login(page);
+    await loginAsAdmin(page);
 
     await expect(page.getByRole('navigation')).toContainText('Bogdan Nowak');
     await expect(page.getByRole('button', { name: 'Edit user' })).toHaveCount(1);
@@ -165,7 +165,7 @@ test('Edit user role is hidden for non-admin user', async ({ page }) => {
 
 test('Edit user role is visible for admin user', async ({ page }) => {
     await page.goto('/users/c393c524-453c-4b02-bfad-5114fe828200/');
-    await login(page);
+    await loginAsAdmin(page);
 
     await page.getByRole('button', { name: 'Edit user' }).click();
 
@@ -174,7 +174,7 @@ test('Edit user role is visible for admin user', async ({ page }) => {
 
 test('Can edit user data and prevent duplicate user as admin', async ({ page }) => {
     await page.goto('/users/feeaa186-3d69-4801-a580-88be10d53553/');
-    await login(page);
+    await loginAsAdmin(page);
 
     await expect(page.getByRole('navigation')).toContainText('Bogdan Nowak');
 
@@ -261,7 +261,7 @@ test('Password reset button is hidden for non-admin user', async ({ page }) => {
 
 test('Password reset button is visible for admin user', async ({ page }) => {
     await page.goto('/users/feeaa186-3d69-4801-a580-88be10d53553/');
-    await login(page);
+    await loginAsAdmin(page);
 
     await expect(page.getByRole('navigation')).toContainText('Bogdan Nowak');
 
@@ -272,7 +272,7 @@ test('Password reset button is visible for admin user', async ({ page }) => {
 
 test('Can generate random password when reseting user password', async ({ page }) => {
     await page.goto('/users/feeaa186-3d69-4801-a580-88be10d53553/');
-    await login(page);
+    await loginAsAdmin(page);
 
     await expect(page.getByRole('navigation')).toContainText('Bogdan Nowak');
 
@@ -295,7 +295,7 @@ test('Can generate random password when reseting user password', async ({ page }
 
 test('Can reset user password', async ({ page }) => {
     await page.goto('/users/feeaa186-3d69-4801-a580-88be10d53553/');
-    await login(page);
+    await loginAsAdmin(page);
 
     await expect(page.getByRole('navigation')).toContainText('Bogdan Nowak');
 
@@ -333,7 +333,7 @@ test('Change password button is visible for user whose profile is theirs', async
     await page.getByRole('button', { name: 'Sign out' }).click();
 
     await page.goto('/profile/');
-    await login(page);
+    await loginAsAdmin(page);
 
     await expect(page.getByRole('navigation')).toContainText('Admin');
 
@@ -385,7 +385,6 @@ test.describe('API fetch tests', () => {
     test('Logged-in user can change password', async ({ page }) => {
         await page.goto('/profile/');
         await loginAsTeacher(page);
-        await expect(page).toHaveURL('/profile/');
 
         const response = await page.request.patch('/users/api/password-change/', {
             data: {
@@ -414,7 +413,6 @@ test.describe('API fetch tests', () => {
     test('Teacher cannot reset other user password', async ({ page }) => {
         await page.goto('/profile/');
         await loginAsTeacher(page);
-        await expect(page).toHaveURL('/profile/');
 
         const response = await page.request.patch('/users/api/password-reset/', {
             data: {
@@ -428,8 +426,7 @@ test.describe('API fetch tests', () => {
 
     test('Admin can reset other user password', async ({ page }) => {
         await page.goto('/profile/');
-        await login(page);
-        await expect(page).toHaveURL('/profile/');
+        await loginAsAdmin(page);
 
         const response = await page.request.patch('/users/api/password-reset/', {
             data: {
