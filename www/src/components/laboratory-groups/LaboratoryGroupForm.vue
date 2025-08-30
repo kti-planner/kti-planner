@@ -69,13 +69,9 @@ const nameId = useId();
         </div>
 
         <div class="text-center">
-            <<<<<<< HEAD
-            <button type="submit" class="btn btn-success">{{ translate(group ? 'Save' : 'Add') }}</button>
-            =======
             <button type="submit" class="btn btn-success">
                 {{ translate(group ? 'Save' : 'Add') }}
             </button>
-            >>>>>>> main
         </div>
 
         <div v-if="submitFailed" class="text-center text-danger">
