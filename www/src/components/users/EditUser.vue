@@ -40,7 +40,7 @@ const modalId = `edit-user-modal-${props.user.id}`;
         :title="translate('Edit user')"
     />
 
-    <Modal :id="modalId">
+    <Modal :id="modalId" content-rendering="always">
         <template #header> {{ translate('Edit user') }} {{ props.user.name }} </template>
         <UserForm :user />
         <template #footer>
