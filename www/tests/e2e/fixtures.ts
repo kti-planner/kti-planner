@@ -7,22 +7,15 @@ declare global {
     }
 }
 
-type Options = {
-    failOnConsoleError: boolean;
-};
-
-export const test = base.extend<Options>({
-    failOnConsoleError: [true, { option: true }],
-    page: async ({ page, failOnConsoleError }, use) => {
+export const test = base.extend({
+    page: async ({ page }, use) => {
         // Fail tests on exceptions or console errors
         page.on('pageerror', err => {
-            if (failOnConsoleError) {
-                throw new Error(`Unhandled page exception: ${err.stack ?? err}`);
-            }
+            throw new Error(`Unhandled page exception: ${err.stack ?? err}`);
         });
 
         page.on('console', msg => {
-            if (msg.type() === 'error' && failOnConsoleError) {
+            if (msg.type() === 'error') {
                 throw new Error(`Console error: ${msg.text()} ${JSON.stringify(msg.location())}`);
             }
         });
