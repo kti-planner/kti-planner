@@ -150,3 +150,63 @@ test('Can edit subject and prevent duplicate subject', async ({ page }) => {
     await expect(page.locator('.breadcrumb')).toContainText('Sieci Ethernet i IP');
     await expect(page.locator('body')).toContainText('Sieci Ethernet i IP');
 });
+
+test.describe('API fetch tests', () => {
+    test('Logged-out user cannot create subject', async ({ page }) => {
+        await page.goto('/semesters/2024-summer/');
+
+        const response = await page.request.patch('/semesters/api/subjects/', {
+            data: {
+                name: 'New Subject',
+                semesterId: '094f8324-7c58-4566-b5d7-e4fe8ed03a18',
+                teacherIds: ['c393c524-453c-4b02-bfad-5114fe828200'],
+            },
+        });
+
+        expect(response.status()).toBe(404);
+    });
+
+    test('Logged-in user can create new subject', async ({ page }) => {
+        await page.goto('/semesters/2024-summer/');
+        await loginAsAdmin(page);
+
+        const response = await page.request.post('/semesters/api/subjects/', {
+            data: {
+                name: 'New Subject',
+                semesterId: '094f8324-7c58-4566-b5d7-e4fe8ed03a18',
+                teacherIds: ['c393c524-453c-4b02-bfad-5114fe828200'],
+            },
+        });
+
+        expect(response.status()).toBe(201);
+    });
+
+    test('Logged-out user cannot edit subject', async ({ page }) => {
+        await page.goto('/semesters/2024-summer/');
+
+        const response = await page.request.patch('/semesters/api/subjects/', {
+            data: {
+                id: '3f58b671-5b38-43f8-bf0f-49d93048c52e',
+                name: 'Updated Subject',
+                teacherIds: ['feeaa186-3d69-4801-a580-88be10d53553'],
+            },
+        });
+
+        expect(response.status()).toBe(404);
+    });
+
+    test('Logged-in user can edit subject', async ({ page }) => {
+        await page.goto('/semesters/2024-summer/');
+        await loginAsAdmin(page);
+
+        const response = await page.request.patch('/semesters/api/subjects/', {
+            data: {
+                id: '3f58b671-5b38-43f8-bf0f-49d93048c52e',
+                name: 'Updated Subject',
+                teacherIds: ['feeaa186-3d69-4801-a580-88be10d53553'],
+            },
+        });
+
+        expect(response.status()).toBe(200);
+    });
+});
