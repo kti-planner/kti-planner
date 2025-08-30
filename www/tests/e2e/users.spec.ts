@@ -366,3 +366,81 @@ test('User can change their password', async ({ page }) => {
     await page.locator('form').getByRole('button', { name: 'Sign in' }).click();
     await expect(page.getByRole('navigation')).toContainText("You're logged in as Bogdan Nowak");
 });
+
+test('Logged-out user cannot change password', async ({ page, context }) => {
+    await page.goto('/profile/');
+
+    await context.route('/users/api/password-change/', async route => {
+        const response = await context.request.post(route.request().url(), {
+            data: {
+                currentPassword: 'kti',
+                newPassword: 'NewPassword',
+                newPasswordRepeated: 'NewPassword',
+            },
+        });
+
+        expect(response.status()).toBe(404);
+    });
+});
+
+test('Logged-in user can change password', async ({ page, context }) => {
+    await page.goto('/profile/');
+    await loginAsTeacher(page);
+
+    await context.route('/users/api/password-change/', async route => {
+        const response = await context.request.post(route.request().url(), {
+            data: {
+                currentPassword: 'kti',
+                newPassword: 'NewPassword',
+                newPasswordRepeated: 'NewPassword',
+            },
+        });
+
+        expect(response.status()).toBe(200);
+    });
+});
+
+test('Logged-out user cannot reset user password', async ({ page, context }) => {
+    await page.goto('/profile/');
+
+    await context.route('/users/api/password-reset/', async route => {
+        const response = await context.request.post(route.request().url(), {
+            data: {
+                id: 'c393c524-453c-4b02-bfad-5114fe828200',
+                password: 'NewPassword',
+            },
+        });
+
+        expect(response.status()).toBe(404);
+    });
+});
+
+test('Teacher cannot reset other user password', async ({ page, context }) => {
+    await page.goto('/profile/');
+    await loginAsTeacher(page);
+
+    const response = await page.request.post('/users/api/password-reset/', {
+        data: {
+            id: 'c393c524-453c-4b02-bfad-5114fe828200',
+            password: 'NewPassword',
+        },
+    });
+
+    expect(response.status()).toBe(404);
+});
+
+test('Admin can reset other user password', async ({ page }) => {
+    await page.goto('/profile/');
+    await login(page);
+
+    await expect(page).toHaveURL('/profile/');
+
+    const response = await page.request.post('/users/api/password-reset/', {
+        data: {
+            id: 'c393c524-453c-4b02-bfad-5114fe828200',
+            password: 'NewPassword',
+        },
+    });
+
+    expect(response.status()).toBe(200);
+});
