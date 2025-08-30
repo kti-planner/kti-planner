@@ -2,12 +2,13 @@
 import { computed, ref } from 'vue';
 import type { UserRole } from '@backend/user';
 import { langId } from '@components/frontend/lang';
+import { currentUser } from '@components/frontend/user';
 import { apiPatch, apiPost } from '@components/api';
 import type { UserCreateApiData, UserData, UserEditApiData } from '@components/users/types';
 import { generatePassword } from '@components/utils';
+import PasswordInputField from '@components/users/passwords/PasswordInputField.vue';
 
 const props = defineProps<{
-    isAdmin: boolean;
     user?: UserData;
 }>();
 
@@ -39,7 +40,7 @@ async function submit() {
                   id: props.user.id,
                   name: name.value,
                   email: email.value,
-                  role: props.isAdmin ? role.value : undefined,
+                  role: currentUser?.role === 'admin' ? role.value : undefined,
               } satisfies UserEditApiData);
 
     if (success === undefined) {
@@ -117,26 +118,19 @@ function translate(text: keyof (typeof translations)[LangId]): string {
 
         <div v-if="!isEditing">
             <label for="password" class="form-label">{{ translate('Password') }}</label>
-            <div class="input-group">
-                <input
-                    id="password"
-                    v-model="password"
-                    :type="passwordVisible ? 'text' : 'password'"
-                    class="form-control"
-                    :placeholder="translate('Password')"
-                    autocomplete="new-password"
-                    required
-                />
-                <button type="button" class="btn border" @click="passwordVisible = !passwordVisible">
-                    <i class="bi" :class="`bi-${passwordVisible ? 'eye-slash' : 'eye'}`"></i>
-                </button>
-            </div>
+            <PasswordInputField
+                id="password"
+                v-model="password"
+                v-model:visible="passwordVisible"
+                :placeholder="translate('Password')"
+                autocomplete="new-password"
+            />
             <button type="button" class="btn btn-success btn-sm my-2" @click="regeneratePassword()">
                 {{ translate('Generate random password') }}
             </button>
         </div>
 
-        <div v-if="isAdmin">
+        <div v-if="currentUser?.role === 'admin'">
             <label for="role" class="form-label">{{ translate('Role') }}</label>
             <select id="role" v-model="role" class="form-select" required>
                 <option value="teacher">{{ translate('Teacher') }}</option>
@@ -152,5 +146,4 @@ function translate(text: keyof (typeof translations)[LangId]): string {
             {{ translate(isEditing ? 'User with that email already exists.' : 'Adding new user failed.') }}
         </div>
     </form>
-    <br />
 </template>

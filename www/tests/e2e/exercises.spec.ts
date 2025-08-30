@@ -1,5 +1,5 @@
 import { expect } from 'playwright/test';
-import { login, test } from './fixtures';
+import { loginAsAdmin, test } from './fixtures';
 
 test('Can access exercises list', async ({ page }) => {
     await page.goto('/semesters/2024-summer/lokalne-sieci-bezprzewodowe/');
@@ -31,7 +31,7 @@ test('Add new exercise button is hidden for logged-out user', async ({ page }) =
 
 test('Add new exercise button is visible for logged-in user', async ({ page }) => {
     await page.goto('/semesters/');
-    await login(page);
+    await loginAsAdmin(page);
 
     await page.getByText('Summer semester 2024/2025').click();
     await page.waitForURL('/semesters/2024-summer/');
@@ -46,7 +46,7 @@ test('Add new exercise button is visible for logged-in user', async ({ page }) =
 
 test('Can add new exercise and prevent duplicate exercise creation', async ({ page }) => {
     await page.goto('/semesters/2024-winter/');
-    await login(page);
+    await loginAsAdmin(page);
 
     await expect(page.locator('.breadcrumb')).toContainText('Winter semester 2024/2025');
 
@@ -115,7 +115,7 @@ test('Edit exercise button is hidden for logged-out user', async ({ page }) => {
 
 test('Edit exercise button is visible for logged-in user', async ({ page }) => {
     await page.goto('/semesters/');
-    await login(page);
+    await loginAsAdmin(page);
 
     await page.getByText('Summer semester 2024/2025').click();
     await page.waitForURL('/semesters/2024-summer/');
@@ -135,7 +135,7 @@ test('Edit exercise button is visible for logged-in user', async ({ page }) => {
 test('Can edit exercise and prevent duplicate exercise', async ({ page }) => {
     // Can edit exercise with data that do not match already existing exercise
     await page.goto('/semesters/');
-    await login(page);
+    await loginAsAdmin(page);
 
     await page.getByText('Winter semester 2024/2025').click();
     await expect(page.locator('.breadcrumb')).toContainText('Winter semester 2024/2025');

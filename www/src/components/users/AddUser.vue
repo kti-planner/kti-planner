@@ -29,7 +29,7 @@ function translate(text: keyof (typeof translations)[LangId]): string {
             <template #header>
                 {{ translate('Add new user') }}
             </template>
-            <UserForm :is-admin="true" />
+            <UserForm />
         </Modal>
     </div>
 </template>

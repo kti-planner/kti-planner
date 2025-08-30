@@ -42,7 +42,7 @@ const modalId = useId();
         :title="translate('Edit groups')"
     />
 
-    <Modal ref="modal" :id="modalId">
+    <Modal ref="modal" :id="modalId" content-rendering="always">
         <template #header>{{ translate('Laboratory groups') }}</template>
         <div class="list-group mx-auto mb-3">
             <div
