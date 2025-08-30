@@ -247,3 +247,122 @@ test('Can edit user data and prevent duplicate user as teacher', async ({ page }
     await expect(page.locator('body')).toContainText('Email: bogdanx@nowakx.pl');
     await expect(page.locator('body')).toContainText('Role: Teacher');
 });
+
+test('Password reset button is hidden for non-admin user', async ({ page }) => {
+    await page.goto('/profile/');
+    await loginAsTeacher(page);
+
+    await expect(page.getByRole('navigation')).toContainText('Bogdan Nowak');
+
+    await page.getByRole('button', { name: 'Edit user' }).click();
+
+    await expect(page.getByRole('button', { name: 'Password reset' })).not.toBeVisible();
+});
+
+test('Password reset button is visible for admin user', async ({ page }) => {
+    await page.goto('/users/feeaa186-3d69-4801-a580-88be10d53553/');
+    await login(page);
+
+    await expect(page.getByRole('navigation')).toContainText('Bogdan Nowak');
+
+    await page.getByRole('button', { name: 'Edit user' }).click();
+
+    await expect(page.getByRole('button', { name: 'Reset password' })).toBeVisible();
+});
+
+test('Can generate random password when reseting user password', async ({ page }) => {
+    await page.goto('/users/feeaa186-3d69-4801-a580-88be10d53553/');
+    await login(page);
+
+    await expect(page.getByRole('navigation')).toContainText('Bogdan Nowak');
+
+    await page.getByRole('button', { name: 'Edit user' }).click();
+
+    await page.getByRole('button', { name: 'Reset password' }).click();
+
+    await page.getByRole('button', { name: 'Generate random password' }).click();
+
+    await expect(page.getByRole('textbox', { name: 'New password', exact: true })).toHaveValue(/^.{16}$/);
+    const password = await page.getByRole('textbox', { name: 'New password', exact: true }).inputValue();
+
+    await page.getByRole('button', { name: 'Generate random password' }).click();
+
+    await expect(page.getByRole('textbox', { name: 'New password', exact: true })).toHaveValue(/^.{16}$/);
+    const secondPassword = await page.getByRole('textbox', { name: 'New password', exact: true }).inputValue();
+
+    expect(password).not.toBe(secondPassword);
+});
+
+test('Can reset user password', async ({ page }) => {
+    await page.goto('/users/feeaa186-3d69-4801-a580-88be10d53553/');
+    await login(page);
+
+    await expect(page.getByRole('navigation')).toContainText('Bogdan Nowak');
+
+    await page.getByRole('button', { name: 'Edit user' }).click();
+
+    await page.getByRole('button', { name: 'Reset password' }).click();
+
+    await page.getByRole('textbox', { name: 'Password' }).fill('NewPassword');
+
+    await page.getByRole('button', { name: 'Save' }).click();
+
+    // Can login with new password
+    await page.getByRole('button', { name: 'Sign out' }).click();
+    await page.getByRole('button', { name: 'Sign in' }).click();
+    await page.getByRole('textbox', { name: 'Email' }).fill('bogdan@nowak.pl');
+    await page.getByRole('textbox', { name: 'Password' }).fill('NewPassword');
+    await page.locator('form').getByRole('button', { name: 'Sign in' }).click();
+    await expect(page.getByRole('navigation')).toContainText("You're logged in as Bogdan Nowak");
+});
+
+test('Change password button is visible for user whose profile is theirs', async ({ page }) => {
+    // As teacher
+    await page.goto('/profile/');
+    await loginAsTeacher(page);
+
+    await expect(page.getByRole('navigation')).toContainText('Bogdan Nowak');
+
+    await page.getByRole('button', { name: 'Edit user' }).click();
+
+    await expect(page.getByRole('button', { name: 'Change password' })).toBeVisible();
+
+    await page.getByRole('button', { name: 'Close' }).click();
+
+    // As Admin
+    await page.getByRole('button', { name: 'Sign out' }).click();
+
+    await page.goto('/profile/');
+    await login(page);
+
+    await expect(page.getByRole('navigation')).toContainText('Admin');
+
+    await page.getByRole('button', { name: 'Edit user' }).click();
+
+    await expect(page.getByRole('button', { name: 'Change password' })).toBeVisible();
+});
+
+test('User can change their password', async ({ page }) => {
+    await page.goto('/profile/');
+    await loginAsTeacher(page);
+
+    await expect(page.getByRole('navigation')).toContainText('Bogdan Nowak');
+
+    await page.getByRole('button', { name: 'Edit user' }).click();
+
+    await page.getByRole('button', { name: 'Change password' }).click();
+
+    await page.getByRole('textbox', { name: 'Current password' }).fill('kti');
+    await page.getByRole('textbox', { name: 'New password', exact: true }).fill('NewPassword');
+    await page.getByRole('textbox', { name: 'Repeat new password', exact: true }).fill('NewPassword');
+
+    await page.getByRole('button', { name: 'Save' }).click();
+
+    // Can login with new password
+    await page.getByRole('button', { name: 'Sign out' }).click();
+    await page.getByRole('button', { name: 'Sign in' }).click();
+    await page.getByRole('textbox', { name: 'Email' }).fill('bogdan@nowak.pl');
+    await page.getByRole('textbox', { name: 'Password' }).fill('NewPassword');
+    await page.locator('form').getByRole('button', { name: 'Sign in' }).click();
+    await expect(page.getByRole('navigation')).toContainText("You're logged in as Bogdan Nowak");
+});
