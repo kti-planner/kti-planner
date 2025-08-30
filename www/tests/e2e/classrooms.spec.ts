@@ -1,5 +1,5 @@
 import { expect } from 'playwright/test';
-import { login, test } from './fixtures';
+import { loginAsAdmin, test } from './fixtures';
 
 test('Cannot access classrooms list when logged-out', async ({ page }) => {
     await page.goto('/classrooms/');
@@ -8,7 +8,7 @@ test('Cannot access classrooms list when logged-out', async ({ page }) => {
 
 test('Can access classrooms list when logged-in', async ({ page }) => {
     await page.goto('/semesters/2024-summer/lokalne-sieci-bezprzewodowe/');
-    await login(page);
+    await loginAsAdmin(page);
 
     await page.getByRole('button', { name: 'Add new exercise' }).click();
     await page.getByRole('link', { name: 'Manage classrooms' }).click();
@@ -20,7 +20,7 @@ test('Can access classrooms list when logged-in', async ({ page }) => {
 
 test('Can add new classroom and prevent duplicate classroom creation', async ({ page }) => {
     await page.goto('/classrooms/');
-    await login(page);
+    await loginAsAdmin(page);
 
     await page.getByRole('button', { name: 'Add new classroom' }).click();
 
@@ -57,7 +57,7 @@ test('Can add new classroom and prevent duplicate classroom creation', async ({ 
 
 test('Can edit classroom and prevent duplicate classroom', async ({ page }) => {
     await page.goto('/classrooms/');
-    await login(page);
+    await loginAsAdmin(page);
 
     await page.locator('.list-group-item', { hasText: 'EA 142' }).hover();
     await page.locator('.list-group-item', { hasText: 'EA 142' }).locator('button').click();

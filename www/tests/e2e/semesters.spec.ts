@@ -1,5 +1,5 @@
 import { expect } from 'playwright/test';
-import { login, test } from './fixtures';
+import { loginAsAdmin, test } from './fixtures';
 
 test('Can access semester list', async ({ page }) => {
     await page.goto('/semesters/');
@@ -26,14 +26,14 @@ test('Add new semester button is hidden for logged-out user', async ({ page }) =
 
 test('Add new semester button is visible for logged-in user', async ({ page }) => {
     await page.goto('/semesters/');
-    await login(page);
+    await loginAsAdmin(page);
 
     await expect(page.getByRole('button', { name: 'Add new semester' })).toBeVisible();
 });
 
 test('Can add new semester and prevent duplicate semester creation', async ({ page }) => {
     await page.goto('/semesters/');
-    await login(page);
+    await loginAsAdmin(page);
 
     await expect(page.getByRole('button', { name: 'Add new semester' })).toBeVisible();
     await page.getByRole('button', { name: 'Add new semester' }).click();
@@ -91,7 +91,7 @@ test('Edit semester button is hidden for logged-out user', async ({ page }) => {
 
 test('Edit semester button is visible for logged-in user', async ({ page }) => {
     await page.goto('/semesters/');
-    await login(page);
+    await loginAsAdmin(page);
 
     await page.getByText('Summer semester 2024/2025').click();
     await page.waitForURL('/semesters/2024-summer/');
@@ -103,7 +103,7 @@ test('Edit semester button is visible for logged-in user', async ({ page }) => {
 test('Can edit semester and prevent duplicate semester', async ({ page }) => {
     // Can edit semester with data that do not match already existing semester
     await page.goto('/semesters/');
-    await login(page);
+    await loginAsAdmin(page);
 
     await page.getByText('Summer semester 2024/2025').click();
 

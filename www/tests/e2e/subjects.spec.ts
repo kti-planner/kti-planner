@@ -1,5 +1,5 @@
 import { expect } from 'playwright/test';
-import { login, test } from './fixtures';
+import { loginAsAdmin, test } from './fixtures';
 
 test('Can access subject list', async ({ page }) => {
     await page.goto('/semesters/2024-summer/');
@@ -23,7 +23,7 @@ test('Add new subject button is hidden for logged-out user', async ({ page }) =>
 
 test('Add new subject button is visible for logged-in user', async ({ page }) => {
     await page.goto('/semesters/');
-    await login(page);
+    await loginAsAdmin(page);
 
     await page.getByText('Summer semester 2024/2025').click();
     await page.waitForURL('/semesters/2024-summer/');
@@ -34,7 +34,7 @@ test('Add new subject button is visible for logged-in user', async ({ page }) =>
 
 test('Can add new subject and prevent duplicate subject creation', async ({ page }) => {
     await page.goto('/semesters/2024-summer/');
-    await login(page);
+    await loginAsAdmin(page);
 
     await expect(page.locator('.breadcrumb')).toContainText('Summer semester 2024/2025');
 
@@ -86,7 +86,7 @@ test('Edit subject button is hidden for logged-out user', async ({ page }) => {
 
 test('Edit subject button is visible for logged-in user', async ({ page }) => {
     await page.goto('/semesters/');
-    await login(page);
+    await loginAsAdmin(page);
 
     await page.getByText('Summer semester 2024/2025').click();
     await page.waitForURL('/semesters/2024-summer/');
@@ -101,7 +101,7 @@ test('Edit subject button is visible for logged-in user', async ({ page }) => {
 test('Can edit subject and prevent duplicate subject', async ({ page }) => {
     // Can edit subject with data that do not match already existing subject
     await page.goto('/semesters/');
-    await login(page);
+    await loginAsAdmin(page);
 
     await page.getByText('Summer semester 2024/2025').click();
 
