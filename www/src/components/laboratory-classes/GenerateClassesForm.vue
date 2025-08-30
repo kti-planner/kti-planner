@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { computed, ref, useId, watchEffect } from 'vue';
+import { computed, ref, useId } from 'vue';
 import { langId } from '@components/frontend/lang';
 import { apiPost } from '@components/api';
 import type { ExerciseData } from '@components/exercises/types';
-import { getNextDayOfTheWeekOccurance } from '@components/laboratory-classes/dates';
+import { getNextDayOfTheWeekOccurance, isSameDay } from '@components/laboratory-classes/dates';
 import type { LaboratoryClassCreateApiData } from '@components/laboratory-classes/types';
 import type { LaboratoryGroupData } from '@components/laboratory-groups/types';
 import type { ScheduleChangeData, SemesterData } from '@components/semesters/types';
@@ -59,14 +59,14 @@ const classStartTime = ref<string>();
 const classEndTime = ref<string>();
 const repeatWeeks = ref(1);
 
-const firstDateHoliday = computed(() => {
+const firstClassDateHoliday = computed(() => {
     if (firstClassDateStr.value === undefined) {
         return false;
     }
 
     const firstClassDate = new Date(firstClassDateStr.value);
     return scheduleChanges.some(
-        change => change.type === 'holiday' && firstClassDate.getTime() === new Date(change.date).getTime(),
+        change => change.type === 'holiday' && isSameDay(firstClassDate, new Date(change.date)),
     );
 });
 
@@ -80,6 +80,7 @@ export interface PlannedClass {
 const plannedClasses = computed<PlannedClass[]>(() => {
     if (
         firstClassDateStr.value === undefined ||
+        firstClassDateHoliday.value ||
         classStartTime.value === undefined ||
         classEndTime.value === undefined ||
         group.value === undefined
@@ -107,8 +108,6 @@ const plannedClasses = computed<PlannedClass[]>(() => {
         };
     });
 });
-
-watchEffect(() => console.log(plannedClasses.value));
 
 async function generate() {
     if (plannedClasses.value.length === 0 || group.value === undefined) {
@@ -162,12 +161,12 @@ const dateFeedback = useId();
                 type="date"
                 class="form-control"
                 :class="{
-                    'is-invalid': firstDateHoliday,
+                    'is-invalid': firstClassDateHoliday,
                 }"
-                :="{ ...(firstDateHoliday ? { 'aria-describedby': dateFeedback } : {}) }"
+                :="{ ...(firstClassDateHoliday ? { 'aria-describedby': dateFeedback } : {}) }"
                 required
             />
-            <div v-if="firstDateHoliday" :id="dateFeedback" class="invalid-feedback">
+            <div v-if="firstClassDateHoliday" :id="dateFeedback" class="invalid-feedback">
                 {{ translate('The date you selected is a holiday') }}
             </div>
         </div>
