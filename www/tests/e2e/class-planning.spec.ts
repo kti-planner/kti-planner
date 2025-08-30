@@ -1,12 +1,12 @@
 import { expect } from 'playwright/test';
 import { expectSelectedOptionText, loginAsTeacher, test } from './fixtures';
 
-test.only('Cannot plan classes when not logged in', async ({ page }) => {
+test('Cannot plan classes when not logged in', async ({ page }) => {
     await page.goto('/semesters/2024-summer/lokalne-sieci-bezprzewodowe/');
     await expect(page.getByRole('button', { name: 'Plan classes' })).not.toBeVisible();
 });
 
-test.only('Can plan classes without selecting a group beforehand', async ({ page }) => {
+test('Can plan classes without selecting a group beforehand', async ({ page }) => {
     await page.goto('/semesters/2024-summer/lokalne-sieci-bezprzewodowe/');
     await loginAsTeacher(page);
 
@@ -29,7 +29,7 @@ test.only('Can plan classes without selecting a group beforehand', async ({ page
     await expect(page.getByText('13:15 - 15:00')).toBeVisible();
 });
 
-test.only('Can plan classes with a group selected beforehand', async ({ page }) => {
+test('Can plan classes with a group selected beforehand', async ({ page }) => {
     await page.goto('/semesters/2024-summer/lokalne-sieci-bezprzewodowe/');
     await loginAsTeacher(page);
 
@@ -54,7 +54,7 @@ test.only('Can plan classes with a group selected beforehand', async ({ page }) 
     await expect(page.getByText('13:15 - 15:00')).toBeVisible();
 });
 
-test.only('Cannot generate classes starting at a holiday', async ({ page }) => {
+test('Cannot generate classes starting at a holiday', async ({ page }) => {
     await page.goto('/semesters/2024-summer/lokalne-sieci-bezprzewodowe/');
     await loginAsTeacher(page);
 
