@@ -395,6 +395,7 @@ test.describe('API fetch tests', () => {
     test('Logged-in user can change password', async ({ page }) => {
         await page.goto('/profile/');
         await loginAsTeacher(page);
+        await expect(page).toHaveURL('/profile/');
 
         const status = await page.evaluate(async () => {
             const response = await fetch('/users/api/password-change/', {
@@ -461,7 +462,6 @@ test.describe('API fetch tests', () => {
     test('Admin can reset other user password', async ({ page }) => {
         await page.goto('/profile/');
         await login(page);
-
         await expect(page).toHaveURL('/profile/');
 
         const status = await page.evaluate(async () => {
