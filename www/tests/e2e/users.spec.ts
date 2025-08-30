@@ -375,7 +375,7 @@ test.describe('API fetch tests', () => {
 
         const status = await page.evaluate(async () => {
             const response = await fetch('/users/api/password-change/', {
-                method: 'POST',
+                method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -398,7 +398,7 @@ test.describe('API fetch tests', () => {
 
         const status = await page.evaluate(async () => {
             const response = await fetch('/users/api/password-change/', {
-                method: 'POST',
+                method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -442,7 +442,7 @@ test.describe('API fetch tests', () => {
 
         const status = await page.evaluate(async () => {
             const response = await fetch('/users/api/password-reset/', {
-                method: 'POST',
+                method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -466,7 +466,7 @@ test.describe('API fetch tests', () => {
 
         const status = await page.evaluate(async () => {
             const response = await fetch('/users/api/password-reset/', {
-                method: 'POST',
+                method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
                 },
