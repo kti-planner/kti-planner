@@ -18,13 +18,13 @@ defineProps<{
                     `${formatDateLocalYyyyMmDd(plannedClass.start)} ${formatDateLocalHhMm(plannedClass.start)} - ${formatDateLocalHhMm(plannedClass.end)}`
                 }}
             </h4>
-            <div class="d-flex gap-1">
+            <div>
                 <i class="bi bi-person-fill"></i>
-                <span>{{ plannedClass.exercise.teacher.name }}</span>
+                <span class="ms-1">{{ plannedClass.exercise.teacher.name }}</span>
             </div>
-            <div class="d-flex gap-1">
+            <div>
                 <i class="bi bi-building-fill"></i>
-                <span>{{ plannedClass.exercise.classroom.name }}</span>
+                <span class="ms-1">{{ plannedClass.exercise.classroom.name }}</span>
             </div>
         </div>
     </div>
