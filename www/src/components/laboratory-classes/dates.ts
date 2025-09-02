@@ -10,6 +10,10 @@ export function isSameDay(date1: Date, date2: Date) {
     );
 }
 
+function weekdayName(date: Date): ScheduleChangeType {
+    return (['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'] as const)[date.getDay()]!;
+}
+
 export function getNextDayOfTheWeekOccurance(date: Date, changes: ScheduleChangeData[]): Date {
     const changeMap = new Map<string, ScheduleChangeType>();
     for (const change of changes) {
@@ -26,27 +30,21 @@ export function getNextDayOfTheWeekOccurance(date: Date, changes: ScheduleChange
         return weekdayName(date);
     }
 
-    const targetScheduleDay = getEffectiveDay(date);
+    let targetScheduleDay = getEffectiveDay(date);
+
+    if (targetScheduleDay === 'holiday') {
+        targetScheduleDay = weekdayName(date);
+    }
 
     const next = new Date(date);
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+
     while (true) {
         next.setDate(next.getDate() + 1);
 
         const effectiveDay = getEffectiveDay(next);
 
-        if (effectiveDay === 'holiday') {
-            continue;
-        }
-
         if (effectiveDay === targetScheduleDay) {
             return next;
         }
     }
-}
-
-function weekdayName(date: Date): ScheduleChangeType {
-    return ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][
-        date.getDay()
-    ] as ScheduleChangeType;
 }
