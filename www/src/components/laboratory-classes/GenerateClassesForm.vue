@@ -177,7 +177,7 @@ const dateFeedback = useId();
 
         <div>
             <label :for="repeatId" class="form-label">{{ translate('How many weeks are between classes?') }}</label>
-            <input :id="repeatId" v-model="repeatWeeks" type="number" class="form-control" required />
+            <input :id="repeatId" v-model="repeatWeeks" type="number" min="1" class="form-control" required />
         </div>
 
         <div v-if="plannedClasses.length > 0">
