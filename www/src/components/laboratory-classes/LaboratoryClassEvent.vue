@@ -10,23 +10,21 @@ defineProps<{
 
 <template>
     <div class="event-content" :title>
-        <p>{{ timeText }}</p>
-        <p>
-            <b>
-                {{ laboratoryClass.exercise.name }}
-            </b>
+        <p class="text-truncate">{{ timeText }}</p>
+        <p class="text-truncate fw-bold">
+            {{ laboratoryClass.exercise.name }}
         </p>
-        <div class="d-flex gap-1">
+        <div class="text-truncate">
             <i class="bi bi-people-fill"></i>
-            <span>{{ laboratoryClass.laboratoryGroup.name }}</span>
+            <span class="ms-1">{{ laboratoryClass.laboratoryGroup.name }}</span>
         </div>
-        <div class="d-flex gap-1">
+        <div class="text-truncate">
             <i class="bi bi-person-fill"></i>
-            <span>{{ laboratoryClass.teacher.name }}</span>
+            <span class="ms-1">{{ laboratoryClass.teacher.name }}</span>
         </div>
-        <div class="d-flex gap-1">
+        <div class="text-truncate">
             <i class="bi bi-building-fill"></i>
-            <span>{{ laboratoryClass.exercise.classroom.name }}</span>
+            <span class="ms-1">{{ laboratoryClass.exercise.classroom.name }}</span>
         </div>
     </div>
 </template>
@@ -37,13 +35,6 @@ defineProps<{
 
     p {
         margin: 0;
-    }
-
-    p,
-    span {
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
     }
 }
 </style>
