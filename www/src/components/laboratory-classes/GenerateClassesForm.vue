@@ -71,7 +71,6 @@ const firstClassDateHoliday = computed(() => {
 });
 
 export interface PlannedClass {
-    id: string;
     exercise: ExerciseData;
     start: Date;
     end: Date;
@@ -97,7 +96,6 @@ const plannedClasses = computed<PlannedClass[]>(() => {
         last = date;
 
         return {
-            id: crypto.randomUUID(),
             exercise,
             start: new Date(`${formatDateLocalYyyyMmDd(date)}T${classStartTime.value}`),
             end: new Date(`${formatDateLocalYyyyMmDd(date)}T${classEndTime.value}`),
@@ -185,7 +183,7 @@ const dateFeedback = useId();
         <div v-if="plannedClasses.length > 0">
             <h2 class="fs-6">{{ translate('Summary') }}</h2>
             <div class="d-flex flex-column gap-2">
-                <PlannedClassCard v-for="plannedClass in plannedClasses" :key="plannedClass.id" :planned-class />
+                <PlannedClassCard v-for="(plannedClass, index) in plannedClasses" :key="index" :planned-class />
             </div>
             <p class="text-secondary mt-2">
                 {{ translate('You can edit the classes later from the calendar') }}
