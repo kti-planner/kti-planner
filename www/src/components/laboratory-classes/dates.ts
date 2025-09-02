@@ -14,7 +14,7 @@ function weekdayName(date: Date): ScheduleChangeType {
     return (['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'] as const)[date.getDay()]!;
 }
 
-export function getNextDayOfTheWeekOccurance(date: Date, changes: ScheduleChangeData[]): Date {
+export function getNextDayOfTheWeekOccurance(date: Date, changes: ScheduleChangeData[], skip = 0): Date {
     const changeMap = new Map<string, ScheduleChangeType>();
     for (const change of changes) {
         const date = new Date(change.date);
@@ -44,7 +44,11 @@ export function getNextDayOfTheWeekOccurance(date: Date, changes: ScheduleChange
         const effectiveDay = getEffectiveDay(next);
 
         if (effectiveDay === targetScheduleDay) {
-            return next;
+            if (skip <= 0) {
+                return next;
+            }
+
+            skip -= 1;
         }
     }
 }

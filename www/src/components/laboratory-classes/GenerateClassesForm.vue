@@ -90,13 +90,9 @@ const plannedClasses = computed<PlannedClass[]>(() => {
 
     let last: Date | undefined;
     return exercises.map<PlannedClass>(exercise => {
-        let date = last ? new Date(last) : new Date(firstClassDateStr.value!);
-
-        if (last) {
-            for (let i = 0; i < repeatWeeks.value; i++) {
-                date = getNextDayOfTheWeekOccurance(date, scheduleChanges);
-            }
-        }
+        const date = last
+            ? getNextDayOfTheWeekOccurance(new Date(last), scheduleChanges, repeatWeeks.value - 1)
+            : new Date(firstClassDateStr.value!);
 
         last = date;
 
