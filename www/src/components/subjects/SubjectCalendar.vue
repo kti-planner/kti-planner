@@ -45,18 +45,13 @@ const events = computed<EventInput[]>(() => [
 ]);
 
 const initialDate = computed(() => {
-    if (!laboratoryClasses.value) {
+    const lastClass = laboratoryClasses.value?.at(-1);
+
+    if (!lastClass) {
         return undefined;
     }
 
     const today = new Date();
-
-    const lastClass = laboratoryClasses.value?.at(-1);
-
-    if (!lastClass) {
-        return today;
-    }
-
     const lastEventDate = new Date(lastClass.startDate);
 
     if (today.getTime() < lastEventDate.getTime()) {
