@@ -182,7 +182,7 @@ const dateFeedback = useId();
 
         <div v-if="plannedClasses.length > 0">
             <h2 class="fs-6">{{ translate('Summary') }}</h2>
-            <div class="d-flex flex-column gap-2">
+            <div class="vstack gap-2">
                 <PlannedClassCard v-for="(plannedClass, index) in plannedClasses" :key="index" :planned-class />
             </div>
             <p class="text-secondary mt-2">
