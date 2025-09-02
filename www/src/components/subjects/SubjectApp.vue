@@ -57,6 +57,7 @@ const subjectUrl = computed(() => `/semesters/${semester.slug}/${subject.slug}`)
                 ref="calendar"
                 :api-url="`${subjectUrl}/api/laboratory-classes/`"
                 :selected-laboratory-groups
+                :schedule-changes
             />
         </div>
         <div class="col-12 col-lg-3 order-1 order-lg-2 d-flex gap-3 flex-column-reverse flex-lg-column">

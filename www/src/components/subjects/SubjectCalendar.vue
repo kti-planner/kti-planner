@@ -1,15 +1,17 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import type { DateInput, EventInput } from '@fullcalendar/core';
+import type { EventInput } from '@fullcalendar/core';
 import { useApiFetch } from '@components/api';
 import type { LaboratoryClassData } from '@components/laboratory-classes/types';
 import type { LaboratoryGroupData } from '@components/laboratory-groups/types';
+import type { ScheduleChangeData } from '@components/semesters/types';
 import Calendar from '@components/Calendar.vue';
 import LaboratoryClassEvent from '@components/laboratory-classes/LaboratoryClassEvent.vue';
 
-const { apiUrl, selectedLaboratoryGroups } = defineProps<{
+const { apiUrl, selectedLaboratoryGroups, scheduleChanges } = defineProps<{
     apiUrl: string;
     selectedLaboratoryGroups: LaboratoryGroupData[];
+    scheduleChanges: ScheduleChangeData[];
 }>();
 
 const { data: laboratoryClasses, execute: refreshClasses } = useApiFetch<LaboratoryClassData[]>(
@@ -27,22 +29,35 @@ type LaboraoryClassEventInput = EventInput & {
     };
 };
 
-const events = computed<LaboraoryClassEventInput[]>(() =>
-    (laboratoryClasses.value ?? []).map<LaboraoryClassEventInput>(laboratoryClass => ({
+const events = computed<EventInput[]>(() => [
+    ...(laboratoryClasses.value ?? []).map<LaboraoryClassEventInput>(laboratoryClass => ({
         title: `${laboratoryClass.laboratoryGroup.name} - ${laboratoryClass.exercise.name}`,
         start: laboratoryClass.startDate,
         end: laboratoryClass.endDate,
         extendedProps: { laboratoryClass },
     })),
-);
+    ...scheduleChanges.map<EventInput>(scheduleChange => ({
+        display: 'background',
+        allDay: true,
+        start: scheduleChange.date,
+        backgroundColor: scheduleChange.type === 'holiday' ? 'var(--bs-danger)' : 'var(--bs-warning)',
+    })),
+]);
 
-const initialDate = computed<DateInput | undefined>(() => {
-    if (events.value.length === 0) {
+const initialDate = computed(() => {
+    if (!laboratoryClasses.value) {
         return undefined;
     }
 
-    const lastEventDate = new Date(events.value.at(-1)!.start! as string);
     const today = new Date();
+
+    const lastClass = laboratoryClasses.value?.at(-1);
+
+    if (!lastClass) {
+        return today;
+    }
+
+    const lastEventDate = new Date(lastClass.startDate);
 
     if (today.getTime() < lastEventDate.getTime()) {
         return today;
@@ -56,6 +71,7 @@ const initialDate = computed<DateInput | undefined>(() => {
     <Calendar :events :initial-date>
         <template #eventContent="arg">
             <LaboratoryClassEvent
+                v-if="'laboratoryClass' in arg.event.extendedProps"
                 :title="arg.event.title"
                 :time-text="arg.timeText"
                 :laboratory-class="arg.event.extendedProps.laboratoryClass"

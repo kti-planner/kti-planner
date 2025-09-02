@@ -20,8 +20,8 @@ import { langId } from '@components/frontend/lang';
 
 const { selectable, events, initialDate } = defineProps<{
     selectable?: boolean | undefined;
-    events?: CalendarEvent[] | undefined;
-    initialDate?: DateInput | undefined;
+    events: CalendarEvent[];
+    initialDate: DateInput | undefined;
 }>();
 
 const emit = defineEmits<{
@@ -89,8 +89,8 @@ const options = computed((): CalendarOptions => {
         },
         expandRows: true,
         eventBackgroundColor: 'var(--bs-success)',
-        ...(events ? { events } : {}),
-        ...(initialDate ? { initialDate } : {}),
+        events,
+        initialDate: initialDate ?? new Date(),
     };
 });
 </script>

@@ -174,7 +174,7 @@ export class Semester {
 
 export function makeScheduleChangeData(scheduleChange: ScheduleChange): ScheduleChangeData {
     return {
-        type: scheduleChange.type,
         date: scheduleChange.date.toISOString(),
+        type: scheduleChange.type,
     };
 }

@@ -173,12 +173,12 @@ const dateFeedback = useId();
 
         <div>
             <label :for="startTimeId" class="form-label">{{ translate('Class start time') }}</label>
-            <input :id="startTimeId" v-model="classStartTime" type="time" class="form-control" required />
+            <input :id="startTimeId" v-model="classStartTime" type="time" step="300" class="form-control" required />
         </div>
 
         <div>
             <label :for="endTimeId" class="form-label">{{ translate('Class end time') }}</label>
-            <input :id="endTimeId" v-model="classEndTime" type="time" class="form-control" required />
+            <input :id="endTimeId" v-model="classEndTime" type="time" step="300" class="form-control" required />
         </div>
 
         <div>
