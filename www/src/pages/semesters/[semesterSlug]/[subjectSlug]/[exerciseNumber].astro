@@ -1,5 +1,5 @@
 ---
-import { Classroom } from '@backend/classroom';
+import { Classroom, makeClassroomData } from '@backend/classroom';
 import { Exercise } from '@backend/exercise';
 import { Semester } from '@backend/semester';
 import { Subject } from '@backend/subject';
@@ -60,10 +60,7 @@ if (!exercise) {
 
 const classrooms = await Classroom.fetchAll();
 
-const classroomsData: ClassroomData[] = classrooms.map(classroom => ({
-    id: classroom.id,
-    name: classroom.name,
-}));
+const classroomsData: ClassroomData[] = classrooms.map(makeClassroomData);
 
 const semesterData: SemesterData = {
     id: semester.id,
