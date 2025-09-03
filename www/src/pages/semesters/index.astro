@@ -30,11 +30,11 @@ const semesters = await Semester.fetchAll();
     <div class="semesters-list list-group mx-auto my-4">
         {
             semesters.map(
-                s =>
+                semester =>
                     (
-                        <a href={`/semesters/${s.slug}/`} class="list-group-item list-group-item-action">
-                            {s.type === 'summer' ? translate('Summer semester') : translate('Winter semester')}{' '}
-                            {`${s.year}/${s.year + 1}`}
+                        <a href={`/semesters/${semester.slug}/`} class="list-group-item list-group-item-action">
+                            {semester.type === 'summer' ? translate('Summer semester') : translate('Winter semester')}{' '}
+                            {`${semester.year}/${semester.year + 1}`}
                         </a>
                     ) as unknown,
             )

@@ -79,7 +79,7 @@ test('Can add new subject and prevent duplicate subject creation', async ({ page
 });
 
 test('Edit subject button is hidden for logged-out user', async ({ page }) => {
-    await page.goto('/semesters/2024-summer/lokalne-sieci-bezprzewodowe/');
+    await page.goto('/semesters/2024-summer/subjects/lokalne-sieci-bezprzewodowe/');
 
     await expect(page.getByRole('button', { name: 'Edit subject' })).toHaveCount(0);
 });
@@ -92,7 +92,7 @@ test('Edit subject button is visible for logged-in user', async ({ page }) => {
     await page.waitForURL('/semesters/2024-summer/');
     await expect(page.locator('.breadcrumb')).toContainText('Summer semester 2024/2025');
     await page.getByText('Lokalne sieci bezprzewodowe').click();
-    await page.waitForURL('/semesters/2024-summer/lokalne-sieci-bezprzewodowe/');
+    await page.waitForURL('/semesters/2024-summer/subjects/lokalne-sieci-bezprzewodowe/');
     await expect(page.locator('.breadcrumb')).toContainText('Lokalne sieci bezprzewodowe');
 
     await expect(page.getByRole('button', { name: 'Edit subject' })).toBeVisible();
