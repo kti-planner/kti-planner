@@ -26,7 +26,7 @@ test('Can plan classes without selecting a group beforehand', async ({ page }) =
     await page.getByRole('button', { name: 'Generate classes' }).click();
 
     await expect(page.getByText('19 – 25 May 2025')).toBeVisible();
-    await expect(page.getByText('11:15 - 13:00')).toBeVisible();
+    await expect(page.locator('p', { hasText: '11:15 - 13:00' })).toBeVisible();
 });
 
 test('Can plan classes with a group selected beforehand', async ({ page }) => {
@@ -51,7 +51,7 @@ test('Can plan classes with a group selected beforehand', async ({ page }) => {
     await page.getByRole('button', { name: 'Generate classes' }).click();
 
     await expect(page.getByText('19 – 25 May 2025')).toBeVisible();
-    await expect(page.getByText('11:15 - 13:00')).toBeVisible();
+    await expect(page.locator('p', { hasText: '11:15 - 13:00' })).toBeVisible();
 });
 
 test('Cannot generate classes starting at a holiday', async ({ page }) => {
@@ -85,5 +85,5 @@ test('Can plan classes with two weeks between each one', async ({ page }) => {
     await page.getByRole('button', { name: 'Generate classes' }).click();
 
     await expect(page.getByText('23 – 29 Jun 2025')).toBeVisible();
-    await expect(page.getByText('11:15 - 13:00')).toBeVisible();
+    await expect(page.locator('p', { hasText: '11:15 - 13:00' })).toBeVisible();
 });
