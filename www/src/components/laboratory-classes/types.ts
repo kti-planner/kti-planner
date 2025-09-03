@@ -13,11 +13,13 @@ export interface LaboratoryClassData {
     teacher: UserData;
 }
 
-export const laboratoryClassCreateApiSchema = z.object({
-    exerciseId: z.uuid(),
-    laboratoryGroupId: z.uuid(),
-    startDate: dateTimeStringSchema,
-    endDate: dateTimeStringSchema,
-});
+export const laboratoryClassCreateApiSchema = z
+    .object({
+        exerciseId: z.uuid(),
+        laboratoryGroupId: z.uuid(),
+        startDate: dateTimeStringSchema,
+        endDate: dateTimeStringSchema,
+    })
+    .array();
 
 export type LaboratoryClassCreateApiData = z.input<typeof laboratoryClassCreateApiSchema>;

@@ -2,7 +2,7 @@ import assert from 'node:assert';
 import type { APIRoute } from 'astro';
 import { Classroom } from '@backend/classroom';
 import { Exercise } from '@backend/exercise';
-import { LaboratoryClass, makeLaboratoryClassData } from '@backend/laboratory-class';
+import { LaboratoryClass, type LaboratoryClassCreateData, makeLaboratoryClassData } from '@backend/laboratory-class';
 import { LaboratoryGroup } from '@backend/laboratory-group';
 import { User } from '@backend/user';
 import { laboratoryClassCreateApiSchema, type LaboratoryClassData } from '@components/laboratory-classes/types';
@@ -62,27 +62,33 @@ export const POST: APIRoute = async ({ locals }) => {
         return Response.json(null, { status: 400 });
     }
 
-    const exercise = await Exercise.fetch(data.exerciseId);
+    const createData: LaboratoryClassCreateData[] = [];
 
-    if (!exercise) {
-        return Response.json(null, { status: 400 });
+    for (const laboratoryClass of data) {
+        const exercise = await Exercise.fetch(laboratoryClass.exerciseId);
+
+        if (!exercise) {
+            return Response.json(null, { status: 400 });
+        }
+
+        const teacher = await exercise.getTeacher();
+
+        const group = await LaboratoryGroup.fetch(laboratoryClass.laboratoryGroupId);
+
+        if (!group) {
+            return Response.json(null, { status: 400 });
+        }
+
+        createData.push({
+            exercise,
+            laboratoryGroup: group,
+            startDate: laboratoryClass.startDate,
+            endDate: laboratoryClass.endDate,
+            teacher,
+        });
     }
 
-    const teacher = await exercise.getTeacher();
-
-    const group = await LaboratoryGroup.fetch(data.laboratoryGroupId);
-
-    if (!group) {
-        return Response.json(null, { status: 400 });
-    }
-
-    await LaboratoryClass.create({
-        exercise,
-        laboratoryGroup: group,
-        startDate: data.startDate,
-        endDate: data.endDate,
-        teacher,
-    });
+    await Promise.all(createData.map(createDatum => LaboratoryClass.create(createDatum)));
 
     return Response.json(true, { status: 201 });
 };

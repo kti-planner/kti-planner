@@ -115,18 +115,17 @@ async function generate() {
         return;
     }
 
-    const results = await Promise.all(
-        plannedClasses.value.map(plannedClass =>
-            apiPost<boolean>(apiUrl, {
-                exerciseId: plannedClass.exercise.id,
-                laboratoryGroupId: group.value!.id,
-                startDate: formatDateLocalYyyyMmDdHhMm(plannedClass.start),
-                endDate: formatDateLocalYyyyMmDdHhMm(plannedClass.end),
-            } satisfies LaboratoryClassCreateApiData),
-        ),
+    const result = await apiPost<boolean>(
+        apiUrl,
+        plannedClasses.value.map(plannedClass => ({
+            exerciseId: plannedClass.exercise.id,
+            laboratoryGroupId: group.value!.id,
+            startDate: formatDateLocalYyyyMmDdHhMm(plannedClass.start),
+            endDate: formatDateLocalYyyyMmDdHhMm(plannedClass.end),
+        })) satisfies LaboratoryClassCreateApiData,
     );
 
-    if (results.some(r => r === undefined)) {
+    if (result === undefined) {
         return;
     }
 
