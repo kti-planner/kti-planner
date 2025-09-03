@@ -148,3 +148,69 @@ test('Can edit semester and prevent duplicate semester', async ({ page }) => {
     await expect(page.locator('.breadcrumb')).toContainText('Winter semester 2069/2070');
     await expect(page.locator('body')).toContainText('1.10.2069 - 15.02.2070');
 });
+
+test.describe('API fetch tests', () => {
+    test('Logged-out user cannot create new semester', async ({ page }) => {
+        await page.goto('/semesters/');
+
+        const response = await page.request.post('/semesters/api/semesters/', {
+            data: {
+                year: 2069,
+                type: 'summer',
+                startDate: '2069-06-01',
+                endDate: '2069-09-30',
+            },
+        });
+
+        expect(response.status()).toBe(404);
+    });
+
+    test('Logged-in user can create new semester', async ({ page }) => {
+        await page.goto('/semesters/');
+        await loginAsAdmin(page);
+
+        const response = await page.request.post('/semesters/api/semesters/', {
+            data: {
+                year: 2069,
+                type: 'summer',
+                startDate: '2069-06-01',
+                endDate: '2069-09-30',
+            },
+        });
+
+        expect(response.status()).toBe(201);
+    });
+
+    test('Logged-out user cannot edit semester', async ({ page }) => {
+        await page.goto('/semesters/');
+
+        const response = await page.request.patch('/semesters/api/semesters/', {
+            data: {
+                id: '094f8324-7c58-4566-b5d7-e4fe8ed03a18',
+                year: 2069,
+                type: 'summer',
+                startDate: '2069-06-01',
+                endDate: '2069-09-30',
+            },
+        });
+
+        expect(response.status()).toBe(404);
+    });
+
+    test('Logged-in user can edit semester', async ({ page }) => {
+        await page.goto('/semesters/');
+        await loginAsAdmin(page);
+
+        const response = await page.request.patch('/semesters/api/semesters/', {
+            data: {
+                id: '094f8324-7c58-4566-b5d7-e4fe8ed03a18',
+                year: 2069,
+                type: 'summer',
+                startDate: '2069-06-01',
+                endDate: '2069-09-30',
+            },
+        });
+
+        expect(response.status()).toBe(200);
+    });
+});
