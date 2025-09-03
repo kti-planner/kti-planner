@@ -24,6 +24,9 @@ RUN npm run build
 
 FROM node:22-alpine AS runner
 
+RUN apk add tzdata
+ENV TZ="Europe/Warsaw"
+
 RUN mkdir -p /home/node/app && chown -R node:node /home/node/app
 WORKDIR /home/node/app
 USER node
