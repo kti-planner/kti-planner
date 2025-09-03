@@ -198,3 +198,71 @@ test('Can edit exercise and prevent duplicate exercise', async ({ page }) => {
     await expect(page.locator('.breadcrumb')).toContainText('Wirtualne sieci lokalne (VLAN)');
     await expect(page.locator('body')).toContainText('Wirtualne sieci lokalne (VLAN)');
 });
+
+test.describe('API fetch tests', () => {
+    test('Logged-out user cannot create new exercise', async ({ page }) => {
+        await page.goto('/semesters/2024-summer/lokalne-sieci-bezprzewodowe/');
+
+        const response = await page.request.post('/semesters/api/exercises/', {
+            data: {
+                name: 'Test Exercise',
+                exerciseNumber: 7,
+                subjectId: '25108321-0391-4c7a-b4d8-5ea20388e813',
+                classroomId: '2affdc99-7dd6-47f0-b26c-3c413bf063dd',
+                teacherId: 'c393c524-453c-4b02-bfad-5114fe828200',
+            },
+        });
+
+        expect(response.status()).toBe(404);
+    });
+
+    test('Logged-in user can create new exercise', async ({ page }) => {
+        await page.goto('/semesters/2024-summer/lokalne-sieci-bezprzewodowe/');
+        await loginAsAdmin(page);
+
+        const response = await page.request.post('/semesters/api/exercises/', {
+            data: {
+                name: 'Test Exercise',
+                exerciseNumber: 7,
+                subjectId: '25108321-0391-4c7a-b4d8-5ea20388e813',
+                classroomId: '2affdc99-7dd6-47f0-b26c-3c413bf063dd',
+                teacherId: 'c393c524-453c-4b02-bfad-5114fe828200',
+            },
+        });
+
+        expect(response.status()).toBe(201);
+    });
+
+    test('Logged-out user cannot edit exercise', async ({ page }) => {
+        await page.goto('/semesters/2024-summer/lokalne-sieci-bezprzewodowe/');
+
+        const response = await page.request.patch('/semesters/api/exercises/', {
+            data: {
+                id: 'e4ffb869-8d1d-4396-89b5-f427af451e50',
+                name: 'Updated Test Exercise',
+                exerciseNumber: 8,
+                classroomId: '8689d55d-508e-4f5d-aef8-d5052f220d20',
+                teacherId: 'c393c524-453c-4b02-bfad-5114fe828200',
+            },
+        });
+
+        expect(response.status()).toBe(404);
+    });
+
+    test('Logged-in user can edit exercise', async ({ page }) => {
+        await page.goto('/semesters/2024-summer/lokalne-sieci-bezprzewodowe/');
+        await loginAsAdmin(page);
+
+        const response = await page.request.patch('/semesters/api/exercises/', {
+            data: {
+                id: 'e4ffb869-8d1d-4396-89b5-f427af451e50',
+                name: 'Updated Test Exercise',
+                exerciseNumber: 8,
+                classroomId: '8689d55d-508e-4f5d-aef8-d5052f220d20',
+                teacherId: 'c393c524-453c-4b02-bfad-5114fe828200',
+            },
+        });
+
+        expect(response.status()).toBe(200);
+    });
+});

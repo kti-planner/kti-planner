@@ -81,3 +81,57 @@ test('Can edit classroom and prevent duplicate classroom', async ({ page }) => {
 
     await page.getByRole('button', { name: 'Close' }).click();
 });
+
+test.describe('API fetch tests', () => {
+    test('Logged-out user cannot create new classroom', async ({ page }) => {
+        await page.goto('/classrooms/');
+
+        const response = await page.request.post('/classroms/api/', {
+            data: {
+                name: 'Test classrom',
+            },
+        });
+
+        expect(response.status()).toBe(404);
+    });
+
+    test('Logged-in user can create new classroom', async ({ page }) => {
+        await page.goto('/classrooms/');
+        await loginAsAdmin(page);
+
+        const response = await page.request.post('/classrooms/api/', {
+            data: {
+                name: 'Test Classroom',
+            },
+        });
+
+        expect(response.status()).toBe(201);
+    });
+
+    test('Logged-out user cannot edit classroom', async ({ page }) => {
+        await page.goto('/classrooms/');
+
+        const response = await page.request.patch('/classrooms/api/', {
+            data: {
+                id: '8689d55d-508e-4f5d-aef8-d5052f220d20',
+                name: 'Updated Classroom',
+            },
+        });
+
+        expect(response.status()).toBe(404);
+    });
+
+    test('Logged-in user can edit classroom', async ({ page }) => {
+        await page.goto('/classrooms/');
+        await loginAsAdmin(page);
+
+        const response = await page.request.patch('/classrooms/api/', {
+            data: {
+                id: '8689d55d-508e-4f5d-aef8-d5052f220d20',
+                name: 'Updated Classroom',
+            },
+        });
+
+        expect(response.status()).toBe(200);
+    });
+});
