@@ -129,10 +129,6 @@ async function generate() {
         return;
     }
 
-    firstClassDateStr.value = undefined;
-    classStartTime.value = undefined;
-    classEndTime.value = undefined;
-    repeatWeeks.value = 1;
     emit('done');
 }
 
