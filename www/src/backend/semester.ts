@@ -1,6 +1,7 @@
 import assert from 'node:assert';
 import { db } from '@backend/db';
 import type { ScheduleChangeData } from '@components/semesters/types';
+import { formatDateLocalYyyyMmDd } from '@components/utils';
 
 export type SemesterType = 'winter' | 'summer';
 
@@ -174,7 +175,7 @@ export class Semester {
 
 export function makeScheduleChangeData(scheduleChange: ScheduleChange): ScheduleChangeData {
     return {
-        date: scheduleChange.date.toISOString(),
+        date: formatDateLocalYyyyMmDd(scheduleChange.date),
         type: scheduleChange.type,
     };
 }

@@ -6,6 +6,7 @@ import { type LaboratoryGroup, makeLaboratoryGroupData } from '@backend/laborato
 import type { Subject } from '@backend/subject';
 import { makeUserData, type User } from '@backend/user';
 import type { LaboratoryClassData } from '@components/laboratory-classes/types';
+import { formatDateLocalYyyyMmDdHhMm } from '@components/utils';
 
 interface DbLaboratoryClass {
     id: string;
@@ -130,8 +131,8 @@ export function makeLaboratoryClassData(
         id: laboratoryClass.id,
         exercise: makeExerciseData(exercise, exerciseClassroom, exerciseTeacher),
         laboratoryGroup: makeLaboratoryGroupData(group),
-        startDate: laboratoryClass.startDate.toISOString(),
-        endDate: laboratoryClass.endDate.toISOString(),
+        startDate: formatDateLocalYyyyMmDdHhMm(laboratoryClass.startDate),
+        endDate: formatDateLocalYyyyMmDdHhMm(laboratoryClass.endDate),
         teacher: makeUserData(classTeacher),
     };
 }
