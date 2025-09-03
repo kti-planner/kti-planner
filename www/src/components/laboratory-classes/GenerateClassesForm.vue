@@ -22,6 +22,7 @@ const translations = {
         'Generate classes': 'Generate classes',
         'You can edit the classes later from the calendar': 'You can edit the classes later from the calendar',
         'The date you selected is a holiday': 'The date you selected is a holiday',
+        'The classes do not fit in the semester': 'The classes do not fit in the semester',
     },
     'pl': {
         'Laboratory group': 'Grupa laboratoryjna',
@@ -33,6 +34,7 @@ const translations = {
         'Generate classes': 'Wygeneruj zajęcia',
         'You can edit the classes later from the calendar': 'Możesz później edytować te zajęcia w kalendarzu',
         'The date you selected is a holiday': 'Wybrana data jest dniem wolnym od zajęć',
+        'The classes do not fit in the semester': 'Zajęcia nie mieszczą się w semestrze',
     },
 };
 
@@ -42,7 +44,7 @@ function translate(text: keyof (typeof translations)[LangId]): string {
 
 const group = defineModel<LaboratoryGroupData | null>('group', { default: null });
 
-const { exercises, apiUrl, scheduleChanges } = defineProps<{
+const { exercises, semester, apiUrl, scheduleChanges } = defineProps<{
     exercises: ExerciseData[];
     semester: SemesterData;
     apiUrl: string;
@@ -101,6 +103,11 @@ const plannedClasses = computed<PlannedClass[]>(() => {
             end: new Date(`${formatDateLocalYyyyMmDd(date)}T${classEndTime.value}`),
         };
     });
+});
+
+const plannedClassesNotContainedInSemester = computed<boolean>(() => {
+    const lastClass = plannedClasses.value.at(-1);
+    return lastClass !== undefined && lastClass.end.getTime() > new Date(semester.endDate).getTime();
 });
 
 async function generate() {
@@ -185,8 +192,11 @@ const dateFeedback = useId();
             <div class="vstack gap-2">
                 <PlannedClassCard v-for="(plannedClass, index) in plannedClasses" :key="index" :planned-class />
             </div>
-            <p class="text-secondary mt-2">
+            <p class="text-secondary mt-2 mb-0">
                 {{ translate('You can edit the classes later from the calendar') }}
+            </p>
+            <p v-if="plannedClassesNotContainedInSemester" class="text-danger mt-2">
+                {{ translate('The classes do not fit in the semester') }}
             </p>
         </div>
 
