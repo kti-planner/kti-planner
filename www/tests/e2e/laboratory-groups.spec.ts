@@ -2,7 +2,7 @@ import { expect } from 'playwright/test';
 import { loginAsAdmin, test } from './fixtures';
 
 test('Can view and select groups', async ({ page }) => {
-    await page.goto('/semesters/2024-summer/lokalne-sieci-bezprzewodowe/');
+    await page.goto('/semesters/2024-summer/subjects/lokalne-sieci-bezprzewodowe/');
 
     await expect(page.getByText('inf1a')).toBeVisible();
     await expect(page.getByText('inf1b')).toBeVisible();
@@ -26,7 +26,7 @@ test('Can view and select groups', async ({ page }) => {
 });
 
 test('Can add groups and prevent duplicates', async ({ page }) => {
-    await page.goto('/semesters/2024-summer/lokalne-sieci-bezprzewodowe/');
+    await page.goto('/semesters/2024-summer/subjects/lokalne-sieci-bezprzewodowe/');
     await loginAsAdmin(page);
 
     await page.getByRole('button', { name: 'Edit groups' }).click();
@@ -43,7 +43,7 @@ test('Can add groups and prevent duplicates', async ({ page }) => {
 });
 
 test('Can edit groups and prevent duplicates', async ({ page }) => {
-    await page.goto('/semesters/2024-summer/lokalne-sieci-bezprzewodowe/');
+    await page.goto('/semesters/2024-summer/subjects/lokalne-sieci-bezprzewodowe/');
     await loginAsAdmin(page);
 
     await page.getByRole('button', { name: 'Edit groups' }).click();
@@ -64,10 +64,10 @@ test('Can edit groups and prevent duplicates', async ({ page }) => {
 
 test.describe('API fetch tests', () => {
     test('Logged-out user cannot create new laboratory group', async ({ page }) => {
-        await page.goto('/semesters/2024-summer/lokalne-sieci-bezprzewodowe/');
+        await page.goto('/semesters/2024-summer/subjects/lokalne-sieci-bezprzewodowe/');
 
         const response = await page.request.post(
-            '/semesters/2024-summer/lokalne-sieci-bezprzewodowe/api/laboratory-groups/',
+            '/semesters/2024-summer/subjects/lokalne-sieci-bezprzewodowe/api/laboratory-groups/',
             {
                 data: {
                     name: 'Test Group',
@@ -79,11 +79,11 @@ test.describe('API fetch tests', () => {
     });
 
     test('Logged-in user can create new laboratory group', async ({ page }) => {
-        await page.goto('/semesters/2024-summer/lokalne-sieci-bezprzewodowe/');
+        await page.goto('/semesters/2024-summer/subjects/lokalne-sieci-bezprzewodowe/');
         await loginAsAdmin(page);
 
         const response = await page.request.post(
-            '/semesters/2024-summer/lokalne-sieci-bezprzewodowe/api/laboratory-groups/',
+            '/semesters/2024-summer/subjects/lokalne-sieci-bezprzewodowe/api/laboratory-groups/',
             {
                 data: {
                     name: 'Test Group',
@@ -95,10 +95,10 @@ test.describe('API fetch tests', () => {
     });
 
     test('Logged-out user cannot edit laboratory group', async ({ page }) => {
-        await page.goto('/semesters/2024-summer/lokalne-sieci-bezprzewodowe/');
+        await page.goto('/semesters/2024-summer/subjects/lokalne-sieci-bezprzewodowe/');
 
         const response = await page.request.patch(
-            '/semesters/2024-summer/lokalne-sieci-bezprzewodowe/api/laboratory-groups/',
+            '/semesters/2024-summer/subjects/lokalne-sieci-bezprzewodowe/api/laboratory-groups/',
             {
                 data: {
                     id: 'bb9309c2-6a67-4f65-bcc9-fa9547d9ffe9',
@@ -111,11 +111,11 @@ test.describe('API fetch tests', () => {
     });
 
     test('Logged-in user can edit laboratory group', async ({ page }) => {
-        await page.goto('/semesters/2024-summer/lokalne-sieci-bezprzewodowe/');
+        await page.goto('/semesters/2024-summer/subjects/lokalne-sieci-bezprzewodowe/');
         await loginAsAdmin(page);
 
         const response = await page.request.patch(
-            '/semesters/2024-summer/lokalne-sieci-bezprzewodowe/api/laboratory-groups/',
+            '/semesters/2024-summer/subjects/lokalne-sieci-bezprzewodowe/api/laboratory-groups/',
             {
                 data: {
                     id: 'bb9309c2-6a67-4f65-bcc9-fa9547d9ffe9',

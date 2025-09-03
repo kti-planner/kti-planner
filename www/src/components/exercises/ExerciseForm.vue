@@ -59,7 +59,7 @@ async function submit() {
     submitFailed.value = !success;
 
     if (success) {
-        const newUrl = `/semesters/${props.semester.slug}/${props.subject.slug}/${exerciseNumber.value}/`;
+        const newUrl = `/semesters/${props.semester.slug}/subjects/${props.subject.slug}/${exerciseNumber.value}/`;
 
         if (isEditing.value) {
             window.history.replaceState({}, '', newUrl);

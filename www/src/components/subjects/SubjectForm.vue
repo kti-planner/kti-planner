@@ -42,7 +42,7 @@ async function submit() {
     submitFailed.value = !success;
 
     if (success) {
-        const newUrl = `/semesters/${props.semester.slug}/${toHyphenatedLowercase(subjectName.value ?? '')}/`;
+        const newUrl = `/semesters/${props.semester.slug}/subjects/${toHyphenatedLowercase(subjectName.value ?? '')}/`;
 
         if (isEditing.value) {
             window.history.replaceState({}, '', newUrl);

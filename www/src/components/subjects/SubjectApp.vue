@@ -39,7 +39,7 @@ const { subject, semester } = defineProps<{
     nextExerciseNumber: number;
 }>();
 
-const subjectUrl = computed(() => `/semesters/${semester.slug}/${subject.slug}`);
+const subjectUrl = computed(() => `/semesters/${semester.slug}/subjects/${subject.slug}`);
 </script>
 
 <template>
