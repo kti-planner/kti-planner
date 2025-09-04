@@ -24,7 +24,8 @@ VALUES
   ( 'e15683d9-bcd0-4893-ab28-cb7a8f44cbf3', 2023, 'winter', '2023-10-01', '2024-01-25' ),
   ( 'a4560e99-9aa0-4c3e-9a6d-73c63b847d2e', 2023, 'summer', '2024-02-21', '2024-06-14' ),
   ( '50138012-1f54-43a6-b5fd-8efea42020a9', 2024, 'winter', '2024-10-01', '2025-01-30' ),
-  ( '094f8324-7c58-4566-b5d7-e4fe8ed03a18', 2024, 'summer', '2025-02-24', '2025-06-15' );
+  ( '094f8324-7c58-4566-b5d7-e4fe8ed03a18', 2024, 'summer', '2025-02-24', '2025-06-15' ),
+  ( 'b2805b48-3d24-4169-8f67-88561345ee99', 2025, 'winter', '2025-10-01', '2026-01-30' );
 
 INSERT INTO schedule_changes (date, type)
 VALUES
@@ -100,11 +101,12 @@ VALUES
 
 INSERT INTO subjects (id, name, semester_id, teacher_ids)
 VALUES
-  ( '981c68ba-3f6a-459e-83af-f9fc578adc85', 'Sieci komputerowe', 'e15683d9-bcd0-4893-ab28-cb7a8f44cbf3', '{c393c524-453c-4b02-bfad-5114fe828200}' ),
   ( '60bd04c7-b83c-4b4d-8668-7bad4ea0a800', 'Lokalne sieci bezprzewodowe', 'a4560e99-9aa0-4c3e-9a6d-73c63b847d2e', '{c393c524-453c-4b02-bfad-5114fe828200,feeaa186-3d69-4801-a580-88be10d53553}' ),
   ( 'cfaa8255-992f-405e-9064-dd8baf9dfde3', 'Sieci komputerowe', '50138012-1f54-43a6-b5fd-8efea42020a9', '{c393c524-453c-4b02-bfad-5114fe828200}' ),
   ( '25108321-0391-4c7a-b4d8-5ea20388e813', 'Lokalne sieci bezprzewodowe', '094f8324-7c58-4566-b5d7-e4fe8ed03a18', '{c393c524-453c-4b02-bfad-5114fe828200,feeaa186-3d69-4801-a580-88be10d53553}' ),
-  ( '3f58b671-5b38-43f8-bf0f-49d93048c52e', 'Zarządzanie bezpieczeństwem sieci', '094f8324-7c58-4566-b5d7-e4fe8ed03a18', '{c393c524-453c-4b02-bfad-5114fe828200,feeaa186-3d69-4801-a580-88be10d53553}' );
+  ( '3f58b671-5b38-43f8-bf0f-49d93048c52e', 'Zarządzanie bezpieczeństwem sieci', '094f8324-7c58-4566-b5d7-e4fe8ed03a18', '{c393c524-453c-4b02-bfad-5114fe828200,feeaa186-3d69-4801-a580-88be10d53553}' ),
+  ( '981c68ba-3f6a-459e-83af-f9fc578adc85', 'Sieci komputerowe', 'b2805b48-3d24-4169-8f67-88561345ee99', '{c393c524-453c-4b02-bfad-5114fe828200}' ),
+  ( 'b2805b48-3d24-4169-8f67-88561345ee99', 'Wstęp do sieci komputerowych', 'b2805b48-3d24-4169-8f67-88561345ee99', '{c393c524-453c-4b02-bfad-5114fe828200,feeaa186-3d69-4801-a580-88be10d53553}' );
 
 INSERT INTO exercises (id, name, subject_id, exercise_number, classroom_id, teacher_id)
 VALUES
@@ -134,17 +136,75 @@ VALUES
   ( 'eda8f76f-414a-4abb-b2f1-7a97b49cbe53', 'IPv6', 'cfaa8255-992f-405e-9064-dd8baf9dfde3', 3, '2affdc99-7dd6-47f0-b26c-3c413bf063dd', 'c393c524-453c-4b02-bfad-5114fe828200' ),
   ( 'da10e215-beb9-41f6-9895-0a6b83ab9a79', 'IPv6 cz. II', 'cfaa8255-992f-405e-9064-dd8baf9dfde3', 4, '2affdc99-7dd6-47f0-b26c-3c413bf063dd', 'c393c524-453c-4b02-bfad-5114fe828200' ),
 
-  -- Sieci komputerowe 2023
+  -- Sieci komputerowe 2025
   ( '79d83df1-1fc1-4cc5-afe6-6cc9e0387221', 'Diagnostyka sieci IPv4', '981c68ba-3f6a-459e-83af-f9fc578adc85', 1, '2affdc99-7dd6-47f0-b26c-3c413bf063dd', 'c393c524-453c-4b02-bfad-5114fe828200' ),
   ( '2a31cf55-f926-42e2-a985-50849bafe939', 'Zarządzanie sprzętem sieciowym', '981c68ba-3f6a-459e-83af-f9fc578adc85', 2, '2affdc99-7dd6-47f0-b26c-3c413bf063dd', 'c393c524-453c-4b02-bfad-5114fe828200' ),
   ( 'a263264d-1d2d-42de-939e-ee9553961b17', 'IPv6', '981c68ba-3f6a-459e-83af-f9fc578adc85', 3, '2affdc99-7dd6-47f0-b26c-3c413bf063dd', 'c393c524-453c-4b02-bfad-5114fe828200' ),
-  ( '805124e6-2595-4fe6-ad91-93f2a6c5762e', 'IPv6 cz. II', '981c68ba-3f6a-459e-83af-f9fc578adc85', 4, '2affdc99-7dd6-47f0-b26c-3c413bf063dd', 'c393c524-453c-4b02-bfad-5114fe828200' );
+  ( '805124e6-2595-4fe6-ad91-93f2a6c5762e', 'IPv6 cz. II', '981c68ba-3f6a-459e-83af-f9fc578adc85', 4, '2affdc99-7dd6-47f0-b26c-3c413bf063dd', 'c393c524-453c-4b02-bfad-5114fe828200' ),
+
+  -- Wstęp do sieci komputerowych 2025
+  ( '042c7d5c-ba9c-4a01-bbd8-79e743829f4d', 'Diagnostyka sieci IPv4', 'b2805b48-3d24-4169-8f67-88561345ee99', 1, '2affdc99-7dd6-47f0-b26c-3c413bf063dd', 'c393c524-453c-4b02-bfad-5114fe828200' ),
+  ( 'ab126bb5-d52a-4ec7-b199-ab1d73177c80', 'Zarządzanie sprzętem sieciowym', 'b2805b48-3d24-4169-8f67-88561345ee99', 2, '2affdc99-7dd6-47f0-b26c-3c413bf063dd', 'c393c524-453c-4b02-bfad-5114fe828200' ),
+  ( 'ccef8e62-4de9-4aa3-8a75-70276aab7ee4', 'Routing Statyczny', 'b2805b48-3d24-4169-8f67-88561345ee99', 3, '2affdc99-7dd6-47f0-b26c-3c413bf063dd', 'c393c524-453c-4b02-bfad-5114fe828200' ),
+  ( '8b3ddf60-a307-46fe-a53a-c79f44161946', 'WiFi Sieci bezprzewodowe standardu 802.11', 'b2805b48-3d24-4169-8f67-88561345ee99', 4, '2affdc99-7dd6-47f0-b26c-3c413bf063dd', 'c393c524-453c-4b02-bfad-5114fe828200' ),
+  ( 'fc48900f-fd81-45a6-8878-5044076c0c06', 'Wirtualne sieci lokalne (VLAN)', 'b2805b48-3d24-4169-8f67-88561345ee99', 5, '2affdc99-7dd6-47f0-b26c-3c413bf063dd', 'c393c524-453c-4b02-bfad-5114fe828200' ),
+  ( '019e221d-85fe-4d00-afbc-c81b609ad252', 'Bezpieczeństwo sieci standardów 802.11', 'b2805b48-3d24-4169-8f67-88561345ee99', 6, '2affdc99-7dd6-47f0-b26c-3c413bf063dd', 'c393c524-453c-4b02-bfad-5114fe828200' );
 
 INSERT INTO laboratory_groups (id, name, subject_id)
 VALUES
-  ( 'bb9309c2-6a67-4f65-bcc9-fa9547d9ffe9', 'inf1a', '25108321-0391-4c7a-b4d8-5ea20388e813' ),
-  ( '1bae5961-9ad4-4cfc-8240-f213deea65a4', 'inf1b', '25108321-0391-4c7a-b4d8-5ea20388e813' ),
-  ( 'edf46299-620d-4ce7-9495-ad52ae6553b4', 'inf2a', '25108321-0391-4c7a-b4d8-5ea20388e813' ),
-  ( '4dd6eb8b-94e0-4d04-8cc7-bdbcf873bea8', 'inf2b', '25108321-0391-4c7a-b4d8-5ea20388e813' ),
-  ( '155fefc9-2702-428a-b8c2-be492233b037', 'inf3a', '25108321-0391-4c7a-b4d8-5ea20388e813' ),
-  ( '88a0b530-7535-455c-8d20-385acce8a728', 'inf3b', '25108321-0391-4c7a-b4d8-5ea20388e813' );
+  -- Lokalne sieci bezprzewodowe 2024
+  ( 'bb9309c2-6a67-4f65-bcc9-fa9547d9ffe9', '5A', '25108321-0391-4c7a-b4d8-5ea20388e813' ),
+  ( '1bae5961-9ad4-4cfc-8240-f213deea65a4', '5B', '25108321-0391-4c7a-b4d8-5ea20388e813' ),
+  ( 'edf46299-620d-4ce7-9495-ad52ae6553b4', '6A', '25108321-0391-4c7a-b4d8-5ea20388e813' ),
+  ( '4dd6eb8b-94e0-4d04-8cc7-bdbcf873bea8', '6B', '25108321-0391-4c7a-b4d8-5ea20388e813' ),
+  ( '155fefc9-2702-428a-b8c2-be492233b037', '7A', '25108321-0391-4c7a-b4d8-5ea20388e813' ),
+  ( '88a0b530-7535-455c-8d20-385acce8a728', '7B', '25108321-0391-4c7a-b4d8-5ea20388e813' ),
+
+  -- Lokalne sieci bezprzewodowe 2023
+  ( '8c90429c-f950-4e3c-9431-94109a0b44e0', '5A', '60bd04c7-b83c-4b4d-8668-7bad4ea0a800' ),
+  ( '93982857-f764-4e4a-a6fb-e914e52090f0', '5B', '60bd04c7-b83c-4b4d-8668-7bad4ea0a800' ),
+  ( 'a82bbde7-b1f4-4550-9549-17579f4fbe93', '6A', '60bd04c7-b83c-4b4d-8668-7bad4ea0a800' ),
+  ( 'a2dfac24-6270-47a0-8017-a859508f1596', '6B', '60bd04c7-b83c-4b4d-8668-7bad4ea0a800' ),
+  ( 'c76e84b3-853b-46e8-956c-e4217105ce7a', '7A', '60bd04c7-b83c-4b4d-8668-7bad4ea0a800' ),
+
+  -- Zarządzanie bezpieczeństwem sieci 2024
+  ( '5716ab65-c00f-4314-a72d-2d8c3e7f986b', '1A', '3f58b671-5b38-43f8-bf0f-49d93048c52e' ),
+  ( '5efc7df8-feea-492f-97f8-a1d9bd9740b4', '1B', '3f58b671-5b38-43f8-bf0f-49d93048c52e' ),
+  ( 'd363bbde-bdeb-4724-a337-c9df24006abe', '2A', '3f58b671-5b38-43f8-bf0f-49d93048c52e' ),
+  ( '318f9e58-4406-44b6-976a-3e139c99c8a6', '2B', '3f58b671-5b38-43f8-bf0f-49d93048c52e' ),
+  ( 'bc2d78d7-6d25-43e3-9ec6-b3d55689b2c6', '3A', '3f58b671-5b38-43f8-bf0f-49d93048c52e' ),
+  ( '1de3f581-294a-4204-a3c4-d5aec56a4424', '3B', '3f58b671-5b38-43f8-bf0f-49d93048c52e' ),
+
+  -- Sieci komputerowe 2024
+  ( '4726687c-d496-45b4-b261-42344b46528a', '1A', 'cfaa8255-992f-405e-9064-dd8baf9dfde3' ),
+  ( '84f99e4e-ef62-49bf-ac43-a1bf8e4da469', '1B', 'cfaa8255-992f-405e-9064-dd8baf9dfde3' ),
+  ( '03c928b3-f5b1-45d8-96b1-4a361b39b81c', '2A', 'cfaa8255-992f-405e-9064-dd8baf9dfde3' ),
+  ( 'e87c7530-59b7-4157-bca3-acac0801a63a', '2B', 'cfaa8255-992f-405e-9064-dd8baf9dfde3' ),
+  ( '23ca8659-9791-434e-a045-979cc3d3ea26', '3A', 'cfaa8255-992f-405e-9064-dd8baf9dfde3' ),
+  ( '20c8d7ef-f0c8-49b4-9b40-17d0bbfe12c1', '3B', 'cfaa8255-992f-405e-9064-dd8baf9dfde3' ),
+  ( '6a9e54a6-8c53-4a3b-a98e-c8f6df8ad5f9', '4A', 'cfaa8255-992f-405e-9064-dd8baf9dfde3' ),
+  ( 'a34cbb0c-3eb1-498e-b150-2259d4673a74', '4B', 'cfaa8255-992f-405e-9064-dd8baf9dfde3' ),
+  ( '46e9b773-6925-4310-b02d-2dbcc40ba8e1', '5A', 'cfaa8255-992f-405e-9064-dd8baf9dfde3' ),
+  ( '36c32075-472e-4ae1-84e9-d378972104ab', '5B', 'cfaa8255-992f-405e-9064-dd8baf9dfde3' ),
+
+  -- Sieci komputerowe 2025
+  ( 'c9854621-e713-4b3f-b442-8e8cbdb20b57', '1A', '981c68ba-3f6a-459e-83af-f9fc578adc85' ),
+  ( '81f35756-28be-4942-bddf-d245d4deaab3', '1B', '981c68ba-3f6a-459e-83af-f9fc578adc85' ),
+  ( '1e4f7873-0d68-48bc-bf3e-86f0073a0ee2', '2A', '981c68ba-3f6a-459e-83af-f9fc578adc85' ),
+  ( '7fcc1ea8-fcf4-4a0e-a3cd-41391be3209e', '2B', '981c68ba-3f6a-459e-83af-f9fc578adc85' ),
+  ( 'f8699364-b9bf-4ec2-9efc-7fc1bf626a13', '3A', '981c68ba-3f6a-459e-83af-f9fc578adc85' ),
+  ( '6b4259bb-228d-4bb1-ae75-809545c24812', '3B', '981c68ba-3f6a-459e-83af-f9fc578adc85' ),
+  ( '85c2d03f-6a46-4a3b-a4ed-2b51d668676a', '4A', '981c68ba-3f6a-459e-83af-f9fc578adc85' ),
+  ( '075f17f0-ed9c-4797-a605-75936d452f0d', '4B', '981c68ba-3f6a-459e-83af-f9fc578adc85' ),
+  ( '7031ceff-0000-4d50-82de-bd4a781e9eea', '5A', '981c68ba-3f6a-459e-83af-f9fc578adc85' ),
+  ( '4d20e187-ac48-45d0-927d-d9a4ea242029', '5B', '981c68ba-3f6a-459e-83af-f9fc578adc85' ),
+  ( '52a97503-34a5-4a2b-ab4a-1acc9add64f5', '6A', '981c68ba-3f6a-459e-83af-f9fc578adc85' ),
+  ( '854e4921-c286-4b06-a713-16049ec5048d', '6B', '981c68ba-3f6a-459e-83af-f9fc578adc85' ),
+
+  -- Wstęp do sieci komputerowych 2025
+  ( '68d444cf-b67e-41ac-bc47-74dfcb5d031a', 'air1A', 'b2805b48-3d24-4169-8f67-88561345ee99' ),
+  ( '92145d11-c173-417e-af93-b1a3fab0249c', 'air1B', 'b2805b48-3d24-4169-8f67-88561345ee99' ),
+  ( '5dfe45ea-7a6a-4192-a58b-7541494856eb', 'air2A', 'b2805b48-3d24-4169-8f67-88561345ee99' ),
+  ( '35ac8c7d-737c-4155-9c6d-9be5b6908c5a', 'air2B', 'b2805b48-3d24-4169-8f67-88561345ee99' ),
+  ( '0fa2f183-4d9c-4441-8382-ae6955a6905e', 'ib1A', 'b2805b48-3d24-4169-8f67-88561345ee99' ),
+  ( '36e0f0ca-e87f-434a-a8b5-fb89e177191a', 'ib1B', 'b2805b48-3d24-4169-8f67-88561345ee99' );
