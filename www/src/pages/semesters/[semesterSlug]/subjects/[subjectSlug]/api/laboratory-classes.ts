@@ -28,13 +28,19 @@ export const GET: APIRoute = async ({ params, url }) => {
             .filter(c => filteredGroups.some(g => g.id === c.laboratoryGroupId))
             .map<LaboratoryClassData>(laboratoryClass => {
                 const exercise = exercises.find(e => e.id === laboratoryClass.exerciseId);
+                assert(exercise);
+
                 const group = groups.find(g => g.id === laboratoryClass.laboratoryGroupId);
+                assert(group);
+
                 const classTeacher = users.find(u => u.id === laboratoryClass.teacherId);
-                assert(exercise && group && classTeacher);
+                assert(classTeacher);
 
                 const exerciseClassroom = classrooms.find(c => c.id === exercise.classroomId);
+                assert(exerciseClassroom);
+
                 const exerciseTeacher = users.find(u => u.id === exercise.teacherId);
-                assert(exerciseClassroom && exerciseTeacher);
+                assert(exerciseTeacher);
 
                 return makeLaboratoryClassData(
                     laboratoryClass,
@@ -75,7 +81,7 @@ export const POST: APIRoute = async ({ locals }) => {
 
         const group = await LaboratoryGroup.fetch(laboratoryClass.laboratoryGroupId);
 
-        if (!group) {
+        if (!group || group.subjectId !== exercise.subjectId) {
             return Response.json(null, { status: 400 });
         }
 

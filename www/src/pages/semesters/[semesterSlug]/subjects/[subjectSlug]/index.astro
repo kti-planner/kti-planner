@@ -91,7 +91,7 @@ const exercisesData = exercises.map(exercise => {
 
 const nextExerciseNumber = exercises.reduce((max, e) => Math.max(max, e.exerciseNumber), 0) + 1;
 
-const groups = await LaboratoryGroup.fetchAll();
+const groups = await LaboratoryGroup.fetchAllFromSubject(subject);
 const groupData = groups.map(makeLaboratoryGroupData);
 ---
 

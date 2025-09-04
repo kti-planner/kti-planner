@@ -110,16 +110,22 @@ const plannedClassesNotContainedInSemester = computed<boolean>(() => {
     return lastClass !== undefined && lastClass.end.getTime() > parseDateLocalYyyyMmDd(semester.endDate).getTime();
 });
 
+const cantGenerate = computed(() => {
+    return !group.value || plannedClasses.value.length === 0 || group.value === undefined;
+});
+
 async function generate() {
-    if (plannedClasses.value.length === 0 || group.value === undefined) {
+    if (!group.value || plannedClasses.value.length === 0 || group.value === undefined) {
         return;
     }
+
+    const laboratoryGroupId = group.value.id;
 
     const result = await apiPost<boolean>(
         apiUrl,
         plannedClasses.value.map(plannedClass => ({
             exerciseId: plannedClass.exercise.id,
-            laboratoryGroupId: group.value!.id,
+            laboratoryGroupId,
             startDate: formatDateLocalYyyyMmDdHhMm(plannedClass.start),
             endDate: formatDateLocalYyyyMmDdHhMm(plannedClass.end),
         })) satisfies LaboratoryClassCreateApiData,
@@ -196,7 +202,9 @@ const dateFeedback = useId();
         </div>
 
         <div class="text-center">
-            <button type="submit" class="btn btn-success">{{ translate('Generate classes') }}</button>
+            <button type="submit" class="btn btn-success" :disabled="cantGenerate">
+                {{ translate('Generate classes') }}
+            </button>
         </div>
     </form>
 </template>

@@ -32,7 +32,7 @@ export function generatePassword() {
 }
 
 export const dateStringSchema = z.iso.date().transform(str => {
-    return new Date(`${str}T00:00:00`);
+    return parseDateLocalYyyyMmDd(str);
 });
 
 export const dateTimeStringSchema = z.iso.datetime({ local: true }).transform(str => {
