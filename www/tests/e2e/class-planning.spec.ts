@@ -2,12 +2,12 @@ import { expect } from 'playwright/test';
 import { expectSelectedOptionText, loginAsTeacher, test } from './fixtures';
 
 test('Cannot plan classes when not logged in', async ({ page }) => {
-    await page.goto('/semesters/2024-summer/lokalne-sieci-bezprzewodowe/');
+    await page.goto('/semesters/2024-summer/subjects/lokalne-sieci-bezprzewodowe/');
     await expect(page.getByRole('button', { name: 'Plan classes' })).not.toBeVisible();
 });
 
 test('Can plan classes without selecting a group beforehand', async ({ page }) => {
-    await page.goto('/semesters/2024-summer/lokalne-sieci-bezprzewodowe/');
+    await page.goto('/semesters/2024-summer/subjects/lokalne-sieci-bezprzewodowe/');
     await loginAsTeacher(page);
 
     await page.getByRole('button', { name: 'Plan classes' }).click();
@@ -30,7 +30,7 @@ test('Can plan classes without selecting a group beforehand', async ({ page }) =
 });
 
 test('Can plan classes with a group selected beforehand', async ({ page }) => {
-    await page.goto('/semesters/2024-summer/lokalne-sieci-bezprzewodowe/');
+    await page.goto('/semesters/2024-summer/subjects/lokalne-sieci-bezprzewodowe/');
     await loginAsTeacher(page);
 
     await page.locator('label', { hasText: 'inf1a' }).click();
@@ -55,7 +55,7 @@ test('Can plan classes with a group selected beforehand', async ({ page }) => {
 });
 
 test('Cannot generate classes starting at a holiday', async ({ page }) => {
-    await page.goto('/semesters/2024-summer/lokalne-sieci-bezprzewodowe/');
+    await page.goto('/semesters/2024-summer/subjects/lokalne-sieci-bezprzewodowe/');
     await loginAsTeacher(page);
 
     await page.getByRole('button', { name: 'Plan classes' }).click();
@@ -65,7 +65,7 @@ test('Cannot generate classes starting at a holiday', async ({ page }) => {
 });
 
 test('Can plan classes with two weeks between each one', async ({ page }) => {
-    await page.goto('/semesters/2024-summer/lokalne-sieci-bezprzewodowe/');
+    await page.goto('/semesters/2024-summer/subjects/lokalne-sieci-bezprzewodowe/');
     await loginAsTeacher(page);
 
     await page.getByRole('button', { name: 'Plan classes' }).click();
