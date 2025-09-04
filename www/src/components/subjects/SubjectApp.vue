@@ -43,7 +43,7 @@ const { subject, semester } = defineProps<{
 
 const selectedLaboratoryGroups = ref<LaboratoryGroupData[]>([]);
 const calendar = useTemplateRef('calendar');
-const subjectUrl = computed(() => `/semesters/${semester.slug}/${subject.slug}`);
+const subjectUrl = computed(() => `/semesters/${semester.slug}/subjects/${subject.slug}`);
 </script>
 
 <template>

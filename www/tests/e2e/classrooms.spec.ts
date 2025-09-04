@@ -7,7 +7,7 @@ test('Cannot access classrooms list when logged-out', async ({ page }) => {
 });
 
 test('Can access classrooms list when logged-in', async ({ page }) => {
-    await page.goto('/semesters/2024-summer/lokalne-sieci-bezprzewodowe/');
+    await page.goto('/semesters/2024-summer/subjects/lokalne-sieci-bezprzewodowe/');
     await loginAsAdmin(page);
 
     await page.getByRole('button', { name: 'Add new exercise' }).click();
