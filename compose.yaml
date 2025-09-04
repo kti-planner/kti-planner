@@ -15,6 +15,7 @@ services:
       - .env
     environment:
       POSTGRES_HOST: postgres
+    stop_grace_period: 0s
   postgres:
     build:
       context: ./db
