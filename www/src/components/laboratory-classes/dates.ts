@@ -1,6 +1,6 @@
 import type { ScheduleChangeType } from '@backend/semester';
 import type { ScheduleChangeData } from '@components/semesters/types';
-import { formatDateLocalYyyyMmDd } from '@components/utils';
+import { formatDateLocalYyyyMmDd, parseDateLocalYyyyMmDd } from '@components/utils';
 
 export function isSameDay(date1: Date, date2: Date) {
     return (
@@ -17,7 +17,7 @@ function weekdayName(date: Date): ScheduleChangeType {
 export function getNextDayOfTheWeekOccurance(date: Date, changes: ScheduleChangeData[], skip = 0): Date {
     const changeMap = new Map<string, ScheduleChangeType>();
     for (const change of changes) {
-        const date = new Date(change.date);
+        const date = parseDateLocalYyyyMmDd(change.date);
         changeMap.set(formatDateLocalYyyyMmDd(date), change.type);
     }
 

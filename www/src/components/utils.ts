@@ -8,6 +8,10 @@ export function formatDateLocalYyyyMmDd(date: Date): string {
     return `${year.toString().padStart(4, '0')}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
 }
 
+export function parseDateLocalYyyyMmDd(str: string): Date {
+    return new Date(`${str}T00:00:00`);
+}
+
 export function formatDateLocalHhMm(date: Date): string {
     const hours = date.getHours();
     const minutes = date.getMinutes();

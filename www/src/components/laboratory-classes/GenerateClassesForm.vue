@@ -7,7 +7,7 @@ import { getNextDayOfTheWeekOccurance, isSameDay } from '@components/laboratory-
 import type { LaboratoryClassCreateApiData } from '@components/laboratory-classes/types';
 import type { LaboratoryGroupData } from '@components/laboratory-groups/types';
 import type { ScheduleChangeData, SemesterData } from '@components/semesters/types';
-import { formatDateLocalYyyyMmDd, formatDateLocalYyyyMmDdHhMm } from '@components/utils';
+import { formatDateLocalYyyyMmDd, formatDateLocalYyyyMmDdHhMm, parseDateLocalYyyyMmDd } from '@components/utils';
 import PlannedClassCard from '@components/laboratory-classes/PlannedClassCard.vue';
 import LaboratoryGroupSelector from '@components/laboratory-groups/LaboratoryGroupSelector.vue';
 
@@ -66,9 +66,9 @@ const firstClassDateHoliday = computed(() => {
         return false;
     }
 
-    const firstClassDate = new Date(firstClassDateStr.value);
+    const firstClassDate = parseDateLocalYyyyMmDd(firstClassDateStr.value);
     return scheduleChanges.some(
-        change => change.type === 'holiday' && isSameDay(firstClassDate, new Date(change.date)),
+        change => change.type === 'holiday' && isSameDay(firstClassDate, parseDateLocalYyyyMmDd(change.date)),
     );
 });
 
@@ -93,7 +93,7 @@ const plannedClasses = computed<PlannedClass[]>(() => {
     return exercises.map<PlannedClass>(exercise => {
         const date = last
             ? getNextDayOfTheWeekOccurance(new Date(last), scheduleChanges, repeatWeeks.value - 1)
-            : new Date(firstClassDateStr.value!);
+            : parseDateLocalYyyyMmDd(firstClassDateStr.value!);
 
         last = date;
 
@@ -107,7 +107,7 @@ const plannedClasses = computed<PlannedClass[]>(() => {
 
 const plannedClassesNotContainedInSemester = computed<boolean>(() => {
     const lastClass = plannedClasses.value.at(-1);
-    return lastClass !== undefined && lastClass.end.getTime() > new Date(semester.endDate).getTime();
+    return lastClass !== undefined && lastClass.end.getTime() > parseDateLocalYyyyMmDd(semester.endDate).getTime();
 });
 
 async function generate() {
