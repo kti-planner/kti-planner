@@ -87,3 +87,15 @@ test('Can plan classes with two weeks between each one', async ({ page }) => {
     await expect(page.getByText('23 – 29 Jun 2025')).toBeVisible();
     await expect(page.locator('p', { hasText: '11:15 - 13:00' })).toBeVisible();
 });
+
+test('Generating classes that extend beyond semester end results in a warning', async ({ page }) => {
+    await page.goto('/semesters/2024-summer/subjects/lokalne-sieci-bezprzewodowe/');
+    await loginAsTeacher(page);
+
+    await page.getByRole('button', { name: 'Plan classes' }).click();
+    await page.getByRole('combobox', { name: 'Laboratory group' }).selectOption('inf1a');
+    await page.getByRole('textbox', { name: 'First class date' }).fill('2025-06-04');
+    await page.getByRole('textbox', { name: 'Class start time' }).fill('11:15');
+    await page.getByRole('textbox', { name: 'Class end time' }).fill('13:00');
+    await expect(page.getByText('The classes do not fit in the semester')).toBeVisible();
+});
