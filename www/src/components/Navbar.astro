@@ -12,7 +12,6 @@ const translations = {
     'en': {
         'Sign in': 'Sign in',
         'Sign out': 'Sign out',
-        "You're logged in as": "You're logged in as",
         'Profile': 'Profile',
         'Users': 'Users',
         'Classrooms': 'Classrooms',
@@ -20,7 +19,6 @@ const translations = {
     'pl': {
         'Sign in': 'Zaloguj się',
         'Sign out': 'Wyloguj się',
-        "You're logged in as": 'Jesteś zalogowany jako',
         'Profile': 'Profil',
         'Users': 'Użytkownicy',
         'Classrooms': 'Sale',
@@ -93,7 +91,6 @@ const initials = user?.name
                     </a>
                 ) : (
                     <>
-                        <div class="d-none d-sm-block">{`${translate("You're logged in as")} ${user.name}`}</div>
                         <div class="dropdown">
                             <div
                                 class="d-flex align-items-center justify-content-center gap-1"
@@ -103,7 +100,13 @@ const initials = user?.name
                                 <span class="initials btn btn-light border rounded-circle">{initials}</span>
                                 <span class="dropdown-toggle" />
                             </div>
-                            <ul class="dropdown-menu dropdown-menu-end bg-body-tertiary">
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li>
+                                    <p class="dropdown-item m-0">{user.name}</p>
+                                </li>
+                                <li>
+                                    <hr class="dropdown-divider" />
+                                </li>
                                 <li>
                                     <a class="dropdown-item" href="/profile/">
                                         {translate('Profile')}
@@ -119,13 +122,18 @@ const initials = user?.name
                                         {translate('Classrooms')}
                                     </a>
                                 </li>
+                                <li>
+                                    <hr class="dropdown-divider" />
+                                </li>
+                                <li>
+                                    <form action={`/api/logout/${loginParams}`} method="post">
+                                        <button type="submit" class="text-nowrap dropdown-item">
+                                            {translate('Sign out')}
+                                        </button>
+                                    </form>
+                                </li>
                             </ul>
                         </div>
-                        <form action={`/api/logout/${loginParams}`} method="post">
-                            <button type="submit" class="btn btn-success btn-sm text-nowrap">
-                                {translate('Sign out')}
-                            </button>
-                        </form>
                     </>
                 )
             }
