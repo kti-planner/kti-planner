@@ -1,5 +1,6 @@
 ---
 import { makeLoginNextParam } from 'src/utils';
+import UserProfileDropdown from '@components/UserProfileDropdown.astro';
 
 interface Props {
     breadcrumbs: Breadcrumb[];
@@ -11,17 +12,9 @@ const { langId, user } = Astro.locals;
 const translations = {
     'en': {
         'Sign in': 'Sign in',
-        'Sign out': 'Sign out',
-        'Profile': 'Profile',
-        'Users': 'Users',
-        'Classrooms': 'Classrooms',
     },
     'pl': {
         'Sign in': 'Zaloguj się',
-        'Sign out': 'Wyloguj się',
-        'Profile': 'Profil',
-        'Users': 'Użytkownicy',
-        'Classrooms': 'Sale',
     },
 };
 
@@ -37,11 +30,6 @@ const languageLabels: Record<LangId, string> = {
 };
 
 const loginParams = makeLoginNextParam(Astro.url);
-
-const initials = user?.name
-    .split(' ')
-    .map(word => word.charAt(0).toUpperCase())
-    .join('');
 ---
 
 <nav class="navbar navbar-expand-md bg-body-tertiary border-bottom border-secondary-subtle">
@@ -86,55 +74,12 @@ const initials = user?.name
         <div class="d-flex align-items-center gap-3 order-first order-md-last px-3 ms-auto">
             {
                 user === null ? (
-                    <a href={`/login/${loginParams}`} role="button" class="btn btn-success btn-sm text-nowrap">
+                    <a href={`/login/${loginParams}`} role="button" class="btn btn-success btn-sm">
                         {translate('Sign in')}
                     </a>
                 ) : (
                     <>
-                        <div class="dropdown">
-                            <a
-                                role="button"
-                                href="/profile/"
-                                class="hstack text-reset text-decoration-none dropdown-toggle"
-                                data-bs-toggle="dropdown"
-                                aria-expanded="false"
-                            >
-                                <div class="initials btn btn-light border rounded-circle">{initials}</div>
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-end">
-                                <li>
-                                    <span class="dropdown-item-text">{user.name}</span>
-                                </li>
-                                <li>
-                                    <hr class="dropdown-divider" />
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" href="/profile/">
-                                        {translate('Profile')}
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" href="/users/">
-                                        {translate('Users')}
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" href="/classrooms/">
-                                        {translate('Classrooms')}
-                                    </a>
-                                </li>
-                                <li>
-                                    <hr class="dropdown-divider" />
-                                </li>
-                                <li>
-                                    <form action={`/api/logout/${loginParams}`} method="post">
-                                        <button type="submit" class="dropdown-item">
-                                            {translate('Sign out')}
-                                        </button>
-                                    </form>
-                                </li>
-                            </ul>
-                        </div>
+                        <UserProfileDropdown />
                     </>
                 )
             }
@@ -152,13 +97,5 @@ const initials = user?.name
     nav {
         margin-inline: calc((100vw - 100%) / -2);
         padding-inline: calc((100vw - 100%) / 2);
-    }
-
-    .initials {
-        width: 40px;
-        height: 40px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
     }
 </style>

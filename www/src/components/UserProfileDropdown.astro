@@ -1,0 +1,90 @@
+---
+import { makeLoginNextParam } from 'src/utils';
+
+const { langId, user } = Astro.locals;
+
+if (!user) {
+    return;
+}
+
+const translations = {
+    'en': {
+        'Profile': 'Profile',
+        'Users': 'Users',
+        'Classrooms': 'Classrooms',
+        'Sign out': 'Sign out',
+    },
+    'pl': {
+        'Profile': 'Profil',
+        'Users': 'Użytkownicy',
+        'Classrooms': 'Sale',
+        'Sign out': 'Wyloguj się',
+    },
+};
+
+function translate(text: keyof (typeof translations)[LangId]): string {
+    return translations[langId][text];
+}
+
+const loginParams = makeLoginNextParam(Astro.url);
+
+const initials = user.name
+    .split(' ')
+    .map(word => word.charAt(0).toUpperCase())
+    .join('');
+---
+
+<div class="dropdown">
+    <a
+        role="button"
+        href="/profile/"
+        class="hstack text-reset text-decoration-none dropdown-toggle"
+        data-bs-toggle="dropdown"
+        aria-expanded="false"
+    >
+        <div class="initials btn btn-light border rounded-circle">{initials}</div>
+    </a>
+    <ul class="dropdown-menu dropdown-menu-end">
+        <li>
+            <span class="dropdown-item-text">{user.name}</span>
+        </li>
+        <li>
+            <hr class="dropdown-divider" />
+        </li>
+        <li>
+            <a class="dropdown-item" href="/profile/">
+                {translate('Profile')}
+            </a>
+        </li>
+        <li>
+            <a class="dropdown-item" href="/users/">
+                {translate('Users')}
+            </a>
+        </li>
+        <li>
+            <a class="dropdown-item" href="/classrooms/">
+                {translate('Classrooms')}
+            </a>
+        </li>
+        <li>
+            <hr class="dropdown-divider" />
+        </li>
+        <li>
+            <form action={`/api/logout/${loginParams}`} method="post">
+                <button type="submit" class="dropdown-item">
+                    {translate('Sign out')}
+                </button>
+            </form>
+        </li>
+    </ul>
+</div>
+
+<style>
+    .initials {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+</style>
