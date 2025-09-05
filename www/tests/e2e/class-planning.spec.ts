@@ -11,7 +11,7 @@ test('Can plan classes without selecting a group beforehand', async ({ page }) =
     await loginAsTeacher(page);
 
     await page.getByRole('button', { name: 'Plan classes' }).click();
-    await page.getByRole('combobox', { name: 'Laboratory group' }).selectOption('inf1a');
+    await page.getByRole('combobox', { name: 'Laboratory group' }).selectOption('5A');
     await page.getByRole('textbox', { name: 'First class date' }).fill('2025-04-08');
     await page.getByRole('textbox', { name: 'Class start time' }).fill('11:15');
     await page.getByRole('textbox', { name: 'Class end time' }).fill('13:00');
@@ -33,10 +33,10 @@ test('Can plan classes with a group selected beforehand', async ({ page }) => {
     await page.goto('/semesters/2024-summer/subjects/lokalne-sieci-bezprzewodowe/');
     await loginAsTeacher(page);
 
-    await page.locator('label', { hasText: 'inf1a' }).click();
+    await page.locator('label', { hasText: '5A' }).click();
     await page.getByRole('button', { name: 'Plan classes' }).click();
 
-    await expectSelectedOptionText(page.getByRole('combobox', { name: 'Laboratory group' }), 'inf1a');
+    await expectSelectedOptionText(page.getByRole('combobox', { name: 'Laboratory group' }), '5A');
     await page.getByRole('textbox', { name: 'First class date' }).fill('2025-04-08');
     await page.getByRole('textbox', { name: 'Class start time' }).fill('11:15');
     await page.getByRole('textbox', { name: 'Class end time' }).fill('13:00');
@@ -59,7 +59,7 @@ test('Cannot generate classes starting at a holiday', async ({ page }) => {
     await loginAsTeacher(page);
 
     await page.getByRole('button', { name: 'Plan classes' }).click();
-    await page.getByRole('combobox', { name: 'Laboratory group' }).selectOption('inf1a');
+    await page.getByRole('combobox', { name: 'Laboratory group' }).selectOption('5A');
     await page.getByRole('textbox', { name: 'First class date' }).fill('2025-04-18');
     await expect(page.getByText('The date you selected is a holiday')).toBeVisible();
 });
@@ -69,7 +69,7 @@ test('Can plan classes with two weeks between each one', async ({ page }) => {
     await loginAsTeacher(page);
 
     await page.getByRole('button', { name: 'Plan classes' }).click();
-    await page.getByRole('combobox', { name: 'Laboratory group' }).selectOption('inf1a');
+    await page.getByRole('combobox', { name: 'Laboratory group' }).selectOption('5A');
     await page.getByRole('textbox', { name: 'First class date' }).fill('2025-04-08');
     await page.getByRole('textbox', { name: 'Class start time' }).fill('11:15');
     await page.getByRole('textbox', { name: 'Class end time' }).fill('13:00');
@@ -93,7 +93,7 @@ test('Generating classes that extend beyond semester end results in a warning', 
     await loginAsTeacher(page);
 
     await page.getByRole('button', { name: 'Plan classes' }).click();
-    await page.getByRole('combobox', { name: 'Laboratory group' }).selectOption('inf1a');
+    await page.getByRole('combobox', { name: 'Laboratory group' }).selectOption('5A');
     await page.getByRole('textbox', { name: 'First class date' }).fill('2025-06-04');
     await page.getByRole('textbox', { name: 'Class start time' }).fill('11:15');
     await page.getByRole('textbox', { name: 'Class end time' }).fill('13:00');
