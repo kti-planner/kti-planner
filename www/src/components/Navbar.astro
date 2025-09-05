@@ -92,12 +92,19 @@ const initials = user?.name
                 ) : (
                     <>
                         <div class="dropdown">
-                            <div class="hstack" data-bs-toggle="dropdown" aria-expanded="false">
-                                <span class="initials btn btn-light border rounded-circle">{initials}</span>
-                                <span class="ms-1 dropdown-toggle" />
-                            </div>
+                            <a
+                                role="button"
+                                href="/profile/"
+                                class="hstack text-reset text-decoration-none dropdown-toggle"
+                                data-bs-toggle="dropdown"
+                                aria-expanded="false"
+                            >
+                                <div class="initials btn btn-light border rounded-circle">{initials}</div>
+                            </a>
                             <ul class="dropdown-menu dropdown-menu-end">
-                                <p class="ms-3 my-0">{user.name}</p>
+                                <li>
+                                    <span class="dropdown-item-text">{user.name}</span>
+                                </li>
                                 <li>
                                     <hr class="dropdown-divider" />
                                 </li>
@@ -121,7 +128,7 @@ const initials = user?.name
                                 </li>
                                 <li>
                                     <form action={`/api/logout/${loginParams}`} method="post">
-                                        <button type="submit" class="text-nowrap dropdown-item">
+                                        <button type="submit" class="dropdown-item">
                                             {translate('Sign out')}
                                         </button>
                                     </form>
