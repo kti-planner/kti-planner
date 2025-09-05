@@ -22,7 +22,7 @@ const submitFailed = ref(false);
 
 const exerciseName = ref<string | undefined>(props.exercise?.name);
 const exerciseNumber = ref<number | undefined>(props.exercise?.exerciseNumber);
-const exerciseClassroomId = ref<string | undefined>(props.exercise?.classroomId);
+const exerciseClassroomId = ref<string | undefined>(props.exercise?.classroom?.id);
 const teacher = ref<UserData | null>(props.exercise?.teacher ?? props.subject.teachers[0] ?? null);
 
 async function submit() {
@@ -59,7 +59,7 @@ async function submit() {
     submitFailed.value = !success;
 
     if (success) {
-        const newUrl = `/semesters/${props.semester.slug}/${props.subject.slug}/${exerciseNumber.value}/`;
+        const newUrl = `/semesters/${props.semester.slug}/subjects/${props.subject.slug}/${exerciseNumber.value}/`;
 
         if (isEditing.value) {
             window.history.replaceState({}, '', newUrl);

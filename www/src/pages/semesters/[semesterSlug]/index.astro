@@ -55,7 +55,10 @@ const allUsers = await User.fetchAll();
 
 <Layout
     breadcrumbs={[
-        { text: translate('Semesters'), href: '/semesters/' },
+        {
+            text: translate('Semesters'),
+            href: '/semesters/',
+        },
         {
             text: semesterName,
             href: '#',
@@ -79,13 +82,13 @@ const allUsers = await User.fetchAll();
     <div class="subjects-list list-group mx-auto my-4">
         {
             subjects.map(
-                s =>
+                subject =>
                     (
                         <a
-                            href={`/semesters/${semesterSlug}/${s.slug}/`}
+                            href={`/semesters/${semesterSlug}/subjects/${subject.slug}/`}
                             class="list-group-item list-group-item-action"
                         >
-                            {s.name}
+                            {subject.name}
                         </a>
                     ) as unknown,
             )
