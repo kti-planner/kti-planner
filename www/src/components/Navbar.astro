@@ -92,13 +92,9 @@ const initials = user?.name
                 ) : (
                     <>
                         <div class="dropdown">
-                            <div
-                                class="d-flex align-items-center justify-content-center gap-1"
-                                data-bs-toggle="dropdown"
-                                aria-expanded="false"
-                            >
+                            <div class="hstack" data-bs-toggle="dropdown" aria-expanded="false">
                                 <span class="initials btn btn-light border rounded-circle">{initials}</span>
-                                <span class="dropdown-toggle" />
+                                <span class="ms-1 dropdown-toggle" />
                             </div>
                             <ul class="dropdown-menu dropdown-menu-end">
                                 <p class="ms-3 my-0">{user.name}</p>
