@@ -1,5 +1,6 @@
 import z from 'zod';
-import type { SemesterType } from '@backend/semester';
+import type { ScheduleChangeType, SemesterType } from '@backend/semester';
+import { dateStringSchema } from '@components/utils';
 
 export interface SemesterData {
     id: string;
@@ -13,12 +14,8 @@ export interface SemesterData {
 export const semesterCreateApiSchema = z.object({
     year: z.number(),
     type: z.enum(['summer', 'winter']),
-    startDate: z.iso.date().transform(str => {
-        return new Date(`${str}T00:00:00`);
-    }),
-    endDate: z.iso.date().transform(str => {
-        return new Date(`${str}T00:00:00`);
-    }),
+    startDate: dateStringSchema,
+    endDate: dateStringSchema,
 });
 
 export type SemesterCreateApiData = z.input<typeof semesterCreateApiSchema>;
@@ -27,18 +24,13 @@ export const semesterEditApiSchema = z.object({
     id: z.uuid(),
     year: z.number().optional(),
     type: z.enum(['summer', 'winter']).optional(),
-    startDate: z.iso
-        .date()
-        .transform(str => {
-            return new Date(`${str}T00:00:00`);
-        })
-        .optional(),
-    endDate: z.iso
-        .date()
-        .transform(str => {
-            return new Date(`${str}T00:00:00`);
-        })
-        .optional(),
+    startDate: dateStringSchema.optional(),
+    endDate: dateStringSchema.optional(),
 });
 
 export type SemesterEditApiData = z.input<typeof semesterEditApiSchema>;
+
+export interface ScheduleChangeData {
+    date: string;
+    type: ScheduleChangeType;
+}

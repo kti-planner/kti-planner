@@ -2,7 +2,7 @@
 import { Classroom, makeClassroomData } from '@backend/classroom';
 import { Exercise, makeExerciseData } from '@backend/exercise';
 import { LaboratoryGroup, makeLaboratoryGroupData } from '@backend/laboratory-group';
-import { Semester } from '@backend/semester';
+import { makeScheduleChangeData, Semester } from '@backend/semester';
 import { Subject } from '@backend/subject';
 import { makeUserData, User } from '@backend/user';
 import type { SemesterData } from '@components/semesters/types';
@@ -56,6 +56,9 @@ const semesterData: SemesterData = {
     endDate: formatDateLocalYyyyMmDd(semester.endDate),
 };
 
+const scheduleChanges = await semester.getScheduleChanges();
+const scheduleChangesData = scheduleChanges.map(makeScheduleChangeData);
+
 const subjectData: SubjectData = {
     id: subject.id,
     name: subject.name,
@@ -67,6 +70,9 @@ const subjectData: SubjectData = {
 const allUsers = await User.fetchAll();
 const allUsersData = allUsers.map(makeUserData);
 
+const classrooms = await Classroom.fetchAll();
+const classroomsData = classrooms.map(makeClassroomData);
+
 const exercises = await Exercise.fetchAllFromSubject(subject);
 
 const exercisesData = exercises.map(exercise => {
@@ -75,15 +81,17 @@ const exercisesData = exercises.map(exercise => {
         throw new Error('Exercise teacher not found');
     }
 
-    return makeExerciseData(exercise, teacher);
+    const classroom = classrooms.find(classroom => classroom.id === exercise.classroomId);
+    if (classroom === undefined) {
+        throw new Error('Exercise classroom not found');
+    }
+
+    return makeExerciseData(exercise, classroom, teacher);
 });
 
 const nextExerciseNumber = exercises.reduce((max, e) => Math.max(max, e.exerciseNumber), 0) + 1;
 
-const classrooms = await Classroom.fetchAll();
-const classroomsData = classrooms.map(makeClassroomData);
-
-const groups = await LaboratoryGroup.fetchAll();
+const groups = await LaboratoryGroup.fetchAllFromSubject(subject);
 const groupData = groups.map(makeLaboratoryGroupData);
 ---
 
@@ -112,5 +120,6 @@ const groupData = groups.map(makeLaboratoryGroupData);
         classrooms={classroomsData}
         laboratoryGroups={groupData}
         nextExerciseNumber={nextExerciseNumber}
+        scheduleChanges={scheduleChangesData}
     />
 </Layout>

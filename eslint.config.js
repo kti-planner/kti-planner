@@ -113,6 +113,12 @@ export default tseslint.config(
             '@typescript-eslint/no-extraneous-class': 'off',
             '@typescript-eslint/no-import-type-side-effects': 'error',
             '@typescript-eslint/no-non-null-assertion': 'off',
+            '@typescript-eslint/no-unnecessary-condition': [
+                'error',
+                {
+                    allowConstantLoopConditions: 'only-allowed-literals',
+                },
+            ],
             '@typescript-eslint/no-unused-vars': [
                 'error',
                 {

@@ -1,4 +1,4 @@
-import { expect, type Page, test as base } from '@playwright/test';
+import { expect, type Locator, type Page, test as base } from '@playwright/test';
 import { restoreDb } from './db-utils';
 
 declare global {
@@ -43,4 +43,14 @@ export async function loginAsTeacher(page: Page) {
     await page.locator('form').getByRole('button', { name: 'Sign in' }).click();
     const expected = url.pathname === '/login/' ? (url.searchParams.get('next') ?? '/') : url.toString();
     await expect(page).toHaveURL(expected);
+}
+
+export async function expectSelectedOptionText(locator: Locator, text: string) {
+    await expect(async () => {
+        const selected = await locator.evaluate<string | undefined, HTMLSelectElement>(
+            el => el.options[el.selectedIndex]?.text,
+        );
+
+        expect(selected).toBe(text);
+    }).toPass();
 }

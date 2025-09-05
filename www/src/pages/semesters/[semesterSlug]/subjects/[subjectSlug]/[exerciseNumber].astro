@@ -1,5 +1,5 @@
 ---
-import { Classroom } from '@backend/classroom';
+import { Classroom, makeClassroomData } from '@backend/classroom';
 import { Exercise } from '@backend/exercise';
 import { Semester } from '@backend/semester';
 import { Subject } from '@backend/subject';
@@ -58,6 +58,10 @@ if (!exercise) {
     return new Response(null, { status: 404 });
 }
 
+const classrooms = await Classroom.fetchAll();
+
+const classroomsData: ClassroomData[] = classrooms.map(makeClassroomData);
+
 const semesterData: SemesterData = {
     id: semester.id,
     type: semester.type,
@@ -75,21 +79,19 @@ const subjectData: SubjectData = {
     teachers: (await subject.getTeachers()).map(makeUserData),
 };
 
+const classroomData = classroomsData.find(classroom => classroom.id === exercise.classroomId);
+if (!classroomData) {
+    throw new Error('Exercise classroom not found');
+}
+
 const exerciseData: ExerciseData = {
     id: exercise.id,
     name: exercise.name,
     exerciseNumber: exercise.exerciseNumber,
     subjectId: exercise.subjectId,
-    classroomId: exercise.classroomId,
+    classroom: classroomData,
     teacher: makeUserData(await exercise.getTeacher()),
 };
-
-const classrooms = await Classroom.fetchAll();
-
-const classroomsData: ClassroomData[] = classrooms.map(classroom => ({
-    id: classroom.id,
-    name: classroom.name,
-}));
 ---
 
 <Layout
