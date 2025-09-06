@@ -1,14 +1,13 @@
 ---
 import { Classroom, makeClassroomData } from '@backend/classroom';
 import { Exercise } from '@backend/exercise';
-import { Semester } from '@backend/semester';
+import { makeSemesterData, Semester } from '@backend/semester';
 import { Subject } from '@backend/subject';
 import { makeUserData } from '@backend/user';
 import type { ClassroomData } from '@components/classrooms/types';
 import type { ExerciseData } from '@components/exercises/types';
 import type { SemesterData } from '@components/semesters/types';
 import type { SubjectData } from '@components/subjects/types';
-import { formatDateLocalYyyyMmDd } from '@components/utils';
 import Layout from '@layouts/Layout.astro';
 import EditExercise from '@components/exercises/EditExercise.vue';
 
@@ -62,14 +61,7 @@ const classrooms = await Classroom.fetchAll();
 
 const classroomsData: ClassroomData[] = classrooms.map(makeClassroomData);
 
-const semesterData: SemesterData = {
-    id: semester.id,
-    type: semester.type,
-    year: semester.year,
-    slug: semester.slug,
-    startDate: formatDateLocalYyyyMmDd(semester.startDate),
-    endDate: formatDateLocalYyyyMmDd(semester.endDate),
-};
+const semesterData: SemesterData = makeSemesterData(semester);
 
 const subjectData: SubjectData = {
     id: subject.id,

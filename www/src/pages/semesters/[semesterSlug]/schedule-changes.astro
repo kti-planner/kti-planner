@@ -1,5 +1,6 @@
 ---
-import { makeScheduleChangeData, Semester } from '@backend/semester';
+import { makeScheduleChangeData, makeSemesterData, Semester } from '@backend/semester';
+import type { SemesterData } from '@components/semesters/types';
 import Layout from '@layouts/Layout.astro';
 import ScheduleChangesList from '@components/semesters/ScheduleChangesList.vue';
 
@@ -40,6 +41,8 @@ if (!semester) {
 
 const semesterName = `${semester.type === 'summer' ? translate('Summer semester') : translate('Winter semester')} ${semester.year}/${semester.year + 1}`;
 
+const semesterData: SemesterData = makeSemesterData(semester);
+
 const scheduleChanges = await semester.getScheduleChanges();
 const scheduleChangesData = scheduleChanges.map(makeScheduleChangeData);
 ---
@@ -66,8 +69,8 @@ const scheduleChangesData = scheduleChanges.map(makeScheduleChangeData);
     <div class="text-center">
         {semester.startDate.toLocaleDateString('pl-PL')} - {semester.endDate.toLocaleDateString('pl-PL')}
     </div>
-    <h2 class="text-center fs-5">
+    <h2 class="text-center fs-5 mt-3">
         {translate('Schedule changes')}
     </h2>
-    <ScheduleChangesList client:only="vue" initialScheduleChanges={scheduleChangesData} />
+    <ScheduleChangesList client:only="vue" semester={semesterData} initialScheduleChanges={scheduleChangesData} />
 </Layout>

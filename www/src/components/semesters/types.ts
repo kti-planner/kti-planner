@@ -30,7 +30,32 @@ export const semesterEditApiSchema = z.object({
 
 export type SemesterEditApiData = z.input<typeof semesterEditApiSchema>;
 
-export interface ScheduleChangeData {
-    date: string;
-    type: ScheduleChangeType;
-}
+export const scheduleChangeDataSchema = z.object({
+    date: dateStringSchema,
+    type: z.enum(['holiday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']),
+});
+
+export type ScheduleChangeData = z.input<typeof scheduleChangeDataSchema>;
+
+export const scheduleChangeTypeLabels: Record<LangId, Record<ScheduleChangeType, string>> = {
+    'en': {
+        'holiday': 'holiday',
+        'monday': "monday's schedule",
+        'tuesday': "tuesday's schedule",
+        'wednesday': "wednesday's schedule",
+        'thursday': "thursday's schedule",
+        'friday': "friday's schedule",
+        'saturday': "saturday's schedule",
+        'sunday': "sunday's schedule",
+    },
+    'pl': {
+        'holiday': 'dzień wolny',
+        'monday': 'zajęcia wg planu z poniedziałku',
+        'tuesday': 'zajęcia wg planu z wtorku',
+        'wednesday': 'zajęcia wg planu z środy',
+        'thursday': 'zajęcia wg planu z czwartku',
+        'friday': 'zajęcia wg planu z piątku',
+        'saturday': 'zajęcia wg planu z soboty',
+        'sunday': 'zajęcia wg planu z niedzieli',
+    },
+};

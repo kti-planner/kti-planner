@@ -1,9 +1,8 @@
 ---
-import { Semester } from '@backend/semester';
+import { makeSemesterData, Semester } from '@backend/semester';
 import { Subject } from '@backend/subject';
 import { User } from '@backend/user';
 import type { SemesterData } from '@components/semesters/types';
-import { formatDateLocalYyyyMmDd } from '@components/utils';
 import Layout from '@layouts/Layout.astro';
 import EditSemester from '@components/semesters/EditSemester.vue';
 import AddSubject from '@components/subjects/AddSubject.vue';
@@ -39,14 +38,7 @@ if (!semester) {
 
 const semesterName = `${semester.type === 'summer' ? translate('Summer semester') : translate('Winter semester')} ${semester.year}/${semester.year + 1}`;
 
-const semesterData: SemesterData = {
-    id: semester.id,
-    type: semester.type,
-    year: semester.year,
-    slug: semester.slug,
-    startDate: formatDateLocalYyyyMmDd(semester.startDate),
-    endDate: formatDateLocalYyyyMmDd(semester.endDate),
-};
+const semesterData: SemesterData = makeSemesterData(semester);
 
 const subjects = await Subject.fetchAllFromSemester(semester);
 
