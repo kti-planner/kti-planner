@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useId } from 'vue';
 import { langId } from '@components/frontend/lang';
 import { currentUser } from '@components/frontend/user';
 import type { UserData } from '@components/users/types';
@@ -8,7 +9,7 @@ import PasswordChange from '@components/users/passwords/PasswordChange.vue';
 import PasswordReset from '@components/users/passwords/PasswordReset.vue';
 import UserForm from '@components/users/UserForm.vue';
 
-const props = defineProps<{
+defineProps<{
     user: UserData;
 }>();
 
@@ -25,7 +26,7 @@ function translate(text: keyof (typeof translations)[LangId]): string {
     return translations[langId][text];
 }
 
-const modalId = `edit-user-modal-${props.user.id}`;
+const modalId = useId();
 </script>
 
 <template>
@@ -41,7 +42,7 @@ const modalId = `edit-user-modal-${props.user.id}`;
     />
 
     <Modal :id="modalId" content-rendering="always">
-        <template #header> {{ translate('Edit user') }} {{ props.user.name }} </template>
+        <template #header> {{ translate('Edit user') }} {{ user.name }} </template>
         <UserForm :user />
         <template #footer>
             <PasswordChange v-if="currentUser?.id === user.id" />

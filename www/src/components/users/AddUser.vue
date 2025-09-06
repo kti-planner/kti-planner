@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useId } from 'vue';
 import { langId } from '@components/frontend/lang';
 import Modal from '@components/Modal.vue';
 import UserForm from '@components/users/UserForm.vue';
@@ -15,17 +16,19 @@ const translations = {
 function translate(text: keyof (typeof translations)[LangId]): string {
     return translations[langId][text];
 }
+
+const modalId = useId();
 </script>
 
 <template>
     <div>
         <div class="d-flex justify-content-center mb-3">
-            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#user-modal">
+            <button type="button" class="btn btn-success" data-bs-toggle="modal" :data-bs-target="`#${modalId}`">
                 {{ translate('Add new user') }}
             </button>
         </div>
 
-        <Modal id="user-modal">
+        <Modal :id="modalId">
             <template #header>
                 {{ translate('Add new user') }}
             </template>
