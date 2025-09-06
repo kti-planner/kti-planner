@@ -2,6 +2,7 @@
 import { Semester } from '@backend/semester';
 import Layout from '@layouts/Layout.astro';
 import AddSemester from '@components/semesters/AddSemester.vue';
+import Show from '@components/Show.astro';
 
 const { langId, user } = Astro.locals;
 
@@ -26,24 +27,32 @@ const semesters = await Semester.fetchAll();
 ---
 
 <Layout breadcrumbs={[{ text: translate('Semesters'), href: '#' }]}>
-    {user && <AddSemester client:only="vue" />}
-    <div class="semesters-list list-group mx-auto my-4">
-        {
-            semesters.map(
-                semester =>
-                    (
-                        <a href={`/semesters/${semester.slug}/`} class="list-group-item list-group-item-action">
-                            {semester.type === 'summer' ? translate('Summer semester') : translate('Winter semester')}{' '}
-                            {`${semester.year}/${semester.year + 1}`}
-                        </a>
-                    ) as unknown,
-            )
-        }
+    <div class="vstack gap-3 align-items-center">
+        <Show when={semesters.length > 0}>
+            <div class="semesters-list list-group">
+                {
+                    semesters.map(
+                        semester =>
+                            (
+                                <a href={`/semesters/${semester.slug}/`} class="list-group-item list-group-item-action">
+                                    {semester.type === 'summer'
+                                        ? translate('Summer semester')
+                                        : translate('Winter semester')}{' '}
+                                    {`${semester.year}/${semester.year + 1}`}
+                                </a>
+                            ) as unknown,
+                    )
+                }
+            </div>
+        </Show>
+        <Show when={user !== null}>
+            <AddSemester client:only="vue" />
+        </Show>
     </div>
 </Layout>
 
 <style>
     .semesters-list {
-        max-width: 600px;
+        width: min(600px, 100%);
     }
 </style>

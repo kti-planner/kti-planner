@@ -60,7 +60,7 @@ const subjectUrl = computed(() => `/semesters/${semester.slug}/subjects/${subjec
                 :schedule-changes
             />
         </div>
-        <div class="col-12 col-lg-3 order-1 order-lg-2 d-flex gap-3 flex-column-reverse flex-lg-column">
+        <div class="col-12 col-lg-3 order-1 order-lg-2 d-flex gap-4 flex-column-reverse flex-lg-column">
             <div>
                 <h2 class="text-center fs-5">
                     {{ translate('Laboratory groups') }}
@@ -81,24 +81,24 @@ const subjectUrl = computed(() => `/semesters/${semester.slug}/subjects/${subjec
                     :laboratory-groups
                     :schedule-changes
                     :api-url="`${subjectUrl}/api/laboratory-classes/`"
-                    class="mt-3"
+                    class="d-block mt-3 mx-auto"
                     @done="calendar?.refreshClasses()"
                 />
             </div>
             <div>
                 <h2 class="text-center fs-5">{{ translate('Exercises') }}</h2>
-                <div class="exercises-list list-group mx-auto my-2">
-                    <a
-                        v-for="exercise in exercises"
-                        :key="exercise.id"
-                        :href="`${subjectUrl}/${exercise.exerciseNumber}/`"
-                        class="list-group-item list-group-item-action"
-                    >
-                        {{ `${exercise.exerciseNumber}. ${exercise.name}` }}
-                    </a>
-                </div>
-                <div v-if="currentUser !== null" class="my-2">
-                    <AddExercise :semester :subject :classrooms :next-exercise-number />
+                <div class="vstack gap-3 align-items-center">
+                    <div v-if="exercises.length > 0" class="exercises-list list-group w-100">
+                        <a
+                            v-for="exercise in exercises"
+                            :key="exercise.id"
+                            :href="`${subjectUrl}/${exercise.exerciseNumber}/`"
+                            class="list-group-item list-group-item-action"
+                        >
+                            {{ `${exercise.exerciseNumber}. ${exercise.name}` }}
+                        </a>
+                    </div>
+                    <AddExercise v-if="currentUser" :semester :subject :classrooms :next-exercise-number />
                 </div>
             </div>
         </div>
