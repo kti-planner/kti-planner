@@ -12,15 +12,11 @@ import ScheduleChangeTypeSelector from '@components/semesters/schedule-changes/S
 
 const translations = {
     'en': {
-        'Edit': 'Edit',
-        'Remove': 'Remove',
         'Set': 'Set',
         'Save': 'Save',
         'Saved': 'Saved',
     },
     'pl': {
-        'Edit': 'Edytuj',
-        'Remove': 'Usuń',
         'Set': 'Ustaw',
         'Save': 'Zapisz',
         'Saved': 'Zapisano',

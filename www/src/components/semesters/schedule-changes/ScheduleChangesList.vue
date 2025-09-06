@@ -11,16 +11,12 @@ const translations = {
     'en': {
         'Edit': 'Edit',
         'Remove': 'Remove',
-        'Add': 'Add',
         'Save': 'Save',
-        'Saved': 'Saved',
     },
     'pl': {
         'Edit': 'Edytuj',
         'Remove': 'Usuń',
-        'Add': 'Dodaj',
         'Save': 'Zapisz',
-        'Saved': 'Zapisano',
     },
 };
 
