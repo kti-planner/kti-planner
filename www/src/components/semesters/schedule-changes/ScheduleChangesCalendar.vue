@@ -234,7 +234,7 @@ watch(selectedRange, newSelection => {
 </template>
 
 <style scoped lang="scss">
-::selection {
+.date-button::selection {
     color: inherit;
     background-color: inherit;
 }
