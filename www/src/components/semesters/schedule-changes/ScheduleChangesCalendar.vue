@@ -89,8 +89,27 @@ const selectedRange = computed(() => {
         return;
     }
 
-    const startDate = parseDateLocalYyyyMmDd(startDateString);
-    const endDate = parseDateLocalYyyyMmDd(endDateString);
+    let startDate = parseDateLocalYyyyMmDd(startDateString);
+    let endDate = parseDateLocalYyyyMmDd(endDateString);
+
+    const semesterStartDate = parseDateLocalYyyyMmDd(semester.startDate);
+    const semesterEndDate = parseDateLocalYyyyMmDd(semester.endDate);
+
+    if (startDate.getTime() < semesterStartDate.getTime()) {
+        startDate = semesterStartDate;
+    }
+
+    if (startDate.getTime() > semesterEndDate.getTime()) {
+        startDate = semesterEndDate;
+    }
+
+    if (endDate.getTime() < semesterStartDate.getTime()) {
+        endDate = semesterStartDate;
+    }
+
+    if (endDate.getTime() > semesterEndDate.getTime()) {
+        endDate = semesterEndDate;
+    }
 
     if (startDate.getTime() > endDate.getTime()) {
         return { start: endDate, end: startDate };
@@ -98,6 +117,13 @@ const selectedRange = computed(() => {
         return { start: startDate, end: endDate };
     }
 });
+
+function isDateWithinSemester(date: Date): boolean {
+    return (
+        date.getTime() >= parseDateLocalYyyyMmDd(semester.startDate).getTime() &&
+        date.getTime() <= parseDateLocalYyyyMmDd(semester.endDate).getTime()
+    );
+}
 
 function isDateSelected(date: Date): boolean {
     return (
@@ -121,19 +147,23 @@ watch(selectedRange, newSelection => {
                 v-for="day in weekDaysFor(week)"
                 :key="day.getTime()"
                 ref="dateButtons"
-                role="button"
+                :role="isDateWithinSemester(day) ? 'button' : 'none'"
                 :title="scheduleChangeTitle(day)"
                 class="date-button border"
                 :class="{
-                    'bg-info': isDateSelected(day),
+                    'bg-body-secondary': !isDateWithinSemester(day),
+                    'bg-info': isDateWithinSemester(day) && isDateSelected(day),
                     'bg-danger':
-                        !isDateSelected(day) && scheduleChanges.get(formatDateLocalYyyyMmDd(day)) === 'holiday',
+                        isDateWithinSemester(day) &&
+                        !isDateSelected(day) &&
+                        scheduleChanges.get(formatDateLocalYyyyMmDd(day)) === 'holiday',
                     'bg-warning':
+                        isDateWithinSemester(day) &&
                         !isDateSelected(day) &&
                         (scheduleChanges.get(formatDateLocalYyyyMmDd(day)) ?? 'holiday') !== 'holiday',
                 }"
                 :data-date="formatDateLocalYyyyMmDd(day)"
-                @click="emit('select', day, day)"
+                @click="isDateWithinSemester(day) ? emit('select', day, day) : void 0"
             >
                 {{ day.getDate() }}
             </div>
