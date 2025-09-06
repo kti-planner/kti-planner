@@ -3,6 +3,19 @@ import type { ScheduleChangeType } from '@backend/semester';
 import { langId } from '@components/frontend/lang';
 import { scheduleChangeTypeLabels } from '@components/semesters/types';
 
+const translations = {
+    'en': {
+        'no changes': 'no changes',
+    },
+    'pl': {
+        'no changes': 'bez zmian',
+    },
+};
+
+function translate(text: keyof (typeof translations)[LangId]): string {
+    return translations[langId][text];
+}
+
 const model = defineModel<ScheduleChangeType | null>({ required: true });
 
 defineProps<{
@@ -19,7 +32,7 @@ defineProps<{
         }"
         style="max-width: fit-content"
     >
-        <option :value="null">brak zmian</option>
+        <option :value="null">{{ translate('no changes') }}</option>
         <option v-for="(label, type) in scheduleChangeTypeLabels[langId]" :key="type" :value="type">
             {{ label }}
         </option>

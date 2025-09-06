@@ -83,6 +83,11 @@ const monthsInSemester = computed(() => {
     return months.map(date => monthNames[date.getMonth()] ?? '');
 });
 
+const weekdayNames = {
+    'en': ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+    'pl': ['poniedziałek', 'wtorek', 'środa', 'czwartek', 'piątek', 'sobota', 'niedziela'],
+}[langId];
+
 function weekDaysFor(week: Date): Date[] {
     return [0, 1, 2, 3, 4, 5, 6].map(day => {
         const date = new Date(week);
@@ -188,11 +193,17 @@ watch(selectedRange, newSelection => {
 
 <template>
     <div class="row text-center">
+        <div style="width: 12ch"></div>
         <div v-for="monthName in monthsInSemester" :key="monthName" class="col">
             {{ monthName }}
         </div>
     </div>
-    <div class="row g-0 text-center">
+    <div class="row g-0 text-center text-nowrap border">
+        <div style="width: 12ch">
+            <div v-for="weekdayName in weekdayNames" :key="weekdayName" class="border">
+                {{ weekdayName }}
+            </div>
+        </div>
         <div v-for="week in weeksInSemester" :key="week.getTime()" class="col">
             <div
                 v-for="day in weekDaysFor(week)"
