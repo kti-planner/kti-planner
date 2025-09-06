@@ -56,8 +56,7 @@ test('Can add new exercise and prevent duplicate exercise creation', async ({ pa
 
     await page.getByRole('button', { name: 'Add new exercise' }).click();
 
-    await expect(page.locator('#exercise-modal')).toBeVisible();
-    await expect(page.locator('#exercise-modal')).toContainText('Add new exercise');
+    await expect(page.getByRole('heading', { name: 'Add new exercise' })).toBeVisible();
 
     await page.getByRole('textbox', { name: 'Exercise name' }).fill('Wirtualne sieci lokalne (VLAN)');
     await page.getByRole('spinbutton', { name: 'Exercise number' }).fill('5');
@@ -75,8 +74,7 @@ test('Can add new exercise and prevent duplicate exercise creation', async ({ pa
 
     await page.getByRole('button', { name: 'Add new exercise' }).click();
 
-    await expect(page.locator('#exercise-modal')).toBeVisible();
-    await expect(page.locator('#exercise-modal')).toContainText('Add new exercise');
+    await expect(page.getByRole('heading', { name: 'Add new exercise' })).toBeVisible();
 
     // Existing name
     await page.getByRole('textbox', { name: 'Exercise name' }).fill('Wirtualne sieci lokalne (VLAN)');
@@ -85,9 +83,7 @@ test('Can add new exercise and prevent duplicate exercise creation', async ({ pa
 
     await page.getByRole('button', { name: 'Add', exact: true }).click();
 
-    await expect(page.locator('#exercise-modal').locator('form')).toContainText(
-        'Exercise with this name or number already exists.',
-    );
+    await expect(page.getByText('Exercise with this name or number already exists.')).toBeVisible();
 
     // Existing number
     await page.getByRole('textbox', { name: 'Exercise name' }).fill('WiFi Sieci bezprzewodowe standardów 802.11');
@@ -96,9 +92,7 @@ test('Can add new exercise and prevent duplicate exercise creation', async ({ pa
 
     await page.getByRole('button', { name: 'Add', exact: true }).click();
 
-    await expect(page.locator('#exercise-modal').locator('form')).toContainText(
-        'Exercise with this name or number already exists.',
-    );
+    await expect(page.getByText('Exercise with this name or number already exists.')).toBeVisible();
 
     await page.getByRole('button', { name: 'Close' }).click();
 
@@ -149,11 +143,7 @@ test('Can edit exercise and prevent duplicate exercise', async ({ page }) => {
     await expect(page.getByRole('button', { name: 'Edit exercise' })).toBeVisible();
     await page.getByRole('button', { name: 'Edit exercise' }).click();
 
-    await expect(page.locator('#edit-exercise-modal-2024-winter-sieci-komputerowe-4')).toBeVisible();
-
-    await expect(page.locator('#edit-exercise-modal-2024-winter-sieci-komputerowe-4')).toContainText(
-        'Edit exercise IPv6 cz. II',
-    );
+    await expect(page.getByRole('heading', { name: 'Edit exercise IPv6 cz. II' })).toBeVisible();
 
     await page.getByRole('textbox', { name: 'Exercise name' }).fill('Wirtualne sieci lokalne (VLAN)');
     await page.getByRole('spinbutton', { name: 'Exercise number' }).fill('4');
@@ -167,11 +157,7 @@ test('Can edit exercise and prevent duplicate exercise', async ({ page }) => {
     // Can not edit exercise with data that match already existing exercise
     await page.getByRole('button', { name: 'Edit exercise' }).click();
 
-    await expect(page.locator('#edit-exercise-modal-2024-winter-sieci-komputerowe-4')).toBeVisible();
-
-    await expect(page.locator('#edit-exercise-modal-2024-winter-sieci-komputerowe-4')).toContainText(
-        'Edit exercise Wirtualne sieci lokalne (VLAN)',
-    );
+    await expect(page.getByRole('heading', { name: 'Edit exercise Wirtualne sieci lokalne (VLAN)' })).toBeVisible();
 
     // Existing name
     await page.getByRole('textbox', { name: 'Exercise name' }).fill('Diagnostyka sieci IPv4');
@@ -180,18 +166,14 @@ test('Can edit exercise and prevent duplicate exercise', async ({ page }) => {
 
     await page.getByRole('button', { name: 'Save' }).click();
 
-    await expect(page.locator('#edit-exercise-modal-2024-winter-sieci-komputerowe-4').locator('form')).toContainText(
-        'Exercise with this name or number already exists.',
-    );
+    await expect(page.getByText('Exercise with this name or number already exists.')).toBeVisible();
 
     // Existing number
     await page.getByRole('textbox', { name: 'Exercise name' }).fill('IPv6 cz. II');
     await page.getByRole('spinbutton', { name: 'Exercise number' }).fill('1');
     await page.getByRole('combobox', { name: 'Classroom' }).selectOption('EA 142');
 
-    await expect(page.locator('#edit-exercise-modal-2024-winter-sieci-komputerowe-4').locator('form')).toContainText(
-        'Exercise with this name or number already exists.',
-    );
+    await expect(page.getByText('Exercise with this name or number already exists.')).toBeVisible();
 
     await page.getByRole('button', { name: 'Close' }).click();
 

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useId } from 'vue';
 import { langId } from '@components/frontend/lang';
 import type { ClassroomData } from '@components/classrooms/types';
 import type { ExerciseData } from '@components/exercises/types';
@@ -8,7 +9,7 @@ import ExerciseForm from '@components/exercises/ExerciseForm.vue';
 import IconButton from '@components/IconButton.vue';
 import Modal from '@components/Modal.vue';
 
-const props = defineProps<{
+defineProps<{
     semester: SemesterData;
     subject: SubjectData;
     exercise: ExerciseData;
@@ -28,7 +29,7 @@ function translate(text: keyof (typeof translations)[LangId]): string {
     return translations[langId][text];
 }
 
-const modalId = `edit-exercise-modal-${props.semester.slug}-${props.subject.slug}-${props.exercise.exerciseNumber}`;
+const modalId = useId();
 </script>
 
 <template>
@@ -45,6 +46,6 @@ const modalId = `edit-exercise-modal-${props.semester.slug}-${props.subject.slug
 
     <Modal :id="modalId">
         <template #header>{{ translate('Edit exercise') }} {{ exercise.name }}</template>
-        <ExerciseForm :semester="semester" :subject="subject" :exercise="exercise" :classrooms="classrooms" />
+        <ExerciseForm :semester :subject :exercise :classrooms />
     </Modal>
 </template>
