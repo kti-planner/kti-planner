@@ -37,6 +37,52 @@ const weeksInSemester = computed(() => {
     return weeks;
 });
 
+const monthsInSemester = computed(() => {
+    const start = parseDateLocalYyyyMmDd(semester.startDate);
+    const end = parseDateLocalYyyyMmDd(semester.endDate);
+
+    start.setDate(1);
+
+    const months: Date[] = [];
+    while (start.getTime() <= end.getTime()) {
+        months.push(new Date(start));
+        start.setMonth(start.getMonth() + 1);
+    }
+
+    const monthNames = {
+        'en': [
+            'January',
+            'February',
+            'March',
+            'April',
+            'May',
+            'June',
+            'July',
+            'August',
+            'September',
+            'October',
+            'November',
+            'December',
+        ],
+        'pl': [
+            'styczeń',
+            'luty',
+            'marzec',
+            'kwiecień',
+            'maj',
+            'czerwiec',
+            'lipiec',
+            'sierpień',
+            'wrzesień',
+            'październik',
+            'listopad',
+            'grudzień',
+        ],
+    }[langId];
+
+    return months.map(date => monthNames[date.getMonth()] ?? '');
+});
+
 function weekDaysFor(week: Date): Date[] {
     return [0, 1, 2, 3, 4, 5, 6].map(day => {
         const date = new Date(week);
@@ -141,6 +187,11 @@ watch(selectedRange, newSelection => {
 </script>
 
 <template>
+    <div class="row text-center">
+        <div v-for="monthName in monthsInSemester" :key="monthName" class="col">
+            {{ monthName }}
+        </div>
+    </div>
     <div class="row g-0 text-center">
         <div v-for="week in weeksInSemester" :key="week.getTime()" class="col">
             <div
