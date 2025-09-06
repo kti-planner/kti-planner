@@ -111,6 +111,7 @@ test('Can edit subject and prevent duplicate subject', async ({ page }) => {
 
     await page.getByRole('textbox', { name: 'Subject name' }).fill('Sieci Ethernet i IP');
     await page.getByRole('combobox', { name: 'Teachers' }).selectOption('Admin');
+
     await page.getByRole('button', { name: 'Save' }).click();
 
     await expect(page.locator('.breadcrumb')).toContainText('Sieci Ethernet i IP');

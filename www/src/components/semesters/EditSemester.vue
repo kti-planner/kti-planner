@@ -1,11 +1,12 @@
 <script setup lang="ts">
+import { useId } from 'vue';
 import { langId } from '@components/frontend/lang';
 import type { SemesterData } from '@components/semesters/types';
 import IconButton from '@components/IconButton.vue';
 import Modal from '@components/Modal.vue';
 import SemesterForm from '@components/semesters/SemesterForm.vue';
 
-const props = defineProps<{
+defineProps<{
     semester: SemesterData;
 }>();
 
@@ -22,7 +23,7 @@ function translate(text: keyof (typeof translations)[LangId]): string {
     return translations[langId][text];
 }
 
-const modalId = `edit-semester-modal-${props.semester.slug}`;
+const modalId = useId();
 </script>
 
 <template>
@@ -39,6 +40,6 @@ const modalId = `edit-semester-modal-${props.semester.slug}`;
 
     <Modal :id="modalId">
         <template #header>{{ translate('Edit semester') }} {{ semester.year }}/{{ semester.year + 1 }}</template>
-        <SemesterForm :semester="semester" />
+        <SemesterForm :semester />
     </Modal>
 </template>
