@@ -1,5 +1,6 @@
 ---
 import { makeLoginNextParam } from 'src/utils';
+import UserProfileDropdown from '@components/UserProfileDropdown.astro';
 
 interface Props {
     breadcrumbs: Breadcrumb[];
@@ -11,17 +12,9 @@ const { langId, user } = Astro.locals;
 const translations = {
     'en': {
         'Sign in': 'Sign in',
-        'Sign out': 'Sign out',
-        "You're logged in as": "You're logged in as",
-        'Profile': 'Profile',
-        'Users': 'Users',
     },
     'pl': {
         'Sign in': 'Zaloguj się',
-        'Sign out': 'Wyloguj się',
-        "You're logged in as": 'Jesteś zalogowany jako',
-        'Profile': 'Profil',
-        'Users': 'Użytkownicy',
     },
 };
 
@@ -81,23 +74,12 @@ const loginParams = makeLoginNextParam(Astro.url);
         <div class="d-flex align-items-center gap-3 order-first order-md-last px-3 ms-auto">
             {
                 user === null ? (
-                    <a href={`/login/${loginParams}`} role="button" class="btn btn-success btn-sm text-nowrap">
+                    <a href={`/login/${loginParams}`} role="button" class="btn btn-success btn-sm">
                         {translate('Sign in')}
                     </a>
                 ) : (
                     <>
-                        <div class="d-none d-sm-block">{`${translate("You're logged in as")} ${user.name}`}</div>
-                        <a href={`/profile/`} role="button" class="btn btn-success btn-sm text-nowrap">
-                            {translate('Profile')}
-                        </a>
-                        <a href={`/users/`} role="button" class="btn btn-success btn-sm text-nowrap">
-                            {translate('Users')}
-                        </a>
-                        <form action={`/api/logout/${loginParams}`} method="post">
-                            <button type="submit" class="btn btn-success btn-sm text-nowrap">
-                                {translate('Sign out')}
-                            </button>
-                        </form>
+                        <UserProfileDropdown />
                     </>
                 )
             }
