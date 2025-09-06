@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, useTemplateRef } from 'vue';
+import { computed, useId, useTemplateRef } from 'vue';
 import { useCloned } from '@vueuse/core';
 import { langId } from '@components/frontend/lang';
 import type { ExerciseData } from '@components/exercises/types';
@@ -37,6 +37,7 @@ const emit = defineEmits<{
 }>();
 
 const modal = useTemplateRef('modal');
+const modalId = useId();
 const { cloned: group } = useCloned(computed(() => initialGroup));
 
 function handleFormDone() {
@@ -48,12 +49,12 @@ function handleFormDone() {
 <template>
     <div>
         <div class="d-flex justify-content-center">
-            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#plan-classes-modal">
+            <button type="button" class="btn btn-success" data-bs-toggle="modal" :data-bs-target="`#${modalId}`">
                 {{ translate('Plan classes') }}
             </button>
         </div>
 
-        <Modal ref="modal" id="plan-classes-modal" scrollable>
+        <Modal ref="modal" :id="modalId" scrollable>
             <template #header>
                 {{ group ? `${translate('Plan classes for group')} ${group.name}` : translate('Plan classes') }}
             </template>
