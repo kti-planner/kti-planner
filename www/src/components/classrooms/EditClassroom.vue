@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useId } from 'vue';
 import { langId } from '@components/frontend/lang';
 import type { ClassroomData } from '@components/classrooms/types';
 import ClassroomForm from '@components/classrooms/ClassroomForm.vue';
@@ -22,7 +23,7 @@ function translate(text: keyof (typeof translations)[LangId]): string {
     return translations[langId][text];
 }
 
-const modalId = `edit-classroom-modal-${props.classroom.id}`;
+const modalId = `${useId()}-${props.classroom.id}`;
 </script>
 
 <template>
@@ -37,6 +38,6 @@ const modalId = `edit-classroom-modal-${props.classroom.id}`;
 
     <Modal :id="modalId">
         <template #header>{{ translate('Edit classroom') }} {{ classroom.name }}</template>
-        <ClassroomForm :classroom="classroom" />
+        <ClassroomForm :classroom />
     </Modal>
 </template>
