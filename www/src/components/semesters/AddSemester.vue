@@ -18,18 +18,14 @@ function translate(text: keyof (typeof translations)[LangId]): string {
 </script>
 
 <template>
-    <div>
-        <div class="d-flex justify-content-center mb-3">
-            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#semester-modal">
-                {{ translate('Add new semester') }}
-            </button>
-        </div>
+    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#semester-modal">
+        {{ translate('Add new semester') }}
+    </button>
 
-        <Modal id="semester-modal">
-            <template #header>
-                {{ translate('Add new semester') }}
-            </template>
-            <SemesterForm />
-        </Modal>
-    </div>
+    <Modal id="semester-modal">
+        <template #header>
+            {{ translate('Add new semester') }}
+        </template>
+        <SemesterForm />
+    </Modal>
 </template>

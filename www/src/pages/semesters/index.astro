@@ -26,24 +26,30 @@ const semesters = await Semester.fetchAll();
 ---
 
 <Layout breadcrumbs={[{ text: translate('Semesters'), href: '#' }]}>
-    {user && <AddSemester client:only="vue" />}
-    <div class="semesters-list list-group mx-auto my-4">
+    <div class="vstack gap-3 align-items-center">
         {
-            semesters.map(
-                semester =>
-                    (
-                        <a href={`/semesters/${semester.slug}/`} class="list-group-item list-group-item-action">
-                            {semester.type === 'summer' ? translate('Summer semester') : translate('Winter semester')}{' '}
-                            {`${semester.year}/${semester.year + 1}`}
-                        </a>
-                    ) as unknown,
+            semesters.length > 0 && (
+                <div class="semesters-list list-group">
+                    {semesters.map(
+                        semester =>
+                            (
+                                <a href={`/semesters/${semester.slug}/`} class="list-group-item list-group-item-action">
+                                    {semester.type === 'summer'
+                                        ? translate('Summer semester')
+                                        : translate('Winter semester')}{' '}
+                                    {`${semester.year}/${semester.year + 1}`}
+                                </a>
+                            ) as unknown,
+                    )}
+                </div>
             )
         }
+        {user && <AddSemester client:only="vue" />}
     </div>
 </Layout>
 
 <style>
     .semesters-list {
-        max-width: 600px;
+        width: min(600px, 100%);
     }
 </style>

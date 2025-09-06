@@ -72,32 +72,30 @@ const allUsers = await User.fetchAll();
     <div class="text-center">
         {semester.startDate.toLocaleDateString('pl-PL')} - {semester.endDate.toLocaleDateString('pl-PL')}
     </div>
-    {
-        user && (
-            <div class="my-2">
-                <AddSubject client:only="vue" semester={semesterData} allUsers={allUsers} />
-            </div>
-        )
-    }
-    <div class="subjects-list list-group mx-auto my-4">
+    <div class="vstack gap-3 align-items-center mt-4">
         {
-            subjects.map(
-                subject =>
-                    (
-                        <a
-                            href={`/semesters/${semesterSlug}/subjects/${subject.slug}/`}
-                            class="list-group-item list-group-item-action"
-                        >
-                            {subject.name}
-                        </a>
-                    ) as unknown,
+            subjects.length > 0 && (
+                <div class="subjects-list list-group">
+                    {subjects.map(
+                        subject =>
+                            (
+                                <a
+                                    href={`/semesters/${semesterSlug}/subjects/${subject.slug}/`}
+                                    class="list-group-item list-group-item-action"
+                                >
+                                    {subject.name}
+                                </a>
+                            ) as unknown,
+                    )}
+                </div>
             )
         }
+        {user && <AddSubject client:only="vue" semester={semesterData} allUsers={allUsers} />}
     </div>
 </Layout>
 
 <style>
     .subjects-list {
-        max-width: 600px;
+        width: min(600px, 100%);
     }
 </style>
