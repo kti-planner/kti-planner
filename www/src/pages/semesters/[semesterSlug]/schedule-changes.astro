@@ -1,0 +1,73 @@
+---
+import { makeScheduleChangeData, Semester } from '@backend/semester';
+import Layout from '@layouts/Layout.astro';
+import ScheduleChangesList from '@components/semesters/ScheduleChangesList.vue';
+
+const { semesterSlug } = Astro.params;
+const { langId, user, redirectToLoginPage } = Astro.locals;
+
+if (!user) {
+    return redirectToLoginPage();
+}
+
+const translations = {
+    'en': {
+        'Semesters': 'Semesters',
+        'Winter semester': 'Winter semester',
+        'Summer semester': 'Summer semester',
+        'Schedule changes': 'Schedule changes',
+    },
+    'pl': {
+        'Semesters': 'Semestry',
+        'Winter semester': 'Semestr zimowy',
+        'Summer semester': 'Semestr letni',
+        'Schedule changes': 'Zmiany w harmonogramie',
+    },
+};
+
+function translate(text: keyof (typeof translations)[LangId]): string {
+    return translations[langId][text];
+}
+
+if (semesterSlug === undefined) {
+    return new Response(null, { status: 404 });
+}
+
+const semester = await Semester.fetchBySlug(semesterSlug);
+if (!semester) {
+    return new Response(null, { status: 404 });
+}
+
+const semesterName = `${semester.type === 'summer' ? translate('Summer semester') : translate('Winter semester')} ${semester.year}/${semester.year + 1}`;
+
+const scheduleChanges = await semester.getScheduleChanges();
+const scheduleChangesData = scheduleChanges.map(makeScheduleChangeData);
+---
+
+<Layout
+    breadcrumbs={[
+        {
+            text: translate('Semesters'),
+            href: '/semesters/',
+        },
+        {
+            text: semesterName,
+            href: `/semesters/${semesterSlug}/`,
+        },
+        {
+            text: translate('Schedule changes'),
+            href: '#',
+        },
+    ]}
+>
+    <h1 class="text-center fs-4">
+        {semesterName}
+    </h1>
+    <div class="text-center">
+        {semester.startDate.toLocaleDateString('pl-PL')} - {semester.endDate.toLocaleDateString('pl-PL')}
+    </div>
+    <h2 class="text-center fs-5">
+        {translate('Schedule changes')}
+    </h2>
+    <ScheduleChangesList client:only="vue" initialScheduleChanges={scheduleChangesData} />
+</Layout>

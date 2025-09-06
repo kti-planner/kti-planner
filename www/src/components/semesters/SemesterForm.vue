@@ -107,6 +107,12 @@ function translate(text: keyof (typeof translations)[LangId]): string {
             <input id="endDate" v-model="endDate" type="date" class="form-control" required />
         </div>
 
+        <div v-if="semester">
+            <a :href="`/semesters/${semester.slug}/schedule-changes/`" target="_blank" class="link-success">
+                Edytuj dni wolne i zmiany planu
+            </a>
+        </div>
+
         <div class="text-center">
             <button type="submit" class="btn btn-success">{{ translate(semester ? 'Save' : 'Add') }}</button>
         </div>
