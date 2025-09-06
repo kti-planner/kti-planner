@@ -5,7 +5,7 @@ import type { ScheduleChangeType } from '@backend/semester';
 import { langId } from '@components/frontend/lang';
 import { apiPut } from '@components/api';
 import { type ScheduleChangeData, scheduleChangeTypeLabels, type SemesterData } from '@components/semesters/types';
-import { parseDateLocalYyyyMmDd } from '@components/utils';
+import { formatDateLocalYyyyMmDd, parseDateLocalYyyyMmDd } from '@components/utils';
 import IconButton from '@components/IconButton.vue';
 import ScheduleChangeTypeSelector from '@components/semesters/ScheduleChangeTypeSelector.vue';
 
@@ -40,6 +40,7 @@ const scheduleChanges = ref(
 );
 
 const newScheduleChangeDate = ref<string>('');
+const newScheduleChangeDateEnd = ref<string>('');
 const newScheduleChangeType = ref<ScheduleChangeType>('holiday');
 
 const editableFields = ref(new Set<string>());
@@ -52,7 +53,21 @@ function addScheduleChange() {
         return;
     }
 
-    scheduleChanges.value.set(newScheduleChangeDate.value, newScheduleChangeType.value);
+    if (newScheduleChangeDateEnd.value === '') {
+        scheduleChanges.value.set(newScheduleChangeDate.value, newScheduleChangeType.value);
+    } else {
+        const start = parseDateLocalYyyyMmDd(newScheduleChangeDate.value);
+        const end = parseDateLocalYyyyMmDd(newScheduleChangeDateEnd.value);
+
+        while (start.getTime() <= end.getTime()) {
+            scheduleChanges.value.set(formatDateLocalYyyyMmDd(start), newScheduleChangeType.value);
+
+            start.setDate(start.getDate() + 1);
+        }
+    }
+
+    newScheduleChangeDate.value = '';
+    newScheduleChangeDateEnd.value = '';
 }
 
 const sortedScheduleChanges = computed(() =>
@@ -128,7 +143,7 @@ useEventListener(
                 />
             </li>
         </ul>
-        <form class="input-group my-3" @submit.prevent="addScheduleChange()">
+        <div class="input-group my-3">
             <input
                 v-model="newScheduleChangeDate"
                 type="date"
@@ -136,11 +151,25 @@ useEventListener(
                 :max="semester.endDate"
                 class="form-control"
             />
+            <span class="input-group-text">-</span>
+            <input
+                v-model="newScheduleChangeDateEnd"
+                type="date"
+                :min="semester.startDate"
+                :max="semester.endDate"
+                :placeholder="newScheduleChangeDate"
+                class="form-control"
+            />
             <ScheduleChangeTypeSelector v-model="newScheduleChangeType" />
-            <button type="submit" class="btn btn-success" :disabled="newScheduleChangeDate === ''">
+            <button
+                type="button"
+                class="btn btn-success"
+                :disabled="newScheduleChangeDate === ''"
+                @click="addScheduleChange()"
+            >
                 {{ translate('Add') }}
             </button>
-        </form>
+        </div>
         <button type="button" class="btn btn-success d-block mx-auto" @click="save()">
             {{ translate('Save') }}
         </button>
