@@ -39,7 +39,7 @@ const modalId = useId();
             <template #header>
                 {{ translate('Add new subject') }}
             </template>
-            <SubjectForm :semester="semester" :all-users />
+            <SubjectForm :semester :all-users />
         </Modal>
     </div>
 </template>

@@ -44,6 +44,6 @@ const modalId = useId();
 
     <Modal :id="modalId">
         <template #header>{{ translate('Edit subject') }} {{ subject.name }}</template>
-        <SubjectForm :semester="semester" :subject="subject" :all-users />
+        <SubjectForm :semester :subject :all-users />
     </Modal>
 </template>
