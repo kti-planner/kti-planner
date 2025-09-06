@@ -11,6 +11,7 @@ import type { SubjectData } from '@components/subjects/types';
 import { formatDateLocalYyyyMmDd } from '@components/utils';
 import Layout from '@layouts/Layout.astro';
 import EditExercise from '@components/exercises/EditExercise.vue';
+import Show from '@components/Show.astro';
 
 const { semesterSlug, subjectSlug, exerciseNumber } = Astro.params;
 const { langId, user } = Astro.locals;
@@ -116,16 +117,14 @@ const exerciseData: ExerciseData = {
 >
     <h1 class="text-center fs-4">
         {exercise.exerciseNumber}. {exercise.name}
-        {
-            user && (
-                <EditExercise
-                    client:only="vue"
-                    semester={semesterData}
-                    subject={subjectData}
-                    exercise={exerciseData}
-                    classrooms={classroomsData}
-                />
-            )
-        }
+        <Show when={user !== null}>
+            <EditExercise
+                client:only="vue"
+                semester={semesterData}
+                subject={subjectData}
+                exercise={exerciseData}
+                classrooms={classroomsData}
+            />
+        </Show>
     </h1>
 </Layout>

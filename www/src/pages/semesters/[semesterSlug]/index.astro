@@ -6,6 +6,7 @@ import type { SemesterData } from '@components/semesters/types';
 import { formatDateLocalYyyyMmDd } from '@components/utils';
 import Layout from '@layouts/Layout.astro';
 import EditSemester from '@components/semesters/EditSemester.vue';
+import Show from '@components/Show.astro';
 import AddSubject from '@components/subjects/AddSubject.vue';
 
 const { semesterSlug } = Astro.params;
@@ -67,16 +68,18 @@ const allUsers = await User.fetchAll();
 >
     <h1 class="text-center fs-4">
         {semesterName}
-        {user && <EditSemester client:only="vue" semester={semesterData} />}
+        <Show when={user !== null}>
+            <EditSemester client:only="vue" semester={semesterData} />
+        </Show>
     </h1>
     <div class="text-center">
         {semester.startDate.toLocaleDateString('pl-PL')} - {semester.endDate.toLocaleDateString('pl-PL')}
     </div>
     <div class="vstack gap-3 align-items-center mt-4">
-        {
-            subjects.length > 0 && (
-                <div class="subjects-list list-group">
-                    {subjects.map(
+        <Show when={subjects.length > 0}>
+            <div class="subjects-list list-group">
+                {
+                    subjects.map(
                         subject =>
                             (
                                 <a
@@ -86,11 +89,13 @@ const allUsers = await User.fetchAll();
                                     {subject.name}
                                 </a>
                             ) as unknown,
-                    )}
-                </div>
-            )
-        }
-        {user && <AddSubject client:only="vue" semester={semesterData} allUsers={allUsers} />}
+                    )
+                }
+            </div>
+        </Show>
+        <Show when={user !== null}>
+            <AddSubject client:only="vue" semester={semesterData} allUsers={allUsers} />
+        </Show>
     </div>
 </Layout>
 

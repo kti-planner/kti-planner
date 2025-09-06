@@ -2,6 +2,7 @@
 import { Semester } from '@backend/semester';
 import Layout from '@layouts/Layout.astro';
 import AddSemester from '@components/semesters/AddSemester.vue';
+import Show from '@components/Show.astro';
 
 const { langId, user } = Astro.locals;
 
@@ -27,10 +28,10 @@ const semesters = await Semester.fetchAll();
 
 <Layout breadcrumbs={[{ text: translate('Semesters'), href: '#' }]}>
     <div class="vstack gap-3 align-items-center">
-        {
-            semesters.length > 0 && (
-                <div class="semesters-list list-group">
-                    {semesters.map(
+        <Show when={semesters.length > 0}>
+            <div class="semesters-list list-group">
+                {
+                    semesters.map(
                         semester =>
                             (
                                 <a href={`/semesters/${semester.slug}/`} class="list-group-item list-group-item-action">
@@ -40,11 +41,13 @@ const semesters = await Semester.fetchAll();
                                     {`${semester.year}/${semester.year + 1}`}
                                 </a>
                             ) as unknown,
-                    )}
-                </div>
-            )
-        }
-        {user && <AddSemester client:only="vue" />}
+                    )
+                }
+            </div>
+        </Show>
+        <Show when={user !== null}>
+            <AddSemester client:only="vue" />
+        </Show>
     </div>
 </Layout>
 

@@ -3,6 +3,7 @@ import { Classroom } from '@backend/classroom';
 import Layout from '@layouts/Layout.astro';
 import AddClassroom from '@components/classrooms/AddClassroom.vue';
 import EditClassroom from '@components/classrooms/EditClassroom.vue';
+import Show from '@components/Show.astro';
 
 const { langId, user, redirectToLoginPage } = Astro.locals;
 
@@ -28,10 +29,10 @@ const classrooms = await Classroom.fetchAll();
 
 <Layout breadcrumbs={[{ text: translate('Classrooms'), href: '#' }]}>
     <div class="vstack gap-3 align-items-center">
-        {
-            classrooms.length > 0 && (
-                <div class="classrooms-list list-group">
-                    {classrooms.map(
+        <Show when={classrooms.length > 0}>
+            <div class="classrooms-list list-group">
+                {
+                    classrooms.map(
                         c =>
                             (
                                 <div class="list-group-item d-flex justify-content-between align-items-center">
@@ -39,10 +40,10 @@ const classrooms = await Classroom.fetchAll();
                                     <EditClassroom client:only="vue" classroom={{ id: c.id, name: c.name }} />
                                 </div>
                             ) as unknown,
-                    )}
-                </div>
-            )
-        }
+                    )
+                }
+            </div>
+        </Show>
         <AddClassroom client:only="vue" />
     </div>
 </Layout>
