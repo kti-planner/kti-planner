@@ -106,7 +106,7 @@ useEventListener(
 </script>
 
 <template>
-    <div class="mx-auto my-3" style="max-width: 600px">
+    <div class="mx-auto my-3" style="max-width: 700px">
         <ScheduleChangesCalendar
             :semester
             :schedule-changes
@@ -118,13 +118,14 @@ useEventListener(
                 }
             "
         />
-        <div class="input-group my-3">
+        <div class="input-group justify-content-center my-3">
             <input
                 v-model="newScheduleChangeDate"
                 type="date"
                 :min="semester.startDate"
                 :max="semester.endDate"
                 class="form-control"
+                style="max-width: fit-content"
             />
             <span class="input-group-text">-</span>
             <input
@@ -134,6 +135,7 @@ useEventListener(
                 :max="semester.endDate"
                 :placeholder="newScheduleChangeDate"
                 class="form-control"
+                style="max-width: fit-content"
             />
             <ScheduleChangeTypeSelector v-model="newScheduleChangeType" />
             <button
