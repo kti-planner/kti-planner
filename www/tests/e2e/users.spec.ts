@@ -69,12 +69,14 @@ test('Can add new user and prevent duplicate user creation', async ({ page }) =>
     await expect(page.getByRole('link', { name: 'Test User' })).toHaveCount(1);
 
     // Can login as new user
-    await page.getByRole('button', { name: 'Sign out' }).click();
+    await page.locator('.navbar').getByText('A', { exact: true }).click();
+    await page.locator('.navbar').getByRole('button', { name: 'Sign out' }).click();
+
     await page.getByRole('button', { name: 'Sign in' }).click();
     await page.getByRole('textbox', { name: 'Email' }).fill('test@test.com');
     await page.getByRole('textbox', { name: 'Password' }).fill('password');
     await page.locator('form').getByRole('button', { name: 'Sign in' }).click();
-    await expect(page.getByRole('navigation')).toContainText("You're logged in as Test User");
+    await expect(page.locator('.navbar')).toContainText('TU');
 });
 
 test('Can generate random password when adding new user', async ({ page }) => {
@@ -146,7 +148,9 @@ test('Edit user button is visible for admin user and user whose profile is their
     await expect(page.getByRole('button', { name: 'Edit user' })).toHaveCount(1);
 
     // As teacher
-    await page.getByRole('button', { name: 'Sign out' }).click();
+    await page.locator('.navbar').getByText('A', { exact: true }).click();
+    await page.locator('.navbar').getByRole('button', { name: 'Sign out' }).click();
+
     await page.goto('/users/feeaa186-3d69-4801-a580-88be10d53553/');
     await loginAsTeacher(page);
 
@@ -308,12 +312,14 @@ test('Can reset user password', async ({ page }) => {
     await page.getByRole('button', { name: 'Save' }).click();
 
     // Can login with new password
-    await page.getByRole('button', { name: 'Sign out' }).click();
+    await page.locator('.navbar').getByText('A', { exact: true }).click();
+    await page.locator('.navbar').getByRole('button', { name: 'Sign out' }).click();
+
     await page.getByRole('button', { name: 'Sign in' }).click();
     await page.getByRole('textbox', { name: 'Email' }).fill('bogdan@nowak.pl');
     await page.getByRole('textbox', { name: 'Password' }).fill('NewPassword');
     await page.locator('form').getByRole('button', { name: 'Sign in' }).click();
-    await expect(page.getByRole('navigation')).toContainText("You're logged in as Bogdan Nowak");
+    await expect(page.getByRole('navigation')).toContainText('BN');
 });
 
 test('Change password button is visible for user whose profile is theirs', async ({ page }) => {
@@ -330,7 +336,8 @@ test('Change password button is visible for user whose profile is theirs', async
     await page.getByRole('button', { name: 'Close' }).click();
 
     // As Admin
-    await page.getByRole('button', { name: 'Sign out' }).click();
+    await page.locator('.navbar').getByText('BN', { exact: true }).click();
+    await page.locator('.navbar').getByRole('button', { name: 'Sign out' }).click();
 
     await page.goto('/profile/');
     await loginAsAdmin(page);
@@ -359,12 +366,14 @@ test('User can change their password', async ({ page }) => {
     await page.getByRole('button', { name: 'Save' }).click();
 
     // Can login with new password
-    await page.getByRole('button', { name: 'Sign out' }).click();
+    await page.locator('.navbar').getByText('BN', { exact: true }).click();
+    await page.locator('.navbar').getByRole('button', { name: 'Sign out' }).click();
+
     await page.getByRole('button', { name: 'Sign in' }).click();
     await page.getByRole('textbox', { name: 'Email' }).fill('bogdan@nowak.pl');
     await page.getByRole('textbox', { name: 'Password' }).fill('NewPassword');
     await page.locator('form').getByRole('button', { name: 'Sign in' }).click();
-    await expect(page.getByRole('navigation')).toContainText("You're logged in as Bogdan Nowak");
+    await expect(page.getByRole('navigation')).toContainText('BN');
 });
 
 test.describe('API fetch tests', () => {
