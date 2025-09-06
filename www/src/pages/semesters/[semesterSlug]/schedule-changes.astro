@@ -2,7 +2,7 @@
 import { makeScheduleChangeData, makeSemesterData, Semester } from '@backend/semester';
 import type { SemesterData } from '@components/semesters/types';
 import Layout from '@layouts/Layout.astro';
-import ScheduleChangesList from '@components/semesters/ScheduleChangesList.vue';
+import ScheduleChangesApp from '@components/semesters/schedule-changes/ScheduleChangesApp.vue';
 
 const { semesterSlug } = Astro.params;
 const { langId, user, redirectToLoginPage } = Astro.locals;
@@ -72,5 +72,5 @@ const scheduleChangesData = scheduleChanges.map(makeScheduleChangeData);
     <h2 class="text-center fs-5 mt-3">
         {translate('Schedule changes')}
     </h2>
-    <ScheduleChangesList client:only="vue" semester={semesterData} initialScheduleChanges={scheduleChangesData} />
+    <ScheduleChangesApp client:only="vue" semester={semesterData} initialScheduleChanges={scheduleChangesData} />
 </Layout>

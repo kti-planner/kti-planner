@@ -1,26 +1,27 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue';
+import { ref, watch } from 'vue';
 import { useEventListener } from '@vueuse/core';
 import type { ScheduleChangeType } from '@backend/semester';
 import { langId } from '@components/frontend/lang';
 import { apiPut } from '@components/api';
-import { type ScheduleChangeData, scheduleChangeTypeLabels, type SemesterData } from '@components/semesters/types';
+import type { ScheduleChangeData, SemesterData } from '@components/semesters/types';
 import { formatDateLocalYyyyMmDd, parseDateLocalYyyyMmDd } from '@components/utils';
-import IconButton from '@components/IconButton.vue';
-import ScheduleChangeTypeSelector from '@components/semesters/ScheduleChangeTypeSelector.vue';
+import ScheduleChangesCalendar from '@components/semesters/schedule-changes/ScheduleChangesCalendar.vue';
+import ScheduleChangesList from '@components/semesters/schedule-changes/ScheduleChangesList.vue';
+import ScheduleChangeTypeSelector from '@components/semesters/schedule-changes/ScheduleChangeTypeSelector.vue';
 
 const translations = {
     'en': {
         'Edit': 'Edit',
         'Remove': 'Remove',
-        'Add': 'Add',
+        'Set': 'Set',
         'Save': 'Save',
         'Saved': 'Saved',
     },
     'pl': {
         'Edit': 'Edytuj',
         'Remove': 'Usuń',
-        'Add': 'Dodaj',
+        'Set': 'Ustaw',
         'Save': 'Zapisz',
         'Saved': 'Zapisano',
     },
@@ -39,14 +40,14 @@ const scheduleChanges = ref(
     new Map<string, ScheduleChangeType>(initialScheduleChanges.map(change => [change.date, change.type])),
 );
 
-const newScheduleChangeDate = ref<string>('');
-const newScheduleChangeDateEnd = ref<string>('');
-const newScheduleChangeType = ref<ScheduleChangeType>('holiday');
-
 const editableFields = ref(new Set<string>());
 
 const preventPageUnload = ref<boolean>(false);
 const changesSaved = ref<boolean>(false);
+
+const newScheduleChangeDate = ref<string>('');
+const newScheduleChangeDateEnd = ref<string>('');
+const newScheduleChangeType = ref<ScheduleChangeType | null>(null);
 
 function addScheduleChange() {
     if (newScheduleChangeDate.value === '') {
@@ -54,30 +55,35 @@ function addScheduleChange() {
     }
 
     if (newScheduleChangeDateEnd.value === '') {
-        scheduleChanges.value.set(newScheduleChangeDate.value, newScheduleChangeType.value);
+        if (newScheduleChangeType.value) {
+            scheduleChanges.value.set(newScheduleChangeDate.value, newScheduleChangeType.value);
+        } else {
+            scheduleChanges.value.delete(newScheduleChangeDate.value);
+        }
     } else {
         const start = parseDateLocalYyyyMmDd(newScheduleChangeDate.value);
         const end = parseDateLocalYyyyMmDd(newScheduleChangeDateEnd.value);
 
         while (start.getTime() <= end.getTime()) {
-            scheduleChanges.value.set(formatDateLocalYyyyMmDd(start), newScheduleChangeType.value);
+            if (newScheduleChangeType.value) {
+                scheduleChanges.value.set(formatDateLocalYyyyMmDd(start), newScheduleChangeType.value);
+            } else {
+                scheduleChanges.value.delete(formatDateLocalYyyyMmDd(start));
+            }
 
             start.setDate(start.getDate() + 1);
         }
     }
 
+    window.getSelection()?.empty();
     newScheduleChangeDate.value = '';
     newScheduleChangeDateEnd.value = '';
 }
 
-const sortedScheduleChanges = computed(() =>
-    [...scheduleChanges.value.entries()].toSorted((a, b) => a[0].localeCompare(b[0])),
-);
-
 async function save() {
     await apiPut(
         `/semesters/${semester.slug}/api/schedule-changes/`,
-        sortedScheduleChanges.value.map(([date, type]) => ({ date, type })) satisfies ScheduleChangeData[],
+        [...scheduleChanges.value.entries()].map(([date, type]) => ({ date, type })) satisfies ScheduleChangeData[],
     );
 
     preventPageUnload.value = false;
@@ -105,44 +111,17 @@ useEventListener(
 
 <template>
     <div class="mx-auto my-3" style="max-width: 600px">
-        <ul v-if="sortedScheduleChanges.length > 0" class="list-group mx-auto my-3" style="max-width: 500px">
-            <li v-for="[date, type] in sortedScheduleChanges" :key="date" class="list-group-item hstack">
-                {{ parseDateLocalYyyyMmDd(date).toLocaleDateString('pl-PL') }} -
-                <ScheduleChangeTypeSelector
-                    v-if="editableFields.has(date)"
-                    :model-value="type"
-                    size="sm"
-                    class="ms-1 ps-1 py-0"
-                    @update:model-value="newType => scheduleChanges.set(date, newType)"
-                />
-                <template v-else>
-                    {{ scheduleChangeTypeLabels[langId][type] }}
-                </template>
-                <IconButton
-                    v-if="editableFields.has(date)"
-                    icon="check-lg"
-                    :aria-label="translate('Save')"
-                    class="ms-auto"
-                    :title="translate('Save')"
-                    @click="editableFields.delete(date)"
-                />
-                <IconButton
-                    v-else
-                    icon="pencil"
-                    :aria-label="translate('Edit')"
-                    class="ms-auto"
-                    :title="translate('Edit')"
-                    @click="editableFields.add(date)"
-                />
-                <IconButton
-                    icon="trash"
-                    :aria-label="translate('Remove')"
-                    class="text-danger ms-2"
-                    :title="translate('Remove')"
-                    @click="scheduleChanges.delete(date)"
-                />
-            </li>
-        </ul>
+        <ScheduleChangesCalendar
+            :semester
+            :schedule-changes
+            class="my-3"
+            @select="
+                (startDate, endDate) => {
+                    newScheduleChangeDate = formatDateLocalYyyyMmDd(startDate);
+                    newScheduleChangeDateEnd = formatDateLocalYyyyMmDd(endDate);
+                }
+            "
+        />
         <div class="input-group my-3">
             <input
                 v-model="newScheduleChangeDate"
@@ -167,12 +146,13 @@ useEventListener(
                 :disabled="newScheduleChangeDate === ''"
                 @click="addScheduleChange()"
             >
-                {{ translate('Add') }}
+                {{ translate('Set') }}
             </button>
         </div>
         <button type="button" class="btn btn-success d-block mx-auto" @click="save()">
             {{ translate('Save') }}
         </button>
         <div v-if="changesSaved" class="text-center mt-2">{{ translate('Saved') }}!</div>
+        <ScheduleChangesList v-model="scheduleChanges" v-model:editable-fields="editableFields" />
     </div>
 </template>
