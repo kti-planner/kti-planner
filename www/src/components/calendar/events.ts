@@ -27,18 +27,22 @@ export function getScheduleChangeEvents(scheduleChanges: ScheduleChangeData[]): 
 }
 
 export function getInitialDate(laboratoryClasses: LaboratoryClassData[]): Date | undefined {
+    const firstClass = laboratoryClasses[0];
     const lastClass = laboratoryClasses.at(-1);
 
-    if (!lastClass) {
+    if (!firstClass || !lastClass) {
         return undefined;
     }
 
     const today = new Date();
+    const firstEventDate = new Date(firstClass.startDate);
     const lastEventDate = new Date(lastClass.startDate);
 
-    if (today.getTime() < lastEventDate.getTime()) {
-        return today;
-    } else {
+    if (today.getTime() < firstEventDate.getTime()) {
+        return firstEventDate;
+    } else if (today.getTime() > lastEventDate.getTime()) {
         return lastEventDate;
+    } else {
+        return today;
     }
 }
