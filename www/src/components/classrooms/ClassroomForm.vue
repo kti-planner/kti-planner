@@ -50,13 +50,15 @@ const translations = {
 function translate(text: keyof (typeof translations)[LangId]): string {
     return translations[langId][text];
 }
+
+const nameId = crypto.randomUUID();
 </script>
 
 <template>
     <form class="vstack gap-3 mx-auto" style="max-width: 500px" @submit.prevent="submit">
         <div>
-            <label for="classroomName" class="form-label">{{ translate('Classroom name') }}</label>
-            <input id="classroomName" v-model="name" type="text" class="form-control" autofocus required />
+            <label :for="nameId" class="form-label">{{ translate('Classroom name') }}</label>
+            <input :id="nameId" v-model="name" type="text" class="form-control" autofocus required />
         </div>
 
         <div class="text-center">

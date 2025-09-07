@@ -82,31 +82,36 @@ const translations = {
 function translate(text: keyof (typeof translations)[LangId]): string {
     return translations[langId][text];
 }
+
+const typeId = crypto.randomUUID();
+const yearId = crypto.randomUUID();
+const startId = crypto.randomUUID();
+const endId = crypto.randomUUID();
 </script>
 
 <template>
     <form class="vstack gap-3 mx-auto" style="max-width: 500px" @submit.prevent="submit">
         <div>
-            <label for="type" class="form-label">{{ translate('Semester type') }}</label>
-            <select id="type" v-model="type" class="form-select" required>
+            <label :for="typeId" class="form-label">{{ translate('Semester type') }}</label>
+            <select :id="typeId" v-model="type" class="form-select" required>
                 <option value="winter">{{ translate('Winter semester') }}</option>
                 <option value="summer">{{ translate('Summer semester') }}</option>
             </select>
         </div>
 
         <div>
-            <label for="year" class="form-label">{{ translate('Academic year') }}</label>
-            <input id="year" v-model="year" type="number" class="form-control" required />
+            <label :for="yearId" class="form-label">{{ translate('Academic year') }}</label>
+            <input :id="yearId" v-model="year" type="number" class="form-control" required />
         </div>
 
         <div>
-            <label for="startDate" class="form-label">{{ translate('Semester start date') }}</label>
-            <input id="startDate" v-model="startDate" type="date" class="form-control" required />
+            <label :for="startId" class="form-label">{{ translate('Semester start date') }}</label>
+            <input :id="startId" v-model="startDate" type="date" class="form-control" required />
         </div>
 
         <div>
-            <label for="endDate" class="form-label">{{ translate('Semester end date') }}</label>
-            <input id="endDate" v-model="endDate" type="date" class="form-control" required />
+            <label :for="endId" class="form-label">{{ translate('Semester end date') }}</label>
+            <input :id="endId" v-model="endDate" type="date" class="form-control" required />
         </div>
 
         <div v-if="semester">

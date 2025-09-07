@@ -47,19 +47,22 @@ const translations = {
 function translate(text: keyof (typeof translations)[LangId]): string {
     return translations[langId][text];
 }
+
+const emailId = crypto.randomUUID();
+const passwordId = crypto.randomUUID();
 </script>
 
 <template>
     <form class="vstack gap-3 mx-auto" style="max-width: 500px" @submit.prevent="submit">
         <div>
-            <label for="email" class="form-label">Email</label>
-            <input id="email" v-model="email" type="email" class="form-control" placeholder="Email" required />
+            <label :for="emailId" class="form-label">Email</label>
+            <input :id="emailId" v-model="email" type="email" class="form-control" placeholder="Email" required />
         </div>
 
         <div>
-            <label for="password" class="form-label">{{ translate('Password') }}</label>
+            <label :for="passwordId" class="form-label">{{ translate('Password') }}</label>
             <input
-                id="password"
+                :id="passwordId"
                 v-model="password"
                 type="password"
                 class="form-control"

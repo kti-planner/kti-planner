@@ -73,18 +73,21 @@ const translations = {
 function translate(text: keyof (typeof translations)[LangId]): string {
     return translations[langId][text];
 }
+
+const nameId = crypto.randomUUID();
+const teachersId = crypto.randomUUID();
 </script>
 
 <template>
     <form class="vstack gap-3 mx-auto" style="max-width: 500px" @submit.prevent="submit">
         <div>
-            <label for="subjectName" class="form-label">{{ translate('Subject name') }}</label>
-            <input id="subjectName" v-model="subjectName" type="text" class="form-control" required autofocus />
+            <label :for="nameId" class="form-label">{{ translate('Subject name') }}</label>
+            <input :id="nameId" v-model="subjectName" type="text" class="form-control" required autofocus />
         </div>
 
         <div>
-            <label for="subjectTeachers" class="form-label">{{ translate('Teachers') }}</label>
-            <UserMultiSelector id="subjectTeachers" v-model="teachers" :options="allUsers" required />
+            <label :for="teachersId" class="form-label">{{ translate('Teachers') }}</label>
+            <UserMultiSelector :id="teachersId" v-model="teachers" :options="allUsers" required />
         </div>
 
         <div class="text-center">
