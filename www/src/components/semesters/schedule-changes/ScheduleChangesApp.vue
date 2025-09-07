@@ -129,7 +129,6 @@ useEventListener(
                 type="date"
                 :min="semester.startDate"
                 :max="semester.endDate"
-                :placeholder="newScheduleChangeDate"
                 class="form-control"
                 style="max-width: fit-content"
             />
