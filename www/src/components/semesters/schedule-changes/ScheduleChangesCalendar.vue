@@ -227,7 +227,6 @@ watch(selectedRange, newSelection => {
                                 (scheduleChanges.get(formatDateLocalYyyyMmDd(day)) ?? 'holiday') !== 'holiday',
                         }"
                         :data-date="formatDateLocalYyyyMmDd(day)"
-                        @click="isDateWithinSemester(day) ? emit('select', day, day) : void 0"
                     >
                         {{ day.getDate() }}
                     </div>
