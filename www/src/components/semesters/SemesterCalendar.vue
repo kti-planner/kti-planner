@@ -77,6 +77,9 @@ const initialDate = computed(() => getInitialDate(laboratoryClasses.value ?? [])
                         :title="arg.event.title"
                         :time-text="arg.timeText"
                         :laboratory-class="arg.event.extendedProps.laboratoryClass"
+                        :subject="
+                            subjects.find(s => s.id === arg.event.extendedProps.laboratoryClass.exercise.subjectId)
+                        "
                     />
                 </template>
             </Calendar>
