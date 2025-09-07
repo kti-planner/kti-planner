@@ -60,6 +60,7 @@ const translations = {
         'Academic year': 'Academic year',
         'Semester start date': 'Semester start date',
         'Semester end date': 'Semester end date',
+        'Edit holidays and schedule changes': 'Edit holidays and schedule changes',
         'Save': 'Save',
         'Add': 'Add',
         'Semester with this year and type already exists.': 'Semester with this year and type already exists.',
@@ -71,6 +72,7 @@ const translations = {
         'Academic year': 'Rok rozpoczęcia roku akademickiego',
         'Semester start date': 'Data rozpoczęcia semestru',
         'Semester end date': 'Data zakończenia semestru',
+        'Edit holidays and schedule changes': 'Edytuj dni wolne i zmiany planu',
         'Save': 'Zapisz',
         'Add': 'Dodaj',
         'Semester with this year and type already exists.': 'Semestr o podanym roku i rodzaju już istnieje.',
@@ -109,7 +111,7 @@ function translate(text: keyof (typeof translations)[LangId]): string {
 
         <div v-if="semester">
             <a :href="`/semesters/${semester.slug}/schedule-changes/`" target="_blank" class="link-success">
-                Edytuj dni wolne i zmiany planu
+                {{ translate('Edit holidays and schedule changes') }}
             </a>
         </div>
 
