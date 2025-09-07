@@ -216,12 +216,12 @@ watch(selectedRange, newSelection => {
                         class="date-button border"
                         :class="{
                             'bg-body-secondary': !isDateWithinSemester(day),
-                            'bg-info': isDateWithinSemester(day) && isDateSelected(day),
-                            'bg-danger':
+                            'text-bg-info': isDateWithinSemester(day) && isDateSelected(day),
+                            'text-bg-danger':
                                 isDateWithinSemester(day) &&
                                 !isDateSelected(day) &&
                                 scheduleChanges.get(formatDateLocalYyyyMmDd(day)) === 'holiday',
-                            'bg-warning':
+                            'text-bg-warning':
                                 isDateWithinSemester(day) &&
                                 !isDateSelected(day) &&
                                 (scheduleChanges.get(formatDateLocalYyyyMmDd(day)) ?? 'holiday') !== 'holiday',

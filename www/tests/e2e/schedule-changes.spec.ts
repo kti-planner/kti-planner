@@ -46,16 +46,16 @@ test('Can access schedule changes list when logged-in', async ({ page }) => {
     await expect(page1.getByTitle("16.04.2025\nfriday's schedule", { exact: true })).toHaveText('16');
     await expect(page1.getByTitle('3.04.2025', { exact: true })).toHaveText('3');
 
-    await expect(page1.getByTitle('24.02.2025', { exact: true })).not.toContainClass('bg-danger');
-    await expect(page1.getByTitle('1.05.2025\nholiday', { exact: true })).toContainClass('bg-danger');
-    await expect(page1.getByTitle('8.06.2025\nholiday', { exact: true })).toContainClass('bg-danger');
-    await expect(page1.getByTitle("16.04.2025\nfriday's schedule", { exact: true })).toContainClass('bg-warning');
-    await expect(page1.getByTitle('3.04.2025', { exact: true })).not.toContainClass('bg-warning');
-    await expect(page1.getByTitle('3.04.2025', { exact: true })).not.toContainClass('bg-info');
+    await expect(page1.getByTitle('24.02.2025', { exact: true })).not.toContainClass('text-bg-danger');
+    await expect(page1.getByTitle('1.05.2025\nholiday', { exact: true })).toContainClass('text-bg-danger');
+    await expect(page1.getByTitle('8.06.2025\nholiday', { exact: true })).toContainClass('text-bg-danger');
+    await expect(page1.getByTitle("16.04.2025\nfriday's schedule", { exact: true })).toContainClass('text-bg-warning');
+    await expect(page1.getByTitle('3.04.2025', { exact: true })).not.toContainClass('text-bg-warning');
+    await expect(page1.getByTitle('3.04.2025', { exact: true })).not.toContainClass('text-bg-info');
 
     await page1.getByTitle('3.04.2025', { exact: true }).click();
 
-    await expect(page1.getByTitle('3.04.2025', { exact: true })).toContainClass('bg-info');
+    await expect(page1.getByTitle('3.04.2025', { exact: true })).toContainClass('text-bg-info');
 
     await expect(page1.getByRole('textbox').first()).toHaveValue('2025-04-03');
     // await expect(page1.getByRole('textbox')).toHaveValue('2025-04-03');
@@ -65,7 +65,7 @@ test('Can access schedule changes list when logged-in', async ({ page }) => {
 
     await expect(page1.getByTitle("3.04.2025\ntuesday's schedule", { exact: true })).toBeVisible();
     await expect(page1.getByTitle("3.04.2025\ntuesday's schedule", { exact: true })).toHaveText('3');
-    await expect(page1.getByTitle("3.04.2025\ntuesday's schedule", { exact: true })).toContainClass('bg-warning');
+    await expect(page1.getByTitle("3.04.2025\ntuesday's schedule", { exact: true })).toContainClass('text-bg-warning');
 
     await expect(page1.getByText('Saved!')).not.toBeVisible();
     await page1.getByRole('button', { name: 'Save' }).click();
