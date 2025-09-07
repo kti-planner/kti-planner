@@ -57,8 +57,8 @@ test('Can access schedule changes list when logged-in', async ({ page }) => {
 
     await expect(page1.getByTitle('3.04.2025', { exact: true })).toContainClass('text-bg-info');
 
-    await expect(page1.getByRole('textbox').first()).toHaveValue('2025-04-03');
-    // await expect(page1.getByRole('textbox')).toHaveValue('2025-04-03');
+    await expect(page1.getByRole('textbox', { name: 'From' })).toHaveValue('2025-04-03');
+    await expect(page1.getByRole('textbox', { name: 'To' })).toHaveValue('2025-04-03');
     await expect(page1.getByRole('combobox')).toHaveValue('no changes');
     await page1.getByRole('combobox').selectOption('tuesday');
     await page1.getByRole('button', { name: 'Set' }).click();

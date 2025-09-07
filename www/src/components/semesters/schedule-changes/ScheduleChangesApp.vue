@@ -11,11 +11,15 @@ import ScheduleChangeTypeSelector from '@components/semesters/schedule-changes/S
 
 const translations = {
     'en': {
+        'From': 'From',
+        'To': 'To',
         'Set': 'Set',
         'Save': 'Save',
         'Saved': 'Saved',
     },
     'pl': {
+        'From': 'Od',
+        'To': 'Do',
         'Set': 'Ustaw',
         'Save': 'Zapisz',
         'Saved': 'Zapisano',
@@ -122,6 +126,7 @@ useEventListener(
                 :max="semester.endDate"
                 class="form-control"
                 style="max-width: fit-content"
+                :aria-label="translate('From')"
             />
             <span class="input-group-text">-</span>
             <input
@@ -131,6 +136,7 @@ useEventListener(
                 :max="semester.endDate"
                 class="form-control"
                 style="max-width: fit-content"
+                :aria-label="translate('To')"
             />
             <ScheduleChangeTypeSelector v-model="newScheduleChangeType" />
             <button
