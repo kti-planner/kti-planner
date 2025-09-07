@@ -96,28 +96,33 @@ const translations = {
 function translate(text: keyof (typeof translations)[LangId]): string {
     return translations[langId][text];
 }
+
+const numberId = crypto.randomUUID();
+const nameId = crypto.randomUUID();
+const teacherId = crypto.randomUUID();
+const classroomId = crypto.randomUUID();
 </script>
 
 <template>
     <form class="vstack gap-3 mx-auto" style="max-width: 500px" @submit.prevent="submit">
         <div>
-            <label for="exerciseNumber" class="form-label">{{ translate('Exercise number') }}</label>
-            <input id="exerciseNumber" v-model="exerciseNumber" type="number" :min="0" class="form-control" required />
+            <label :for="numberId" class="form-label">{{ translate('Exercise number') }}</label>
+            <input :id="numberId" v-model="exerciseNumber" type="number" :min="0" class="form-control" required />
         </div>
 
         <div>
-            <label for="exerciseName" class="form-label">{{ translate('Exercise name') }}</label>
-            <input id="exerciseName" v-model="exerciseName" type="text" class="form-control" required autofocus />
+            <label :for="nameId" class="form-label">{{ translate('Exercise name') }}</label>
+            <input :id="nameId" v-model="exerciseName" type="text" class="form-control" required autofocus />
         </div>
 
         <div>
-            <label for="exerciseTeacher" class="form-label">{{ translate('Teacher') }}</label>
-            <UserSelector id="exerciseTeacher" v-model="teacher" :options="subject.teachers" required />
+            <label :for="teacherId" class="form-label">{{ translate('Teacher') }}</label>
+            <UserSelector :id="teacherId" v-model="teacher" :options="subject.teachers" required />
         </div>
 
         <div>
-            <label for="exerciseClassroom" class="form-label">{{ translate('Classroom') }}</label>
-            <select id="exerciseClassroom" v-model="exerciseClassroomId" class="form-select" required>
+            <label :for="classroomId" class="form-label">{{ translate('Classroom') }}</label>
+            <select :id="classroomId" v-model="exerciseClassroomId" class="form-select" required>
                 <option v-for="classroom in classrooms" :key="classroom.id" :value="classroom.id">
                     {{ classroom.name }}
                 </option>

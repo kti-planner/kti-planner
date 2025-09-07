@@ -51,14 +51,16 @@ const translations = {
 function translate(text: keyof (typeof translations)[LangId]): string {
     return translations[langId][text];
 }
+
+const passwordId = crypto.randomUUID();
 </script>
 
 <template>
     <form class="vstack gap-3 mx-auto" style="max-width: 500px" @submit.prevent="submit">
         <div>
-            <label for="password" class="form-label">{{ translate('New password') }}</label>
+            <label :for="passwordId" class="form-label">{{ translate('New password') }}</label>
             <PasswordInputField
-                id="password"
+                :id="passwordId"
                 v-model="password"
                 v-model:visible="passwordVisible"
                 :placeholder="translate('New password')"
