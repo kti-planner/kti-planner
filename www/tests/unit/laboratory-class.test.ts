@@ -125,6 +125,11 @@ test('Laboratory classes', async () => {
     expect(await LaboratoryClass.fetchAllFromSubject(subject1)).toStrictEqual([laboratoryClass1]);
     expect(await LaboratoryClass.fetchAllFromSubject(subject2)).toStrictEqual([laboratoryClass2]);
 
+    expect(await LaboratoryClass.fetchAllFromSubjects([subject1, subject2])).toStrictEqual([
+        laboratoryClass1,
+        laboratoryClass2,
+    ]);
+
     await laboratoryClass2.edit({
         startDate: new Date('2025-03-12T09:00:00'),
         endDate: new Date('2025-03-12T11:00:00'),
@@ -158,4 +163,10 @@ test('Laboratory classes', async () => {
 
     expect(await LaboratoryClass.fetchAllFromSubject(subject1)).toStrictEqual([laboratoryClass1, laboratoryClass3]);
     expect(await LaboratoryClass.fetchAllFromSubject(subject2)).toStrictEqual([laboratoryClass2]);
+
+    expect(await LaboratoryClass.fetchAllFromSubjects([subject1, subject2])).toStrictEqual([
+        laboratoryClass1,
+        laboratoryClass3,
+        laboratoryClass2,
+    ]);
 });
