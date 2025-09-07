@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { useId } from 'vue';
 import { langId } from '@components/frontend/lang';
 import type { SemesterData } from '@components/semesters/types';
 import IconButton from '@components/IconButton.vue';
@@ -23,7 +22,7 @@ function translate(text: keyof (typeof translations)[LangId]): string {
     return translations[langId][text];
 }
 
-const modalId = useId();
+const modalId = crypto.randomUUID();
 </script>
 
 <template>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, useId } from 'vue';
+import { ref } from 'vue';
 import { langId } from '@components/frontend/lang';
 import { apiPatch, apiPost } from '@components/api';
 import type {
@@ -58,7 +58,7 @@ function translate(text: keyof (typeof translations)[LangId]): string {
     return translations[langId][text];
 }
 
-const nameId = useId();
+const nameId = crypto.randomUUID();
 </script>
 
 <template>

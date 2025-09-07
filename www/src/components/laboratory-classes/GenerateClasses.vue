@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, useId, useTemplateRef } from 'vue';
+import { computed, useTemplateRef } from 'vue';
 import { useCloned } from '@vueuse/core';
 import { langId } from '@components/frontend/lang';
 import type { ExerciseData } from '@components/exercises/types';
@@ -37,7 +37,7 @@ const emit = defineEmits<{
 }>();
 
 const modal = useTemplateRef('modal');
-const modalId = useId();
+const modalId = crypto.randomUUID();
 const { cloned: group } = useCloned(computed(() => initialGroup));
 
 function handleFormDone() {

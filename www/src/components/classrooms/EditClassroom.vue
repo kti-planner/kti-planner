@@ -1,12 +1,11 @@
 <script setup lang="ts">
-import { useId } from 'vue';
 import { langId } from '@components/frontend/lang';
 import type { ClassroomData } from '@components/classrooms/types';
 import ClassroomForm from '@components/classrooms/ClassroomForm.vue';
 import IconButton from '@components/IconButton.vue';
 import Modal from '@components/Modal.vue';
 
-const props = defineProps<{
+defineProps<{
     classroom: ClassroomData;
 }>();
 
@@ -23,7 +22,7 @@ function translate(text: keyof (typeof translations)[LangId]): string {
     return translations[langId][text];
 }
 
-const modalId = `${useId()}-${props.classroom.id}`;
+const modalId = crypto.randomUUID();
 </script>
 
 <template>
