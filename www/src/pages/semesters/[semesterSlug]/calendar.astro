@@ -1,0 +1,61 @@
+---
+import { makeScheduleChangeData, makeSemesterData, Semester } from '@backend/semester';
+import Layout from '@layouts/Layout.astro';
+import SemesterCalendar from '@components/semesters/SemesterCalendar.vue';
+
+const { semesterSlug } = Astro.params;
+const { langId } = Astro.locals;
+
+const translations = {
+    'en': {
+        'Semesters': 'Semesters',
+        'Winter semester': 'Winter semester',
+        'Summer semester': 'Summer semester',
+        'Calendar': 'Calendar',
+    },
+    'pl': {
+        'Semesters': 'Semestry',
+        'Winter semester': 'Semestr zimowy',
+        'Summer semester': 'Semestr letni',
+        'Calendar': 'Kalendarz',
+    },
+};
+
+function translate(text: keyof (typeof translations)[LangId]): string {
+    return translations[langId][text];
+}
+
+if (semesterSlug === undefined) {
+    return new Response(null, { status: 404 });
+}
+
+const semester = await Semester.fetchBySlug(semesterSlug);
+if (!semester) {
+    return new Response(null, { status: 404 });
+}
+
+const semesterName = `${semester.type === 'summer' ? translate('Summer semester') : translate('Winter semester')} ${semester.year}/${semester.year + 1}`;
+const semesterData = makeSemesterData(semester);
+
+const scheduleChanges = await semester.getScheduleChanges();
+const scheduleChangesData = scheduleChanges.map(makeScheduleChangeData);
+---
+
+<Layout
+    breadcrumbs={[
+        {
+            text: translate('Semesters'),
+            href: '/semesters/',
+        },
+        {
+            text: semesterName,
+            href: `/semesters/${semesterSlug}/`,
+        },
+        {
+            text: translate('Calendar'),
+            href: '#',
+        },
+    ]}
+>
+    <SemesterCalendar client:only="vue" semester={semesterData} scheduleChanges={scheduleChangesData} />
+</Layout>

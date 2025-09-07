@@ -14,11 +14,13 @@ const translations = {
         'Semesters': 'Semesters',
         'Winter semester': 'Winter semester',
         'Summer semester': 'Summer semester',
+        'Go to calendar': 'Go to calendar',
     },
     'pl': {
         'Semesters': 'Semestry',
         'Winter semester': 'Semestr zimowy',
         'Summer semester': 'Semestr letni',
+        'Go to calendar': 'Przejdź do kalendarza',
     },
 };
 
@@ -83,6 +85,11 @@ const allUsers = await User.fetchAll();
                     ) as unknown,
             )
         }
+    </div>
+    <div class="mx-auto" style="width: fit-content">
+        <a href={`/semesters/${semesterSlug}/calendar/`} class="btn btn-success">
+            {translate('Go to calendar')}
+        </a>
     </div>
 </Layout>
 

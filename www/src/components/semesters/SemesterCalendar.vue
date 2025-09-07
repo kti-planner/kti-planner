@@ -4,25 +4,18 @@ import type { EventInput } from '@fullcalendar/core';
 import { useApiFetch } from '@components/api';
 import { getInitialDate, getLaboratoryClassEvents, getScheduleChangeEvents } from '@components/calendar/events';
 import type { LaboratoryClassData } from '@components/laboratory-classes/types';
-import type { LaboratoryGroupData } from '@components/laboratory-groups/types';
-import type { ScheduleChangeData } from '@components/semesters/types';
+import type { ScheduleChangeData, SemesterData } from '@components/semesters/types';
 import Calendar from '@components/Calendar.vue';
 import LaboratoryClassEvent from '@components/laboratory-classes/LaboratoryClassEvent.vue';
 
-const { apiUrl, selectedLaboratoryGroups, scheduleChanges } = defineProps<{
-    apiUrl: string;
-    selectedLaboratoryGroups: LaboratoryGroupData[];
+const { semester, scheduleChanges } = defineProps<{
+    semester: SemesterData;
     scheduleChanges: ScheduleChangeData[];
 }>();
 
-const { data: laboratoryClasses, execute: refreshClasses } = useApiFetch<LaboratoryClassData[]>(
-    apiUrl,
-    () => new URLSearchParams(selectedLaboratoryGroups.map(group => ['laboratoryGroup', group.name])),
+const { data: laboratoryClasses } = useApiFetch<LaboratoryClassData[]>(
+    `/semesters/${semester.slug}/api/laboratory-classes/`,
 );
-
-defineExpose({
-    refreshClasses,
-});
 
 const events = computed<EventInput[]>(() => [
     ...getLaboratoryClassEvents(laboratoryClasses.value ?? []),
