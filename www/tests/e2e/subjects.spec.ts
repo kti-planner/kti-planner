@@ -40,11 +40,9 @@ test('Can add new subject and prevent duplicate subject creation', async ({ page
 
     await page.getByRole('button', { name: 'Add new subject' }).click();
 
-    await expect(page.locator('#subject-modal')).toBeVisible();
-    await expect(page.locator('#subject-modal')).toContainText('Add new subject');
+    await expect(page.getByRole('heading', { name: 'Add new subject' })).toBeVisible();
 
     await page.getByRole('textbox', { name: 'Subject name' }).fill('Sieci komputerowe');
-
     await page.getByRole('combobox', { name: 'Teachers' }).selectOption('Jan Kowalski');
 
     await page.getByRole('button', { name: 'Add', exact: true }).click();
@@ -59,18 +57,14 @@ test('Can add new subject and prevent duplicate subject creation', async ({ page
 
     await page.getByRole('button', { name: 'Add new subject' }).click();
 
-    await expect(page.locator('#subject-modal')).toBeVisible();
-    await expect(page.locator('#subject-modal')).toContainText('Add new subject');
+    await expect(page.getByRole('heading', { name: 'Add new subject' })).toBeVisible();
 
     await page.getByRole('textbox', { name: 'Subject name' }).fill('Sieci komputerowe');
-
     await page.getByRole('combobox', { name: 'Teachers' }).selectOption('Jan Kowalski');
 
     await page.getByRole('button', { name: 'Add', exact: true }).click();
 
-    await expect(page.locator('#subject-modal').locator('form')).toContainText(
-        'Subject with this name already exists.',
-    );
+    await expect(page.getByText('Subject with this name already exists.')).toBeVisible();
 
     await page.getByRole('button', { name: 'Close' }).click();
 
@@ -113,14 +107,9 @@ test('Can edit subject and prevent duplicate subject', async ({ page }) => {
     await expect(page.getByRole('button', { name: 'Edit subject' })).toBeVisible();
     await page.getByRole('button', { name: 'Edit subject' }).click();
 
-    await expect(page.locator('#edit-subject-modal-2024-summer-lokalne-sieci-bezprzewodowe')).toBeVisible();
-
-    await expect(page.locator('#edit-subject-modal-2024-summer-lokalne-sieci-bezprzewodowe')).toContainText(
-        'Edit subject Lokalne sieci bezprzewodowe',
-    );
+    await expect(page.getByRole('heading', { name: 'Edit subject Lokalne sieci bezprzewodowe' })).toBeVisible();
 
     await page.getByRole('textbox', { name: 'Subject name' }).fill('Sieci Ethernet i IP');
-
     await page.getByRole('combobox', { name: 'Teachers' }).selectOption('Admin');
 
     await page.getByRole('button', { name: 'Save' }).click();
@@ -131,19 +120,13 @@ test('Can edit subject and prevent duplicate subject', async ({ page }) => {
     // Can not edit subject with data that match already existing subject
     await page.getByRole('button', { name: 'Edit subject' }).click();
 
-    await expect(page.locator('#edit-subject-modal-2024-summer-sieci-ethernet-i-ip')).toBeVisible();
-
-    await expect(page.locator('#edit-subject-modal-2024-summer-sieci-ethernet-i-ip')).toContainText(
-        'Edit subject Sieci Ethernet i IP',
-    );
+    await expect(page.getByRole('heading', { name: 'Edit subject Sieci Ethernet i IP' })).toBeVisible();
 
     await page.getByRole('textbox', { name: 'Subject name' }).fill('Zarządzanie bezpieczeństwem sieci');
 
     await page.getByRole('button', { name: 'Save' }).click();
 
-    await expect(page.locator('#edit-subject-modal-2024-summer-sieci-ethernet-i-ip').locator('form')).toContainText(
-        'Subject with this name already exists.',
-    );
+    await expect(page.getByText('Subject with this name already exists.')).toBeVisible();
 
     await page.getByRole('button', { name: 'Close' }).click();
 

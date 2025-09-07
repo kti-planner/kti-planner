@@ -15,17 +15,19 @@ const translations = {
 function translate(text: keyof (typeof translations)[LangId]): string {
     return translations[langId][text];
 }
+
+const modalId = crypto.randomUUID();
 </script>
 
 <template>
     <div>
         <div class="d-flex justify-content-center mb-3">
-            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#user-modal">
+            <button type="button" class="btn btn-success" data-bs-toggle="modal" :data-bs-target="`#${modalId}`">
                 {{ translate('Add new user') }}
             </button>
         </div>
 
-        <Modal id="user-modal">
+        <Modal :id="modalId">
             <template #header>
                 {{ translate('Add new user') }}
             </template>

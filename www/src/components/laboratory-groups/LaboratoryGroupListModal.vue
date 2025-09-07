@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useId, useTemplateRef } from 'vue';
+import { useTemplateRef } from 'vue';
 import { langId } from '@components/frontend/lang';
 import type { LaboratoryGroupData } from '@components/laboratory-groups/types';
 import IconButton from '@components/IconButton.vue';
@@ -28,7 +28,7 @@ function translate(text: keyof (typeof translations)[LangId]): string {
 }
 
 const modal = useTemplateRef('modal');
-const modalId = useId();
+const modalId = crypto.randomUUID();
 </script>
 
 <template>

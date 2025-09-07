@@ -5,7 +5,7 @@ import ClassroomForm from '@components/classrooms/ClassroomForm.vue';
 import IconButton from '@components/IconButton.vue';
 import Modal from '@components/Modal.vue';
 
-const props = defineProps<{
+defineProps<{
     classroom: ClassroomData;
 }>();
 
@@ -22,7 +22,7 @@ function translate(text: keyof (typeof translations)[LangId]): string {
     return translations[langId][text];
 }
 
-const modalId = `edit-classroom-modal-${props.classroom.id}`;
+const modalId = crypto.randomUUID();
 </script>
 
 <template>
@@ -37,6 +37,6 @@ const modalId = `edit-classroom-modal-${props.classroom.id}`;
 
     <Modal :id="modalId">
         <template #header>{{ translate('Edit classroom') }} {{ classroom.name }}</template>
-        <ClassroomForm :classroom="classroom" />
+        <ClassroomForm :classroom />
     </Modal>
 </template>
