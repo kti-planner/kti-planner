@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, ref, useId } from 'vue';
+import { computed, onBeforeUnmount, ref } from 'vue';
 
-const { id = useId(), contentRendering = 'when-open' } = defineProps<{
+const { id = crypto.randomUUID(), contentRendering = 'when-open' } = defineProps<{
     id?: string;
     contentRendering?: 'always' | 'when-open' | undefined;
     size?: 'sm' | null | 'lg' | 'xl' | undefined;

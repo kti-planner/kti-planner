@@ -7,7 +7,7 @@ import IconButton from '@components/IconButton.vue';
 import Modal from '@components/Modal.vue';
 import SubjectForm from '@components/subjects/SubjectForm.vue';
 
-const props = defineProps<{
+defineProps<{
     semester: SemesterData;
     subject: SubjectData;
     allUsers: UserData[];
@@ -26,7 +26,7 @@ function translate(text: keyof (typeof translations)[LangId]): string {
     return translations[langId][text];
 }
 
-const modalId = `edit-subject-modal-${props.semester.slug}-${props.subject.slug}`;
+const modalId = crypto.randomUUID();
 </script>
 
 <template>
@@ -43,6 +43,6 @@ const modalId = `edit-subject-modal-${props.semester.slug}-${props.subject.slug}
 
     <Modal :id="modalId">
         <template #header>{{ translate('Edit subject') }} {{ subject.name }}</template>
-        <SubjectForm :semester="semester" :subject="subject" :all-users />
+        <SubjectForm :semester :subject :all-users />
     </Modal>
 </template>

@@ -37,6 +37,7 @@ const emit = defineEmits<{
 }>();
 
 const modal = useTemplateRef('modal');
+const modalId = crypto.randomUUID();
 const { cloned: group } = useCloned(computed(() => initialGroup));
 
 function handleFormDone() {
@@ -46,17 +47,11 @@ function handleFormDone() {
 </script>
 
 <template>
-    <button
-        type="button"
-        class="btn btn-success"
-        data-bs-toggle="modal"
-        data-bs-target="#plan-classes-modal"
-        :="$attrs"
-    >
+    <button type="button" class="btn btn-success" data-bs-toggle="modal" :data-bs-target="`#${modalId}`" :="$attrs">
         {{ translate('Plan classes') }}
     </button>
 
-    <Modal ref="modal" id="plan-classes-modal" scrollable>
+    <Modal ref="modal" :id="modalId" scrollable>
         <template #header>
             {{ group ? `${translate('Plan classes for group')} ${group.name}` : translate('Plan classes') }}
         </template>

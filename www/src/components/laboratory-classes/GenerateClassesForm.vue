@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, useId } from 'vue';
+import { computed, ref } from 'vue';
 import { langId } from '@components/frontend/lang';
 import { apiPost } from '@components/api';
 import type { ExerciseData } from '@components/exercises/types';
@@ -138,12 +138,12 @@ async function generate() {
     emit('done');
 }
 
-const groupId = useId();
-const dateId = useId();
-const startTimeId = useId();
-const endTimeId = useId();
-const repeatId = useId();
-const dateFeedback = useId();
+const groupId = crypto.randomUUID();
+const dateId = crypto.randomUUID();
+const startTimeId = crypto.randomUUID();
+const endTimeId = crypto.randomUUID();
+const repeatId = crypto.randomUUID();
+const dateFeedback = crypto.randomUUID();
 </script>
 
 <template>
@@ -165,7 +165,7 @@ const dateFeedback = useId();
                 :class="{
                     'is-invalid': firstClassDateHoliday,
                 }"
-                :="{ ...(firstClassDateHoliday ? { 'aria-describedby': dateFeedback } : {}) }"
+                :aria-describedby="firstClassDateHoliday ? dateFeedback : undefined"
                 required
             />
             <div v-if="firstClassDateHoliday" :id="dateFeedback" class="invalid-feedback">

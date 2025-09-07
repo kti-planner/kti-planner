@@ -61,7 +61,7 @@ test('Can add new user and prevent duplicate user creation', async ({ page }) =>
 
     await page.getByRole('button', { name: 'Add', exact: true }).click();
 
-    await expect(page.locator('#user-modal').locator('form')).toContainText('Adding new user failed.');
+    await expect(page.getByText('Adding new user failed.')).toBeVisible();
 
     await page.getByRole('button', { name: 'Close' }).click();
 
@@ -184,6 +184,8 @@ test('Can edit user data and prevent duplicate user as admin', async ({ page }) 
 
     await page.getByRole('button', { name: 'Edit user' }).click();
 
+    await expect(page.getByRole('heading', { name: 'Edit user Bogdan Nowak' })).toBeVisible();
+
     await page.getByRole('textbox', { name: 'Name' }).fill('BogdanX NowakX');
     await page.getByRole('textbox', { name: 'Email' }).fill('bogdanx@nowakx.pl');
     await page.getByRole('combobox', { name: 'Role' }).selectOption('admin');
@@ -197,6 +199,8 @@ test('Can edit user data and prevent duplicate user as admin', async ({ page }) 
     // Cannot edit user with data that match already existing user
     await page.getByRole('button', { name: 'Edit user' }).click();
 
+    await expect(page.getByRole('heading', { name: 'Edit user BogdanX NowakX' })).toBeVisible();
+
     // Existing email
     await page.getByRole('textbox', { name: 'Name' }).fill('BogdanX NowakX');
     await page.getByRole('textbox', { name: 'Email' }).fill('jan@kowalski.pl');
@@ -204,9 +208,7 @@ test('Can edit user data and prevent duplicate user as admin', async ({ page }) 
 
     await page.getByRole('button', { name: 'Save' }).click();
 
-    await expect(page.locator('#edit-user-modal-feeaa186-3d69-4801-a580-88be10d53553').locator('form')).toContainText(
-        'User with that email already exists.',
-    );
+    await expect(page.getByText('User with that email already exists.')).toBeVisible();
 
     await page.getByRole('button', { name: 'Close' }).click();
 
@@ -223,6 +225,8 @@ test('Can edit user data and prevent duplicate user as teacher', async ({ page }
 
     await page.getByRole('button', { name: 'Edit user' }).click();
 
+    await expect(page.getByRole('heading', { name: 'Edit user Bogdan Nowak' })).toBeVisible();
+
     await page.getByRole('textbox', { name: 'Name' }).fill('BogdanX NowakX');
     await page.getByRole('textbox', { name: 'Email' }).fill('bogdanx@nowakx.pl');
 
@@ -235,15 +239,15 @@ test('Can edit user data and prevent duplicate user as teacher', async ({ page }
     // Cannot edit user with data that match already existing user
     await page.getByRole('button', { name: 'Edit user' }).click();
 
+    await expect(page.getByRole('heading', { name: 'Edit user BogdanX NowakX' })).toBeVisible();
+
     // Existing email
     await page.getByRole('textbox', { name: 'Name' }).fill('BogdanX NowakX');
     await page.getByRole('textbox', { name: 'Email' }).fill('jan@kowalski.pl');
 
     await page.getByRole('button', { name: 'Save' }).click();
 
-    await expect(page.locator('#edit-user-modal-feeaa186-3d69-4801-a580-88be10d53553').locator('form')).toContainText(
-        'User with that email already exists.',
-    );
+    await expect(page.getByText('User with that email already exists.')).toBeVisible();
 
     await page.getByRole('button', { name: 'Close' }).click();
 

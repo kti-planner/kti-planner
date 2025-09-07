@@ -15,14 +15,16 @@ const translations = {
 function translate(text: keyof (typeof translations)[LangId]): string {
     return translations[langId][text];
 }
+
+const modalId = crypto.randomUUID();
 </script>
 
 <template>
-    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#semester-modal">
+    <button type="button" class="btn btn-success" data-bs-toggle="modal" :data-bs-target="`#${modalId}`">
         {{ translate('Add new semester') }}
     </button>
 
-    <Modal id="semester-modal">
+    <Modal :id="modalId">
         <template #header>
             {{ translate('Add new semester') }}
         </template>

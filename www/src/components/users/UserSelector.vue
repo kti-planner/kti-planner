@@ -1,10 +1,9 @@
 <script setup lang="ts">
-import { useId } from 'vue';
 import type { UserData } from '@components/users/types';
 
 const model = defineModel<UserData | null>({ default: null });
 
-const { id = useId(), required = false } = defineProps<{
+const { id = crypto.randomUUID(), required = false } = defineProps<{
     id?: string | undefined;
     options: UserData[];
     required?: boolean | undefined;

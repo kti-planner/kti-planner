@@ -38,8 +38,7 @@ test('Can add new semester and prevent duplicate semester creation', async ({ pa
     await expect(page.getByRole('button', { name: 'Add new semester' })).toBeVisible();
     await page.getByRole('button', { name: 'Add new semester' }).click();
 
-    await expect(page.locator('#semester-modal')).toBeVisible();
-    await expect(page.locator('#semester-modal')).toContainText('Add new semester');
+    await expect(page.getByRole('heading', { name: 'Add new semester' })).toBeVisible();
 
     await page.getByRole('combobox', { name: 'Semester type' }).selectOption('summer');
     await page.getByRole('spinbutton', { name: 'Academic year' }).fill('2100');
@@ -59,8 +58,7 @@ test('Can add new semester and prevent duplicate semester creation', async ({ pa
     await expect(page.getByRole('button', { name: 'Add new semester' })).toBeVisible();
     await page.getByRole('button', { name: 'Add new semester' }).click();
 
-    await expect(page.locator('#semester-modal')).toBeVisible();
-    await expect(page.locator('#semester-modal')).toContainText('Add new semester');
+    await expect(page.getByRole('heading', { name: 'Add new semester' })).toBeVisible();
 
     await page.getByRole('combobox', { name: 'Semester type' }).selectOption('summer');
     await page.getByRole('spinbutton', { name: 'Academic year' }).fill('2100');
@@ -69,9 +67,7 @@ test('Can add new semester and prevent duplicate semester creation', async ({ pa
 
     await page.getByRole('button', { name: 'Add', exact: true }).click();
 
-    await expect(page.locator('#semester-modal').locator('form')).toContainText(
-        'Semester with this year and type already exists.',
-    );
+    await expect(page.getByText('Semester with this year and type already exists.')).toBeVisible();
 
     await page.getByRole('button', { name: 'Close' }).click();
 
@@ -113,8 +109,7 @@ test('Can edit semester and prevent duplicate semester', async ({ page }) => {
     await expect(page.getByRole('button', { name: 'Edit semester' })).toBeVisible();
     await page.getByRole('button', { name: 'Edit semester' }).click();
 
-    await expect(page.locator('#edit-semester-modal-2024-summer')).toBeVisible();
-    await expect(page.locator('#edit-semester-modal-2024-summer')).toContainText('Edit semester 2024/2025');
+    await expect(page.getByRole('heading', { name: 'Edit semester 2024/2025' })).toBeVisible();
 
     await page.getByRole('combobox', { name: 'Semester type' }).selectOption('winter');
     await page.getByRole('spinbutton', { name: 'Academic year' }).fill('2069');
@@ -129,8 +124,7 @@ test('Can edit semester and prevent duplicate semester', async ({ page }) => {
     // Can not edit semester with data that match already existing semester
     await page.getByRole('button', { name: 'Edit semester' }).click();
 
-    await expect(page.locator('#edit-semester-modal-2069-winter')).toBeVisible();
-    await expect(page.locator('#edit-semester-modal-2069-winter')).toContainText('Edit semester 2069/2070');
+    await expect(page.getByRole('heading', { name: 'Edit semester 2069/2070' })).toBeVisible();
 
     await page.getByRole('combobox', { name: 'Semester type' }).selectOption('winter');
     await page.getByRole('spinbutton', { name: 'Academic year' }).fill('2023');
@@ -139,9 +133,7 @@ test('Can edit semester and prevent duplicate semester', async ({ page }) => {
 
     await page.getByRole('button', { name: 'Save' }).click();
 
-    await expect(page.locator('#edit-semester-modal-2069-winter').locator('form')).toContainText(
-        'Semester with this year and type already exists.',
-    );
+    await expect(page.getByText('Semester with this year and type already exists.')).toBeVisible();
 
     await page.getByRole('button', { name: 'Close' }).click();
 

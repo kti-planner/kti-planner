@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { useId } from 'vue';
 import { langId } from '@components/frontend/lang';
 import LaboratoryGroupForm from '@components/laboratory-groups/LaboratoryGroupForm.vue';
 import Modal from '@components/Modal.vue';
@@ -21,7 +20,7 @@ defineProps<{
     apiUrl: string;
 }>();
 
-const modalId = useId();
+const modalId = crypto.randomUUID();
 </script>
 
 <template>
