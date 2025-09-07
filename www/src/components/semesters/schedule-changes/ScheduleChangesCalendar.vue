@@ -192,42 +192,46 @@ watch(selectedRange, newSelection => {
 </script>
 
 <template>
-    <div class="row text-center">
-        <div style="width: 12ch"></div>
-        <div v-for="monthName in monthsInSemester" :key="monthName" class="col">
-            {{ monthName }}
-        </div>
-    </div>
-    <div class="row g-0 text-center text-nowrap border">
-        <div style="width: 12ch">
-            <div v-for="weekdayName in weekdayNames" :key="weekdayName" class="border">
-                {{ weekdayName }}
+    <div class="overflow-x-auto" style="max-width: 700px">
+        <div style="width: 700px">
+            <div class="row g-0 text-center">
+                <div style="width: 12ch"></div>
+                <div v-for="monthName in monthsInSemester" :key="monthName" class="col">
+                    {{ monthName }}
+                </div>
             </div>
-        </div>
-        <div v-for="week in weeksInSemester" :key="week.getTime()" class="col">
-            <div
-                v-for="day in weekDaysFor(week)"
-                :key="day.getTime()"
-                ref="dateButtons"
-                :role="isDateWithinSemester(day) ? 'button' : 'none'"
-                :title="scheduleChangeTitle(day)"
-                class="date-button border"
-                :class="{
-                    'bg-body-secondary': !isDateWithinSemester(day),
-                    'bg-info': isDateWithinSemester(day) && isDateSelected(day),
-                    'bg-danger':
-                        isDateWithinSemester(day) &&
-                        !isDateSelected(day) &&
-                        scheduleChanges.get(formatDateLocalYyyyMmDd(day)) === 'holiday',
-                    'bg-warning':
-                        isDateWithinSemester(day) &&
-                        !isDateSelected(day) &&
-                        (scheduleChanges.get(formatDateLocalYyyyMmDd(day)) ?? 'holiday') !== 'holiday',
-                }"
-                :data-date="formatDateLocalYyyyMmDd(day)"
-                @click="isDateWithinSemester(day) ? emit('select', day, day) : void 0"
-            >
-                {{ day.getDate() }}
+            <div class="row g-0 text-center text-nowrap border">
+                <div style="width: 12ch">
+                    <div v-for="weekdayName in weekdayNames" :key="weekdayName" class="border">
+                        {{ weekdayName }}
+                    </div>
+                </div>
+                <div v-for="week in weeksInSemester" :key="week.getTime()" class="col">
+                    <div
+                        v-for="day in weekDaysFor(week)"
+                        :key="day.getTime()"
+                        ref="dateButtons"
+                        :role="isDateWithinSemester(day) ? 'button' : 'none'"
+                        :title="scheduleChangeTitle(day)"
+                        class="date-button border"
+                        :class="{
+                            'bg-body-secondary': !isDateWithinSemester(day),
+                            'bg-info': isDateWithinSemester(day) && isDateSelected(day),
+                            'bg-danger':
+                                isDateWithinSemester(day) &&
+                                !isDateSelected(day) &&
+                                scheduleChanges.get(formatDateLocalYyyyMmDd(day)) === 'holiday',
+                            'bg-warning':
+                                isDateWithinSemester(day) &&
+                                !isDateSelected(day) &&
+                                (scheduleChanges.get(formatDateLocalYyyyMmDd(day)) ?? 'holiday') !== 'holiday',
+                        }"
+                        :data-date="formatDateLocalYyyyMmDd(day)"
+                        @click="isDateWithinSemester(day) ? emit('select', day, day) : void 0"
+                    >
+                        {{ day.getDate() }}
+                    </div>
+                </div>
             </div>
         </div>
     </div>

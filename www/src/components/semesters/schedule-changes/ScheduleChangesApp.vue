@@ -106,11 +106,11 @@ useEventListener(
 </script>
 
 <template>
-    <div class="mx-auto my-3" style="max-width: 700px">
+    <div class="mx-auto my-3">
         <ScheduleChangesCalendar
             :semester
             :schedule-changes
-            class="my-3"
+            class="mx-auto my-3"
             @select="
                 (startDate, endDate) => {
                     newScheduleChangeDate = formatDateLocalYyyyMmDd(startDate);
