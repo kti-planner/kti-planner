@@ -7,7 +7,6 @@ import { apiPut } from '@components/api';
 import type { ScheduleChangeData, SemesterData } from '@components/semesters/types';
 import { formatDateLocalYyyyMmDd, parseDateLocalYyyyMmDd } from '@components/utils';
 import ScheduleChangesCalendar from '@components/semesters/schedule-changes/ScheduleChangesCalendar.vue';
-import ScheduleChangesList from '@components/semesters/schedule-changes/ScheduleChangesList.vue';
 import ScheduleChangeTypeSelector from '@components/semesters/schedule-changes/ScheduleChangeTypeSelector.vue';
 
 const translations = {
@@ -35,8 +34,6 @@ const { semester, initialScheduleChanges } = defineProps<{
 const scheduleChanges = ref(
     new Map<string, ScheduleChangeType>(initialScheduleChanges.map(change => [change.date, change.type])),
 );
-
-const editableFields = ref(new Set<string>());
 
 const preventPageUnload = ref<boolean>(false);
 const changesSaved = ref<boolean>(false);
@@ -84,7 +81,6 @@ async function save() {
 
     preventPageUnload.value = false;
     changesSaved.value = true;
-    editableFields.value.clear();
 }
 
 watch(
@@ -151,6 +147,5 @@ useEventListener(
             {{ translate('Save') }}
         </button>
         <div v-if="changesSaved" class="text-center mt-2">{{ translate('Saved') }}!</div>
-        <ScheduleChangesList v-model="scheduleChanges" v-model:editable-fields="editableFields" />
     </div>
 </template>
