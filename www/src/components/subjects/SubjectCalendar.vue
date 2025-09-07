@@ -33,7 +33,7 @@ const initialDate = computed(() => getInitialDate(laboratoryClasses.value ?? [])
 </script>
 
 <template>
-    <Calendar :events :initial-date height="80vh">
+    <Calendar :events :initial-date>
         <template #eventContent="arg">
             <LaboratoryClassEvent
                 v-if="'laboratoryClass' in arg.event.extendedProps"
