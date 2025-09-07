@@ -2,12 +2,10 @@
 import { Classroom, makeClassroomData } from '@backend/classroom';
 import { Exercise, makeExerciseData } from '@backend/exercise';
 import { LaboratoryGroup, makeLaboratoryGroupData } from '@backend/laboratory-group';
-import { makeScheduleChangeData, Semester } from '@backend/semester';
+import { makeScheduleChangeData, makeSemesterData, Semester } from '@backend/semester';
 import { Subject } from '@backend/subject';
 import { makeUserData, User } from '@backend/user';
-import type { SemesterData } from '@components/semesters/types';
 import type { SubjectData } from '@components/subjects/types';
-import { formatDateLocalYyyyMmDd } from '@components/utils';
 import Layout from '@layouts/Layout.astro';
 import SubjectApp from '@components/subjects/SubjectApp.vue';
 
@@ -41,20 +39,12 @@ if (!semester) {
 }
 
 const semesterName = `${semester.type === 'summer' ? translate('Summer semester') : translate('Winter semester')} ${semester.year}/${semester.year + 1}`;
+const semesterData = makeSemesterData(semester);
 
 const subject = await Subject.fetchBySlug(semester, subjectSlug);
 if (!subject) {
     return new Response(null, { status: 404 });
 }
-
-const semesterData: SemesterData = {
-    id: semester.id,
-    type: semester.type,
-    year: semester.year,
-    slug: semester.slug,
-    startDate: formatDateLocalYyyyMmDd(semester.startDate),
-    endDate: formatDateLocalYyyyMmDd(semester.endDate),
-};
 
 const scheduleChanges = await semester.getScheduleChanges();
 const scheduleChangesData = scheduleChanges.map(makeScheduleChangeData);
