@@ -60,7 +60,7 @@ test('Can edit classroom and prevent duplicate classroom', async ({ page }) => {
     await page.locator('.list-group-item', { hasText: 'EA 142' }).hover();
     await page.locator('.list-group-item', { hasText: 'EA 142' }).locator('button').click();
 
-    await page.getByLabel('Edit classroom EA 142').locator('#classroomName').fill('EA 143');
+    await page.getByRole('textbox', { name: 'Classroom name' }).fill('EA 143');
     await page.getByRole('button', { name: 'Save', exact: true }).click();
 
     await expect(page.locator('body')).toContainText('EA 143');
@@ -70,7 +70,7 @@ test('Can edit classroom and prevent duplicate classroom', async ({ page }) => {
     await page.locator('.list-group-item', { hasText: 'EA 204' }).locator('button').click();
 
     // Existing name
-    await page.getByLabel('Edit classroom EA 204').locator('#classroomName').fill('EA 143');
+    await page.getByRole('textbox', { name: 'Classroom name' }).fill('EA 143');
     await page.getByRole('button', { name: 'Save', exact: true }).click();
 
     await expect(page.getByLabel('Edit classroom EA 204').locator('form')).toContainText(
