@@ -1,5 +1,9 @@
 ---
+import { Classroom, makeClassroomData } from '@backend/classroom';
 import { makeScheduleChangeData, makeSemesterData, Semester } from '@backend/semester';
+import { Subject } from '@backend/subject';
+import { makeUserData, User } from '@backend/user';
+import type { SubjectData } from '@components/subjects/types';
 import Layout from '@layouts/Layout.astro';
 import SemesterCalendar from '@components/semesters/SemesterCalendar.vue';
 
@@ -39,6 +43,24 @@ const semesterData = makeSemesterData(semester);
 
 const scheduleChanges = await semester.getScheduleChanges();
 const scheduleChangesData = scheduleChanges.map(makeScheduleChangeData);
+
+const users = await User.fetchAll();
+const subjects = await Subject.fetchAllFromSemester(semester);
+
+const subjectsData = subjects.map<SubjectData>(subject => {
+    const teachers = users.filter(user => subject.teacherIds.includes(user.id));
+
+    return {
+        id: subject.id,
+        name: subject.name,
+        semesterId: subject.semesterId,
+        slug: subject.slug,
+        teachers: teachers.map(makeUserData),
+    };
+});
+
+const classrooms = await Classroom.fetchAll();
+const classroomsData = classrooms.map(makeClassroomData);
 ---
 
 <Layout
@@ -57,5 +79,11 @@ const scheduleChangesData = scheduleChanges.map(makeScheduleChangeData);
         },
     ]}
 >
-    <SemesterCalendar client:only="vue" semester={semesterData} scheduleChanges={scheduleChangesData} />
+    <SemesterCalendar
+        client:only="vue"
+        semester={semesterData}
+        scheduleChanges={scheduleChangesData}
+        subjects={subjectsData}
+        classrooms={classroomsData}
+    />
 </Layout>

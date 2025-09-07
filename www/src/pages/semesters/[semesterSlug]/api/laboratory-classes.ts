@@ -9,7 +9,7 @@ import { Subject } from '@backend/subject';
 import { User } from '@backend/user';
 import type { LaboratoryClassData } from '@components/laboratory-classes/types';
 
-export const GET: APIRoute = async ({ params }) => {
+export const GET: APIRoute = async ({ params, url }) => {
     const { semesterSlug } = params;
 
     if (semesterSlug === undefined) {
@@ -21,6 +21,10 @@ export const GET: APIRoute = async ({ params }) => {
         return new Response(null, { status: 404 });
     }
 
+    const subjectFilter = url.searchParams.getAll('subject');
+    const classroomFilter = url.searchParams.getAll('classroom');
+    const teacherFilter = url.searchParams.getAll('teacher');
+
     const subjects = await Subject.fetchAllFromSemester(semester);
     const classes = await LaboratoryClass.fetchAllFromSubjects(subjects);
     const groups = await LaboratoryGroup.fetchAllFromSubjects(subjects);
@@ -29,31 +33,49 @@ export const GET: APIRoute = async ({ params }) => {
     const exercises = await Exercise.fetchAllFromSubjects(subjects);
 
     return Response.json(
-        classes.map<LaboratoryClassData>(laboratoryClass => {
-            const exercise = exercises.find(e => e.id === laboratoryClass.exerciseId);
-            assert(exercise);
+        classes
+            .map<LaboratoryClassData | null>(laboratoryClass => {
+                const exercise = exercises.find(e => e.id === laboratoryClass.exerciseId);
+                assert(exercise);
 
-            const group = groups.find(g => g.id === laboratoryClass.laboratoryGroupId);
-            assert(group);
+                const group = groups.find(g => g.id === laboratoryClass.laboratoryGroupId);
+                assert(group);
 
-            const classTeacher = users.find(u => u.id === laboratoryClass.teacherId);
-            assert(classTeacher);
+                const classTeacher = users.find(u => u.id === laboratoryClass.teacherId);
+                assert(classTeacher);
 
-            const exerciseClassroom = classrooms.find(c => c.id === exercise.classroomId);
-            assert(exerciseClassroom);
+                const exerciseClassroom = classrooms.find(c => c.id === exercise.classroomId);
+                assert(exerciseClassroom);
 
-            const exerciseTeacher = users.find(u => u.id === exercise.teacherId);
-            assert(exerciseTeacher);
+                const exerciseTeacher = users.find(u => u.id === exercise.teacherId);
+                assert(exerciseTeacher);
 
-            return makeLaboratoryClassData(
-                laboratoryClass,
-                exercise,
-                exerciseClassroom,
-                exerciseTeacher,
-                group,
-                classTeacher,
-            );
-        }) satisfies LaboratoryClassData[],
+                if (subjectFilter.length > 0 && !subjectFilter.includes(exercise.subjectId)) {
+                    return null;
+                }
+
+                if (classroomFilter.length > 0 && !classroomFilter.includes(exercise.classroomId)) {
+                    return null;
+                }
+
+                if (teacherFilter.length > 0 && !teacherFilter.includes(laboratoryClass.teacherId)) {
+                    return null;
+                }
+
+                return makeLaboratoryClassData(
+                    laboratoryClass,
+                    exercise,
+                    exerciseClassroom,
+                    exerciseTeacher,
+                    group,
+                    classTeacher,
+                );
+            })
+            .filter(nonNullFilter) satisfies LaboratoryClassData[],
         { status: 200 },
     );
 };
+
+function nonNullFilter<T>(value: T | null): value is Exclude<T, null> {
+    return value !== null;
+}
