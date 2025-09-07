@@ -26,14 +26,19 @@ const initialDate = computed(() => getInitialDate(laboratoryClasses.value ?? [])
 </script>
 
 <template>
-    <Calendar :events :initial-date>
-        <template #eventContent="arg">
-            <LaboratoryClassEvent
-                v-if="'laboratoryClass' in arg.event.extendedProps"
-                :title="arg.event.title"
-                :time-text="arg.timeText"
-                :laboratory-class="arg.event.extendedProps.laboratoryClass"
-            />
-        </template>
-    </Calendar>
+    <div class="row g-4">
+        <div class="col-12 col-lg-9 mb-2 order-2 order-lg-1">
+            <Calendar :events :initial-date>
+                <template #eventContent="arg">
+                    <LaboratoryClassEvent
+                        v-if="'laboratoryClass' in arg.event.extendedProps"
+                        :title="arg.event.title"
+                        :time-text="arg.timeText"
+                        :laboratory-class="arg.event.extendedProps.laboratoryClass"
+                    />
+                </template>
+            </Calendar>
+        </div>
+        <div class="col-12 col-lg-3 order-1 order-lg-2"></div>
+    </div>
 </template>
