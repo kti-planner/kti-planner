@@ -35,6 +35,6 @@ const modalId = crypto.randomUUID();
         <template #header>
             {{ translate('Reset password') }}
         </template>
-        <PasswordResetForm :user="user" />
+        <PasswordResetForm :user />
     </Modal>
 </template>
