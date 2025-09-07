@@ -1,6 +1,6 @@
 import assert from 'node:assert';
 import { db } from '@backend/db';
-import type { ScheduleChangeData } from '@components/semesters/types';
+import type { ScheduleChangeData, SemesterData } from '@components/semesters/types';
 import { formatDateLocalYyyyMmDd } from '@components/utils';
 
 export type SemesterType = 'winter' | 'summer';
@@ -171,6 +171,17 @@ export class Semester {
             await db.query<DbScheduleChange>('DELETE FROM schedule_changes WHERE date = $1', [date]);
         }
     }
+}
+
+export function makeSemesterData(semester: Semester): SemesterData {
+    return {
+        id: semester.id,
+        type: semester.type,
+        year: semester.year,
+        slug: semester.slug,
+        startDate: formatDateLocalYyyyMmDd(semester.startDate),
+        endDate: formatDateLocalYyyyMmDd(semester.endDate),
+    };
 }
 
 export function makeScheduleChangeData(scheduleChange: ScheduleChange): ScheduleChangeData {
