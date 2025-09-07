@@ -165,7 +165,7 @@ const dateFeedback = crypto.randomUUID();
                 :class="{
                     'is-invalid': firstClassDateHoliday,
                 }"
-                :="{ ...(firstClassDateHoliday ? { 'aria-describedby': dateFeedback } : {}) }"
+                :aria-describedby="firstClassDateHoliday ? dateFeedback : undefined"
                 required
             />
             <div v-if="firstClassDateHoliday" :id="dateFeedback" class="invalid-feedback">
