@@ -27,18 +27,14 @@ const modalId = crypto.randomUUID();
 </script>
 
 <template>
-    <div>
-        <div class="d-flex justify-content-center mb-3">
-            <button type="button" class="btn btn-success" data-bs-toggle="modal" :data-bs-target="`#${modalId}`">
-                {{ translate('Add new subject') }}
-            </button>
-        </div>
+    <button type="button" class="btn btn-success" data-bs-toggle="modal" :data-bs-target="`#${modalId}`">
+        {{ translate('Add new subject') }}
+    </button>
 
-        <Modal :id="modalId">
-            <template #header>
-                {{ translate('Add new subject') }}
-            </template>
-            <SubjectForm :semester :all-users />
-        </Modal>
-    </div>
+    <Modal :id="modalId">
+        <template #header>
+            {{ translate('Add new subject') }}
+        </template>
+        <SubjectForm :semester :all-users />
+    </Modal>
 </template>

@@ -47,26 +47,22 @@ function handleFormDone() {
 </script>
 
 <template>
-    <div>
-        <div class="d-flex justify-content-center">
-            <button type="button" class="btn btn-success" data-bs-toggle="modal" :data-bs-target="`#${modalId}`">
-                {{ translate('Plan classes') }}
-            </button>
-        </div>
+    <button type="button" class="btn btn-success" data-bs-toggle="modal" :data-bs-target="`#${modalId}`" :="$attrs">
+        {{ translate('Plan classes') }}
+    </button>
 
-        <Modal ref="modal" :id="modalId" scrollable>
-            <template #header>
-                {{ group ? `${translate('Plan classes for group')} ${group.name}` : translate('Plan classes') }}
-            </template>
-            <GenerateClassesForm
-                v-model:group="group"
-                :semester
-                :exercises
-                :api-url
-                :laboratory-groups
-                :schedule-changes
-                @done="handleFormDone"
-            />
-        </Modal>
-    </div>
+    <Modal ref="modal" :id="modalId" scrollable>
+        <template #header>
+            {{ group ? `${translate('Plan classes for group')} ${group.name}` : translate('Plan classes') }}
+        </template>
+        <GenerateClassesForm
+            v-model:group="group"
+            :semester
+            :exercises
+            :api-url
+            :laboratory-groups
+            :schedule-changes
+            @done="handleFormDone"
+        />
+    </Modal>
 </template>

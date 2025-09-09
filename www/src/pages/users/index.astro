@@ -1,6 +1,7 @@
 ---
 import { User } from '@backend/user';
 import Layout from '@layouts/Layout.astro';
+import Show from '@components/Show.astro';
 import AddUser from '@components/users/AddUser.vue';
 
 const { langId, user, redirectToLoginPage } = Astro.locals;
@@ -26,24 +27,29 @@ const users = await User.fetchAll();
 ---
 
 <Layout breadcrumbs={[{ text: translate('Users'), href: '#' }]}>
-    {user.role === 'admin' && <AddUser client:only="vue" />}
-
-    <div class="users-list list-group mx-auto my-4">
-        {
-            users.map(
-                s =>
-                    (
-                        <a class="list-group-item list-group-item-action" href={`/users/${s.id}/`}>
-                            {s.name}
-                        </a>
-                    ) as unknown,
-            )
-        }
+    <div class="vstack gap-3 align-items-center">
+        <Show when={users.length > 0}>
+            <div class="users-list list-group">
+                {
+                    users.map(
+                        s =>
+                            (
+                                <a class="list-group-item list-group-item-action" href={`/users/${s.id}/`}>
+                                    {s.name}
+                                </a>
+                            ) as unknown,
+                    )
+                }
+            </div>
+        </Show>
+        <Show when={user.role === 'admin'}>
+            <AddUser client:only="vue" />
+        </Show>
     </div>
 </Layout>
 
 <style>
     .users-list {
-        max-width: 600px;
+        width: min(600px, 100%);
     }
 </style>
