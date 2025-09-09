@@ -30,18 +30,14 @@ const modalId = crypto.randomUUID();
 </script>
 
 <template>
-    <div>
-        <div class="d-flex justify-content-center">
-            <button type="button" class="btn btn-success" data-bs-toggle="modal" :data-bs-target="`#${modalId}`">
-                {{ translate('Add new exercise') }}
-            </button>
-        </div>
+    <button type="button" class="btn btn-success" data-bs-toggle="modal" :data-bs-target="`#${modalId}`">
+        {{ translate('Add new exercise') }}
+    </button>
 
-        <Modal :id="modalId">
-            <template #header>
-                {{ translate('Add new exercise') }}
-            </template>
-            <ExerciseForm :exercise="{ exerciseNumber: nextExerciseNumber }" :semester :subject :classrooms />
-        </Modal>
-    </div>
+    <Modal :id="modalId">
+        <template #header>
+            {{ translate('Add new exercise') }}
+        </template>
+        <ExerciseForm :exercise="{ exerciseNumber: nextExerciseNumber }" :semester :subject :classrooms />
+    </Modal>
 </template>
