@@ -5,6 +5,7 @@ import { LaboratoryGroup, makeLaboratoryGroupData } from '@backend/laboratory-gr
 import { makeScheduleChangeData, makeSemesterData, Semester } from '@backend/semester';
 import { Subject } from '@backend/subject';
 import { makeUserData, User } from '@backend/user';
+import type { SemesterData } from '@components/semesters/types';
 import type { SubjectData } from '@components/subjects/types';
 import Layout from '@layouts/Layout.astro';
 import SubjectApp from '@components/subjects/SubjectApp.vue';
@@ -39,12 +40,13 @@ if (!semester) {
 }
 
 const semesterName = `${semester.type === 'summer' ? translate('Summer semester') : translate('Winter semester')} ${semester.year}/${semester.year + 1}`;
-const semesterData = makeSemesterData(semester);
 
 const subject = await Subject.fetchBySlug(semester, subjectSlug);
 if (!subject) {
     return new Response(null, { status: 404 });
 }
+
+const semesterData: SemesterData = makeSemesterData(semester);
 
 const scheduleChanges = await semester.getScheduleChanges();
 const scheduleChangesData = scheduleChanges.map(makeScheduleChangeData);

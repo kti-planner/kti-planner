@@ -2,8 +2,10 @@
 import { makeSemesterData, Semester } from '@backend/semester';
 import { Subject } from '@backend/subject';
 import { User } from '@backend/user';
+import type { SemesterData } from '@components/semesters/types';
 import Layout from '@layouts/Layout.astro';
 import EditSemester from '@components/semesters/EditSemester.vue';
+import Show from '@components/Show.astro';
 import AddSubject from '@components/subjects/AddSubject.vue';
 
 const { semesterSlug } = Astro.params;
@@ -38,7 +40,8 @@ if (!semester) {
 }
 
 const semesterName = `${semester.type === 'summer' ? translate('Summer semester') : translate('Winter semester')} ${semester.year}/${semester.year + 1}`;
-const semesterData = makeSemesterData(semester);
+
+const semesterData: SemesterData = makeSemesterData(semester);
 
 const subjects = await Subject.fetchAllFromSemester(semester);
 
@@ -59,32 +62,34 @@ const allUsers = await User.fetchAll();
 >
     <h1 class="text-center fs-4">
         {semesterName}
-        {user && <EditSemester client:only="vue" semester={semesterData} />}
+        <Show when={user !== null}>
+            <EditSemester client:only="vue" semester={semesterData} />
+        </Show>
     </h1>
     <div class="text-center">
         {semester.startDate.toLocaleDateString('pl-PL')} - {semester.endDate.toLocaleDateString('pl-PL')}
     </div>
-    {
-        user && (
-            <div class="my-2">
-                <AddSubject client:only="vue" semester={semesterData} allUsers={allUsers} />
+    <div class="vstack gap-3 align-items-center mt-4">
+        <Show when={subjects.length > 0}>
+            <div class="subjects-list list-group">
+                {
+                    subjects.map(
+                        subject =>
+                            (
+                                <a
+                                    href={`/semesters/${semesterSlug}/subjects/${subject.slug}/`}
+                                    class="list-group-item list-group-item-action"
+                                >
+                                    {subject.name}
+                                </a>
+                            ) as unknown,
+                    )
+                }
             </div>
-        )
-    }
-    <div class="subjects-list list-group mx-auto my-4">
-        {
-            subjects.map(
-                subject =>
-                    (
-                        <a
-                            href={`/semesters/${semesterSlug}/subjects/${subject.slug}/`}
-                            class="list-group-item list-group-item-action"
-                        >
-                            {subject.name}
-                        </a>
-                    ) as unknown,
-            )
-        }
+        </Show>
+        <Show when={user !== null}>
+            <AddSubject client:only="vue" semester={semesterData} allUsers={allUsers} />
+        </Show>
     </div>
     <div class="mx-auto" style="width: fit-content">
         <a href={`/semesters/${semesterSlug}/calendar/`} class="btn btn-success">
@@ -95,6 +100,6 @@ const allUsers = await User.fetchAll();
 
 <style>
     .subjects-list {
-        max-width: 600px;
+        width: min(600px, 100%);
     }
 </style>

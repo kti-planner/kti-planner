@@ -87,14 +87,19 @@ const translations = {
 function translate(text: keyof (typeof translations)[LangId]): string {
     return translations[langId][text];
 }
+
+const nameId = crypto.randomUUID();
+const emailId = crypto.randomUUID();
+const passwordId = crypto.randomUUID();
+const roleId = crypto.randomUUID();
 </script>
 
 <template>
     <form class="vstack gap-3 mx-auto" style="max-width: 500px" @submit.prevent="submit">
         <div>
-            <label for="name" class="form-label">{{ translate('Name') }}</label>
+            <label :for="nameId" class="form-label">{{ translate('Name') }}</label>
             <input
-                id="name"
+                :id="nameId"
                 v-model="name"
                 type="text"
                 class="form-control"
@@ -104,9 +109,9 @@ function translate(text: keyof (typeof translations)[LangId]): string {
         </div>
 
         <div>
-            <label for="email" class="form-label">Email</label>
+            <label :for="emailId" class="form-label">Email</label>
             <input
-                id="email"
+                :id="emailId"
                 v-model="email"
                 type="email"
                 class="form-control"
@@ -117,9 +122,9 @@ function translate(text: keyof (typeof translations)[LangId]): string {
         </div>
 
         <div v-if="!isEditing">
-            <label for="password" class="form-label">{{ translate('Password') }}</label>
+            <label :for="passwordId" class="form-label">{{ translate('Password') }}</label>
             <PasswordInputField
-                id="password"
+                :id="passwordId"
                 v-model="password"
                 v-model:visible="passwordVisible"
                 :placeholder="translate('Password')"
@@ -131,8 +136,8 @@ function translate(text: keyof (typeof translations)[LangId]): string {
         </div>
 
         <div v-if="currentUser?.role === 'admin'">
-            <label for="role" class="form-label">{{ translate('Role') }}</label>
-            <select id="role" v-model="role" class="form-select" required>
+            <label :for="roleId" class="form-label">{{ translate('Role') }}</label>
+            <select :id="roleId" v-model="role" class="form-select" required>
                 <option value="teacher">{{ translate('Teacher') }}</option>
                 <option value="admin">Admin</option>
             </select>

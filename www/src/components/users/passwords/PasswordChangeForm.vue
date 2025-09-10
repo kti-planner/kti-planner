@@ -49,14 +49,18 @@ const translations = {
 function translate(text: keyof (typeof translations)[LangId]): string {
     return translations[langId][text];
 }
+
+const currentId = crypto.randomUUID();
+const newId = crypto.randomUUID();
+const newRepeatedId = crypto.randomUUID();
 </script>
 
 <template>
     <form class="vstack gap-3 mx-auto" style="max-width: 500px" @submit.prevent="submit">
         <div>
-            <label for="currentPassword" class="form-label">{{ translate('Current password') }}</label>
+            <label :for="currentId" class="form-label">{{ translate('Current password') }}</label>
             <PasswordInputField
-                id="currentPassword"
+                :id="currentId"
                 v-model="currentPassword"
                 :placeholder="translate('Current password')"
                 autocomplete="current-password"
@@ -64,9 +68,9 @@ function translate(text: keyof (typeof translations)[LangId]): string {
         </div>
 
         <div>
-            <label for="newPassword" class="form-label">{{ translate('New password') }}</label>
+            <label :for="newId" class="form-label">{{ translate('New password') }}</label>
             <PasswordInputField
-                id="newPassword"
+                :id="newId"
                 v-model="newPassword"
                 :placeholder="translate('New password')"
                 autocomplete="new-password"
@@ -74,9 +78,9 @@ function translate(text: keyof (typeof translations)[LangId]): string {
         </div>
 
         <div>
-            <label for="newPasswordRepeated" class="form-label">{{ translate('Repeat new password') }}</label>
+            <label :for="newRepeatedId" class="form-label">{{ translate('Repeat new password') }}</label>
             <PasswordInputField
-                id="newPasswordRepeated"
+                :id="newRepeatedId"
                 v-model="newPasswordRepeated"
                 :placeholder="translate('Repeat new password')"
                 autocomplete="new-password"

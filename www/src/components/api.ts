@@ -148,6 +148,34 @@ export async function apiPatch<T extends NonUndefined = NonUndefined>(
     });
 }
 
+/** Makes a PUT requrest to the API and returns `undefined` if there was en error. */
+export async function apiPut<T extends NonUndefined = NonUndefined>(
+    resource: string | URL,
+    body: NonUndefined,
+): Promise<NoInfer<T> | undefined>;
+
+/** Makes a PUT requrest to the API and returns `undefined` if there was en error. */
+export async function apiPut<T extends NonUndefined = NonUndefined>(
+    resource: string | URL,
+    params: URLSearchParams,
+    body: NonUndefined,
+): Promise<NoInfer<T> | undefined>;
+
+/** Makes a PUT requrest to the API and returns `undefined` if there was en error. */
+export async function apiPut<T extends NonUndefined = NonUndefined>(
+    resource: string | URL,
+    arg1: NonUndefined,
+    arg2?: unknown,
+): Promise<NoInfer<T> | undefined> {
+    const { url, body, headers } = parseApiArgs(resource, arg1, arg2);
+
+    return await apiFetch<T>(url, {
+        method: 'PUT',
+        headers,
+        body,
+    });
+}
+
 interface UseApiFetchCommonOptions extends UseFetchOptions {
     resetDataOnError?: boolean;
 }

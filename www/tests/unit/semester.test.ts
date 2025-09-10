@@ -119,20 +119,6 @@ test('Semesters', async () => {
 test('Schedule changes', async () => {
     expect(await Semester.getAllScheduleChanges()).toStrictEqual([]);
 
-    await Semester.setScheduleChange(new Date('2025-04-18T00:00:00'), 'holiday');
-    await Semester.setScheduleChange(new Date('2025-04-19T00:00:00'), 'holiday');
-    await Semester.setScheduleChange(new Date('2025-04-20T00:00:00'), 'holiday');
-    await Semester.setScheduleChange(new Date('2025-01-08T00:00:00'), 'friday');
-    await Semester.setScheduleChange(new Date('2024-11-12T00:00:00'), 'monday');
-
-    expect(await Semester.getAllScheduleChanges()).toStrictEqual([
-        { date: new Date('2024-11-12T00:00:00'), type: 'monday' },
-        { date: new Date('2025-01-08T00:00:00'), type: 'friday' },
-        { date: new Date('2025-04-18T00:00:00'), type: 'holiday' },
-        { date: new Date('2025-04-19T00:00:00'), type: 'holiday' },
-        { date: new Date('2025-04-20T00:00:00'), type: 'holiday' },
-    ]);
-
     const semester1 = await Semester.create({
         year: 2024,
         type: 'winter',
@@ -147,6 +133,25 @@ test('Schedule changes', async () => {
         endDate: new Date('2025-06-15T00:00:00'),
     });
 
+    await semester1.setScheduleChanges([
+        { date: new Date('2025-01-08T00:00:00'), type: 'friday' },
+        { date: new Date('2024-11-12T00:00:00'), type: 'monday' },
+    ]);
+
+    await semester2.setScheduleChanges([
+        { date: new Date('2025-04-18T00:00:00'), type: 'holiday' },
+        { date: new Date('2025-04-19T00:00:00'), type: 'holiday' },
+        { date: new Date('2025-04-20T00:00:00'), type: 'holiday' },
+    ]);
+
+    expect(await Semester.getAllScheduleChanges()).toStrictEqual([
+        { date: new Date('2024-11-12T00:00:00'), type: 'monday' },
+        { date: new Date('2025-01-08T00:00:00'), type: 'friday' },
+        { date: new Date('2025-04-18T00:00:00'), type: 'holiday' },
+        { date: new Date('2025-04-19T00:00:00'), type: 'holiday' },
+        { date: new Date('2025-04-20T00:00:00'), type: 'holiday' },
+    ]);
+
     expect(await semester1.getScheduleChanges()).toStrictEqual([
         { date: new Date('2024-11-12T00:00:00'), type: 'monday' },
         { date: new Date('2025-01-08T00:00:00'), type: 'friday' },
@@ -158,18 +163,46 @@ test('Schedule changes', async () => {
         { date: new Date('2025-04-20T00:00:00'), type: 'holiday' },
     ]);
 
-    await Semester.setScheduleChange(new Date('2025-04-19T00:00:00'), 'monday');
+    await semester2.setScheduleChanges([{ date: new Date('2025-04-19T00:00:00'), type: 'monday' }]);
+
+    expect(await semester1.getScheduleChanges()).toStrictEqual([
+        { date: new Date('2024-11-12T00:00:00'), type: 'monday' },
+        { date: new Date('2025-01-08T00:00:00'), type: 'friday' },
+    ]);
 
     expect(await semester2.getScheduleChanges()).toStrictEqual([
-        { date: new Date('2025-04-18T00:00:00'), type: 'holiday' },
         { date: new Date('2025-04-19T00:00:00'), type: 'monday' },
-        { date: new Date('2025-04-20T00:00:00'), type: 'holiday' },
     ]);
 
-    await Semester.setScheduleChange(new Date('2025-04-19T00:00:00'), null);
-
-    expect(await semester2.getScheduleChanges()).toStrictEqual([
-        { date: new Date('2025-04-18T00:00:00'), type: 'holiday' },
-        { date: new Date('2025-04-20T00:00:00'), type: 'holiday' },
+    await semester1.setScheduleChanges([
+        { date: new Date('2025-01-08T00:00:00'), type: 'holiday' },
+        { date: new Date('2024-11-12T00:00:00'), type: 'monday' },
     ]);
+
+    expect(await semester1.getScheduleChanges()).toStrictEqual([
+        { date: new Date('2024-11-12T00:00:00'), type: 'monday' },
+        { date: new Date('2025-01-08T00:00:00'), type: 'holiday' },
+    ]);
+
+    await expect(
+        semester1.setScheduleChanges([
+            { date: new Date('2025-01-08T00:00:00'), type: 'holiday' },
+            { date: new Date('2024-11-12T00:00:00'), type: 'monday' },
+            { date: new Date('2025-04-28T00:00:00'), type: 'holiday' },
+        ]),
+    ).rejects.toThrow(Error);
+
+    expect(await Semester.getAllScheduleChanges()).toStrictEqual([
+        { date: new Date('2024-11-12T00:00:00'), type: 'monday' },
+        { date: new Date('2025-01-08T00:00:00'), type: 'holiday' },
+        { date: new Date('2025-04-19T00:00:00'), type: 'monday' },
+    ]);
+
+    await semester1.setScheduleChanges([]);
+
+    expect(await Semester.getAllScheduleChanges()).toStrictEqual([
+        { date: new Date('2025-04-19T00:00:00'), type: 'monday' },
+    ]);
+
+    expect(await semester1.getScheduleChanges()).toStrictEqual([]);
 });

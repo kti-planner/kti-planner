@@ -25,26 +25,19 @@ const translations = {
 function translate(text: keyof (typeof translations)[LangId]): string {
     return translations[langId][text];
 }
+
+const modalId = crypto.randomUUID();
 </script>
 
 <template>
-    <div>
-        <div class="d-flex justify-content-center">
-            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exercise-modal">
-                {{ translate('Add new exercise') }}
-            </button>
-        </div>
+    <button type="button" class="btn btn-success" data-bs-toggle="modal" :data-bs-target="`#${modalId}`">
+        {{ translate('Add new exercise') }}
+    </button>
 
-        <Modal id="exercise-modal">
-            <template #header>
-                {{ translate('Add new exercise') }}
-            </template>
-            <ExerciseForm
-                :exercise="{ exerciseNumber: nextExerciseNumber }"
-                :semester="semester"
-                :subject="subject"
-                :classrooms="classrooms"
-            />
-        </Modal>
-    </div>
+    <Modal :id="modalId">
+        <template #header>
+            {{ translate('Add new exercise') }}
+        </template>
+        <ExerciseForm :exercise="{ exerciseNumber: nextExerciseNumber }" :semester :subject :classrooms />
+    </Modal>
 </template>

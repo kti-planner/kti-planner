@@ -1,6 +1,7 @@
 ---
 import { makeUserData, User } from '@backend/user';
 import Layout from '@layouts/Layout.astro';
+import Show from '@components/Show.astro';
 import EditUser from '@components/users/EditUser.vue';
 
 const { userId } = Astro.params;
@@ -60,7 +61,9 @@ const userData = makeUserData(targetUser);
 >
     <h1 class="text-center fs-4 mb-3">
         {translate('User profile')}
-        {(user.role === 'admin' || user.id === targetUser.id) && <EditUser client:only="vue" user={userData} />}
+        <Show when={user.role === 'admin' || user.id === targetUser.id}>
+            <EditUser client:only="vue" user={userData} />
+        </Show>
     </h1>
     <p class="text-center">
         {translate('Name')}: {targetUser.name}
