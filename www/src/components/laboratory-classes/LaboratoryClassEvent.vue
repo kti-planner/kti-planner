@@ -1,17 +1,22 @@
 <script setup lang="ts">
 import type { LaboratoryClassData } from '@components/laboratory-classes/types';
+import type { SubjectData } from '@components/subjects/types';
 
 defineProps<{
     timeText: string;
     title: string;
     laboratoryClass: LaboratoryClassData;
+    subject?: SubjectData | undefined;
 }>();
 </script>
 
 <template>
     <div class="event-content" :title>
         <p class="text-truncate">{{ timeText }}</p>
-        <p class="text-truncate fw-bold">
+        <p v-if="subject" class="text-truncate fw-bold">
+            {{ subject.name }}
+        </p>
+        <p class="text-truncate" :class="{ 'fw-bold': !subject }">
             {{ laboratoryClass.exercise.name }}
         </p>
         <div class="text-truncate">

@@ -76,6 +76,20 @@ export class LaboratoryClass {
         return records.map(record => new LaboratoryClass(record));
     }
 
+    static async fetchAllFromSubjects(subjects: Subject[]): Promise<LaboratoryClass[]> {
+        const records = (
+            await db.query<DbLaboratoryClass>(
+                'SELECT laboratory_classes.*' +
+                    ' FROM laboratory_classes JOIN laboratory_groups ON laboratory_classes.laboratory_group_id = laboratory_groups.id' +
+                    ' WHERE laboratory_groups.subject_id = ANY ($1)' +
+                    ' ORDER BY laboratory_classes.start_date',
+                [subjects.map(subject => subject.id)],
+            )
+        ).rows;
+
+        return records.map(record => new LaboratoryClass(record));
+    }
+
     static async create(data: LaboratoryClassCreateData): Promise<LaboratoryClass> {
         const result = (
             await db.query<DbLaboratoryClass>(

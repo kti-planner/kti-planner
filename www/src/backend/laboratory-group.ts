@@ -52,6 +52,17 @@ export class LaboratoryGroup {
         return records.map(record => new LaboratoryGroup(record));
     }
 
+    static async fetchAllFromSubjects(subjects: Subject[]): Promise<LaboratoryGroup[]> {
+        const records = (
+            await db.query<DbLaboratoryGroup>(
+                'SELECT * FROM laboratory_groups WHERE subject_id = ANY ($1) ORDER BY name',
+                [subjects.map(subject => subject.id)],
+            )
+        ).rows;
+
+        return records.map(record => new LaboratoryGroup(record));
+    }
+
     static async create(data: LaboratoryGroupCreateData): Promise<LaboratoryGroup> {
         const result = (
             await db.query<DbLaboratoryGroup>(

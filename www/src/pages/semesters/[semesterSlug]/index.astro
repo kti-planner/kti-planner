@@ -16,11 +16,13 @@ const translations = {
         'Semesters': 'Semesters',
         'Winter semester': 'Winter semester',
         'Summer semester': 'Summer semester',
+        'Go to calendar': 'Go to calendar',
     },
     'pl': {
         'Semesters': 'Semestry',
         'Winter semester': 'Semestr zimowy',
         'Summer semester': 'Semestr letni',
+        'Go to calendar': 'Przejdź do kalendarza',
     },
 };
 
@@ -88,6 +90,11 @@ const allUsers = await User.fetchAll();
         <Show when={user !== null}>
             <AddSubject client:only="vue" semester={semesterData} allUsers={allUsers} />
         </Show>
+    </div>
+    <div class="mx-auto" style="width: fit-content">
+        <a href={`/semesters/${semesterSlug}/calendar/`} class="btn btn-success">
+            {translate('Go to calendar')}
+        </a>
     </div>
 </Layout>
 

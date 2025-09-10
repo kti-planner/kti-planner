@@ -104,6 +104,8 @@ test('Exercises', async () => {
 
     expect(await Exercise.fetchAllFromSubject(subject1)).toStrictEqual([exercise1]);
     expect(await Exercise.fetchAllFromSubject(subject2)).toStrictEqual([exercise2]);
+    expect(await Exercise.fetchAllFromSubjects([subject1, subject2])).toStrictEqual([exercise1, exercise2]);
+
     expect(await Exercise.fetchByNumber(subject1, 1)).toStrictEqual(exercise1);
     expect(await Exercise.fetchByNumber(subject1, 2)).toStrictEqual(null);
     expect(await Exercise.fetchByNumber(subject2, 1)).toStrictEqual(null);
@@ -149,6 +151,9 @@ test('Exercises', async () => {
 
     expect(await Exercise.fetchAllFromSubject(subject1)).toStrictEqual([exercise1, exercise3]);
     expect(await Exercise.fetchAllFromSubject(subject2)).toStrictEqual([exercise2]);
+
+    expect(await Exercise.fetchAllFromSubjects([subject1, subject2])).toStrictEqual([exercise1, exercise3, exercise2]);
+
     expect(await Exercise.fetchByNumber(subject1, 1)).toStrictEqual(exercise1);
     expect(await Exercise.fetchByNumber(subject1, 2)).toStrictEqual(exercise3);
     expect(await Exercise.fetchByNumber(subject1, 4)).toStrictEqual(null);

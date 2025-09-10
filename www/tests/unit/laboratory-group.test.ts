@@ -78,6 +78,11 @@ test('Laboratory groups', async () => {
     expect(await LaboratoryGroup.fetchAllFromSubject(subject1)).toStrictEqual([laboratoryGroup1]);
     expect(await LaboratoryGroup.fetchAllFromSubject(subject2)).toStrictEqual([laboratoryGroup2]);
 
+    expect(await LaboratoryGroup.fetchAllFromSubjects([subject1, subject2])).toStrictEqual([
+        laboratoryGroup1,
+        laboratoryGroup2,
+    ]);
+
     await laboratoryGroup2.edit({
         name: '3B',
     });
@@ -104,4 +109,10 @@ test('Laboratory groups', async () => {
 
     expect(await LaboratoryGroup.fetchAllFromSubject(subject1)).toStrictEqual([laboratoryGroup1, laboratoryGroup3]);
     expect(await LaboratoryGroup.fetchAllFromSubject(subject2)).toStrictEqual([laboratoryGroup2]);
+
+    expect(await LaboratoryGroup.fetchAllFromSubjects([subject1, subject2])).toStrictEqual([
+        laboratoryGroup1,
+        laboratoryGroup3,
+        laboratoryGroup2,
+    ]);
 });

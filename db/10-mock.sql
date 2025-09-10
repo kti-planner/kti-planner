@@ -139,13 +139,13 @@ VALUES
   -- Sieci komputerowe 2025
   ( '79d83df1-1fc1-4cc5-afe6-6cc9e0387221', 'Diagnostyka sieci IPv4', '981c68ba-3f6a-459e-83af-f9fc578adc85', 1, '2affdc99-7dd6-47f0-b26c-3c413bf063dd', 'c393c524-453c-4b02-bfad-5114fe828200' ),
   ( '2a31cf55-f926-42e2-a985-50849bafe939', 'Zarządzanie sprzętem sieciowym', '981c68ba-3f6a-459e-83af-f9fc578adc85', 2, '2affdc99-7dd6-47f0-b26c-3c413bf063dd', 'c393c524-453c-4b02-bfad-5114fe828200' ),
-  ( 'a263264d-1d2d-42de-939e-ee9553961b17', 'IPv6', '981c68ba-3f6a-459e-83af-f9fc578adc85', 3, '2affdc99-7dd6-47f0-b26c-3c413bf063dd', 'c393c524-453c-4b02-bfad-5114fe828200' ),
-  ( '805124e6-2595-4fe6-ad91-93f2a6c5762e', 'IPv6 cz. II', '981c68ba-3f6a-459e-83af-f9fc578adc85', 4, '2affdc99-7dd6-47f0-b26c-3c413bf063dd', 'c393c524-453c-4b02-bfad-5114fe828200' ),
+  ( 'a263264d-1d2d-42de-939e-ee9553961b17', 'IPv6', '981c68ba-3f6a-459e-83af-f9fc578adc85', 3, '8689d55d-508e-4f5d-aef8-d5052f220d20', 'c393c524-453c-4b02-bfad-5114fe828200' ),
+  ( '805124e6-2595-4fe6-ad91-93f2a6c5762e', 'IPv6 cz. II', '981c68ba-3f6a-459e-83af-f9fc578adc85', 4, '8689d55d-508e-4f5d-aef8-d5052f220d20', 'c393c524-453c-4b02-bfad-5114fe828200' ),
 
   -- Wstęp do sieci komputerowych 2025
-  ( '042c7d5c-ba9c-4a01-bbd8-79e743829f4d', 'Diagnostyka sieci IPv4', 'b2805b48-3d24-4169-8f67-88561345ee99', 1, '2affdc99-7dd6-47f0-b26c-3c413bf063dd', 'c393c524-453c-4b02-bfad-5114fe828200' ),
-  ( 'ab126bb5-d52a-4ec7-b199-ab1d73177c80', 'Zarządzanie sprzętem sieciowym', 'b2805b48-3d24-4169-8f67-88561345ee99', 2, '2affdc99-7dd6-47f0-b26c-3c413bf063dd', 'c393c524-453c-4b02-bfad-5114fe828200' ),
-  ( 'ccef8e62-4de9-4aa3-8a75-70276aab7ee4', 'Routing Statyczny', 'b2805b48-3d24-4169-8f67-88561345ee99', 3, '2affdc99-7dd6-47f0-b26c-3c413bf063dd', 'c393c524-453c-4b02-bfad-5114fe828200' ),
+  ( '042c7d5c-ba9c-4a01-bbd8-79e743829f4d', 'Diagnostyka sieci IPv4', 'b2805b48-3d24-4169-8f67-88561345ee99', 1, '8689d55d-508e-4f5d-aef8-d5052f220d20', 'feeaa186-3d69-4801-a580-88be10d53553' ),
+  ( 'ab126bb5-d52a-4ec7-b199-ab1d73177c80', 'Zarządzanie sprzętem sieciowym', 'b2805b48-3d24-4169-8f67-88561345ee99', 2, '2affdc99-7dd6-47f0-b26c-3c413bf063dd', 'feeaa186-3d69-4801-a580-88be10d53553' ),
+  ( 'ccef8e62-4de9-4aa3-8a75-70276aab7ee4', 'Routing Statyczny', 'b2805b48-3d24-4169-8f67-88561345ee99', 3, '2affdc99-7dd6-47f0-b26c-3c413bf063dd', 'feeaa186-3d69-4801-a580-88be10d53553' ),
   ( '8b3ddf60-a307-46fe-a53a-c79f44161946', 'WiFi Sieci bezprzewodowe standardu 802.11', 'b2805b48-3d24-4169-8f67-88561345ee99', 4, '2affdc99-7dd6-47f0-b26c-3c413bf063dd', 'c393c524-453c-4b02-bfad-5114fe828200' ),
   ( 'fc48900f-fd81-45a6-8878-5044076c0c06', 'Wirtualne sieci lokalne (VLAN)', 'b2805b48-3d24-4169-8f67-88561345ee99', 5, '2affdc99-7dd6-47f0-b26c-3c413bf063dd', 'c393c524-453c-4b02-bfad-5114fe828200' ),
   ( '019e221d-85fe-4d00-afbc-c81b609ad252', 'Bezpieczeństwo sieci standardów 802.11', 'b2805b48-3d24-4169-8f67-88561345ee99', 6, '2affdc99-7dd6-47f0-b26c-3c413bf063dd', 'c393c524-453c-4b02-bfad-5114fe828200' );
@@ -208,3 +208,33 @@ VALUES
   ( '35ac8c7d-737c-4155-9c6d-9be5b6908c5a', 'air2B', 'b2805b48-3d24-4169-8f67-88561345ee99' ),
   ( '0fa2f183-4d9c-4441-8382-ae6955a6905e', 'ib1A', 'b2805b48-3d24-4169-8f67-88561345ee99' ),
   ( '36e0f0ca-e87f-434a-a8b5-fb89e177191a', 'ib1B', 'b2805b48-3d24-4169-8f67-88561345ee99' );
+
+INSERT INTO laboratory_classes (id, exercise_id, laboratory_group_id, start_date, end_date, teacher_id)
+VALUES
+  -- Sieci komputerowe 2025, Group 1A
+  ('05c03885-dca8-481e-a635-511024503acd', '79d83df1-1fc1-4cc5-afe6-6cc9e0387221', 'c9854621-e713-4b3f-b442-8e8cbdb20b57', '2025-10-01 11:15 Europe/Warsaw', '2025-10-01 13:00 Europe/Warsaw', 'c393c524-453c-4b02-bfad-5114fe828200'),
+  ('bab85007-4fdc-4171-8de7-9700a9a8f775', '2a31cf55-f926-42e2-a985-50849bafe939', 'c9854621-e713-4b3f-b442-8e8cbdb20b57', '2025-10-08 11:15 Europe/Warsaw', '2025-10-08 13:00 Europe/Warsaw', 'c393c524-453c-4b02-bfad-5114fe828200'),
+  ('c37a7353-42e9-4049-a372-41aa54ff25e6', 'a263264d-1d2d-42de-939e-ee9553961b17', 'c9854621-e713-4b3f-b442-8e8cbdb20b57', '2025-10-15 11:15 Europe/Warsaw', '2025-10-15 13:00 Europe/Warsaw', 'c393c524-453c-4b02-bfad-5114fe828200'),
+  ('c083bfab-f681-431e-a863-1298fb97bc67', '805124e6-2595-4fe6-ad91-93f2a6c5762e', 'c9854621-e713-4b3f-b442-8e8cbdb20b57', '2025-10-22 11:15 Europe/Warsaw', '2025-10-22 13:00 Europe/Warsaw', 'c393c524-453c-4b02-bfad-5114fe828200'),
+
+  -- Sieci komputerowe 2025, Group 1B
+  ('60e5b9be-5f25-4ec8-aee6-e3eee103e4b8', '79d83df1-1fc1-4cc5-afe6-6cc9e0387221', '81f35756-28be-4942-bddf-d245d4deaab3', '2025-10-03 09:15 Europe/Warsaw', '2025-10-03 11:00 Europe/Warsaw', 'c393c524-453c-4b02-bfad-5114fe828200'),
+  ('ba17115d-c7c5-4ebe-b1b2-5a2ed8823582', '2a31cf55-f926-42e2-a985-50849bafe939', '81f35756-28be-4942-bddf-d245d4deaab3', '2025-10-10 09:15 Europe/Warsaw', '2025-10-10 11:00 Europe/Warsaw', 'c393c524-453c-4b02-bfad-5114fe828200'),
+  ('e972e1db-19c1-4dad-868f-6374d42656eb', 'a263264d-1d2d-42de-939e-ee9553961b17', '81f35756-28be-4942-bddf-d245d4deaab3', '2025-10-17 09:15 Europe/Warsaw', '2025-10-17 11:00 Europe/Warsaw', 'c393c524-453c-4b02-bfad-5114fe828200'),
+  ('c9fdec5d-f716-4d24-bd1b-04b54b38363a', '805124e6-2595-4fe6-ad91-93f2a6c5762e', '81f35756-28be-4942-bddf-d245d4deaab3', '2025-10-24 09:15 Europe/Warsaw', '2025-10-24 11:00 Europe/Warsaw', 'c393c524-453c-4b02-bfad-5114fe828200'),
+
+  -- Wstęp do sieci komputerowych 2025, Group air2A
+  ('a3394a83-72db-485c-92b6-3fcb7c8cfaba', '042c7d5c-ba9c-4a01-bbd8-79e743829f4d', '5dfe45ea-7a6a-4192-a58b-7541494856eb', '2025-10-07 13:15 Europe/Warsaw', '2025-10-07 15:00 Europe/Warsaw', 'feeaa186-3d69-4801-a580-88be10d53553'),
+  ('bf4aee3a-a5b1-4ad3-91ac-0cdb71100efe', 'ab126bb5-d52a-4ec7-b199-ab1d73177c80', '5dfe45ea-7a6a-4192-a58b-7541494856eb', '2025-10-14 13:15 Europe/Warsaw', '2025-10-14 15:00 Europe/Warsaw', 'feeaa186-3d69-4801-a580-88be10d53553'),
+  ('bf2f5e3c-6a66-4093-af30-e2134841f982', 'ccef8e62-4de9-4aa3-8a75-70276aab7ee4', '5dfe45ea-7a6a-4192-a58b-7541494856eb', '2025-10-21 13:15 Europe/Warsaw', '2025-10-21 15:00 Europe/Warsaw', 'feeaa186-3d69-4801-a580-88be10d53553'),
+  ('82e69073-e8a5-413e-8d6e-98f20748cddb', '8b3ddf60-a307-46fe-a53a-c79f44161946', '5dfe45ea-7a6a-4192-a58b-7541494856eb', '2025-10-28 13:15 Europe/Warsaw', '2025-10-28 15:00 Europe/Warsaw', 'c393c524-453c-4b02-bfad-5114fe828200'),
+  ('f6f23cbd-3868-4030-8786-a8883ee44249', 'fc48900f-fd81-45a6-8878-5044076c0c06', '5dfe45ea-7a6a-4192-a58b-7541494856eb', '2025-11-04 13:15 Europe/Warsaw', '2025-11-04 15:00 Europe/Warsaw', 'c393c524-453c-4b02-bfad-5114fe828200'),
+  ('76911161-3f86-45fa-902a-f7002d883a6d', '019e221d-85fe-4d00-afbc-c81b609ad252', '5dfe45ea-7a6a-4192-a58b-7541494856eb', '2025-11-18 13:15 Europe/Warsaw', '2025-11-18 15:00 Europe/Warsaw', 'c393c524-453c-4b02-bfad-5114fe828200'),
+
+  -- Wstęp do sieci komputerowych 2025, Group air2B
+  ('90a2d2d5-1b59-4f73-9011-718db2344b28', '042c7d5c-ba9c-4a01-bbd8-79e743829f4d', '35ac8c7d-737c-4155-9c6d-9be5b6908c5a', '2025-10-01 09:15 Europe/Warsaw', '2025-10-01 11:00 Europe/Warsaw', 'feeaa186-3d69-4801-a580-88be10d53553'),
+  ('0efbdbb9-3e85-4ad8-93e6-c64ef65a2c2b', 'ab126bb5-d52a-4ec7-b199-ab1d73177c80', '35ac8c7d-737c-4155-9c6d-9be5b6908c5a', '2025-10-08 09:15 Europe/Warsaw', '2025-10-08 11:00 Europe/Warsaw', 'feeaa186-3d69-4801-a580-88be10d53553'),
+  ('34b0cc55-5766-4e32-979b-bba6eb765b58', 'ccef8e62-4de9-4aa3-8a75-70276aab7ee4', '35ac8c7d-737c-4155-9c6d-9be5b6908c5a', '2025-10-15 09:15 Europe/Warsaw', '2025-10-15 11:00 Europe/Warsaw', 'feeaa186-3d69-4801-a580-88be10d53553'),
+  ('cd998c22-c9a7-4d89-b5c9-9018c435a72e', '8b3ddf60-a307-46fe-a53a-c79f44161946', '35ac8c7d-737c-4155-9c6d-9be5b6908c5a', '2025-10-22 09:15 Europe/Warsaw', '2025-10-22 11:00 Europe/Warsaw', 'c393c524-453c-4b02-bfad-5114fe828200'),
+  ('f8759326-af65-4e7c-975b-802cc8c6fa31', 'fc48900f-fd81-45a6-8878-5044076c0c06', '35ac8c7d-737c-4155-9c6d-9be5b6908c5a', '2025-10-29 09:15 Europe/Warsaw', '2025-10-29 11:00 Europe/Warsaw', 'c393c524-453c-4b02-bfad-5114fe828200'),
+  ('5c7eff85-77a9-445d-8425-d54190e9a74a', '019e221d-85fe-4d00-afbc-c81b609ad252', '35ac8c7d-737c-4155-9c6d-9be5b6908c5a', '2025-11-05 09:15 Europe/Warsaw', '2025-11-05 11:00 Europe/Warsaw', 'c393c524-453c-4b02-bfad-5114fe828200');
