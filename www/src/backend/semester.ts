@@ -1,6 +1,6 @@
 import assert from 'node:assert';
 import { db } from '@backend/db';
-import type { ScheduleChangeData } from '@components/semesters/types';
+import type { ScheduleChangeData, SemesterData } from '@components/semesters/types';
 import { formatDateLocalYyyyMmDd } from '@components/utils';
 
 export type SemesterType = 'winter' | 'summer';
@@ -161,16 +161,52 @@ export class Semester {
         return data.rows;
     }
 
-    static async setScheduleChange(date: Date, type: ScheduleChangeType | null): Promise<void> {
-        if (type) {
-            await db.query<DbScheduleChange>(
-                'INSERT INTO schedule_changes (date, type) VALUES ($1, $2) ON CONFLICT (date) DO UPDATE SET type = $2',
-                [date, type],
-            );
-        } else {
-            await db.query<DbScheduleChange>('DELETE FROM schedule_changes WHERE date = $1', [date]);
+    async setScheduleChanges(changes: ScheduleChange[]): Promise<void> {
+        assert(
+            changes.every(
+                change =>
+                    change.date.getTime() >= this.startDate.getTime() &&
+                    change.date.getTime() <= this.endDate.getTime(),
+            ),
+        );
+
+        const transaction = await db.connect();
+
+        try {
+            await transaction.query('BEGIN');
+
+            await transaction.query('DELETE FROM schedule_changes WHERE date BETWEEN $1 AND $2', [
+                this.startDate,
+                this.endDate,
+            ]);
+
+            if (changes.length > 0) {
+                await transaction.query<DbScheduleChange>(
+                    `INSERT INTO schedule_changes (date, type)` +
+                        ` VALUES ${changes.map((change, index) => `($${index * 2 + 1}, $${index * 2 + 2})`).join(', ')}`,
+                    changes.flatMap(change => [change.date, change.type]),
+                );
+            }
+
+            await transaction.query('COMMIT');
+        } catch (error) {
+            await transaction.query('ROLLBACK');
+            throw error;
+        } finally {
+            transaction.release();
         }
     }
+}
+
+export function makeSemesterData(semester: Semester): SemesterData {
+    return {
+        id: semester.id,
+        type: semester.type,
+        year: semester.year,
+        slug: semester.slug,
+        startDate: formatDateLocalYyyyMmDd(semester.startDate),
+        endDate: formatDateLocalYyyyMmDd(semester.endDate),
+    };
 }
 
 export function makeScheduleChangeData(scheduleChange: ScheduleChange): ScheduleChangeData {

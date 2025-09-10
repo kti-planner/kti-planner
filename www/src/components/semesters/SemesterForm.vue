@@ -60,6 +60,7 @@ const translations = {
         'Academic year': 'Academic year',
         'Semester start date': 'Semester start date',
         'Semester end date': 'Semester end date',
+        'Edit holidays and schedule changes': 'Edit holidays and schedule changes',
         'Save': 'Save',
         'Add': 'Add',
         'Semester with this year and type already exists.': 'Semester with this year and type already exists.',
@@ -71,6 +72,7 @@ const translations = {
         'Academic year': 'Rok rozpoczęcia roku akademickiego',
         'Semester start date': 'Data rozpoczęcia semestru',
         'Semester end date': 'Data zakończenia semestru',
+        'Edit holidays and schedule changes': 'Edytuj dni wolne i zmiany planu',
         'Save': 'Zapisz',
         'Add': 'Dodaj',
         'Semester with this year and type already exists.': 'Semestr o podanym roku i rodzaju już istnieje.',
@@ -110,6 +112,12 @@ const endId = crypto.randomUUID();
         <div>
             <label :for="endId" class="form-label">{{ translate('Semester end date') }}</label>
             <input :id="endId" v-model="endDate" type="date" class="form-control" required />
+        </div>
+
+        <div v-if="semester">
+            <a :href="`/semesters/${semester.slug}/schedule-changes/`" target="_blank" class="link-success">
+                {{ translate('Edit holidays and schedule changes') }}
+            </a>
         </div>
 
         <div class="text-center">
