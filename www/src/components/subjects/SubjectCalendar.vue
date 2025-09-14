@@ -112,7 +112,12 @@ function handleEventClick(arg: EventClickArg) {
 
     <Modal v-if="currentUser" ref="editModal">
         <template #header>{{ translate('Edit class') }}</template>
-        <EditLaboratoryClassForm v-if="editedLaboratoryClass" :laboratory-class="editedLaboratoryClass" :teachers />
+        <EditLaboratoryClassForm
+            v-if="editedLaboratoryClass"
+            :laboratory-class="editedLaboratoryClass"
+            :teachers
+            :api-url
+        />
     </Modal>
 </template>
 

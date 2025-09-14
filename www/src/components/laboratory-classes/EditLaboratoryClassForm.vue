@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { langId } from '@components/frontend/lang';
-import type { LaboratoryClassData } from '@components/laboratory-classes/types';
+import { apiPatch } from '@components/api';
+import type { LaboratoryClassData, LaboratoryClassEditApiData } from '@components/laboratory-classes/types';
 import type { UserData } from '@components/users/types';
 import UserSelector from '@components/users/UserSelector.vue';
 
 const props = defineProps<{
     laboratoryClass: LaboratoryClassData;
+    apiUrl: string;
     teachers: UserData[];
 }>();
 
@@ -39,6 +41,23 @@ const startDate = ref<string>(props.laboratoryClass.startDate);
 const endDate = ref<string>(props.laboratoryClass.endDate);
 const teacher = ref<UserData>(props.laboratoryClass.teacher);
 
+async function saveLaboratoryClass() {
+    const success = await apiPatch<boolean>(props.apiUrl, {
+        id: props.laboratoryClass.id,
+        startDate: startDate.value,
+        endDate: endDate.value,
+        teacherId: teacher.value.id,
+    } satisfies LaboratoryClassEditApiData);
+
+    if (success === undefined) {
+        return;
+    }
+
+    if (success) {
+        window.location.reload();
+    }
+}
+
 const exerciseNameId = crypto.randomUUID();
 const groupNameId = crypto.randomUUID();
 const classroomId = crypto.randomUUID();
@@ -48,7 +67,7 @@ const teacherId = crypto.randomUUID();
 </script>
 
 <template>
-    <form class="vstack gap-3 mx-auto" @submit.prevent>
+    <form class="vstack gap-3 mx-auto" @submit.prevent="saveLaboratoryClass">
         <div>
             <label :for="exerciseNameId" class="form-label">{{ translate('Exercise name') }}</label>
             <input
@@ -94,7 +113,7 @@ const teacherId = crypto.randomUUID();
 
         <div>
             <label :for="teacherId" class="form-label">{{ translate('Teacher') }}</label>
-            <UserSelector :id="teacherId" v-model="teacher" :options="teachers" />
+            <UserSelector :id="teacherId" v-model="teacher" required :options="teachers" />
         </div>
 
         <div class="text-center">
