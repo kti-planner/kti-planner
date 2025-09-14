@@ -1,18 +1,37 @@
 <script setup lang="ts">
-import { computed } from 'vue';
-import type { EventInput } from '@fullcalendar/core';
+import { computed, shallowRef, useTemplateRef } from 'vue';
+import type { EventClickArg, EventInput } from '@fullcalendar/core';
+import { langId } from '@components/frontend/lang';
+import { currentUser } from '@components/frontend/user';
 import { useApiFetch } from '@components/api';
 import type { LaboratoryClassData } from '@components/laboratory-classes/types';
 import type { LaboratoryGroupData } from '@components/laboratory-groups/types';
 import type { ScheduleChangeData } from '@components/semesters/types';
+import type { UserData } from '@components/users/types';
 import Calendar from '@components/Calendar.vue';
+import EditLaboratoryClassForm from '@components/laboratory-classes/EditLaboratoryClassForm.vue';
 import LaboratoryClassEvent from '@components/laboratory-classes/LaboratoryClassEvent.vue';
+import Modal from '@components/Modal.vue';
 
 const { apiUrl, selectedLaboratoryGroups, scheduleChanges } = defineProps<{
     apiUrl: string;
     selectedLaboratoryGroups: LaboratoryGroupData[];
     scheduleChanges: ScheduleChangeData[];
+    teachers: UserData[];
 }>();
+
+const translations = {
+    'en': {
+        'Edit class': 'Edit class',
+    },
+    'pl': {
+        'Edit class': 'Edytuj zajęcia',
+    },
+};
+
+function translate(text: keyof (typeof translations)[LangId]): string {
+    return translations[langId][text];
+}
 
 const { data: laboratoryClasses, execute: refreshClasses } = useApiFetch<LaboratoryClassData[]>(
     apiUrl,
@@ -60,10 +79,27 @@ const initialDate = computed(() => {
         return lastEventDate;
     }
 });
+
+const editModal = useTemplateRef('editModal');
+const editedLaboratoryClass = shallowRef<LaboratoryClassData | null>(null);
+
+function handleEventClick(arg: EventClickArg) {
+    if (!('laboratoryClass' in arg.event.extendedProps) || currentUser === null) {
+        return;
+    }
+
+    editedLaboratoryClass.value = arg.event.extendedProps.laboratoryClass;
+    editModal.value?.show();
+}
 </script>
 
 <template>
-    <Calendar :events :initial-date>
+    <Calendar
+        :class="{ 'clickable-events': currentUser !== null }"
+        :events
+        :initial-date
+        @event-click="handleEventClick"
+    >
         <template #eventContent="arg">
             <LaboratoryClassEvent
                 v-if="'laboratoryClass' in arg.event.extendedProps"
@@ -73,4 +109,21 @@ const initialDate = computed(() => {
             />
         </template>
     </Calendar>
+
+    <Modal v-if="currentUser" ref="editModal">
+        <template #header>{{ translate('Edit class') }}</template>
+        <EditLaboratoryClassForm v-if="editedLaboratoryClass" :laboratory-class="editedLaboratoryClass" :teachers />
+    </Modal>
 </template>
+
+<style scoped lang="scss">
+.clickable-events :deep(.fc) {
+    .fc-event {
+        cursor: pointer;
+
+        &:hover {
+            background-color: #157347 !important;
+        }
+    }
+}
+</style>
