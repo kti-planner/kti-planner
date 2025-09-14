@@ -23,3 +23,12 @@ export const laboratoryClassCreateApiSchema = z
     .array();
 
 export type LaboratoryClassCreateApiData = z.input<typeof laboratoryClassCreateApiSchema>;
+
+export const laboratoryClassEditApiSchema = z.object({
+    id: z.uuid(),
+    startDate: dateTimeStringSchema.optional(),
+    endDate: dateTimeStringSchema.optional(),
+    teacherId: z.uuid().optional(),
+});
+
+export type LaboratoryClassEditApiData = z.input<typeof laboratoryClassEditApiSchema>;

@@ -5,7 +5,11 @@ import { Exercise } from '@backend/exercise';
 import { LaboratoryClass, type LaboratoryClassCreateData, makeLaboratoryClassData } from '@backend/laboratory-class';
 import { LaboratoryGroup } from '@backend/laboratory-group';
 import { User } from '@backend/user';
-import { laboratoryClassCreateApiSchema, type LaboratoryClassData } from '@components/laboratory-classes/types';
+import {
+    laboratoryClassCreateApiSchema,
+    type LaboratoryClassData,
+    laboratoryClassEditApiSchema,
+} from '@components/laboratory-classes/types';
 import { getSubjectFromParams } from '@pages/semesters/[semesterSlug]/subjects/[subjectSlug]/api/_subject-utils';
 
 export const GET: APIRoute = async ({ params, url }) => {
@@ -97,4 +101,38 @@ export const POST: APIRoute = async ({ locals }) => {
     await Promise.all(createData.map(createDatum => LaboratoryClass.create(createDatum)));
 
     return Response.json(true, { status: 201 });
+};
+
+export const PATCH: APIRoute = async ({ locals }) => {
+    const { jsonData, user } = locals;
+
+    if (!user) {
+        return Response.json(null, { status: 404 });
+    }
+
+    const data = laboratoryClassEditApiSchema.nullable().catch(null).parse(jsonData);
+
+    if (!data) {
+        return Response.json(null, { status: 400 });
+    }
+
+    const laboratoryClass = await LaboratoryClass.fetch(data.id);
+
+    if (!laboratoryClass) {
+        return Response.json(null, { status: 404 });
+    }
+
+    const teacher = data.teacherId !== undefined ? await User.fetch(data.teacherId) : undefined;
+
+    if (teacher === null) {
+        return Response.json(null, { status: 400 });
+    }
+
+    await laboratoryClass.edit({
+        startDate: data.startDate,
+        endDate: data.endDate,
+        teacher,
+    });
+
+    return Response.json(true, { status: 200 });
 };
