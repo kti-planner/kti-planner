@@ -6,7 +6,7 @@ import { currentUser } from '@components/frontend/user';
 import { useApiFetch } from '@components/api';
 import type { LaboratoryClassData } from '@components/laboratory-classes/types';
 import type { LaboratoryGroupData } from '@components/laboratory-groups/types';
-import type { ScheduleChangeData } from '@components/semesters/types';
+import type { ScheduleChangeData, SemesterData } from '@components/semesters/types';
 import type { UserData } from '@components/users/types';
 import Calendar from '@components/Calendar.vue';
 import EditLaboratoryClassForm from '@components/laboratory-classes/EditLaboratoryClassForm.vue';
@@ -17,6 +17,7 @@ const { apiUrl, selectedLaboratoryGroups, scheduleChanges } = defineProps<{
     apiUrl: string;
     selectedLaboratoryGroups: LaboratoryGroupData[];
     scheduleChanges: ScheduleChangeData[];
+    semester: SemesterData;
     teachers: UserData[];
 }>();
 
@@ -114,6 +115,7 @@ function handleEventClick(arg: EventClickArg) {
             :laboratory-class="editedLaboratoryClass"
             :teachers
             :api-url
+            :semester
         />
     </Modal>
 </template>

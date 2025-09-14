@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import { langId } from '@components/frontend/lang';
 import { currentUser } from '@components/frontend/user';
 import { apiPatch } from '@components/api';
 import type { LaboratoryClassData, LaboratoryClassEditApiData } from '@components/laboratory-classes/types';
+import type { SemesterData } from '@components/semesters/types';
 import type { UserData } from '@components/users/types';
 import UserSelector from '@components/users/UserSelector.vue';
 
@@ -11,6 +12,7 @@ const props = defineProps<{
     laboratoryClass: LaboratoryClassData;
     apiUrl: string;
     teachers: UserData[];
+    semester: SemesterData;
 }>();
 
 const translations = {
@@ -62,6 +64,9 @@ async function saveLaboratoryClass() {
         window.location.reload();
     }
 }
+
+const minDate = computed(() => `${props.semester.startDate}T00:00`);
+const maxDate = computed(() => `${props.semester.endDate}T23:59`);
 
 const exerciseNameId = crypto.randomUUID();
 const groupNameId = crypto.randomUUID();
@@ -115,6 +120,8 @@ const teacherId = crypto.randomUUID();
                 required
                 class="form-control"
                 :readonly="!currentUser"
+                :min="minDate"
+                :max="maxDate"
             />
         </div>
 
@@ -127,6 +134,8 @@ const teacherId = crypto.randomUUID();
                 required
                 class="form-control"
                 :readonly="!currentUser"
+                :min="minDate"
+                :max="maxDate"
             />
         </div>
 

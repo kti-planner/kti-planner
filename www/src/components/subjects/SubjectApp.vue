@@ -59,6 +59,7 @@ const subjectUrl = computed(() => `/semesters/${semester.slug}/subjects/${subjec
                 :selected-laboratory-groups
                 :schedule-changes
                 :teachers="subject.teachers"
+                :semester
             />
         </div>
         <div class="col-12 col-lg-3 order-1 order-lg-2 d-flex gap-4 flex-column-reverse flex-lg-column">
