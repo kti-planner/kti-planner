@@ -23,9 +23,11 @@ const { apiUrl, selectedLaboratoryGroups, scheduleChanges } = defineProps<{
 const translations = {
     'en': {
         'Edit class': 'Edit class',
+        'Class details': 'Class details',
     },
     'pl': {
         'Edit class': 'Edytuj zajęcia',
+        'Class details': 'Szczegóły zajęć',
     },
 };
 
@@ -84,7 +86,7 @@ const editModal = useTemplateRef('editModal');
 const editedLaboratoryClass = shallowRef<LaboratoryClassData | null>(null);
 
 function handleEventClick(arg: EventClickArg) {
-    if (!('laboratoryClass' in arg.event.extendedProps) || currentUser === null) {
+    if (!('laboratoryClass' in arg.event.extendedProps)) {
         return;
     }
 
@@ -94,12 +96,7 @@ function handleEventClick(arg: EventClickArg) {
 </script>
 
 <template>
-    <Calendar
-        :class="{ 'clickable-events': currentUser !== null }"
-        :events
-        :initial-date
-        @event-click="handleEventClick"
-    >
+    <Calendar class="calendar" :events :initial-date @event-click="handleEventClick">
         <template #eventContent="arg">
             <LaboratoryClassEvent
                 v-if="'laboratoryClass' in arg.event.extendedProps"
@@ -110,8 +107,8 @@ function handleEventClick(arg: EventClickArg) {
         </template>
     </Calendar>
 
-    <Modal v-if="currentUser" ref="editModal">
-        <template #header>{{ translate('Edit class') }}</template>
+    <Modal ref="editModal">
+        <template #header>{{ currentUser ? translate('Edit class') : translate('Class details') }}</template>
         <EditLaboratoryClassForm
             v-if="editedLaboratoryClass"
             :laboratory-class="editedLaboratoryClass"
@@ -122,7 +119,7 @@ function handleEventClick(arg: EventClickArg) {
 </template>
 
 <style scoped lang="scss">
-.clickable-events :deep(.fc) {
+.calendar :deep(.fc) {
     .fc-event {
         cursor: pointer;
 

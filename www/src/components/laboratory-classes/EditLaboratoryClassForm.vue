@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { langId } from '@components/frontend/lang';
+import { currentUser } from '@components/frontend/user';
 import { apiPatch } from '@components/api';
 import type { LaboratoryClassData, LaboratoryClassEditApiData } from '@components/laboratory-classes/types';
 import type { UserData } from '@components/users/types';
@@ -42,6 +43,10 @@ const endDate = ref<string>(props.laboratoryClass.endDate);
 const teacher = ref<UserData>(props.laboratoryClass.teacher);
 
 async function saveLaboratoryClass() {
+    if (!currentUser) {
+        return;
+    }
+
     const success = await apiPatch<boolean>(props.apiUrl, {
         id: props.laboratoryClass.id,
         startDate: startDate.value,
@@ -103,20 +108,34 @@ const teacherId = crypto.randomUUID();
 
         <div>
             <label :for="startId" class="form-label">{{ translate('Start date') }}</label>
-            <input :id="startId" v-model="startDate" type="datetime-local" required class="form-control" />
+            <input
+                :id="startId"
+                v-model="startDate"
+                type="datetime-local"
+                required
+                class="form-control"
+                :readonly="!currentUser"
+            />
         </div>
 
         <div>
             <label :for="endId" class="form-label">{{ translate('End date') }}</label>
-            <input :id="endId" v-model="endDate" type="datetime-local" required class="form-control" />
+            <input
+                :id="endId"
+                v-model="endDate"
+                type="datetime-local"
+                required
+                class="form-control"
+                :readonly="!currentUser"
+            />
         </div>
 
         <div>
             <label :for="teacherId" class="form-label">{{ translate('Teacher') }}</label>
-            <UserSelector :id="teacherId" v-model="teacher" required :options="teachers" />
+            <UserSelector :id="teacherId" v-model="teacher" required :options="teachers" :disabled="!currentUser" />
         </div>
 
-        <div class="text-center">
+        <div v-if="currentUser" class="text-center">
             <button type="submit" class="btn btn-success">
                 {{ translate('Save') }}
             </button>
