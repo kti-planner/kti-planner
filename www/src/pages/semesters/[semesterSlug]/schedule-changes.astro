@@ -1,6 +1,5 @@
 ---
 import { makeScheduleChangeData, makeSemesterData, Semester } from '@backend/semester';
-import type { SemesterData } from '@components/semesters/types';
 import Layout from '@layouts/Layout.astro';
 import ScheduleChangesApp from '@components/semesters/schedule-changes/ScheduleChangesApp.vue';
 
@@ -39,9 +38,8 @@ if (!semester) {
     return new Response(null, { status: 404 });
 }
 
+const semesterData = makeSemesterData(semester);
 const semesterName = `${semester.type === 'summer' ? translate('Summer semester') : translate('Winter semester')} ${semester.year}/${semester.year + 1}`;
-
-const semesterData: SemesterData = makeSemesterData(semester);
 
 const scheduleChanges = await semester.getScheduleChanges();
 const scheduleChangesData = scheduleChanges.map(makeScheduleChangeData);
