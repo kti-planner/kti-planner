@@ -53,8 +53,6 @@ test('Can add new subject and prevent duplicate subject creation', async ({ page
     await expect(page.getByRole('link', { name: 'Sieci komputerowe' })).toBeVisible();
 
     // Cannot add duplicate subject
-    await page.goto('/semesters/2024-summer/');
-
     await page.getByRole('button', { name: 'Add new subject' }).click();
 
     await expect(page.getByRole('heading', { name: 'Add new subject' })).toBeVisible();
