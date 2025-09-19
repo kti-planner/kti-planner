@@ -1,13 +1,8 @@
 ---
 import { Classroom, makeClassroomData } from '@backend/classroom';
-import { Exercise } from '@backend/exercise';
+import { Exercise, makeExerciseData } from '@backend/exercise';
 import { makeSemesterData, Semester } from '@backend/semester';
-import { Subject } from '@backend/subject';
-import { makeUserData } from '@backend/user';
-import type { ClassroomData } from '@components/classrooms/types';
-import type { ExerciseData } from '@components/exercises/types';
-import type { SemesterData } from '@components/semesters/types';
-import type { SubjectData } from '@components/subjects/types';
+import { makeSubjectData, Subject } from '@backend/subject';
 import Layout from '@layouts/Layout.astro';
 import EditExercise from '@components/exercises/EditExercise.vue';
 import Show from '@components/Show.astro';
@@ -41,12 +36,15 @@ if (!semester) {
     return new Response(null, { status: 404 });
 }
 
+const semesterData = makeSemesterData(semester);
 const semesterName = `${semester.type === 'summer' ? translate('Summer semester') : translate('Winter semester')} ${semester.year}/${semester.year + 1}`;
 
 const subject = await Subject.fetchBySlug(semester, subjectSlug);
 if (!subject) {
     return new Response(null, { status: 404 });
 }
+
+const subjectData = makeSubjectData(subject, await subject.getTeachers());
 
 const exerciseNumberParsed = parseInt(exerciseNumber, 10);
 if (Number.isNaN(exerciseNumberParsed)) {
@@ -59,32 +57,13 @@ if (!exercise) {
 }
 
 const classrooms = await Classroom.fetchAll();
-
-const classroomsData: ClassroomData[] = classrooms.map(makeClassroomData);
-
-const semesterData: SemesterData = makeSemesterData(semester);
-
-const subjectData: SubjectData = {
-    id: subject.id,
-    name: subject.name,
-    semesterId: subject.semesterId,
-    slug: subject.slug,
-    teachers: (await subject.getTeachers()).map(makeUserData),
-};
-
-const classroomData = classroomsData.find(classroom => classroom.id === exercise.classroomId);
-if (!classroomData) {
+const classroomsData = classrooms.map(makeClassroomData);
+const classroom = classrooms.find(classroom => classroom.id === exercise.classroomId);
+if (!classroom) {
     throw new Error('Exercise classroom not found');
 }
 
-const exerciseData: ExerciseData = {
-    id: exercise.id,
-    name: exercise.name,
-    exerciseNumber: exercise.exerciseNumber,
-    subjectId: exercise.subjectId,
-    classroom: classroomData,
-    teacher: makeUserData(await exercise.getTeacher()),
-};
+const exerciseData = makeExerciseData(exercise, classroom, await exercise.getTeacher());
 ---
 
 <Layout
