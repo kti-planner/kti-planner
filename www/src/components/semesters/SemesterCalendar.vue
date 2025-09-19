@@ -10,10 +10,8 @@ import type { ScheduleChangeData, SemesterData } from '@components/semesters/typ
 import type { SubjectData } from '@components/subjects/types';
 import type { UserData } from '@components/users/types';
 import Calendar from '@components/Calendar.vue';
-import ClassroomPicker from '@components/classrooms/ClassroomPicker.vue';
 import LaboratoryClassEvent from '@components/laboratory-classes/LaboratoryClassEvent.vue';
-import SubjectPicker from '@components/subjects/SubjectPicker.vue';
-import UserPicker from '@components/users/UserPicker.vue';
+import ToggleButtonPicker from '@components/ToggleButtonPicker.vue';
 
 const translations = {
     'en': {
@@ -32,7 +30,7 @@ function translate(text: keyof (typeof translations)[LangId]): string {
     return translations[langId][text];
 }
 
-const { semester, scheduleChanges, subjects } = defineProps<{
+const { semester, scheduleChanges, subjects, classrooms } = defineProps<{
     semester: SemesterData;
     scheduleChanges: ScheduleChangeData[];
     subjects: SubjectData[];
@@ -65,6 +63,10 @@ const events = computed<EventInput[]>(() => [
 ]);
 
 const initialDate = computed(() => getInitialDate(laboratoryClasses.value ?? []));
+
+const subjectOptions = computed(() => Object.fromEntries(subjects.map(subject => [subject.name, subject])));
+const classroomOptions = computed(() => Object.fromEntries(classrooms.map(classroom => [classroom.name, classroom])));
+const teacherOptions = computed(() => Object.fromEntries(teachers.value.map(teacher => [teacher.name, teacher])));
 </script>
 
 <template>
@@ -89,19 +91,19 @@ const initialDate = computed(() => getInitialDate(laboratoryClasses.value ?? [])
                 <h2 class="text-center fs-5">
                     {{ translate('Subjects') }}
                 </h2>
-                <SubjectPicker v-model:selected="selectedSubjects" :subjects />
+                <ToggleButtonPicker v-model="selectedSubjects" :options="subjectOptions" />
             </div>
             <div>
                 <h2 class="text-center fs-5">
                     {{ translate('Classrooms') }}
                 </h2>
-                <ClassroomPicker v-model:selected="selectedClassrooms" :classrooms />
+                <ToggleButtonPicker v-model="selectedClassrooms" :options="classroomOptions" />
             </div>
             <div>
                 <h2 class="text-center fs-5">
                     {{ translate('Teachers') }}
                 </h2>
-                <UserPicker v-model:selected="selectedTeachers" :users="teachers" />
+                <ToggleButtonPicker v-model="selectedTeachers" :options="teacherOptions" />
             </div>
         </div>
     </div>
