@@ -18,7 +18,7 @@ test('Can access exercises list', async ({ page }) => {
 
 test('Can access exercise page', async ({ page }) => {
     await page.goto('/semesters/2024-summer/subjects/lokalne-sieci-bezprzewodowe---informatyka-sem.-vi/');
-    await page.getByText('Tryby pracy punktów dostępowych').click();
+    await page.getByRole('link', { name: 'Tryby pracy punktów dostępowych' }).click();
 
     await expect(page.locator('.breadcrumb')).toContainText('Tryby pracy punktów dostępowych');
 });
@@ -33,11 +33,11 @@ test('Add new exercise button is visible for logged-in user', async ({ page }) =
     await page.goto('/semesters/');
     await loginAsAdmin(page);
 
-    await page.getByText('Summer semester 2024/2025').click();
+    await page.getByRole('link', { name: 'Summer semester 2024/2025' }).click();
     await page.waitForURL('/semesters/2024-summer/');
     await expect(page.locator('.breadcrumb')).toContainText('Summer semester 2024/2025');
 
-    await page.getByText('Lokalne sieci bezprzewodowe - Informatyka sem. VI').click();
+    await page.getByRole('link', { name: 'Lokalne sieci bezprzewodowe - Informatyka sem. VI' }).click();
     await page.waitForURL('/semesters/2024-summer/subjects/lokalne-sieci-bezprzewodowe---informatyka-sem.-vi/');
     await expect(page.locator('.breadcrumb')).toContainText('Lokalne sieci bezprzewodowe - Informatyka sem. VI');
 
@@ -50,7 +50,7 @@ test('Can add new exercise and prevent duplicate exercise creation', async ({ pa
 
     await expect(page.locator('.breadcrumb')).toContainText('Winter semester 2024/2025');
 
-    await page.getByText('Sieci komputerowe - Informatyka sem. V').click();
+    await page.getByRole('link', { name: 'Sieci komputerowe - Informatyka sem. V' }).click();
     await page.waitForURL('/semesters/2024-winter/subjects/sieci-komputerowe---informatyka-sem.-v/');
     await expect(page.locator('.breadcrumb')).toContainText('Sieci komputerowe - Informatyka sem. V');
 
@@ -111,15 +111,15 @@ test('Edit exercise button is visible for logged-in user', async ({ page }) => {
     await page.goto('/semesters/');
     await loginAsAdmin(page);
 
-    await page.getByText('Summer semester 2024/2025').click();
+    await page.getByRole('link', { name: 'Summer semester 2024/2025' }).click();
     await page.waitForURL('/semesters/2024-summer/');
     await expect(page.locator('.breadcrumb')).toContainText('Summer semester 2024/2025');
 
-    await page.getByText('Lokalne sieci bezprzewodowe - Informatyka sem. VI').click();
+    await page.getByRole('link', { name: 'Lokalne sieci bezprzewodowe - Informatyka sem. VI' }).click();
     await page.waitForURL('/semesters/2024-summer/subjects/lokalne-sieci-bezprzewodowe---informatyka-sem.-vi/');
     await expect(page.locator('.breadcrumb')).toContainText('Lokalne sieci bezprzewodowe - Informatyka sem. VI');
 
-    await page.getByText('Tryby pracy punktów dostępowych').click();
+    await page.getByRole('link', { name: 'Tryby pracy punktów dostępowych' }).click();
     await page.waitForURL('/semesters/2024-summer/subjects/lokalne-sieci-bezprzewodowe---informatyka-sem.-vi/1/');
     await expect(page.locator('.breadcrumb')).toContainText('Tryby pracy punktów dostępowych');
 
@@ -131,13 +131,13 @@ test('Can edit exercise and prevent duplicate exercise', async ({ page }) => {
     await page.goto('/semesters/');
     await loginAsAdmin(page);
 
-    await page.getByText('Winter semester 2024/2025').click();
+    await page.getByRole('link', { name: 'Winter semester 2024/2025' }).click();
     await expect(page.locator('.breadcrumb')).toContainText('Winter semester 2024/2025');
 
-    await page.getByText('Sieci komputerowe - Informatyka sem. V').click();
+    await page.getByRole('link', { name: 'Sieci komputerowe - Informatyka sem. V' }).click();
     await expect(page.locator('.breadcrumb')).toContainText('Sieci komputerowe - Informatyka sem. V');
 
-    await page.getByText('IPv6 cz. II').click();
+    await page.getByRole('link', { name: 'IPv6 cz. II' }).click();
     await expect(page.locator('.breadcrumb')).toContainText('IPv6 cz. II');
 
     await expect(page.getByRole('button', { name: 'Edit exercise' })).toBeVisible();
