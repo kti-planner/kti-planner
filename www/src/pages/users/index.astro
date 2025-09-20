@@ -27,25 +27,26 @@ const users = await User.fetchAll();
 ---
 
 <Layout breadcrumbs={[{ text: translate('Users'), href: '#' }]}>
-    <div class="vstack gap-3 align-items-center">
-        <Show when={users.length > 0}>
-            <div class="users-list list-group">
-                {
-                    users.map(
-                        s =>
-                            (
-                                <a class="list-group-item list-group-item-action" href={`/users/${s.id}/`}>
-                                    {s.name}
-                                </a>
-                            ) as unknown,
-                    )
-                }
-            </div>
-        </Show>
-        <Show when={user.role === 'admin'}>
-            <AddUser client:only="vue" />
-        </Show>
-    </div>
+    <h1 class="text-center fs-4">
+        {translate('Users')}
+    </h1>
+    <Show when={users.length > 0}>
+        <div class="users-list list-group mx-auto">
+            {
+                users.map(
+                    s =>
+                        (
+                            <a class="list-group-item list-group-item-action" href={`/users/${s.id}/`}>
+                                {s.name}
+                            </a>
+                        ) as unknown,
+                )
+            }
+        </div>
+    </Show>
+    <Show when={user.role === 'admin'}>
+        <AddUser client:only="vue" class="d-block mx-auto mt-3" />
+    </Show>
 </Layout>
 
 <style>

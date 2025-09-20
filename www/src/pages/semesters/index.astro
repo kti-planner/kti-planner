@@ -11,11 +11,13 @@ const translations = {
         'Semesters': 'Semesters',
         'Winter semester': 'Winter semester',
         'Summer semester': 'Summer semester',
+        'Select a semester': 'Select a semester',
     },
     'pl': {
         'Semesters': 'Semestry',
         'Winter semester': 'Semestr zimowy',
         'Summer semester': 'Semestr letni',
+        'Select a semester': 'Wybierz semestr',
     },
 };
 
@@ -27,28 +29,29 @@ const semesters = await Semester.fetchAll();
 ---
 
 <Layout breadcrumbs={[{ text: translate('Semesters'), href: '#' }]}>
-    <div class="vstack gap-3 align-items-center">
-        <Show when={semesters.length > 0}>
-            <div class="semesters-list list-group">
-                {
-                    semesters.map(
-                        semester =>
-                            (
-                                <a href={`/semesters/${semester.slug}/`} class="list-group-item list-group-item-action">
-                                    {semester.type === 'summer'
-                                        ? translate('Summer semester')
-                                        : translate('Winter semester')}{' '}
-                                    {`${semester.year}/${semester.year + 1}`}
-                                </a>
-                            ) as unknown,
-                    )
-                }
-            </div>
-        </Show>
-        <Show when={user !== null}>
-            <AddSemester client:only="vue" />
-        </Show>
-    </div>
+    <h1 class="text-center fs-4">
+        {translate('Select a semester')}
+    </h1>
+    <Show when={semesters.length > 0}>
+        <div class="semesters-list list-group mx-auto">
+            {
+                semesters.map(
+                    semester =>
+                        (
+                            <a href={`/semesters/${semester.slug}/`} class="list-group-item list-group-item-action">
+                                {semester.type === 'summer'
+                                    ? translate('Summer semester')
+                                    : translate('Winter semester')}{' '}
+                                {`${semester.year}/${semester.year + 1}`}
+                            </a>
+                        ) as unknown,
+                )
+            }
+        </div>
+    </Show>
+    <Show when={user !== null}>
+        <AddSemester client:only="vue" class="d-block mx-auto mt-3" />
+    </Show>
 </Layout>
 
 <style>

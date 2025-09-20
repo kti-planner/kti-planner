@@ -16,11 +16,13 @@ const translations = {
         'Semesters': 'Semesters',
         'Winter semester': 'Winter semester',
         'Summer semester': 'Summer semester',
+        'Subjects': 'Subjects',
     },
     'pl': {
         'Semesters': 'Semestry',
         'Winter semester': 'Semestr zimowy',
         'Summer semester': 'Semestr letni',
+        'Subjects': 'Przedmioty',
     },
 };
 
@@ -67,28 +69,29 @@ const allUsers = await User.fetchAll();
     <div class="text-center">
         {semester.startDate.toLocaleDateString('pl-PL')} - {semester.endDate.toLocaleDateString('pl-PL')}
     </div>
-    <div class="vstack gap-3 align-items-center mt-4">
-        <Show when={subjects.length > 0}>
-            <div class="subjects-list list-group">
-                {
-                    subjects.map(
-                        subject =>
-                            (
-                                <a
-                                    href={`/semesters/${semesterSlug}/subjects/${subject.slug}/`}
-                                    class="list-group-item list-group-item-action"
-                                >
-                                    {subject.name}
-                                </a>
-                            ) as unknown,
-                    )
-                }
-            </div>
-        </Show>
-        <Show when={user !== null}>
-            <AddSubject client:only="vue" semester={semesterData} allUsers={allUsers} />
-        </Show>
-    </div>
+    <h2 class="text-center fs-5 mt-3">
+        {translate('Subjects')}
+    </h2>
+    <Show when={subjects.length > 0}>
+        <div class="subjects-list list-group mx-auto">
+            {
+                subjects.map(
+                    subject =>
+                        (
+                            <a
+                                href={`/semesters/${semesterSlug}/subjects/${subject.slug}/`}
+                                class="list-group-item list-group-item-action"
+                            >
+                                {subject.name}
+                            </a>
+                        ) as unknown,
+                )
+            }
+        </div>
+    </Show>
+    <Show when={user !== null}>
+        <AddSubject client:only="vue" semester={semesterData} allUsers={allUsers} class:list="d-block mx-auto mt-3" />
+    </Show>
 </Layout>
 
 <style>
