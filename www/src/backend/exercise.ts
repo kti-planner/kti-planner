@@ -77,6 +77,17 @@ export class Exercise {
         return records.map(record => new Exercise(record));
     }
 
+    static async fetchAllFromSubjects(subjects: Subject[]): Promise<Exercise[]> {
+        const records = (
+            await db.query<DbExercise>(
+                'SELECT * FROM exercises WHERE subject_id = ANY ($1) ORDER BY subject_id, exercise_number',
+                [subjects.map(subject => subject.id)],
+            )
+        ).rows;
+
+        return records.map(record => new Exercise(record));
+    }
+
     static async fetchByNumber(subject: Subject, number: number): Promise<Exercise | null> {
         const data = (
             await db.query<DbExercise>('SELECT * FROM exercises WHERE subject_id = $1 AND exercise_number = $2', [

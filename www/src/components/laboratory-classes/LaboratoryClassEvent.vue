@@ -1,17 +1,49 @@
 <script setup lang="ts">
+import { computed } from 'vue';
+import { langId } from '@components/frontend/lang';
 import type { LaboratoryClassData } from '@components/laboratory-classes/types';
+import type { SubjectData } from '@components/subjects/types';
 
-defineProps<{
+const translations = {
+    'en': {
+        'Group': 'Group',
+        'Teacher': 'Teacher',
+        'Classroom': 'Classroom',
+    },
+    'pl': {
+        'Group': 'Grupa',
+        'Teacher': 'Nauczyciel',
+        'Classroom': 'Sala',
+    },
+};
+
+function translate(text: keyof (typeof translations)[LangId]): string {
+    return translations[langId][text];
+}
+
+const { laboratoryClass, subject } = defineProps<{
     timeText: string;
-    title: string;
     laboratoryClass: LaboratoryClassData;
+    subject?: SubjectData | undefined;
 }>();
+
+const title = computed(
+    () =>
+        (subject ? `${subject.name}\n` : '') +
+        `${laboratoryClass.exercise.name}\n` +
+        `${translate('Group')}: ${laboratoryClass.laboratoryGroup.name}\n` +
+        `${translate('Teacher')}: ${laboratoryClass.teacher.name}\n` +
+        `${translate('Classroom')}: ${laboratoryClass.exercise.classroom.name}`,
+);
 </script>
 
 <template>
     <div class="event-content" :title>
         <p class="text-truncate">{{ timeText }}</p>
-        <p class="text-truncate fw-bold">
+        <p v-if="subject" class="text-truncate fw-bold">
+            {{ subject.name }}
+        </p>
+        <p class="text-truncate" :class="{ 'fw-bold': !subject }">
             {{ laboratoryClass.exercise.name }}
         </p>
         <div class="text-truncate">

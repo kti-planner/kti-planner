@@ -2,6 +2,7 @@
 import { computed } from 'vue';
 import type { EventInput } from '@fullcalendar/core';
 import { useApiFetch } from '@components/api';
+import { getInitialDate, getLaboratoryClassEvents, getScheduleChangeEvents } from '@components/calendar/events';
 import type { LaboratoryClassData } from '@components/laboratory-classes/types';
 import type { LaboratoryGroupData } from '@components/laboratory-groups/types';
 import type { ScheduleChangeData } from '@components/semesters/types';
@@ -23,43 +24,12 @@ defineExpose({
     refreshClasses,
 });
 
-type LaboraoryClassEventInput = EventInput & {
-    extendedProps: {
-        laboratoryClass: LaboratoryClassData;
-    };
-};
-
 const events = computed<EventInput[]>(() => [
-    ...(laboratoryClasses.value ?? []).map<LaboraoryClassEventInput>(laboratoryClass => ({
-        title: `${laboratoryClass.laboratoryGroup.name} - ${laboratoryClass.exercise.name}`,
-        start: laboratoryClass.startDate,
-        end: laboratoryClass.endDate,
-        extendedProps: { laboratoryClass },
-    })),
-    ...scheduleChanges.map<EventInput>(scheduleChange => ({
-        display: 'background',
-        allDay: true,
-        start: scheduleChange.date,
-        backgroundColor: scheduleChange.type === 'holiday' ? 'var(--bs-danger)' : 'var(--bs-warning)',
-    })),
+    ...getLaboratoryClassEvents(laboratoryClasses.value ?? []),
+    ...getScheduleChangeEvents(scheduleChanges),
 ]);
 
-const initialDate = computed(() => {
-    const lastClass = laboratoryClasses.value?.at(-1);
-
-    if (!lastClass) {
-        return undefined;
-    }
-
-    const today = new Date();
-    const lastEventDate = new Date(lastClass.startDate);
-
-    if (today.getTime() < lastEventDate.getTime()) {
-        return today;
-    } else {
-        return lastEventDate;
-    }
-});
+const initialDate = computed(() => getInitialDate(laboratoryClasses.value ?? []));
 </script>
 
 <template>
@@ -67,7 +37,6 @@ const initialDate = computed(() => {
         <template #eventContent="arg">
             <LaboratoryClassEvent
                 v-if="'laboratoryClass' in arg.event.extendedProps"
-                :title="arg.event.title"
                 :time-text="arg.timeText"
                 :laboratory-class="arg.event.extendedProps.laboratoryClass"
             />
