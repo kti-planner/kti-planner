@@ -101,12 +101,12 @@ VALUES
 
 INSERT INTO subjects (id, name, semester_id, teacher_ids)
 VALUES
-  ( '60bd04c7-b83c-4b4d-8668-7bad4ea0a800', 'Lokalne sieci bezprzewodowe', 'a4560e99-9aa0-4c3e-9a6d-73c63b847d2e', '{c393c524-453c-4b02-bfad-5114fe828200,feeaa186-3d69-4801-a580-88be10d53553}' ),
-  ( 'cfaa8255-992f-405e-9064-dd8baf9dfde3', 'Sieci komputerowe', '50138012-1f54-43a6-b5fd-8efea42020a9', '{c393c524-453c-4b02-bfad-5114fe828200}' ),
-  ( '25108321-0391-4c7a-b4d8-5ea20388e813', 'Lokalne sieci bezprzewodowe', '094f8324-7c58-4566-b5d7-e4fe8ed03a18', '{c393c524-453c-4b02-bfad-5114fe828200,feeaa186-3d69-4801-a580-88be10d53553}' ),
-  ( '3f58b671-5b38-43f8-bf0f-49d93048c52e', 'Zarządzanie bezpieczeństwem sieci', '094f8324-7c58-4566-b5d7-e4fe8ed03a18', '{c393c524-453c-4b02-bfad-5114fe828200,feeaa186-3d69-4801-a580-88be10d53553}' ),
-  ( '981c68ba-3f6a-459e-83af-f9fc578adc85', 'Sieci komputerowe', 'b2805b48-3d24-4169-8f67-88561345ee99', '{c393c524-453c-4b02-bfad-5114fe828200}' ),
-  ( 'b2805b48-3d24-4169-8f67-88561345ee99', 'Wstęp do sieci komputerowych', 'b2805b48-3d24-4169-8f67-88561345ee99', '{c393c524-453c-4b02-bfad-5114fe828200,feeaa186-3d69-4801-a580-88be10d53553}' );
+  ( '60bd04c7-b83c-4b4d-8668-7bad4ea0a800', 'Lokalne sieci bezprzewodowe - Informatyka sem. VI', 'a4560e99-9aa0-4c3e-9a6d-73c63b847d2e', '{c393c524-453c-4b02-bfad-5114fe828200,feeaa186-3d69-4801-a580-88be10d53553}' ),
+  ( 'cfaa8255-992f-405e-9064-dd8baf9dfde3', 'Sieci komputerowe - Informatyka sem. V', '50138012-1f54-43a6-b5fd-8efea42020a9', '{c393c524-453c-4b02-bfad-5114fe828200}' ),
+  ( '25108321-0391-4c7a-b4d8-5ea20388e813', 'Lokalne sieci bezprzewodowe - Informatyka sem. VI', '094f8324-7c58-4566-b5d7-e4fe8ed03a18', '{c393c524-453c-4b02-bfad-5114fe828200,feeaa186-3d69-4801-a580-88be10d53553}' ),
+  ( '3f58b671-5b38-43f8-bf0f-49d93048c52e', 'Zarządzanie bezpieczeństwem sieci - Informatyka sem. VI', '094f8324-7c58-4566-b5d7-e4fe8ed03a18', '{c393c524-453c-4b02-bfad-5114fe828200,feeaa186-3d69-4801-a580-88be10d53553}' ),
+  ( '981c68ba-3f6a-459e-83af-f9fc578adc85', 'Sieci komputerowe - Informatyka sem. V', 'b2805b48-3d24-4169-8f67-88561345ee99', '{c393c524-453c-4b02-bfad-5114fe828200}' ),
+  ( '9068cb5a-fe4b-4b93-af91-7050e61eceeb', 'Wstęp do sieci komputerowych - Automatyka i Robotyka, Inżynieria biomedyczna sem. V', 'b2805b48-3d24-4169-8f67-88561345ee99', '{c393c524-453c-4b02-bfad-5114fe828200,feeaa186-3d69-4801-a580-88be10d53553}' );
 
 INSERT INTO exercises (id, name, subject_id, exercise_number, classroom_id, teacher_id)
 VALUES
@@ -143,12 +143,12 @@ VALUES
   ( '805124e6-2595-4fe6-ad91-93f2a6c5762e', 'IPv6 cz. II', '981c68ba-3f6a-459e-83af-f9fc578adc85', 4, '8689d55d-508e-4f5d-aef8-d5052f220d20', 'c393c524-453c-4b02-bfad-5114fe828200' ),
 
   -- Wstęp do sieci komputerowych 2025
-  ( '042c7d5c-ba9c-4a01-bbd8-79e743829f4d', 'Diagnostyka sieci IPv4', 'b2805b48-3d24-4169-8f67-88561345ee99', 1, '8689d55d-508e-4f5d-aef8-d5052f220d20', 'feeaa186-3d69-4801-a580-88be10d53553' ),
-  ( 'ab126bb5-d52a-4ec7-b199-ab1d73177c80', 'Zarządzanie sprzętem sieciowym', 'b2805b48-3d24-4169-8f67-88561345ee99', 2, '2affdc99-7dd6-47f0-b26c-3c413bf063dd', 'feeaa186-3d69-4801-a580-88be10d53553' ),
-  ( 'ccef8e62-4de9-4aa3-8a75-70276aab7ee4', 'Routing Statyczny', 'b2805b48-3d24-4169-8f67-88561345ee99', 3, '2affdc99-7dd6-47f0-b26c-3c413bf063dd', 'feeaa186-3d69-4801-a580-88be10d53553' ),
-  ( '8b3ddf60-a307-46fe-a53a-c79f44161946', 'WiFi Sieci bezprzewodowe standardu 802.11', 'b2805b48-3d24-4169-8f67-88561345ee99', 4, '2affdc99-7dd6-47f0-b26c-3c413bf063dd', 'c393c524-453c-4b02-bfad-5114fe828200' ),
-  ( 'fc48900f-fd81-45a6-8878-5044076c0c06', 'Wirtualne sieci lokalne (VLAN)', 'b2805b48-3d24-4169-8f67-88561345ee99', 5, '2affdc99-7dd6-47f0-b26c-3c413bf063dd', 'c393c524-453c-4b02-bfad-5114fe828200' ),
-  ( '019e221d-85fe-4d00-afbc-c81b609ad252', 'Bezpieczeństwo sieci standardów 802.11', 'b2805b48-3d24-4169-8f67-88561345ee99', 6, '2affdc99-7dd6-47f0-b26c-3c413bf063dd', 'c393c524-453c-4b02-bfad-5114fe828200' );
+  ( '042c7d5c-ba9c-4a01-bbd8-79e743829f4d', 'Diagnostyka sieci IPv4', '9068cb5a-fe4b-4b93-af91-7050e61eceeb', 1, '8689d55d-508e-4f5d-aef8-d5052f220d20', 'feeaa186-3d69-4801-a580-88be10d53553' ),
+  ( 'ab126bb5-d52a-4ec7-b199-ab1d73177c80', 'Zarządzanie sprzętem sieciowym', '9068cb5a-fe4b-4b93-af91-7050e61eceeb', 2, '2affdc99-7dd6-47f0-b26c-3c413bf063dd', 'feeaa186-3d69-4801-a580-88be10d53553' ),
+  ( 'ccef8e62-4de9-4aa3-8a75-70276aab7ee4', 'Routing Statyczny', '9068cb5a-fe4b-4b93-af91-7050e61eceeb', 3, '2affdc99-7dd6-47f0-b26c-3c413bf063dd', 'feeaa186-3d69-4801-a580-88be10d53553' ),
+  ( '8b3ddf60-a307-46fe-a53a-c79f44161946', 'WiFi Sieci bezprzewodowe standardu 802.11', '9068cb5a-fe4b-4b93-af91-7050e61eceeb', 4, '2affdc99-7dd6-47f0-b26c-3c413bf063dd', 'c393c524-453c-4b02-bfad-5114fe828200' ),
+  ( 'fc48900f-fd81-45a6-8878-5044076c0c06', 'Wirtualne sieci lokalne (VLAN)', '9068cb5a-fe4b-4b93-af91-7050e61eceeb', 5, '2affdc99-7dd6-47f0-b26c-3c413bf063dd', 'c393c524-453c-4b02-bfad-5114fe828200' ),
+  ( '019e221d-85fe-4d00-afbc-c81b609ad252', 'Bezpieczeństwo sieci standardów 802.11', '9068cb5a-fe4b-4b93-af91-7050e61eceeb', 6, '2affdc99-7dd6-47f0-b26c-3c413bf063dd', 'c393c524-453c-4b02-bfad-5114fe828200' );
 
 INSERT INTO laboratory_groups (id, name, subject_id)
 VALUES
@@ -202,12 +202,12 @@ VALUES
   ( '854e4921-c286-4b06-a713-16049ec5048d', '6B', '981c68ba-3f6a-459e-83af-f9fc578adc85' ),
 
   -- Wstęp do sieci komputerowych 2025
-  ( '68d444cf-b67e-41ac-bc47-74dfcb5d031a', 'air1A', 'b2805b48-3d24-4169-8f67-88561345ee99' ),
-  ( '92145d11-c173-417e-af93-b1a3fab0249c', 'air1B', 'b2805b48-3d24-4169-8f67-88561345ee99' ),
-  ( '5dfe45ea-7a6a-4192-a58b-7541494856eb', 'air2A', 'b2805b48-3d24-4169-8f67-88561345ee99' ),
-  ( '35ac8c7d-737c-4155-9c6d-9be5b6908c5a', 'air2B', 'b2805b48-3d24-4169-8f67-88561345ee99' ),
-  ( '0fa2f183-4d9c-4441-8382-ae6955a6905e', 'ib1A', 'b2805b48-3d24-4169-8f67-88561345ee99' ),
-  ( '36e0f0ca-e87f-434a-a8b5-fb89e177191a', 'ib1B', 'b2805b48-3d24-4169-8f67-88561345ee99' );
+  ( '68d444cf-b67e-41ac-bc47-74dfcb5d031a', 'air1A', '9068cb5a-fe4b-4b93-af91-7050e61eceeb' ),
+  ( '92145d11-c173-417e-af93-b1a3fab0249c', 'air1B', '9068cb5a-fe4b-4b93-af91-7050e61eceeb' ),
+  ( '5dfe45ea-7a6a-4192-a58b-7541494856eb', 'air2A', '9068cb5a-fe4b-4b93-af91-7050e61eceeb' ),
+  ( '35ac8c7d-737c-4155-9c6d-9be5b6908c5a', 'air2B', '9068cb5a-fe4b-4b93-af91-7050e61eceeb' ),
+  ( '0fa2f183-4d9c-4441-8382-ae6955a6905e', 'ib1A', '9068cb5a-fe4b-4b93-af91-7050e61eceeb' ),
+  ( '36e0f0ca-e87f-434a-a8b5-fb89e177191a', 'ib1B', '9068cb5a-fe4b-4b93-af91-7050e61eceeb' );
 
 INSERT INTO laboratory_classes (id, exercise_id, laboratory_group_id, start_date, end_date, teacher_id)
 VALUES
