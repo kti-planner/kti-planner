@@ -101,7 +101,7 @@ test('Generating classes that extend beyond semester end results in a warning', 
 });
 
 test('Cannot edit classes when not logged in', async ({ page }) => {
-    await page.goto('/semesters/2025-winter/subjects/sieci-komputerowe/');
+    await page.goto('/semesters/2025-winter/subjects/sieci-komputerowe---informatyka-sem.-v/');
     await page.getByRole('gridcell', { name: '11:15 - 13:00' }).click();
 
     await expect(page.getByRole('heading', { name: 'Class details' })).toBeVisible();
@@ -109,7 +109,7 @@ test('Cannot edit classes when not logged in', async ({ page }) => {
 });
 
 test('Can edit class time when logged in', async ({ page }) => {
-    await page.goto('/semesters/2025-winter/subjects/sieci-komputerowe/');
+    await page.goto('/semesters/2025-winter/subjects/sieci-komputerowe---informatyka-sem.-v/');
     await loginAsTeacher(page);
 
     await page.getByRole('gridcell', { name: '11:15 - 13:00' }).click();
