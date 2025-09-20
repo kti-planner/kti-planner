@@ -17,13 +17,13 @@ const translations = {
         'Semesters': 'Semesters',
         'Winter semester': 'Winter semester',
         'Summer semester': 'Summer semester',
-        'Go to calendar': 'Go to calendar',
+        'Subjects': 'Subjects',
     },
     'pl': {
         'Semesters': 'Semestry',
         'Winter semester': 'Semestr zimowy',
         'Summer semester': 'Semestr letni',
-        'Go to calendar': 'Przejdź do kalendarza',
+        'Subjects': 'Przedmioty',
     },
 };
 
@@ -75,7 +75,10 @@ const classroomsData = classrooms.map(makeClassroomData);
     <div class="text-center">
         {semester.startDate.toLocaleDateString('pl-PL')} - {semester.endDate.toLocaleDateString('pl-PL')}
     </div>
-    <div class="vstack gap-3 align-items-center mt-4">
+    <h2 class="text-center fs-5 mt-3">
+        {translate('Subjects')}
+    </h2>
+    <div class="vstack gap-3 align-items-center">
         <Show when={subjects.length > 0}>
             <div class="subjects-list list-group">
                 {

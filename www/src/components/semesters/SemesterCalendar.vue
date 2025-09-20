@@ -76,7 +76,6 @@ const teacherOptions = computed(() => Object.fromEntries(teachers.value.map(teac
                 <template #eventContent="arg">
                     <LaboratoryClassEvent
                         v-if="'laboratoryClass' in arg.event.extendedProps"
-                        :title="arg.event.title"
                         :time-text="arg.timeText"
                         :laboratory-class="arg.event.extendedProps.laboratoryClass"
                         :subject="

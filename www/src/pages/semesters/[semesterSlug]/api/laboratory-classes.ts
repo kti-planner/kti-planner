@@ -71,11 +71,7 @@ export const GET: APIRoute = async ({ params, url }) => {
                     classTeacher,
                 );
             })
-            .filter(nonNullFilter) satisfies LaboratoryClassData[],
+            .filter(data => data !== null) satisfies LaboratoryClassData[],
         { status: 200 },
     );
 };
-
-function nonNullFilter<T>(value: T | null): value is Exclude<T, null> {
-    return value !== null;
-}
