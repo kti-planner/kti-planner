@@ -98,7 +98,7 @@ const classroomsData = classrooms.map(makeClassroomData);
     <Show when={user !== null}>
         <AddSubject client:only="vue" semester={semesterData} allUsers={allUsers} class:list="d-block mx-auto mt-3" />
     </Show>
-    <div class="mt-5">
+    <div class="mt-4">
         <SemesterCalendar
             client:only="vue"
             semester={semesterData}
