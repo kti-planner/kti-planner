@@ -13,7 +13,7 @@ test('Can access semester list', async ({ page }) => {
 test('Can access semester page', async ({ page }) => {
     await page.goto('/semesters/');
 
-    await page.getByText('Summer semester 2024/2025').click();
+    await page.getByRole('link', { name: 'Summer semester 2024/2025' }).click();
     await page.waitForURL('/semesters/2024-summer/');
     await expect(page.locator('.breadcrumb')).toContainText('Summer semester 2024/2025');
 });
@@ -78,7 +78,7 @@ test('Can add new semester and prevent duplicate semester creation', async ({ pa
 test('Edit semester button is hidden for logged-out user', async ({ page }) => {
     await page.goto('/semesters/');
 
-    await page.getByText('Summer semester 2024/2025').click();
+    await page.getByRole('link', { name: 'Summer semester 2024/2025' }).click();
     await page.waitForURL('/semesters/2024-summer/');
     await expect(page.locator('.breadcrumb')).toContainText('Summer semester 2024/2025');
 
@@ -89,7 +89,7 @@ test('Edit semester button is visible for logged-in user', async ({ page }) => {
     await page.goto('/semesters/');
     await loginAsAdmin(page);
 
-    await page.getByText('Summer semester 2024/2025').click();
+    await page.getByRole('link', { name: 'Summer semester 2024/2025' }).click();
     await page.waitForURL('/semesters/2024-summer/');
     await expect(page.locator('.breadcrumb')).toContainText('Summer semester 2024/2025');
 
@@ -101,7 +101,7 @@ test('Can edit semester and prevent duplicate semester', async ({ page }) => {
     await page.goto('/semesters/');
     await loginAsAdmin(page);
 
-    await page.getByText('Summer semester 2024/2025').click();
+    await page.getByRole('link', { name: 'Summer semester 2024/2025' }).click();
 
     await expect(page.locator('.breadcrumb')).toContainText('Summer semester 2024/2025');
     await expect(page.locator('body')).toContainText('24.02.2025 - 15.06.2025');

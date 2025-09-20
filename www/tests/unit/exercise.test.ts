@@ -46,13 +46,13 @@ test('Exercises', async () => {
     });
 
     const subject1 = await Subject.create({
-        name: 'Sieci komputerowe',
+        name: 'Sieci komputerowe - Informatyka sem. V',
         semester: semester1,
         teachers: [user1],
     });
 
     const subject2 = await Subject.create({
-        name: 'Zarządzanie bezpieczeństwem sieci',
+        name: 'Zarządzanie bezpieczeństwem sieci - Informatyka sem. VI',
         semester: semester2,
         teachers: [user1, user2],
     });
@@ -104,6 +104,14 @@ test('Exercises', async () => {
 
     expect(await Exercise.fetchAllFromSubject(subject1)).toStrictEqual([exercise1]);
     expect(await Exercise.fetchAllFromSubject(subject2)).toStrictEqual([exercise2]);
+
+    expect(await Exercise.fetchAllFromSubjects([subject1])).toStrictEqual([exercise1]);
+    expect(await Exercise.fetchAllFromSubjects([subject2])).toStrictEqual([exercise2]);
+
+    expect(await Exercise.fetchAllFromSubjects([subject1, subject2])).toStrictEqual(
+        [exercise1, exercise2].toSorted((a, b) => a.subjectId.localeCompare(b.subjectId)),
+    );
+
     expect(await Exercise.fetchByNumber(subject1, 1)).toStrictEqual(exercise1);
     expect(await Exercise.fetchByNumber(subject1, 2)).toStrictEqual(null);
     expect(await Exercise.fetchByNumber(subject2, 1)).toStrictEqual(null);
@@ -149,6 +157,14 @@ test('Exercises', async () => {
 
     expect(await Exercise.fetchAllFromSubject(subject1)).toStrictEqual([exercise1, exercise3]);
     expect(await Exercise.fetchAllFromSubject(subject2)).toStrictEqual([exercise2]);
+
+    expect(await Exercise.fetchAllFromSubjects([subject1])).toStrictEqual([exercise1, exercise3]);
+    expect(await Exercise.fetchAllFromSubjects([subject2])).toStrictEqual([exercise2]);
+
+    expect(await Exercise.fetchAllFromSubjects([subject1, subject2])).toStrictEqual(
+        [exercise1, exercise3, exercise2].toSorted((a, b) => a.subjectId.localeCompare(b.subjectId)),
+    );
+
     expect(await Exercise.fetchByNumber(subject1, 1)).toStrictEqual(exercise1);
     expect(await Exercise.fetchByNumber(subject1, 2)).toStrictEqual(exercise3);
     expect(await Exercise.fetchByNumber(subject1, 4)).toStrictEqual(null);

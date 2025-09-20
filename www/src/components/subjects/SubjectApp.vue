@@ -11,9 +11,9 @@ import type { UserData } from '@components/users/types';
 import AddExercise from '@components/exercises/AddExercise.vue';
 import GenerateClasses from '@components/laboratory-classes/GenerateClasses.vue';
 import LaboratoryGroupListModal from '@components/laboratory-groups/LaboratoryGroupListModal.vue';
-import LaboratoryGroupPicker from '@components/laboratory-groups/LaboratoryGroupPicker.vue';
 import EditSubject from '@components/subjects/EditSubject.vue';
 import SubjectCalendar from '@components/subjects/SubjectCalendar.vue';
+import ToggleButtonPicker from '@components/ToggleButtonPicker.vue';
 
 const translations = {
     'en': {
@@ -30,7 +30,7 @@ function translate(text: keyof (typeof translations)[LangId]): string {
     return translations[langId][text];
 }
 
-const { subject, semester } = defineProps<{
+const { subject, semester, laboratoryGroups } = defineProps<{
     subject: SubjectData;
     semester: SemesterData;
     allUsers: UserData[];
@@ -44,6 +44,8 @@ const { subject, semester } = defineProps<{
 const selectedLaboratoryGroups = ref<LaboratoryGroupData[]>([]);
 const calendar = useTemplateRef('calendar');
 const subjectUrl = computed(() => `/semesters/${semester.slug}/subjects/${subject.slug}`);
+
+const laboratoryGroupOptions = computed(() => Object.fromEntries(laboratoryGroups.map(group => [group.name, group])));
 </script>
 
 <template>
@@ -72,7 +74,7 @@ const subjectUrl = computed(() => `/semesters/${semester.slug}/subjects/${subjec
                         :api-url="`${subjectUrl}/api/laboratory-groups/`"
                     />
                 </h2>
-                <LaboratoryGroupPicker v-model:selected="selectedLaboratoryGroups" :groups="laboratoryGroups" />
+                <ToggleButtonPicker v-model="selectedLaboratoryGroups" :options="laboratoryGroupOptions" />
                 <GenerateClasses
                     v-if="currentUser"
                     :initial-group="
