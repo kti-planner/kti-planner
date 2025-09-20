@@ -125,6 +125,9 @@ test('Laboratory classes', async () => {
     expect(await LaboratoryClass.fetchAllFromSubject(subject1)).toStrictEqual([laboratoryClass1]);
     expect(await LaboratoryClass.fetchAllFromSubject(subject2)).toStrictEqual([laboratoryClass2]);
 
+    expect(await LaboratoryClass.fetchAllFromSubjects([subject1])).toStrictEqual([laboratoryClass1]);
+    expect(await LaboratoryClass.fetchAllFromSubjects([subject2])).toStrictEqual([laboratoryClass2]);
+
     expect(await LaboratoryClass.fetchAllFromSubjects([subject1, subject2])).toStrictEqual([
         laboratoryClass1,
         laboratoryClass2,
@@ -163,6 +166,9 @@ test('Laboratory classes', async () => {
 
     expect(await LaboratoryClass.fetchAllFromSubject(subject1)).toStrictEqual([laboratoryClass1, laboratoryClass3]);
     expect(await LaboratoryClass.fetchAllFromSubject(subject2)).toStrictEqual([laboratoryClass2]);
+
+    expect(await LaboratoryClass.fetchAllFromSubjects([subject1])).toStrictEqual([laboratoryClass1, laboratoryClass3]);
+    expect(await LaboratoryClass.fetchAllFromSubjects([subject2])).toStrictEqual([laboratoryClass2]);
 
     expect(await LaboratoryClass.fetchAllFromSubjects([subject1, subject2])).toStrictEqual([
         laboratoryClass1,

@@ -55,7 +55,7 @@ export class LaboratoryGroup {
     static async fetchAllFromSubjects(subjects: Subject[]): Promise<LaboratoryGroup[]> {
         const records = (
             await db.query<DbLaboratoryGroup>(
-                'SELECT * FROM laboratory_groups WHERE subject_id = ANY ($1) ORDER BY name',
+                'SELECT * FROM laboratory_groups WHERE subject_id = ANY ($1) ORDER BY subject_id, name',
                 [subjects.map(subject => subject.id)],
             )
         ).rows;
