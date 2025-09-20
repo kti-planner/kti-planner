@@ -4,15 +4,15 @@ import { loginAsAdmin, test } from './fixtures';
 test('Can access subject list', async ({ page }) => {
     await page.goto('/semesters/2024-summer/');
 
-    await expect(page.locator('body')).toContainText('Lokalne sieci bezprzewodowe');
-    await expect(page.locator('body')).toContainText('Zarządzanie bezpieczeństwem sieci');
+    await expect(page.locator('body')).toContainText('Lokalne sieci bezprzewodowe - Informatyka sem. VI');
+    await expect(page.locator('body')).toContainText('Zarządzanie bezpieczeństwem sieci - Informatyka sem. VI');
 });
 
 test('Can access subject page', async ({ page }) => {
     await page.goto('/semesters/2024-summer/');
 
-    await page.getByRole('link', { name: 'Lokalne sieci bezprzewodowe' }).click();
-    await expect(page.locator('.breadcrumb')).toContainText('Lokalne sieci bezprzewodowe');
+    await page.getByRole('link', { name: 'Lokalne sieci bezprzewodowe - Informatyka sem. VI' }).click();
+    await expect(page.locator('.breadcrumb')).toContainText('Lokalne sieci bezprzewodowe - Informatyka sem. VI');
 });
 
 test('Add new subject button is hidden for logged-out user', async ({ page }) => {
@@ -42,22 +42,22 @@ test('Can add new subject and prevent duplicate subject creation', async ({ page
 
     await expect(page.getByRole('heading', { name: 'Add new subject' })).toBeVisible();
 
-    await page.getByRole('textbox', { name: 'Subject name' }).fill('Sieci komputerowe');
+    await page.getByRole('textbox', { name: 'Subject name' }).fill('Sieci komputerowe - Informatyka sem. V');
     await page.getByRole('combobox', { name: 'Teachers' }).selectOption('Jan Kowalski');
 
     await page.getByRole('button', { name: 'Add', exact: true }).click();
 
-    await expect(page.locator('.breadcrumb')).toContainText('Sieci komputerowe');
+    await expect(page.locator('.breadcrumb')).toContainText('Sieci komputerowe - Informatyka sem. V');
 
     await page.goto('/semesters/2024-summer/');
-    await expect(page.getByRole('link', { name: 'Sieci komputerowe' })).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Sieci komputerowe - Informatyka sem. V' })).toBeVisible();
 
     // Cannot add duplicate subject
     await page.getByRole('button', { name: 'Add new subject' }).click();
 
     await expect(page.getByRole('heading', { name: 'Add new subject' })).toBeVisible();
 
-    await page.getByRole('textbox', { name: 'Subject name' }).fill('Sieci komputerowe');
+    await page.getByRole('textbox', { name: 'Subject name' }).fill('Sieci komputerowe - Informatyka sem. V');
     await page.getByRole('combobox', { name: 'Teachers' }).selectOption('Jan Kowalski');
 
     await page.getByRole('button', { name: 'Add', exact: true }).click();
@@ -67,11 +67,11 @@ test('Can add new subject and prevent duplicate subject creation', async ({ page
     await page.getByRole('button', { name: 'Close' }).click();
 
     await expect(page.getByRole('button', { name: 'Add new subject' })).toBeVisible();
-    await expect(page.getByRole('link', { name: 'Sieci komputerowe' })).toHaveCount(1);
+    await expect(page.getByRole('link', { name: 'Sieci komputerowe - Informatyka sem. V' })).toHaveCount(1);
 });
 
 test('Edit subject button is hidden for logged-out user', async ({ page }) => {
-    await page.goto('/semesters/2024-summer/subjects/lokalne-sieci-bezprzewodowe/');
+    await page.goto('/semesters/2024-summer/subjects/lokalne-sieci-bezprzewodowe---informatyka-sem.-vi/');
 
     await expect(page.getByRole('button', { name: 'Edit subject' })).toHaveCount(0);
 });
@@ -83,9 +83,9 @@ test('Edit subject button is visible for logged-in user', async ({ page }) => {
     await page.getByRole('link', { name: 'Summer semester 2024/2025' }).click();
     await page.waitForURL('/semesters/2024-summer/');
     await expect(page.locator('.breadcrumb')).toContainText('Summer semester 2024/2025');
-    await page.getByRole('link', { name: 'Lokalne sieci bezprzewodowe' }).click();
-    await page.waitForURL('/semesters/2024-summer/subjects/lokalne-sieci-bezprzewodowe/');
-    await expect(page.locator('.breadcrumb')).toContainText('Lokalne sieci bezprzewodowe');
+    await page.getByRole('link', { name: 'Lokalne sieci bezprzewodowe - Informatyka sem. VI' }).click();
+    await page.waitForURL('/semesters/2024-summer/subjects/lokalne-sieci-bezprzewodowe---informatyka-sem.-vi/');
+    await expect(page.locator('.breadcrumb')).toContainText('Lokalne sieci bezprzewodowe - Informatyka sem. VI');
 
     await expect(page.getByRole('button', { name: 'Edit subject' })).toBeVisible();
 });
@@ -98,9 +98,9 @@ test('Can edit subject and prevent duplicate subject', async ({ page }) => {
     await page.getByRole('link', { name: 'Summer semester 2024/2025' }).click();
 
     await expect(page.locator('.breadcrumb')).toContainText('Summer semester 2024/2025');
-    await page.getByRole('link', { name: 'Lokalne sieci bezprzewodowe' }).click();
+    await page.getByRole('link', { name: 'Lokalne sieci bezprzewodowe - Informatyka sem. VI' }).click();
 
-    await expect(page.locator('.breadcrumb')).toContainText('Lokalne sieci bezprzewodowe');
+    await expect(page.locator('.breadcrumb')).toContainText('Lokalne sieci bezprzewodowe - Informatyka sem. VI');
 
     await expect(page.getByRole('button', { name: 'Edit subject' })).toBeVisible();
     await page.getByRole('button', { name: 'Edit subject' }).click();
@@ -120,7 +120,9 @@ test('Can edit subject and prevent duplicate subject', async ({ page }) => {
 
     await expect(page.getByRole('heading', { name: 'Edit subject Sieci Ethernet i IP' })).toBeVisible();
 
-    await page.getByRole('textbox', { name: 'Subject name' }).fill('Zarządzanie bezpieczeństwem sieci');
+    await page
+        .getByRole('textbox', { name: 'Subject name' })
+        .fill('Zarządzanie bezpieczeństwem sieci - Informatyka sem. VI');
 
     await page.getByRole('button', { name: 'Save' }).click();
 

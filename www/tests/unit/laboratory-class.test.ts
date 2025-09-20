@@ -48,13 +48,13 @@ test('Laboratory classes', async () => {
     });
 
     const subject1 = await Subject.create({
-        name: 'Sieci komputerowe',
+        name: 'Sieci komputerowe - Informatyka sem. V',
         semester: semester1,
         teachers: [user1],
     });
 
     const subject2 = await Subject.create({
-        name: 'Zarządzanie bezpieczeństwem sieci',
+        name: 'Zarządzanie bezpieczeństwem sieci - Informatyka sem. VI',
         semester: semester2,
         teachers: [user1, user2],
     });

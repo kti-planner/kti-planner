@@ -5,24 +5,54 @@ test('Can access semester calendar', async ({ page }) => {
     await page.goto('/semesters/2025-winter/');
 
     await expect(page.getByText('29 Sept – 5 Oct 2025')).toBeVisible();
-    await expect(page.getByRole('gridcell', { name: 'Wstęp do sieci komputerowych' })).toBeVisible();
+
+    await expect(
+        page.getByRole('gridcell', {
+            name: 'Wstęp do sieci komputerowych - Automatyka i Robotyka, Inżynieria biomedyczna sem. V',
+        }),
+    ).toBeVisible();
 });
 
 test('Can use subjects filter in semester calendar', async ({ page }) => {
     await page.goto('/semesters/2025-winter/');
 
-    await expect(page.getByRole('gridcell', { name: 'Wstęp do sieci komputerowych' }).first()).toBeVisible();
-    await expect(page.getByRole('gridcell', { name: 'Sieci komputerowe' }).first()).toBeVisible();
+    await expect(
+        page
+            .getByRole('gridcell', {
+                name: 'Wstęp do sieci komputerowych - Automatyka i Robotyka, Inżynieria biomedyczna sem. V',
+            })
+            .first(),
+    ).toBeVisible();
 
-    await page.locator('label', { hasText: 'Sieci komputerowe' }).click();
+    await expect(page.getByRole('gridcell', { name: 'Sieci komputerowe - Informatyka sem. V' }).first()).toBeVisible();
 
-    await expect(page.getByRole('gridcell', { name: 'Wstęp do sieci komputerowych' }).first()).not.toBeVisible();
-    await expect(page.getByRole('gridcell', { name: 'Sieci komputerowe' }).first()).toBeVisible();
+    await page.locator('label', { hasText: 'Sieci komputerowe - Informatyka sem. V' }).click();
 
-    await page.locator('label', { hasText: 'Wstęp do sieci komputerowych' }).click();
+    await expect(
+        page
+            .getByRole('gridcell', {
+                name: 'Wstęp do sieci komputerowych - Automatyka i Robotyka, Inżynieria biomedyczna sem. V',
+            })
+            .first(),
+    ).not.toBeVisible();
 
-    await expect(page.getByRole('gridcell', { name: 'Wstęp do sieci komputerowych' }).first()).toBeVisible();
-    await expect(page.getByRole('gridcell', { name: 'Sieci komputerowe' }).first()).toBeVisible();
+    await expect(page.getByRole('gridcell', { name: 'Sieci komputerowe - Informatyka sem. V' }).first()).toBeVisible();
+
+    await page
+        .locator('label', {
+            hasText: 'Wstęp do sieci komputerowych - Automatyka i Robotyka, Inżynieria biomedyczna sem. V',
+        })
+        .click();
+
+    await expect(
+        page
+            .getByRole('gridcell', {
+                name: 'Wstęp do sieci komputerowych - Automatyka i Robotyka, Inżynieria biomedyczna sem. V',
+            })
+            .first(),
+    ).toBeVisible();
+
+    await expect(page.getByRole('gridcell', { name: 'Sieci komputerowe - Informatyka sem. V' }).first()).toBeVisible();
 });
 
 test('Can use classrooms filter in semester calendar', async ({ page }) => {
