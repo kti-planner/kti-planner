@@ -36,14 +36,14 @@ test('Subjects', async () => {
     });
 
     const subject1 = await Subject.create({
-        name: 'Sieci komputerowe',
+        name: 'Sieci komputerowe - Informatyka sem. V',
         semester: semester1,
         teachers: [user1],
     });
 
-    expect(subject1).toHaveProperty('name', 'Sieci komputerowe');
+    expect(subject1).toHaveProperty('name', 'Sieci komputerowe - Informatyka sem. V');
     expect(subject1).toHaveProperty('semesterId', semester1.id);
-    expect(subject1).toHaveProperty('slug', 'sieci-komputerowe');
+    expect(subject1).toHaveProperty('slug', 'sieci-komputerowe---informatyka-sem.-v');
     expect(subject1).toHaveProperty('teacherIds', [user1.id]);
 
     expect(await subject1.getTeachers()).toStrictEqual([user1]);
@@ -51,19 +51,23 @@ test('Subjects', async () => {
     expect(await Subject.fetch(subject1.id)).toStrictEqual(subject1);
     expect(await Subject.fetchAll()).toStrictEqual([subject1]);
     expect(await Subject.fetchAllFromSemester(semester1)).toStrictEqual([subject1]);
-    expect(await Subject.fetchBySlug(semester1, 'sieci-komputerowe')).toStrictEqual(subject1);
-    expect(await Subject.fetchBySlug(semester1, 'zarządzanie-bezpieczeństwem-sieci')).toStrictEqual(null);
-    expect(await Subject.fetchBySlug(semester2, 'sieci-komputerowe')).toStrictEqual(null);
+    expect(await Subject.fetchBySlug(semester1, 'sieci-komputerowe---informatyka-sem.-v')).toStrictEqual(subject1);
+
+    expect(
+        await Subject.fetchBySlug(semester1, 'zarządzanie-bezpieczeństwem-sieci---informatyka-sem.-vi'),
+    ).toStrictEqual(null);
+
+    expect(await Subject.fetchBySlug(semester2, 'sieci-komputerowe---informatyka-sem.-v')).toStrictEqual(null);
 
     const subject2 = await Subject.create({
-        name: 'Zarządzanie bezpieczeństwem sieci',
+        name: 'Zarządzanie bezpieczeństwem sieci - Informatyka sem. VI',
         semester: semester2,
         teachers: [user1, user2],
     });
 
-    expect(subject2).toHaveProperty('name', 'Zarządzanie bezpieczeństwem sieci');
+    expect(subject2).toHaveProperty('name', 'Zarządzanie bezpieczeństwem sieci - Informatyka sem. VI');
     expect(subject2).toHaveProperty('semesterId', semester2.id);
-    expect(subject2).toHaveProperty('slug', 'zarządzanie-bezpieczeństwem-sieci');
+    expect(subject2).toHaveProperty('slug', 'zarządzanie-bezpieczeństwem-sieci---informatyka-sem.-vi');
     expect(subject2).toHaveProperty('teacherIds', [user1.id, user2.id]);
 
     expect(await subject2.getTeachers()).toStrictEqual([user1, user2]);
@@ -73,27 +77,34 @@ test('Subjects', async () => {
     expect(await Subject.fetchAll()).toStrictEqual([subject1, subject2]);
     expect(await Subject.fetchAllFromSemester(semester1)).toStrictEqual([subject1]);
     expect(await Subject.fetchAllFromSemester(semester2)).toStrictEqual([subject2]);
-    expect(await Subject.fetchBySlug(semester1, 'sieci-komputerowe')).toStrictEqual(subject1);
-    expect(await Subject.fetchBySlug(semester1, 'zarządzanie-bezpieczeństwem-sieci')).toStrictEqual(null);
-    expect(await Subject.fetchBySlug(semester2, 'sieci-komputerowe')).toStrictEqual(null);
-    expect(await Subject.fetchBySlug(semester2, 'zarządzanie-bezpieczeństwem-sieci')).toStrictEqual(subject2);
+    expect(await Subject.fetchBySlug(semester1, 'sieci-komputerowe---informatyka-sem.-v')).toStrictEqual(subject1);
+
+    expect(
+        await Subject.fetchBySlug(semester1, 'zarządzanie-bezpieczeństwem-sieci---informatyka-sem.-vi'),
+    ).toStrictEqual(null);
+
+    expect(await Subject.fetchBySlug(semester2, 'sieci-komputerowe---informatyka-sem.-v')).toStrictEqual(null);
+
+    expect(
+        await Subject.fetchBySlug(semester2, 'zarządzanie-bezpieczeństwem-sieci---informatyka-sem.-vi'),
+    ).toStrictEqual(subject2);
 
     await subject2.edit({
-        name: 'Lokalne sieci bezprzewodowe',
+        name: 'Lokalne sieci bezprzewodowe - Informatyka sem. VI',
         semester: semester1,
         teachers: [user2],
     });
 
-    expect(subject2).toHaveProperty('name', 'Lokalne sieci bezprzewodowe');
+    expect(subject2).toHaveProperty('name', 'Lokalne sieci bezprzewodowe - Informatyka sem. VI');
     expect(subject2).toHaveProperty('semesterId', semester1.id);
-    expect(subject2).toHaveProperty('slug', 'lokalne-sieci-bezprzewodowe');
+    expect(subject2).toHaveProperty('slug', 'lokalne-sieci-bezprzewodowe---informatyka-sem.-vi');
     expect(subject2).toHaveProperty('teacherIds', [user2.id]);
 
     expect(await subject2.getTeachers()).toStrictEqual([user2]);
 
-    expect(subject1).toHaveProperty('name', 'Sieci komputerowe');
+    expect(subject1).toHaveProperty('name', 'Sieci komputerowe - Informatyka sem. V');
     expect(subject1).toHaveProperty('semesterId', semester1.id);
-    expect(subject1).toHaveProperty('slug', 'sieci-komputerowe');
+    expect(subject1).toHaveProperty('slug', 'sieci-komputerowe---informatyka-sem.-v');
     expect(subject1).toHaveProperty('teacherIds', [user1.id]);
 
     expect(await subject1.getTeachers()).toStrictEqual([user1]);
@@ -104,9 +115,19 @@ test('Subjects', async () => {
     expect(await Subject.fetchAllFromSemester(semester1)).toStrictEqual([subject2, subject1]);
     expect(await Subject.fetchAllFromSemester(semester2)).toStrictEqual([]);
     expect(await Subject.fetchBySlug(semester1, '')).toStrictEqual(null);
-    expect(await Subject.fetchBySlug(semester1, 'sieci-komputerowe')).toStrictEqual(subject1);
-    expect(await Subject.fetchBySlug(semester1, 'zarządzanie-bezpieczeństwem-sieci')).toStrictEqual(null);
-    expect(await Subject.fetchBySlug(semester1, 'lokalne-sieci-bezprzewodowe')).toStrictEqual(subject2);
-    expect(await Subject.fetchBySlug(semester2, 'sieci-komputerowe')).toStrictEqual(null);
-    expect(await Subject.fetchBySlug(semester2, 'lokalne-sieci-bezprzewodowe')).toStrictEqual(null);
+    expect(await Subject.fetchBySlug(semester1, 'sieci-komputerowe---informatyka-sem.-v')).toStrictEqual(subject1);
+
+    expect(
+        await Subject.fetchBySlug(semester1, 'zarządzanie-bezpieczeństwem-sieci---informatyka-sem.-vi'),
+    ).toStrictEqual(null);
+
+    expect(await Subject.fetchBySlug(semester1, 'lokalne-sieci-bezprzewodowe---informatyka-sem.-vi')).toStrictEqual(
+        subject2,
+    );
+
+    expect(await Subject.fetchBySlug(semester2, 'sieci-komputerowe---informatyka-sem.-v')).toStrictEqual(null);
+
+    expect(await Subject.fetchBySlug(semester2, 'lokalne-sieci-bezprzewodowe---informatyka-sem.-vi')).toStrictEqual(
+        null,
+    );
 });
