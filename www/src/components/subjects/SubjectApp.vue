@@ -83,25 +83,30 @@ const laboratoryGroupOptions = computed(() => Object.fromEntries(laboratoryGroup
                     :laboratory-groups
                     :schedule-changes
                     :api-url="`${subjectUrl}/api/laboratory-classes/`"
-                    class="d-block mt-3 mx-auto"
+                    class="d-block mx-auto mt-3"
                     @done="calendar?.refreshClasses()"
                 />
             </div>
             <div>
                 <h2 class="text-center fs-5">{{ translate('Exercises') }}</h2>
-                <div class="vstack gap-3 align-items-center">
-                    <div v-if="exercises.length > 0" class="exercises-list list-group w-100">
-                        <a
-                            v-for="exercise in exercises"
-                            :key="exercise.id"
-                            :href="`${subjectUrl}/${exercise.exerciseNumber}/`"
-                            class="list-group-item list-group-item-action"
-                        >
-                            {{ `${exercise.exerciseNumber}. ${exercise.name}` }}
-                        </a>
-                    </div>
-                    <AddExercise v-if="currentUser" :semester :subject :classrooms :next-exercise-number />
+                <div v-if="exercises.length > 0" class="exercises-list list-group mx-auto">
+                    <a
+                        v-for="exercise in exercises"
+                        :key="exercise.id"
+                        :href="`${subjectUrl}/${exercise.exerciseNumber}/`"
+                        class="list-group-item list-group-item-action"
+                    >
+                        {{ `${exercise.exerciseNumber}. ${exercise.name}` }}
+                    </a>
                 </div>
+                <AddExercise
+                    v-if="currentUser"
+                    :semester
+                    :subject
+                    :classrooms
+                    :next-exercise-number
+                    class="d-block mx-auto mt-3"
+                />
             </div>
         </div>
     </div>
