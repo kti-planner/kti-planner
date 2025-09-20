@@ -1,10 +1,11 @@
 ---
-import { makeSemesterData, Semester } from '@backend/semester';
-import { Subject } from '@backend/subject';
+import { Classroom, makeClassroomData } from '@backend/classroom';
+import { makeScheduleChangeData, makeSemesterData, Semester } from '@backend/semester';
+import { makeSubjectData, Subject } from '@backend/subject';
 import { User } from '@backend/user';
-import type { SemesterData } from '@components/semesters/types';
 import Layout from '@layouts/Layout.astro';
 import EditSemester from '@components/semesters/EditSemester.vue';
+import SemesterCalendar from '@components/semesters/SemesterCalendar.vue';
 import Show from '@components/Show.astro';
 import AddSubject from '@components/subjects/AddSubject.vue';
 
@@ -40,12 +41,17 @@ if (!semester) {
 }
 
 const semesterName = `${semester.type === 'summer' ? translate('Summer semester') : translate('Winter semester')} ${semester.year}/${semester.year + 1}`;
-
-const semesterData: SemesterData = makeSemesterData(semester);
+const semesterData = makeSemesterData(semester);
 
 const subjects = await Subject.fetchAllFromSemester(semester);
-
 const allUsers = await User.fetchAll();
+const subjectsData = subjects.map(subject => makeSubjectData(subject, allUsers));
+
+const scheduleChanges = await semester.getScheduleChanges();
+const scheduleChangesData = scheduleChanges.map(makeScheduleChangeData);
+
+const classrooms = await Classroom.fetchAll();
+const classroomsData = classrooms.map(makeClassroomData);
 ---
 
 <Layout
@@ -92,6 +98,15 @@ const allUsers = await User.fetchAll();
     <Show when={user !== null}>
         <AddSubject client:only="vue" semester={semesterData} allUsers={allUsers} class:list="d-block mx-auto mt-3" />
     </Show>
+    <div class="mt-5">
+        <SemesterCalendar
+            client:only="vue"
+            semester={semesterData}
+            scheduleChanges={scheduleChangesData}
+            subjects={subjectsData}
+            classrooms={classroomsData}
+        />
+    </div>
 </Layout>
 
 <style>

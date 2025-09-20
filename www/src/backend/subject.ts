@@ -1,7 +1,8 @@
 import assert from 'node:assert';
 import { db } from '@backend/db';
 import type { Semester } from '@backend/semester';
-import { User } from '@backend/user';
+import { makeUserData, User } from '@backend/user';
+import type { SubjectData } from '@components/subjects/types';
 import { toHyphenatedLowercase } from '@components/utils';
 
 interface DbSubject {
@@ -111,4 +112,16 @@ export class Subject {
             this.teacherIds,
         ]);
     }
+}
+
+export function makeSubjectData(subject: Subject, allUsers: User[]): SubjectData {
+    const teachers = allUsers.filter(user => subject.teacherIds.includes(user.id));
+
+    return {
+        id: subject.id,
+        name: subject.name,
+        semesterId: subject.semesterId,
+        slug: subject.slug,
+        teachers: teachers.map(makeUserData),
+    };
 }

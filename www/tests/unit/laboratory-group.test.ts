@@ -37,13 +37,13 @@ test('Laboratory groups', async () => {
     });
 
     const subject1 = await Subject.create({
-        name: 'Sieci komputerowe',
+        name: 'Sieci komputerowe - Informatyka sem. V',
         semester: semester1,
         teachers: [user1],
     });
 
     const subject2 = await Subject.create({
-        name: 'Zarządzanie bezpieczeństwem sieci',
+        name: 'Zarządzanie bezpieczeństwem sieci - Informatyka sem. VI',
         semester: semester2,
         teachers: [user1, user2],
     });
@@ -78,6 +78,13 @@ test('Laboratory groups', async () => {
     expect(await LaboratoryGroup.fetchAllFromSubject(subject1)).toStrictEqual([laboratoryGroup1]);
     expect(await LaboratoryGroup.fetchAllFromSubject(subject2)).toStrictEqual([laboratoryGroup2]);
 
+    expect(await LaboratoryGroup.fetchAllFromSubjects([subject1])).toStrictEqual([laboratoryGroup1]);
+    expect(await LaboratoryGroup.fetchAllFromSubjects([subject2])).toStrictEqual([laboratoryGroup2]);
+
+    expect(await LaboratoryGroup.fetchAllFromSubjects([subject1, subject2])).toStrictEqual(
+        [laboratoryGroup1, laboratoryGroup2].toSorted((a, b) => a.subjectId.localeCompare(b.subjectId)),
+    );
+
     await laboratoryGroup2.edit({
         name: '3B',
     });
@@ -104,4 +111,13 @@ test('Laboratory groups', async () => {
 
     expect(await LaboratoryGroup.fetchAllFromSubject(subject1)).toStrictEqual([laboratoryGroup1, laboratoryGroup3]);
     expect(await LaboratoryGroup.fetchAllFromSubject(subject2)).toStrictEqual([laboratoryGroup2]);
+
+    expect(await LaboratoryGroup.fetchAllFromSubjects([subject1])).toStrictEqual([laboratoryGroup1, laboratoryGroup3]);
+    expect(await LaboratoryGroup.fetchAllFromSubjects([subject2])).toStrictEqual([laboratoryGroup2]);
+
+    expect(await LaboratoryGroup.fetchAllFromSubjects([subject1, subject2])).toStrictEqual(
+        [laboratoryGroup1, laboratoryGroup3, laboratoryGroup2].toSorted((a, b) =>
+            a.subjectId.localeCompare(b.subjectId),
+        ),
+    );
 });

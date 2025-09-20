@@ -2,7 +2,7 @@ import { expect } from 'playwright/test';
 import { loginAsAdmin, test } from './fixtures';
 
 test('Can access exercises list', async ({ page }) => {
-    await page.goto('/semesters/2024-summer/subjects/lokalne-sieci-bezprzewodowe/');
+    await page.goto('/semesters/2024-summer/subjects/lokalne-sieci-bezprzewodowe---informatyka-sem.-vi/');
 
     await expect(page.locator('body')).toContainText('Tryby pracy punktów dostępowych');
     await expect(page.locator('body')).toContainText('Wydajność sieci standardów IEEE 802.11');
@@ -17,14 +17,14 @@ test('Can access exercises list', async ({ page }) => {
 });
 
 test('Can access exercise page', async ({ page }) => {
-    await page.goto('/semesters/2024-summer/subjects/lokalne-sieci-bezprzewodowe/');
-    await page.getByText('Tryby pracy punktów dostępowych').click();
+    await page.goto('/semesters/2024-summer/subjects/lokalne-sieci-bezprzewodowe---informatyka-sem.-vi/');
+    await page.getByRole('link', { name: 'Tryby pracy punktów dostępowych' }).click();
 
     await expect(page.locator('.breadcrumb')).toContainText('Tryby pracy punktów dostępowych');
 });
 
 test('Add new exercise button is hidden for logged-out user', async ({ page }) => {
-    await page.goto('/semesters/2024-summer/subjects/lokalne-sieci-bezprzewodowe/');
+    await page.goto('/semesters/2024-summer/subjects/lokalne-sieci-bezprzewodowe---informatyka-sem.-vi/');
 
     await expect(page.getByRole('button', { name: 'Add new exercise' })).toHaveCount(0);
 });
@@ -33,13 +33,13 @@ test('Add new exercise button is visible for logged-in user', async ({ page }) =
     await page.goto('/semesters/');
     await loginAsAdmin(page);
 
-    await page.getByText('Summer semester 2024/2025').click();
+    await page.getByRole('link', { name: 'Summer semester 2024/2025' }).click();
     await page.waitForURL('/semesters/2024-summer/');
     await expect(page.locator('.breadcrumb')).toContainText('Summer semester 2024/2025');
 
-    await page.getByText('Lokalne sieci bezprzewodowe').click();
-    await page.waitForURL('/semesters/2024-summer/subjects/lokalne-sieci-bezprzewodowe/');
-    await expect(page.locator('.breadcrumb')).toContainText('Lokalne sieci bezprzewodowe');
+    await page.getByRole('link', { name: 'Lokalne sieci bezprzewodowe - Informatyka sem. VI' }).click();
+    await page.waitForURL('/semesters/2024-summer/subjects/lokalne-sieci-bezprzewodowe---informatyka-sem.-vi/');
+    await expect(page.locator('.breadcrumb')).toContainText('Lokalne sieci bezprzewodowe - Informatyka sem. VI');
 
     await expect(page.getByRole('button', { name: 'Add new exercise' })).toBeVisible();
 });
@@ -50,9 +50,9 @@ test('Can add new exercise and prevent duplicate exercise creation', async ({ pa
 
     await expect(page.locator('.breadcrumb')).toContainText('Winter semester 2024/2025');
 
-    await page.getByText('Sieci komputerowe').click();
-    await page.waitForURL('/semesters/2024-winter/subjects/sieci-komputerowe/');
-    await expect(page.locator('.breadcrumb')).toContainText('Sieci komputerowe');
+    await page.getByRole('link', { name: 'Sieci komputerowe - Informatyka sem. V' }).click();
+    await page.waitForURL('/semesters/2024-winter/subjects/sieci-komputerowe---informatyka-sem.-v/');
+    await expect(page.locator('.breadcrumb')).toContainText('Sieci komputerowe - Informatyka sem. V');
 
     await page.getByRole('button', { name: 'Add new exercise' }).click();
 
@@ -66,11 +66,11 @@ test('Can add new exercise and prevent duplicate exercise creation', async ({ pa
 
     await expect(page.locator('.breadcrumb')).toContainText('Wirtualne sieci lokalne (VLAN)');
 
-    await page.goto('/semesters/2024-winter/subjects/sieci-komputerowe/');
+    await page.goto('/semesters/2024-winter/subjects/sieci-komputerowe---informatyka-sem.-v/');
     await expect(page.getByRole('link', { name: 'Wirtualne sieci lokalne (VLAN)' })).toBeVisible();
 
     // Cannot add duplicate exercise
-    await page.goto('/semesters/2024-winter/subjects/sieci-komputerowe/');
+    await page.goto('/semesters/2024-winter/subjects/sieci-komputerowe---informatyka-sem.-v/');
 
     await page.getByRole('button', { name: 'Add new exercise' }).click();
 
@@ -102,7 +102,7 @@ test('Can add new exercise and prevent duplicate exercise creation', async ({ pa
 });
 
 test('Edit exercise button is hidden for logged-out user', async ({ page }) => {
-    await page.goto('/semesters/2024-summer/subjects/lokalne-sieci-bezprzewodowe/1/');
+    await page.goto('/semesters/2024-summer/subjects/lokalne-sieci-bezprzewodowe---informatyka-sem.-vi/1/');
 
     await expect(page.getByRole('button', { name: 'Edit exercise' })).toHaveCount(0);
 });
@@ -111,16 +111,16 @@ test('Edit exercise button is visible for logged-in user', async ({ page }) => {
     await page.goto('/semesters/');
     await loginAsAdmin(page);
 
-    await page.getByText('Summer semester 2024/2025').click();
+    await page.getByRole('link', { name: 'Summer semester 2024/2025' }).click();
     await page.waitForURL('/semesters/2024-summer/');
     await expect(page.locator('.breadcrumb')).toContainText('Summer semester 2024/2025');
 
-    await page.getByText('Lokalne sieci bezprzewodowe').click();
-    await page.waitForURL('/semesters/2024-summer/subjects/lokalne-sieci-bezprzewodowe/');
-    await expect(page.locator('.breadcrumb')).toContainText('Lokalne sieci bezprzewodowe');
+    await page.getByRole('link', { name: 'Lokalne sieci bezprzewodowe - Informatyka sem. VI' }).click();
+    await page.waitForURL('/semesters/2024-summer/subjects/lokalne-sieci-bezprzewodowe---informatyka-sem.-vi/');
+    await expect(page.locator('.breadcrumb')).toContainText('Lokalne sieci bezprzewodowe - Informatyka sem. VI');
 
-    await page.getByText('Tryby pracy punktów dostępowych').click();
-    await page.waitForURL('/semesters/2024-summer/subjects/lokalne-sieci-bezprzewodowe/1/');
+    await page.getByRole('link', { name: 'Tryby pracy punktów dostępowych' }).click();
+    await page.waitForURL('/semesters/2024-summer/subjects/lokalne-sieci-bezprzewodowe---informatyka-sem.-vi/1/');
     await expect(page.locator('.breadcrumb')).toContainText('Tryby pracy punktów dostępowych');
 
     await expect(page.getByRole('button', { name: 'Edit exercise' })).toBeVisible();
@@ -131,13 +131,13 @@ test('Can edit exercise and prevent duplicate exercise', async ({ page }) => {
     await page.goto('/semesters/');
     await loginAsAdmin(page);
 
-    await page.getByText('Winter semester 2024/2025').click();
+    await page.getByRole('link', { name: 'Winter semester 2024/2025' }).click();
     await expect(page.locator('.breadcrumb')).toContainText('Winter semester 2024/2025');
 
-    await page.getByText('Sieci komputerowe').click();
-    await expect(page.locator('.breadcrumb')).toContainText('Sieci komputerowe');
+    await page.getByRole('link', { name: 'Sieci komputerowe - Informatyka sem. V' }).click();
+    await expect(page.locator('.breadcrumb')).toContainText('Sieci komputerowe - Informatyka sem. V');
 
-    await page.getByText('IPv6 cz. II').click();
+    await page.getByRole('link', { name: 'IPv6 cz. II' }).click();
     await expect(page.locator('.breadcrumb')).toContainText('IPv6 cz. II');
 
     await expect(page.getByRole('button', { name: 'Edit exercise' })).toBeVisible();
@@ -183,7 +183,7 @@ test('Can edit exercise and prevent duplicate exercise', async ({ page }) => {
 
 test.describe('API fetch tests', () => {
     test('Logged-out user cannot create new exercise', async ({ page }) => {
-        await page.goto('/semesters/2024-summer/subjects/lokalne-sieci-bezprzewodowe/');
+        await page.goto('/semesters/2024-summer/subjects/lokalne-sieci-bezprzewodowe---informatyka-sem.-vi/');
 
         const response = await page.request.post('/semesters/api/exercises/', {
             data: {
@@ -199,7 +199,7 @@ test.describe('API fetch tests', () => {
     });
 
     test('Logged-in user can create new exercise', async ({ page }) => {
-        await page.goto('/semesters/2024-summer/subjects/lokalne-sieci-bezprzewodowe/');
+        await page.goto('/semesters/2024-summer/subjects/lokalne-sieci-bezprzewodowe---informatyka-sem.-vi/');
         await loginAsAdmin(page);
 
         const response = await page.request.post('/semesters/api/exercises/', {
@@ -216,7 +216,7 @@ test.describe('API fetch tests', () => {
     });
 
     test('Logged-out user cannot edit exercise', async ({ page }) => {
-        await page.goto('/semesters/2024-summer/subjects/lokalne-sieci-bezprzewodowe/');
+        await page.goto('/semesters/2024-summer/subjects/lokalne-sieci-bezprzewodowe---informatyka-sem.-vi/');
 
         const response = await page.request.patch('/semesters/api/exercises/', {
             data: {
@@ -232,7 +232,7 @@ test.describe('API fetch tests', () => {
     });
 
     test('Logged-in user can edit exercise', async ({ page }) => {
-        await page.goto('/semesters/2024-summer/subjects/lokalne-sieci-bezprzewodowe/');
+        await page.goto('/semesters/2024-summer/subjects/lokalne-sieci-bezprzewodowe---informatyka-sem.-vi/');
         await loginAsAdmin(page);
 
         const response = await page.request.patch('/semesters/api/exercises/', {
