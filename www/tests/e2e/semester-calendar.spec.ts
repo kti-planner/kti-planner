@@ -88,3 +88,11 @@ test('Can use teachers filter in semester calendar', async ({ page }) => {
     await expect(page.getByRole('gridcell', { name: 'Bogdan Nowak' }).first()).toBeVisible();
     await expect(page.getByRole('gridcell', { name: 'Jan Kowalski' }).first()).toBeVisible();
 });
+
+test('Can view class details', async ({ page }) => {
+    await page.goto('/semesters/2025-winter/');
+
+    await page.getByRole('gridcell', { name: '11:15 - 13:00' }).click();
+    await expect(page.getByRole('heading', { name: 'Class details' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Save' })).not.toBeVisible();
+});
