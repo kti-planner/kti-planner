@@ -74,6 +74,7 @@ const teacherOptions = computed(() => Object.fromEntries(teachers.value.map(teac
 
 const classDetailsModal = useTemplateRef('classDetailsModal');
 const clickedLaboratoryClass = shallowRef<LaboratoryClassData | null>(null);
+const clickedClassSubject = shallowRef<SubjectData | null>(null);
 
 function handleEventClick(arg: EventClickArg) {
     if (!('laboratoryClass' in arg.event.extendedProps)) {
@@ -81,6 +82,7 @@ function handleEventClick(arg: EventClickArg) {
     }
 
     clickedLaboratoryClass.value = arg.event.extendedProps.laboratoryClass;
+    clickedClassSubject.value = subjects.find(s => s.id === clickedLaboratoryClass.value!.exercise.subjectId) ?? null;
     classDetailsModal.value?.show();
 }
 </script>
@@ -104,9 +106,10 @@ function handleEventClick(arg: EventClickArg) {
             <Modal ref="classDetailsModal">
                 <template #header>{{ translate('Class details') }}</template>
                 <EditLaboratoryClassForm
-                    v-if="clickedLaboratoryClass"
+                    v-if="clickedLaboratoryClass && clickedClassSubject"
                     :laboratory-class="clickedLaboratoryClass"
-                    :subject="subjects.find(s => s.id === clickedLaboratoryClass!.exercise.subjectId)"
+                    :subject="clickedClassSubject"
+                    :api-url="`/semesters/${semester.slug}/subjects/${clickedClassSubject.slug}/api/laboratory-classes/`"
                     :teachers
                     :semester
                 />

@@ -85,7 +85,6 @@ function handleEventClick(arg: EventClickArg) {
             :teachers
             :api-url
             :semester
-            :editable="currentUser !== null"
         />
     </Modal>
 </template>
