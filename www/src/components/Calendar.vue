@@ -109,7 +109,17 @@ const options = computed((): CalendarOptions => {
 </template>
 
 <style scoped lang="scss">
-.calendar-wrapper :deep(.fc-toolbar-title) {
-    font-size: 1.25rem;
+.calendar-wrapper :deep(.fc) {
+    .fc-toolbar-title {
+        font-size: 1.25rem;
+    }
+
+    .fc-event {
+        cursor: pointer;
+    }
+
+    .fc-timegrid-event:hover {
+        background-color: #157347 !important;
+    }
 }
 </style>

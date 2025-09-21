@@ -85,18 +85,7 @@ function handleEventClick(arg: EventClickArg) {
             :teachers
             :api-url
             :semester
+            :editable="currentUser !== null"
         />
     </Modal>
 </template>
-
-<style scoped lang="scss">
-.calendar :deep(.fc) {
-    .fc-event {
-        cursor: pointer;
-
-        &:hover {
-            background-color: #157347 !important;
-        }
-    }
-}
-</style>

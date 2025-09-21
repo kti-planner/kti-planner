@@ -1,22 +1,25 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import { langId } from '@components/frontend/lang';
-import { currentUser } from '@components/frontend/user';
 import { apiPatch } from '@components/api';
 import type { LaboratoryClassData, LaboratoryClassEditApiData } from '@components/laboratory-classes/types';
 import type { SemesterData } from '@components/semesters/types';
+import type { SubjectData } from '@components/subjects/types';
 import type { UserData } from '@components/users/types';
 import UserSelector from '@components/users/UserSelector.vue';
 
-const props = defineProps<{
+const { apiUrl = '', ...props } = defineProps<{
     laboratoryClass: LaboratoryClassData;
-    apiUrl: string;
     teachers: UserData[];
     semester: SemesterData;
+    apiUrl?: string | undefined;
+    editable?: boolean | undefined;
+    subject?: SubjectData | undefined;
 }>();
 
 const translations = {
     'en': {
+        'Subject name': 'Subject name',
         'Exercise name': 'Exercise name',
         'Laboratory group': 'Laboratory group',
         'Classroom': 'Classroom',
@@ -26,6 +29,7 @@ const translations = {
         'Save': 'Save',
     },
     'pl': {
+        'Subject name': 'Nazwa przedmiotu',
         'Exercise name': 'Nazwa ćwiczenia',
         'Laboratory group': 'Grupa laboratoryjna',
         'Classroom': 'Sala',
@@ -45,11 +49,11 @@ const endDate = ref<string>(props.laboratoryClass.endDate);
 const teacher = ref<UserData>(props.laboratoryClass.teacher);
 
 async function saveLaboratoryClass() {
-    if (!currentUser) {
+    if (!props.editable) {
         return;
     }
 
-    const success = await apiPatch<boolean>(props.apiUrl, {
+    const success = await apiPatch<boolean>(apiUrl, {
         id: props.laboratoryClass.id,
         startDate: startDate.value,
         endDate: endDate.value,
@@ -68,6 +72,7 @@ async function saveLaboratoryClass() {
 const minDate = computed(() => `${props.semester.startDate}T00:00`);
 const maxDate = computed(() => `${props.semester.endDate}T23:59`);
 
+const subjectId = crypto.randomUUID();
 const exerciseNameId = crypto.randomUUID();
 const groupNameId = crypto.randomUUID();
 const classroomId = crypto.randomUUID();
@@ -78,6 +83,11 @@ const teacherId = crypto.randomUUID();
 
 <template>
     <form class="vstack gap-3 mx-auto" @submit.prevent="saveLaboratoryClass">
+        <div v-if="subject">
+            <label :for="subjectId" class="form-label">{{ translate('Subject name') }}</label>
+            <input :id="subjectId" type="text" :value="subject.name" readonly class="form-control" />
+        </div>
+
         <div>
             <label :for="exerciseNameId" class="form-label">{{ translate('Exercise name') }}</label>
             <input
@@ -119,7 +129,7 @@ const teacherId = crypto.randomUUID();
                 type="datetime-local"
                 required
                 class="form-control"
-                :readonly="!currentUser"
+                :readonly="!editable"
                 :min="minDate"
                 :max="maxDate"
             />
@@ -133,7 +143,7 @@ const teacherId = crypto.randomUUID();
                 type="datetime-local"
                 required
                 class="form-control"
-                :readonly="!currentUser"
+                :readonly="!editable"
                 :min="minDate"
                 :max="maxDate"
             />
@@ -141,10 +151,10 @@ const teacherId = crypto.randomUUID();
 
         <div>
             <label :for="teacherId" class="form-label">{{ translate('Teacher') }}</label>
-            <UserSelector :id="teacherId" v-model="teacher" required :options="teachers" :disabled="!currentUser" />
+            <UserSelector :id="teacherId" v-model="teacher" required :options="teachers" :disabled="!editable" />
         </div>
 
-        <div v-if="currentUser" class="text-center">
+        <div v-if="editable" class="text-center">
             <button type="submit" class="btn btn-success">
                 {{ translate('Save') }}
             </button>
