@@ -94,6 +94,17 @@ test('Can view class details', async ({ page }) => {
 
     await page.getByRole('gridcell', { name: '11:15 - 13:00' }).click();
     await expect(page.getByRole('heading', { name: 'Class details' })).toBeVisible();
+
+    await expect(page.getByRole('textbox', { name: 'Subject name' })).toHaveValue(
+        'Sieci komputerowe - Informatyka sem. V',
+    );
+
+    await expect(page.getByRole('textbox', { name: 'Exercise name' })).toHaveValue('Diagnostyka sieci IPv4');
+    await expect(page.getByRole('textbox', { name: 'Laboratory group' })).toHaveValue('1A');
+    await expect(page.getByRole('textbox', { name: 'Classroom' })).toHaveValue('EA 142');
+    await expect(page.getByRole('textbox', { name: 'Start date' })).toHaveValue('2025-10-01T11:15');
+    await expect(page.getByRole('textbox', { name: 'End date' })).toHaveValue('2025-10-01T13:00');
+
     await expect(page.getByRole('button', { name: 'Save' })).not.toBeVisible();
 });
 

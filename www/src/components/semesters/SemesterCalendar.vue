@@ -2,6 +2,7 @@
 import { computed, ref, shallowRef, useTemplateRef } from 'vue';
 import type { EventClickArg, EventInput } from '@fullcalendar/core';
 import { langId } from '@components/frontend/lang';
+import { currentUser } from '@components/frontend/user';
 import { useApiFetch } from '@components/api';
 import { getInitialDate, getLaboratoryClassEvents, getScheduleChangeEvents } from '@components/calendar/events';
 import type { ClassroomData } from '@components/classrooms/types';
@@ -20,12 +21,14 @@ const translations = {
         'Subjects': 'Subjects',
         'Classrooms': 'Classrooms',
         'Teachers': 'Teachers',
+        'Edit class': 'Edit class',
         'Class details': 'Class details',
     },
     'pl': {
         'Subjects': 'Przedmioty',
         'Classrooms': 'Sale',
         'Teachers': 'Prowadzący',
+        'Edit class': 'Edytuj zajęcia',
         'Class details': 'Szczegóły zajęć',
     },
 };
@@ -104,7 +107,7 @@ function handleEventClick(arg: EventClickArg) {
             </Calendar>
 
             <Modal ref="classDetailsModal">
-                <template #header>{{ translate('Class details') }}</template>
+                <template #header>{{ currentUser ? translate('Edit class') : translate('Class details') }}</template>
                 <EditLaboratoryClassForm
                     v-if="clickedLaboratoryClass && clickedClassSubject"
                     :laboratory-class="clickedLaboratoryClass"
