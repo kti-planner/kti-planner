@@ -20,7 +20,7 @@ const modalId = crypto.randomUUID();
 </script>
 
 <template>
-    <button type="button" class="btn btn-success" data-bs-toggle="modal" :data-bs-target="`#${modalId}`">
+    <button type="button" class="btn btn-success" data-bs-toggle="modal" :data-bs-target="`#${modalId}`" :="$attrs">
         {{ translate('Add new classroom') }}
     </button>
 

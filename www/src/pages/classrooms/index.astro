@@ -28,24 +28,25 @@ const classrooms = await Classroom.fetchAll();
 ---
 
 <Layout breadcrumbs={[{ text: translate('Classrooms'), href: '#' }]}>
-    <div class="vstack gap-3 align-items-center">
-        <Show when={classrooms.length > 0}>
-            <div class="classrooms-list list-group">
-                {
-                    classrooms.map(
-                        c =>
-                            (
-                                <div class="list-group-item d-flex justify-content-between align-items-center">
-                                    <span>{c.name}</span>
-                                    <EditClassroom client:only="vue" classroom={{ id: c.id, name: c.name }} />
-                                </div>
-                            ) as unknown,
-                    )
-                }
-            </div>
-        </Show>
-        <AddClassroom client:only="vue" />
-    </div>
+    <h1 class="text-center fs-4">
+        {translate('Classrooms')}
+    </h1>
+    <Show when={classrooms.length > 0}>
+        <div class="classrooms-list list-group mx-auto">
+            {
+                classrooms.map(
+                    c =>
+                        (
+                            <div class="list-group-item d-flex justify-content-between align-items-center">
+                                <span>{c.name}</span>
+                                <EditClassroom client:only="vue" classroom={{ id: c.id, name: c.name }} />
+                            </div>
+                        ) as unknown,
+                )
+            }
+        </div>
+    </Show>
+    <AddClassroom client:only="vue" class="d-block mx-auto mt-3" />
 </Layout>
 
 <style>
