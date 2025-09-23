@@ -102,7 +102,8 @@ test('Generating classes that extend beyond semester end results in a warning', 
 
 test('Cannot edit classes when not logged in', async ({ page }) => {
     await page.goto('/semesters/2025-winter/subjects/sieci-komputerowe---informatyka-sem.-v/');
-    await page.getByRole('gridcell', { name: '11:15 - 13:00' }).click();
+
+    await page.locator('.calendar-wrapper a').filter({ hasText: '11:15 - 13:00' }).click();
 
     await expect(page.getByRole('heading', { name: 'Class details' })).toBeVisible();
 
@@ -119,13 +120,13 @@ test('Can edit class time when logged in', async ({ page }) => {
     await page.goto('/semesters/2025-winter/subjects/sieci-komputerowe---informatyka-sem.-v/');
     await loginAsTeacher(page);
 
-    await page.getByRole('gridcell', { name: '11:15 - 13:00' }).click();
+    await page.locator('.calendar-wrapper a').filter({ hasText: '11:15 - 13:00' }).click();
 
     await expect(page.getByRole('heading', { name: 'Edit class' })).toBeVisible();
     await page.getByRole('textbox', { name: 'Start date' }).fill('2025-10-01T13:15');
     await page.getByRole('textbox', { name: 'End date' }).fill('2025-10-01T15:00');
     await page.getByRole('button', { name: 'Save' }).click();
 
-    await expect(page.getByRole('gridcell', { name: '11:15 - 13:00' })).not.toBeVisible();
-    await expect(page.getByRole('gridcell', { name: '13:15 - 15:00' })).toBeVisible();
+    await expect(page.locator('.calendar-wrapper a').filter({ hasText: '11:15 - 13:00' })).not.toBeVisible();
+    await expect(page.locator('.calendar-wrapper a').filter({ hasText: '13:15 - 15:00' })).toBeVisible();
 });
