@@ -116,6 +116,7 @@ const options = computed((): CalendarOptions => {
 
     .fc-event {
         cursor: pointer;
+        overflow: hidden;
     }
 
     .fc-timegrid-event:hover {
