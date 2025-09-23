@@ -67,7 +67,7 @@ function handleEventClick(arg: EventClickArg) {
 </script>
 
 <template>
-    <Calendar class="calendar" :events :initial-date @event-click="handleEventClick">
+    <Calendar :events :initial-date @event-click="handleEventClick">
         <template #eventContent="arg">
             <LaboratoryClassEvent
                 v-if="'laboratoryClass' in arg.event.extendedProps"
