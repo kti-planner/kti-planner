@@ -1,5 +1,5 @@
 import { expect } from 'playwright/test';
-import { loginAsTeacher, test } from 'tests/e2e/fixtures';
+import { expectSelectedOptionText, loginAsTeacher, test } from 'tests/e2e/fixtures';
 
 test('Can access semester calendar', async ({ page }) => {
     await page.goto('/semesters/2025-winter/');
@@ -99,15 +99,15 @@ test('Can view class details', async ({ page }) => {
     await page.locator('.calendar-wrapper a').filter({ hasText: '11:15 - 13:00' }).click();
     await expect(page.getByRole('heading', { name: 'Class details' })).toBeVisible();
 
-    await expect(page.getByRole('textbox', { name: 'Subject name' })).toHaveValue(
-        'Sieci komputerowe - Informatyka sem. V',
-    );
+    await expect(
+        page.locator('.modal').getByRole('link', { name: 'Sieci komputerowe - Informatyka sem. V', exact: true }),
+    ).toBeVisible();
 
-    await expect(page.getByRole('textbox', { name: 'Exercise name' })).toHaveValue('Diagnostyka sieci IPv4');
-    await expect(page.getByRole('textbox', { name: 'Laboratory group' })).toHaveValue('1A');
-    await expect(page.getByRole('textbox', { name: 'Classroom' })).toHaveValue('EA 142');
-    await expect(page.getByRole('textbox', { name: 'Start date' })).toHaveValue('2025-10-01T11:15');
-    await expect(page.getByRole('textbox', { name: 'End date' })).toHaveValue('2025-10-01T13:00');
+    await expect(page.getByRole('link', { name: 'Diagnostyka sieci IPv4', exact: true })).toBeVisible();
+    await expect(page.getByText('Laboratory group: 1A')).toBeVisible();
+    await expect(page.getByText('Classroom: EA 142')).toBeVisible();
+    await expect(page.getByText('Date: 1.10.2025 11:15 - 13:00')).toBeVisible();
+    await expect(page.getByText('Teacher: Jan Kowalski')).toBeVisible();
 
     await expect(page.getByRole('button', { name: 'Save' })).not.toBeVisible();
 });
@@ -119,8 +119,23 @@ test('Can edit class time when logged in', async ({ page }) => {
     await page.locator('.calendar-wrapper a').filter({ hasText: '11:15 - 13:00' }).click();
 
     await expect(page.getByRole('heading', { name: 'Edit class' })).toBeVisible();
-    await page.getByRole('textbox', { name: 'Start date' }).fill('2025-10-01T13:15');
-    await page.getByRole('textbox', { name: 'End date' }).fill('2025-10-01T15:00');
+
+    await expect(
+        page.locator('.modal').getByRole('link', { name: 'Sieci komputerowe - Informatyka sem. V', exact: true }),
+    ).toBeVisible();
+
+    await expect(page.getByRole('link', { name: 'Diagnostyka sieci IPv4', exact: true })).toBeVisible();
+    await expect(page.getByText('Laboratory group: 1A')).toBeVisible();
+    await expect(page.getByText('Classroom: EA 142')).toBeVisible();
+
+    await expect(page.getByRole('textbox', { name: 'Date' })).toHaveValue('2025-10-01');
+    await expect(page.getByRole('textbox', { name: 'Start time' })).toHaveValue('11:15');
+    await expect(page.getByRole('textbox', { name: 'End time' })).toHaveValue('13:00');
+    await expectSelectedOptionText(page.getByRole('combobox', { name: 'Teacher' }), 'Jan Kowalski');
+
+    await page.getByRole('textbox', { name: 'Date' }).fill('2025-10-01');
+    await page.getByRole('textbox', { name: 'Start time' }).fill('13:15');
+    await page.getByRole('textbox', { name: 'End time' }).fill('15:00');
     await page.getByRole('button', { name: 'Save' }).click();
 
     await expect(page.locator('.calendar-wrapper a').filter({ hasText: '11:15 - 13:00' })).not.toBeVisible();

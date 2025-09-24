@@ -115,6 +115,7 @@ function handleEventClick(arg: EventClickArg) {
                     :api-url="`/semesters/${semester.slug}/subjects/${clickedClassSubject.slug}/api/laboratory-classes/`"
                     :teachers
                     :semester
+                    show-subject
                 />
             </Modal>
         </div>

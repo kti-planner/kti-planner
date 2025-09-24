@@ -8,6 +8,7 @@ import { getInitialDate, getLaboratoryClassEvents, getScheduleChangeEvents } fro
 import type { LaboratoryClassData } from '@components/laboratory-classes/types';
 import type { LaboratoryGroupData } from '@components/laboratory-groups/types';
 import type { ScheduleChangeData, SemesterData } from '@components/semesters/types';
+import type { SubjectData } from '@components/subjects/types';
 import type { UserData } from '@components/users/types';
 import Calendar from '@components/Calendar.vue';
 import EditLaboratoryClassForm from '@components/laboratory-classes/EditLaboratoryClassForm.vue';
@@ -19,6 +20,7 @@ const { apiUrl, selectedLaboratoryGroups, scheduleChanges } = defineProps<{
     selectedLaboratoryGroups: LaboratoryGroupData[];
     scheduleChanges: ScheduleChangeData[];
     semester: SemesterData;
+    subject: SubjectData;
     teachers: UserData[];
 }>();
 
@@ -85,6 +87,7 @@ function handleEventClick(arg: EventClickArg) {
             :teachers
             :api-url
             :semester
+            :subject
         />
     </Modal>
 </template>
