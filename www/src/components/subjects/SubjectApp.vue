@@ -113,6 +113,9 @@ const laboratoryGroupOptions = computed(() => Object.fromEntries(laboratoryGroup
             </div>
         </div>
     </div>
+    <ul>
+        <li v-for="teacher in subject.teachers" :key="teacher.id">{{ teacher.name }} &lt;{{ teacher.email }}&gt;</li>
+    </ul>
 </template>
 
 <style scoped lang="scss">
