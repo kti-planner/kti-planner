@@ -19,10 +19,12 @@ const translations = {
     'en': {
         'Laboratory groups': 'Laboratory groups',
         'Exercises': 'Exercises',
+        'Teachers': 'Teachers',
     },
     'pl': {
         'Laboratory groups': 'Grupy laboratoryjne',
         'Exercises': 'Ćwiczenia',
+        'Teachers': 'Prowadzący',
     },
 };
 
@@ -113,6 +115,9 @@ const laboratoryGroupOptions = computed(() => Object.fromEntries(laboratoryGroup
             </div>
         </div>
     </div>
+    <h2 class="fs-5">
+        {{ translate('Teachers') }}
+    </h2>
     <ul>
         <li v-for="teacher in subject.teachers" :key="teacher.id">{{ teacher.name }} &lt;{{ teacher.email }}&gt;</li>
     </ul>
