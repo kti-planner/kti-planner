@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
-import type { EventInput } from '@fullcalendar/core';
+import { computed, ref, shallowRef, useTemplateRef } from 'vue';
+import type { EventClickArg, EventInput } from '@fullcalendar/core';
 import { langId } from '@components/frontend/lang';
+import { currentUser } from '@components/frontend/user';
 import { useApiFetch } from '@components/api';
 import { getInitialDate, getLaboratoryClassEvents, getScheduleChangeEvents } from '@components/calendar/events';
 import type { ClassroomData } from '@components/classrooms/types';
@@ -10,7 +11,9 @@ import type { ScheduleChangeData, SemesterData } from '@components/semesters/typ
 import type { SubjectData } from '@components/subjects/types';
 import type { UserData } from '@components/users/types';
 import Calendar from '@components/Calendar.vue';
+import EditLaboratoryClassForm from '@components/laboratory-classes/EditLaboratoryClassForm.vue';
 import LaboratoryClassEvent from '@components/laboratory-classes/LaboratoryClassEvent.vue';
+import Modal from '@components/Modal.vue';
 import ToggleButtonPicker from '@components/ToggleButtonPicker.vue';
 
 const translations = {
@@ -18,11 +21,15 @@ const translations = {
         'Subjects': 'Subjects',
         'Classrooms': 'Classrooms',
         'Teachers': 'Teachers',
+        'Edit class': 'Edit class',
+        'Class details': 'Class details',
     },
     'pl': {
         'Subjects': 'Przedmioty',
         'Classrooms': 'Sale',
         'Teachers': 'Prowadzący',
+        'Edit class': 'Edytuj zajęcia',
+        'Class details': 'Szczegóły zajęć',
     },
 };
 
@@ -67,12 +74,26 @@ const initialDate = computed(() => getInitialDate(laboratoryClasses.value ?? [])
 const subjectOptions = computed(() => Object.fromEntries(subjects.map(subject => [subject.name, subject])));
 const classroomOptions = computed(() => Object.fromEntries(classrooms.map(classroom => [classroom.name, classroom])));
 const teacherOptions = computed(() => Object.fromEntries(teachers.value.map(teacher => [teacher.name, teacher])));
+
+const classDetailsModal = useTemplateRef('classDetailsModal');
+const clickedLaboratoryClass = shallowRef<LaboratoryClassData | null>(null);
+const clickedClassSubject = shallowRef<SubjectData | null>(null);
+
+function handleEventClick(arg: EventClickArg) {
+    if (!('laboratoryClass' in arg.event.extendedProps)) {
+        return;
+    }
+
+    clickedLaboratoryClass.value = arg.event.extendedProps.laboratoryClass;
+    clickedClassSubject.value = subjects.find(s => s.id === clickedLaboratoryClass.value!.exercise.subjectId) ?? null;
+    classDetailsModal.value?.show();
+}
 </script>
 
 <template>
     <div class="row g-4">
         <div class="col-12 col-lg-9 mb-2 order-2 order-lg-1">
-            <Calendar :events :initial-date>
+            <Calendar :events :initial-date @event-click="handleEventClick">
                 <template #eventContent="arg">
                     <LaboratoryClassEvent
                         v-if="'laboratoryClass' in arg.event.extendedProps"
@@ -84,6 +105,19 @@ const teacherOptions = computed(() => Object.fromEntries(teachers.value.map(teac
                     />
                 </template>
             </Calendar>
+
+            <Modal ref="classDetailsModal">
+                <template #header>{{ currentUser ? translate('Edit class') : translate('Class details') }}</template>
+                <EditLaboratoryClassForm
+                    v-if="clickedLaboratoryClass && clickedClassSubject"
+                    :laboratory-class="clickedLaboratoryClass"
+                    :subject="clickedClassSubject"
+                    :api-url="`/semesters/${semester.slug}/subjects/${clickedClassSubject.slug}/api/laboratory-classes/`"
+                    :teachers
+                    :semester
+                    show-subject
+                />
+            </Modal>
         </div>
         <div class="col-12 col-lg-3 order-1 order-lg-2 d-flex gap-3 flex-column-reverse flex-lg-column">
             <div>

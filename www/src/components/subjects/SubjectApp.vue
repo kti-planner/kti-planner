@@ -60,6 +60,9 @@ const laboratoryGroupOptions = computed(() => Object.fromEntries(laboratoryGroup
                 :api-url="`${subjectUrl}/api/laboratory-classes/`"
                 :selected-laboratory-groups
                 :schedule-changes
+                :semester
+                :subject
+                :teachers="subject.teachers"
             />
         </div>
         <div class="col-12 col-lg-3 order-1 order-lg-2 d-flex gap-4 flex-column-reverse flex-lg-column">
