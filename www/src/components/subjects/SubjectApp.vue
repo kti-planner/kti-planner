@@ -19,10 +19,12 @@ const translations = {
     'en': {
         'Laboratory groups': 'Laboratory groups',
         'Exercises': 'Exercises',
+        'Teachers': 'Teachers',
     },
     'pl': {
         'Laboratory groups': 'Grupy laboratoryjne',
         'Exercises': 'Ćwiczenia',
+        'Teachers': 'Prowadzący',
     },
 };
 
@@ -110,6 +112,16 @@ const laboratoryGroupOptions = computed(() => Object.fromEntries(laboratoryGroup
                     :next-exercise-number
                     class="d-block mx-auto mt-3"
                 />
+            </div>
+            <div>
+                <h2 class="text-center fs-5">
+                    {{ translate('Teachers') }}
+                </h2>
+                <ul>
+                    <li v-for="teacher in subject.teachers" :key="teacher.id">
+                        {{ teacher.name }} &lt;{{ teacher.email }}&gt;
+                    </li>
+                </ul>
             </div>
         </div>
     </div>
