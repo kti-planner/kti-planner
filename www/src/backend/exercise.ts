@@ -12,6 +12,7 @@ interface DbExercise {
     exercise_number: number;
     classroom_id: string;
     teacher_id: string;
+    url: string;
 }
 
 export interface ExerciseCreateData {
@@ -20,6 +21,7 @@ export interface ExerciseCreateData {
     exerciseNumber: number;
     classroom: Classroom;
     teacher: User;
+    url: string;
 }
 
 export interface ExerciseEditData {
@@ -27,6 +29,7 @@ export interface ExerciseEditData {
     exerciseNumber?: number | undefined;
     classroom?: Classroom | undefined;
     teacher?: User | undefined;
+    url?: string | undefined;
 }
 
 export class Exercise {
@@ -36,6 +39,7 @@ export class Exercise {
     exerciseNumber: number;
     classroomId: string;
     teacherId: string;
+    url: string;
 
     constructor(data: DbExercise) {
         this.id = data.id;
@@ -44,6 +48,7 @@ export class Exercise {
         this.exerciseNumber = data.exercise_number;
         this.classroomId = data.classroom_id;
         this.teacherId = data.teacher_id;
+        this.url = data.url;
     }
 
     async getTeacher(): Promise<User> {
@@ -151,5 +156,6 @@ export function makeExerciseData(exercise: Exercise, classroom: Classroom, teach
         exerciseNumber: exercise.exerciseNumber,
         classroom: makeClassroomData(classroom),
         teacher: makeUserData(teacher),
+        url: exercise.url,
     };
 }

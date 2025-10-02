@@ -24,6 +24,7 @@ const exerciseName = ref<string | undefined>(props.exercise?.name);
 const exerciseNumber = ref<number | undefined>(props.exercise?.exerciseNumber);
 const exerciseClassroomId = ref<string | undefined>(props.exercise?.classroom?.id);
 const teacher = ref<UserData | null>(props.exercise?.teacher ?? props.subject.teachers[0] ?? null);
+const url = ref<string>(props.exercise?.url ?? '');
 
 async function submit() {
     if (
@@ -43,6 +44,7 @@ async function submit() {
                   subjectId: props.subject.id,
                   classroomId: exerciseClassroomId.value,
                   teacherId: teacher.value?.id,
+                  url: url.value,
               } satisfies ExerciseCreateApiData)
             : await apiPatch<boolean>('/semesters/api/exercises/', {
                   id: props.exercise.id,
@@ -50,6 +52,7 @@ async function submit() {
                   exerciseNumber: exerciseNumber.value,
                   classroomId: exerciseClassroomId.value,
                   teacherId: teacher.value?.id,
+                  url: url.value,
               } satisfies ExerciseEditApiData);
 
     if (success === undefined) {
@@ -59,14 +62,7 @@ async function submit() {
     submitFailed.value = !success;
 
     if (success) {
-        const newUrl = `/semesters/${props.semester.slug}/subjects/${props.subject.slug}/${exerciseNumber.value}/`;
-
-        if (isEditing.value) {
-            window.history.replaceState({}, '', newUrl);
-            window.location.reload();
-        } else {
-            window.location.assign(newUrl);
-        }
+        window.location.reload();
     }
 }
 
@@ -80,6 +76,7 @@ const translations = {
         'Add': 'Add',
         'Exercise with this name or number already exists.': 'Exercise with this name or number already exists.',
         'Manage classrooms': 'Manage classrooms',
+        'Exercise url': 'Exercise url',
     },
     'pl': {
         'Exercise number': 'Numer ćwiczenia',
@@ -90,6 +87,7 @@ const translations = {
         'Add': 'Dodaj',
         'Exercise with this name or number already exists.': 'Ćwiczenie o podanej nazwie lub numerze już isnieje.',
         'Manage classrooms': 'Zarządzaj salami',
+        'Exercise url': 'Link do ćwiczenia',
     },
 };
 
@@ -101,6 +99,7 @@ const numberId = crypto.randomUUID();
 const nameId = crypto.randomUUID();
 const teacherId = crypto.randomUUID();
 const classroomId = crypto.randomUUID();
+const urlId = crypto.randomUUID();
 </script>
 
 <template>
@@ -113,6 +112,11 @@ const classroomId = crypto.randomUUID();
         <div>
             <label :for="nameId" class="form-label">{{ translate('Exercise name') }}</label>
             <input :id="nameId" v-model="exerciseName" type="text" class="form-control" required autofocus />
+        </div>
+
+        <div>
+            <label :for="urlId" class="form-label">{{ translate('Exercise url') }}</label>
+            <input :id="urlId" v-model="url" type="text" class="form-control" />
         </div>
 
         <div>

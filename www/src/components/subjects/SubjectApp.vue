@@ -9,6 +9,7 @@ import type { ScheduleChangeData, SemesterData } from '@components/semesters/typ
 import type { SubjectData } from '@components/subjects/types';
 import type { UserData } from '@components/users/types';
 import AddExercise from '@components/exercises/AddExercise.vue';
+import EditExercise from '@components/exercises/EditExercise.vue';
 import GenerateClasses from '@components/laboratory-classes/GenerateClasses.vue';
 import LaboratoryGroupListModal from '@components/laboratory-groups/LaboratoryGroupListModal.vue';
 import EditSubject from '@components/subjects/EditSubject.vue';
@@ -98,10 +99,11 @@ const laboratoryGroupOptions = computed(() => Object.fromEntries(laboratoryGroup
                     <a
                         v-for="exercise in exercises"
                         :key="exercise.id"
-                        :href="`${subjectUrl}/${exercise.exerciseNumber}/`"
-                        class="list-group-item list-group-item-action"
+                        :href="exercise.url"
+                        class="list-group-item d-flex justify-content-between align-items-center list-group-item-action"
                     >
-                        {{ `${exercise.exerciseNumber}. ${exercise.name}` }}
+                        <span>{{ `${exercise.exerciseNumber}. ${exercise.name}` }}</span>
+                        <EditExercise :semester :subject :exercise :classrooms />
                     </a>
                 </div>
                 <AddExercise
