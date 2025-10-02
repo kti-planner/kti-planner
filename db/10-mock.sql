@@ -108,47 +108,47 @@ VALUES
   ( '981c68ba-3f6a-459e-83af-f9fc578adc85', 'Sieci komputerowe - Informatyka sem. V', 'b2805b48-3d24-4169-8f67-88561345ee99', '{c393c524-453c-4b02-bfad-5114fe828200}' ),
   ( '9068cb5a-fe4b-4b93-af91-7050e61eceeb', 'Wstęp do sieci komputerowych - Automatyka i Robotyka, Inżynieria biomedyczna sem. V', 'b2805b48-3d24-4169-8f67-88561345ee99', '{c393c524-453c-4b02-bfad-5114fe828200,feeaa186-3d69-4801-a580-88be10d53553}' );
 
-INSERT INTO exercises (id, name, subject_id, exercise_number, classroom_id, teacher_id)
+INSERT INTO exercises (id, name, subject_id, exercise_number, classroom_id, teacher_id, moodle_url)
 VALUES
   -- Lokalne sieci bezprzewodowe 2024
-  ( 'c3a882b8-d058-4f5e-9ea6-920856776679', 'Tryby pracy punktów dostępowych', '25108321-0391-4c7a-b4d8-5ea20388e813', 1, '8689d55d-508e-4f5d-aef8-d5052f220d20', 'c393c524-453c-4b02-bfad-5114fe828200' ),
-  ( '41a2590d-0b40-41df-87be-80251594218a', 'Wydajność sieci standardów IEEE 802.11', '25108321-0391-4c7a-b4d8-5ea20388e813', 2, '2affdc99-7dd6-47f0-b26c-3c413bf063dd', 'feeaa186-3d69-4801-a580-88be10d53553' ),
-  ( 'fef8b9d5-4a4f-4546-abc0-e9fc48b4661a', 'Podstawowe mechanizmy zabezpieczeń sieci standardu 802.11', '25108321-0391-4c7a-b4d8-5ea20388e813', 3, '2affdc99-7dd6-47f0-b26c-3c413bf063dd', 'feeaa186-3d69-4801-a580-88be10d53553' ),
-  ( '6dd4c88b-89bd-4c3e-94e0-04750096bf86', 'Podstawowe mechanizmy zabezpieczeń sieci standardu 802.11 cz. II', '25108321-0391-4c7a-b4d8-5ea20388e813', 4, '2affdc99-7dd6-47f0-b26c-3c413bf063dd', 'feeaa186-3d69-4801-a580-88be10d53553' ),
-  ( 'f4ef08bf-f778-4ef7-9bf4-875eb77a12a7', 'Emulacja sieci bezprzewodowych', '25108321-0391-4c7a-b4d8-5ea20388e813', 5, '2affdc99-7dd6-47f0-b26c-3c413bf063dd', 'c393c524-453c-4b02-bfad-5114fe828200' ),
-  ( 'e4ffb869-8d1d-4396-89b5-f427af451e50', 'Radius', '25108321-0391-4c7a-b4d8-5ea20388e813', 6, '2affdc99-7dd6-47f0-b26c-3c413bf063dd', 'c393c524-453c-4b02-bfad-5114fe828200' ),
+  ( 'c3a882b8-d058-4f5e-9ea6-920856776679', 'Tryby pracy punktów dostępowych', '25108321-0391-4c7a-b4d8-5ea20388e813', 1, '8689d55d-508e-4f5d-aef8-d5052f220d20', 'c393c524-453c-4b02-bfad-5114fe828200', '' ),
+  ( '41a2590d-0b40-41df-87be-80251594218a', 'Wydajność sieci standardów IEEE 802.11', '25108321-0391-4c7a-b4d8-5ea20388e813', 2, '2affdc99-7dd6-47f0-b26c-3c413bf063dd', 'feeaa186-3d69-4801-a580-88be10d53553', '' ),
+  ( 'fef8b9d5-4a4f-4546-abc0-e9fc48b4661a', 'Podstawowe mechanizmy zabezpieczeń sieci standardu 802.11', '25108321-0391-4c7a-b4d8-5ea20388e813', 3, '2affdc99-7dd6-47f0-b26c-3c413bf063dd', 'feeaa186-3d69-4801-a580-88be10d53553', '' ),
+  ( '6dd4c88b-89bd-4c3e-94e0-04750096bf86', 'Podstawowe mechanizmy zabezpieczeń sieci standardu 802.11 cz. II', '25108321-0391-4c7a-b4d8-5ea20388e813', 4, '2affdc99-7dd6-47f0-b26c-3c413bf063dd', 'feeaa186-3d69-4801-a580-88be10d53553', '' ),
+  ( 'f4ef08bf-f778-4ef7-9bf4-875eb77a12a7', 'Emulacja sieci bezprzewodowych', '25108321-0391-4c7a-b4d8-5ea20388e813', 5, '2affdc99-7dd6-47f0-b26c-3c413bf063dd', 'c393c524-453c-4b02-bfad-5114fe828200', '' ),
+  ( 'e4ffb869-8d1d-4396-89b5-f427af451e50', 'Radius', '25108321-0391-4c7a-b4d8-5ea20388e813', 6, '2affdc99-7dd6-47f0-b26c-3c413bf063dd', 'c393c524-453c-4b02-bfad-5114fe828200', '' ),
 
   -- Lokalne sieci bezprzewodowe 2023
-  ( 'fb2180ac-a9c1-46e6-952e-5be2a54b1346', 'Tryby pracy punktów dostępowych', '60bd04c7-b83c-4b4d-8668-7bad4ea0a800', 1, '8689d55d-508e-4f5d-aef8-d5052f220d20', 'c393c524-453c-4b02-bfad-5114fe828200' ),
-  ( '8347ccd3-5d36-40ff-8a21-4e7d49f52455', 'Wydajność sieci standardów IEEE 802.11', '60bd04c7-b83c-4b4d-8668-7bad4ea0a800', 2, '2affdc99-7dd6-47f0-b26c-3c413bf063dd', 'feeaa186-3d69-4801-a580-88be10d53553' ),
-  ( '724ee79c-47e6-40d0-97fa-1a2b03085c95', 'Podstawowe mechanizmy zabezpieczeń sieci standardu 802.11', '60bd04c7-b83c-4b4d-8668-7bad4ea0a800', 3, '2affdc99-7dd6-47f0-b26c-3c413bf063dd', 'feeaa186-3d69-4801-a580-88be10d53553' ),
-  ( '3a330675-94a8-44f8-8806-456cc3f4a0b7', 'Emulacja sieci bezprzewodowych', '60bd04c7-b83c-4b4d-8668-7bad4ea0a800', 4, '2affdc99-7dd6-47f0-b26c-3c413bf063dd', 'feeaa186-3d69-4801-a580-88be10d53553' ),
+  ( 'fb2180ac-a9c1-46e6-952e-5be2a54b1346', 'Tryby pracy punktów dostępowych', '60bd04c7-b83c-4b4d-8668-7bad4ea0a800', 1, '8689d55d-508e-4f5d-aef8-d5052f220d20', 'c393c524-453c-4b02-bfad-5114fe828200', '' ),
+  ( '8347ccd3-5d36-40ff-8a21-4e7d49f52455', 'Wydajność sieci standardów IEEE 802.11', '60bd04c7-b83c-4b4d-8668-7bad4ea0a800', 2, '2affdc99-7dd6-47f0-b26c-3c413bf063dd', 'feeaa186-3d69-4801-a580-88be10d53553', '' ),
+  ( '724ee79c-47e6-40d0-97fa-1a2b03085c95', 'Podstawowe mechanizmy zabezpieczeń sieci standardu 802.11', '60bd04c7-b83c-4b4d-8668-7bad4ea0a800', 3, '2affdc99-7dd6-47f0-b26c-3c413bf063dd', 'feeaa186-3d69-4801-a580-88be10d53553', '' ),
+  ( '3a330675-94a8-44f8-8806-456cc3f4a0b7', 'Emulacja sieci bezprzewodowych', '60bd04c7-b83c-4b4d-8668-7bad4ea0a800', 4, '2affdc99-7dd6-47f0-b26c-3c413bf063dd', 'feeaa186-3d69-4801-a580-88be10d53553', '' ),
 
   -- Zarządzanie bezpieczeństwem sieci 2024
-  ( 'f2cde405-c91f-417e-be0c-34217ed694e2', 'VLAN 2', '3f58b671-5b38-43f8-bf0f-49d93048c52e', 1, '8689d55d-508e-4f5d-aef8-d5052f220d20', 'feeaa186-3d69-4801-a580-88be10d53553' ),
-  ( '24adefb8-c2a4-4320-b64d-d9b9d2d59656', 'Firewall', '3f58b671-5b38-43f8-bf0f-49d93048c52e', 2, '8689d55d-508e-4f5d-aef8-d5052f220d20', 'c393c524-453c-4b02-bfad-5114fe828200' ),
-  ( '686b3992-b468-42b5-bf78-c6247d96e910', 'Skanowanie sieci', '3f58b671-5b38-43f8-bf0f-49d93048c52e', 3, '8689d55d-508e-4f5d-aef8-d5052f220d20', 'c393c524-453c-4b02-bfad-5114fe828200' ),
-  ( '89a84652-0f57-4955-b320-eb04fe31bf51', 'Tunele IPv6 i IPSec', '3f58b671-5b38-43f8-bf0f-49d93048c52e', 4, '556e5246-040e-4ad9-8cf8-5b30c34c76bd', 'feeaa186-3d69-4801-a580-88be10d53553' ),
+  ( 'f2cde405-c91f-417e-be0c-34217ed694e2', 'VLAN 2', '3f58b671-5b38-43f8-bf0f-49d93048c52e', 1, '8689d55d-508e-4f5d-aef8-d5052f220d20', 'feeaa186-3d69-4801-a580-88be10d53553', '' ),
+  ( '24adefb8-c2a4-4320-b64d-d9b9d2d59656', 'Firewall', '3f58b671-5b38-43f8-bf0f-49d93048c52e', 2, '8689d55d-508e-4f5d-aef8-d5052f220d20', 'c393c524-453c-4b02-bfad-5114fe828200', '' ),
+  ( '686b3992-b468-42b5-bf78-c6247d96e910', 'Skanowanie sieci', '3f58b671-5b38-43f8-bf0f-49d93048c52e', 3, '8689d55d-508e-4f5d-aef8-d5052f220d20', 'c393c524-453c-4b02-bfad-5114fe828200', '' ),
+  ( '89a84652-0f57-4955-b320-eb04fe31bf51', 'Tunele IPv6 i IPSec', '3f58b671-5b38-43f8-bf0f-49d93048c52e', 4, '556e5246-040e-4ad9-8cf8-5b30c34c76bd', 'feeaa186-3d69-4801-a580-88be10d53553', '' ),
 
   -- Sieci komputerowe 2024
-  ( 'ca7b29d6-3920-4566-8836-6045f6191b54', 'Diagnostyka sieci IPv4', 'cfaa8255-992f-405e-9064-dd8baf9dfde3', 1, '2affdc99-7dd6-47f0-b26c-3c413bf063dd', 'c393c524-453c-4b02-bfad-5114fe828200' ),
-  ( 'd9ca226b-16c8-40db-8997-84c3b171d41d', 'Zarządzanie sprzętem sieciowym', 'cfaa8255-992f-405e-9064-dd8baf9dfde3', 2, '2affdc99-7dd6-47f0-b26c-3c413bf063dd', 'c393c524-453c-4b02-bfad-5114fe828200' ),
-  ( 'eda8f76f-414a-4abb-b2f1-7a97b49cbe53', 'IPv6', 'cfaa8255-992f-405e-9064-dd8baf9dfde3', 3, '2affdc99-7dd6-47f0-b26c-3c413bf063dd', 'c393c524-453c-4b02-bfad-5114fe828200' ),
-  ( 'da10e215-beb9-41f6-9895-0a6b83ab9a79', 'IPv6 cz. II', 'cfaa8255-992f-405e-9064-dd8baf9dfde3', 4, '2affdc99-7dd6-47f0-b26c-3c413bf063dd', 'c393c524-453c-4b02-bfad-5114fe828200' ),
+  ( 'ca7b29d6-3920-4566-8836-6045f6191b54', 'Diagnostyka sieci IPv4', 'cfaa8255-992f-405e-9064-dd8baf9dfde3', 1, '2affdc99-7dd6-47f0-b26c-3c413bf063dd', 'c393c524-453c-4b02-bfad-5114fe828200', '' ),
+  ( 'd9ca226b-16c8-40db-8997-84c3b171d41d', 'Zarządzanie sprzętem sieciowym', 'cfaa8255-992f-405e-9064-dd8baf9dfde3', 2, '2affdc99-7dd6-47f0-b26c-3c413bf063dd', 'c393c524-453c-4b02-bfad-5114fe828200', '' ),
+  ( 'eda8f76f-414a-4abb-b2f1-7a97b49cbe53', 'IPv6', 'cfaa8255-992f-405e-9064-dd8baf9dfde3', 3, '2affdc99-7dd6-47f0-b26c-3c413bf063dd', 'c393c524-453c-4b02-bfad-5114fe828200', '' ),
+  ( 'da10e215-beb9-41f6-9895-0a6b83ab9a79', 'IPv6 cz. II', 'cfaa8255-992f-405e-9064-dd8baf9dfde3', 4, '2affdc99-7dd6-47f0-b26c-3c413bf063dd', 'c393c524-453c-4b02-bfad-5114fe828200', '' ),
 
   -- Sieci komputerowe 2025
-  ( '79d83df1-1fc1-4cc5-afe6-6cc9e0387221', 'Diagnostyka sieci IPv4', '981c68ba-3f6a-459e-83af-f9fc578adc85', 1, '2affdc99-7dd6-47f0-b26c-3c413bf063dd', 'c393c524-453c-4b02-bfad-5114fe828200' ),
-  ( '2a31cf55-f926-42e2-a985-50849bafe939', 'Zarządzanie sprzętem sieciowym', '981c68ba-3f6a-459e-83af-f9fc578adc85', 2, '2affdc99-7dd6-47f0-b26c-3c413bf063dd', 'c393c524-453c-4b02-bfad-5114fe828200' ),
-  ( 'a263264d-1d2d-42de-939e-ee9553961b17', 'IPv6', '981c68ba-3f6a-459e-83af-f9fc578adc85', 3, '8689d55d-508e-4f5d-aef8-d5052f220d20', 'c393c524-453c-4b02-bfad-5114fe828200' ),
-  ( '805124e6-2595-4fe6-ad91-93f2a6c5762e', 'IPv6 cz. II', '981c68ba-3f6a-459e-83af-f9fc578adc85', 4, '8689d55d-508e-4f5d-aef8-d5052f220d20', 'c393c524-453c-4b02-bfad-5114fe828200' ),
+  ( '79d83df1-1fc1-4cc5-afe6-6cc9e0387221', 'Diagnostyka sieci IPv4', '981c68ba-3f6a-459e-83af-f9fc578adc85', 1, '2affdc99-7dd6-47f0-b26c-3c413bf063dd', 'c393c524-453c-4b02-bfad-5114fe828200', '' ),
+  ( '2a31cf55-f926-42e2-a985-50849bafe939', 'Zarządzanie sprzętem sieciowym', '981c68ba-3f6a-459e-83af-f9fc578adc85', 2, '2affdc99-7dd6-47f0-b26c-3c413bf063dd', 'c393c524-453c-4b02-bfad-5114fe828200', '' ),
+  ( 'a263264d-1d2d-42de-939e-ee9553961b17', 'IPv6', '981c68ba-3f6a-459e-83af-f9fc578adc85', 3, '8689d55d-508e-4f5d-aef8-d5052f220d20', 'c393c524-453c-4b02-bfad-5114fe828200', '' ),
+  ( '805124e6-2595-4fe6-ad91-93f2a6c5762e', 'IPv6 cz. II', '981c68ba-3f6a-459e-83af-f9fc578adc85', 4, '8689d55d-508e-4f5d-aef8-d5052f220d20', 'c393c524-453c-4b02-bfad-5114fe828200', '' ),
 
   -- Wstęp do sieci komputerowych 2025
-  ( '042c7d5c-ba9c-4a01-bbd8-79e743829f4d', 'Diagnostyka sieci IPv4', '9068cb5a-fe4b-4b93-af91-7050e61eceeb', 1, '8689d55d-508e-4f5d-aef8-d5052f220d20', 'feeaa186-3d69-4801-a580-88be10d53553' ),
-  ( 'ab126bb5-d52a-4ec7-b199-ab1d73177c80', 'Zarządzanie sprzętem sieciowym', '9068cb5a-fe4b-4b93-af91-7050e61eceeb', 2, '2affdc99-7dd6-47f0-b26c-3c413bf063dd', 'feeaa186-3d69-4801-a580-88be10d53553' ),
-  ( 'ccef8e62-4de9-4aa3-8a75-70276aab7ee4', 'Routing Statyczny', '9068cb5a-fe4b-4b93-af91-7050e61eceeb', 3, '2affdc99-7dd6-47f0-b26c-3c413bf063dd', 'feeaa186-3d69-4801-a580-88be10d53553' ),
-  ( '8b3ddf60-a307-46fe-a53a-c79f44161946', 'WiFi Sieci bezprzewodowe standardu 802.11', '9068cb5a-fe4b-4b93-af91-7050e61eceeb', 4, '2affdc99-7dd6-47f0-b26c-3c413bf063dd', 'c393c524-453c-4b02-bfad-5114fe828200' ),
-  ( 'fc48900f-fd81-45a6-8878-5044076c0c06', 'Wirtualne sieci lokalne (VLAN)', '9068cb5a-fe4b-4b93-af91-7050e61eceeb', 5, '2affdc99-7dd6-47f0-b26c-3c413bf063dd', 'c393c524-453c-4b02-bfad-5114fe828200' ),
-  ( '019e221d-85fe-4d00-afbc-c81b609ad252', 'Bezpieczeństwo sieci standardów 802.11', '9068cb5a-fe4b-4b93-af91-7050e61eceeb', 6, '2affdc99-7dd6-47f0-b26c-3c413bf063dd', 'c393c524-453c-4b02-bfad-5114fe828200' );
+  ( '042c7d5c-ba9c-4a01-bbd8-79e743829f4d', 'Diagnostyka sieci IPv4', '9068cb5a-fe4b-4b93-af91-7050e61eceeb', 1, '8689d55d-508e-4f5d-aef8-d5052f220d20', 'feeaa186-3d69-4801-a580-88be10d53553', '' ),
+  ( 'ab126bb5-d52a-4ec7-b199-ab1d73177c80', 'Zarządzanie sprzętem sieciowym', '9068cb5a-fe4b-4b93-af91-7050e61eceeb', 2, '2affdc99-7dd6-47f0-b26c-3c413bf063dd', 'feeaa186-3d69-4801-a580-88be10d53553', '' ),
+  ( 'ccef8e62-4de9-4aa3-8a75-70276aab7ee4', 'Routing Statyczny', '9068cb5a-fe4b-4b93-af91-7050e61eceeb', 3, '2affdc99-7dd6-47f0-b26c-3c413bf063dd', 'feeaa186-3d69-4801-a580-88be10d53553', '' ),
+  ( '8b3ddf60-a307-46fe-a53a-c79f44161946', 'WiFi Sieci bezprzewodowe standardu 802.11', '9068cb5a-fe4b-4b93-af91-7050e61eceeb', 4, '2affdc99-7dd6-47f0-b26c-3c413bf063dd', 'c393c524-453c-4b02-bfad-5114fe828200', '' ),
+  ( 'fc48900f-fd81-45a6-8878-5044076c0c06', 'Wirtualne sieci lokalne (VLAN)', '9068cb5a-fe4b-4b93-af91-7050e61eceeb', 5, '2affdc99-7dd6-47f0-b26c-3c413bf063dd', 'c393c524-453c-4b02-bfad-5114fe828200', '' ),
+  ( '019e221d-85fe-4d00-afbc-c81b609ad252', 'Bezpieczeństwo sieci standardów 802.11', '9068cb5a-fe4b-4b93-af91-7050e61eceeb', 6, '2affdc99-7dd6-47f0-b26c-3c413bf063dd', 'c393c524-453c-4b02-bfad-5114fe828200', '' );
 
 INSERT INTO laboratory_groups (id, name, subject_id)
 VALUES

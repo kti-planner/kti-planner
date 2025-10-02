@@ -45,6 +45,7 @@ CREATE TABLE exercises (
     exercise_number integer NOT NULL,
     classroom_id    uuid REFERENCES classrooms NOT NULL,
     teacher_id      uuid REFERENCES users NOT NULL,
+    moodle_url      text NOT NULL,
     UNIQUE (subject_id, exercise_number)
 );
 

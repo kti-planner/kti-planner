@@ -24,6 +24,7 @@ const exerciseName = ref<string | undefined>(props.exercise?.name);
 const exerciseNumber = ref<number | undefined>(props.exercise?.exerciseNumber);
 const exerciseClassroomId = ref<string | undefined>(props.exercise?.classroom?.id);
 const teacher = ref<UserData | null>(props.exercise?.teacher ?? props.subject.teachers[0] ?? null);
+const moodleUrl = ref<string>(props.exercise?.moodleUrl ?? '');
 
 async function submit() {
     if (
@@ -43,6 +44,7 @@ async function submit() {
                   subjectId: props.subject.id,
                   classroomId: exerciseClassroomId.value,
                   teacherId: teacher.value?.id,
+                  moodleUrl: moodleUrl.value,
               } satisfies ExerciseCreateApiData)
             : await apiPatch<boolean>('/semesters/api/exercises/', {
                   id: props.exercise.id,
@@ -50,6 +52,7 @@ async function submit() {
                   exerciseNumber: exerciseNumber.value,
                   classroomId: exerciseClassroomId.value,
                   teacherId: teacher.value?.id,
+                  moodleUrl: moodleUrl.value,
               } satisfies ExerciseEditApiData);
 
     if (success === undefined) {
@@ -80,6 +83,7 @@ const translations = {
         'Add': 'Add',
         'Exercise with this name or number already exists.': 'Exercise with this name or number already exists.',
         'Manage classrooms': 'Manage classrooms',
+        'eNauczanie link': 'eNauczanie link',
     },
     'pl': {
         'Exercise number': 'Numer ćwiczenia',
@@ -90,6 +94,7 @@ const translations = {
         'Add': 'Dodaj',
         'Exercise with this name or number already exists.': 'Ćwiczenie o podanej nazwie lub numerze już isnieje.',
         'Manage classrooms': 'Zarządzaj salami',
+        'eNauczanie link': 'Link do eNauczania',
     },
 };
 
@@ -101,6 +106,7 @@ const numberId = crypto.randomUUID();
 const nameId = crypto.randomUUID();
 const teacherId = crypto.randomUUID();
 const classroomId = crypto.randomUUID();
+const moodleUrlId = crypto.randomUUID();
 </script>
 
 <template>
@@ -113,6 +119,11 @@ const classroomId = crypto.randomUUID();
         <div>
             <label :for="nameId" class="form-label">{{ translate('Exercise name') }}</label>
             <input :id="nameId" v-model="exerciseName" type="text" class="form-control" required autofocus />
+        </div>
+
+        <div>
+            <label :for="moodleUrlId" class="form-label">{{ translate('eNauczanie link') }}</label>
+            <input :id="moodleUrlId" v-model="moodleUrl" type="url" class="form-control" />
         </div>
 
         <div>

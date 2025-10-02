@@ -12,6 +12,7 @@ interface DbExercise {
     exercise_number: number;
     classroom_id: string;
     teacher_id: string;
+    moodle_url: string;
 }
 
 export interface ExerciseCreateData {
@@ -20,6 +21,7 @@ export interface ExerciseCreateData {
     exerciseNumber: number;
     classroom: Classroom;
     teacher: User;
+    moodleUrl: string;
 }
 
 export interface ExerciseEditData {
@@ -27,6 +29,7 @@ export interface ExerciseEditData {
     exerciseNumber?: number | undefined;
     classroom?: Classroom | undefined;
     teacher?: User | undefined;
+    moodleUrl?: string | undefined;
 }
 
 export class Exercise {
@@ -36,6 +39,7 @@ export class Exercise {
     exerciseNumber: number;
     classroomId: string;
     teacherId: string;
+    moodleUrl: string;
 
     constructor(data: DbExercise) {
         this.id = data.id;
@@ -44,6 +48,7 @@ export class Exercise {
         this.exerciseNumber = data.exercise_number;
         this.classroomId = data.classroom_id;
         this.teacherId = data.teacher_id;
+        this.moodleUrl = data.moodle_url;
     }
 
     async getTeacher(): Promise<User> {
@@ -102,7 +107,7 @@ export class Exercise {
     static async create(data: ExerciseCreateData): Promise<Exercise> {
         const result = (
             await db.query<DbExercise>(
-                'INSERT INTO exercises (id, name, subject_id, exercise_number, classroom_id, teacher_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
+                'INSERT INTO exercises (id, name, subject_id, exercise_number, classroom_id, teacher_id, moodle_url) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
                 [
                     crypto.randomUUID(),
                     data.name,
@@ -110,6 +115,7 @@ export class Exercise {
                     data.exerciseNumber,
                     data.classroom.id,
                     data.teacher.id,
+                    data.moodleUrl,
                 ],
             )
         ).rows[0];
@@ -136,9 +142,13 @@ export class Exercise {
             this.teacherId = data.teacher.id;
         }
 
+        if (data.moodleUrl !== undefined) {
+            this.moodleUrl = data.moodleUrl;
+        }
+
         await db.query(
-            'UPDATE exercises SET name = $2, subject_id = $3, exercise_number = $4, classroom_id = $5, teacher_id = $6 WHERE id = $1',
-            [this.id, this.name, this.subjectId, this.exerciseNumber, this.classroomId, this.teacherId],
+            'UPDATE exercises SET name = $2, subject_id = $3, exercise_number = $4, classroom_id = $5, teacher_id = $6, moodle_url = $7 WHERE id = $1',
+            [this.id, this.name, this.subjectId, this.exerciseNumber, this.classroomId, this.teacherId, this.moodleUrl],
         );
     }
 }
@@ -151,5 +161,6 @@ export function makeExerciseData(exercise: Exercise, classroom: Classroom, teach
         exerciseNumber: exercise.exerciseNumber,
         classroom: makeClassroomData(classroom),
         teacher: makeUserData(teacher),
+        moodleUrl: exercise.moodleUrl,
     };
 }

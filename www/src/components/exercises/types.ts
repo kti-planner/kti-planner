@@ -9,6 +9,7 @@ export interface ExerciseData {
     exerciseNumber: number;
     classroom: ClassroomData;
     teacher: UserData;
+    moodleUrl: string;
 }
 
 export const exerciseCreateApiSchema = z.object({
@@ -17,6 +18,7 @@ export const exerciseCreateApiSchema = z.object({
     subjectId: z.uuid(),
     classroomId: z.uuid(),
     teacherId: z.uuid(),
+    moodleUrl: z.string(),
 });
 
 export type ExerciseCreateApiData = z.input<typeof exerciseCreateApiSchema>;
@@ -27,6 +29,7 @@ export const exerciseEditApiSchema = z.object({
     exerciseNumber: z.number().optional(),
     classroomId: z.uuid().optional(),
     teacherId: z.uuid().optional(),
+    moodleUrl: z.string().optional(),
 });
 
 export type ExerciseEditApiData = z.input<typeof exerciseEditApiSchema>;
