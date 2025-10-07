@@ -64,6 +64,8 @@ if (!classroom) {
 }
 
 const exerciseData = makeExerciseData(exercise, classroom, await exercise.getTeacher());
+
+const MoodleLink = exercise.moodleUrl !== '' ? 'a' : 'div';
 ---
 
 <Layout
@@ -98,4 +100,25 @@ const exerciseData = makeExerciseData(exercise, classroom, await exercise.getTea
             />
         </Show>
     </h1>
+
+    <MoodleLink
+        {...exercise.moodleUrl !== '' ? { href: exercise.moodleUrl, target: '_blank' } : {}}
+        class="center d-block mx-auto mt-3"
+    >
+        <img
+            src="/assets/images/enauczanie.png"
+            alt="eNauczanie"
+            class={exercise.moodleUrl === '' ? 'grayscale' : ''}
+        />
+    </MoodleLink>
 </Layout>
+
+<style lang="scss">
+    .center {
+        width: fit-content;
+    }
+
+    .grayscale {
+        filter: grayscale(1) brightness(2.5);
+    }
+</style>
