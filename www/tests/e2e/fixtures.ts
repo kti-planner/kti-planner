@@ -21,6 +21,7 @@ export const test = base.extend({
         });
 
         await restoreDb('mock.sql');
+        await page.clock.install({ time: new Date('2025-10-01T07:00') });
         await use(page);
     },
 });
