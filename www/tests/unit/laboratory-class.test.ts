@@ -65,6 +65,7 @@ test('Laboratory classes', async () => {
         exerciseNumber: 1,
         classroom: classroom1,
         teacher: user1,
+        moodleUrl: '',
     });
 
     const exercise2 = await Exercise.create({
@@ -73,6 +74,7 @@ test('Laboratory classes', async () => {
         exerciseNumber: 2,
         classroom: classroom2,
         teacher: user2,
+        moodleUrl: '',
     });
 
     const laboratoryGroup1 = await LaboratoryGroup.create({

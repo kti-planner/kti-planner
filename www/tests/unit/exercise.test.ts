@@ -63,6 +63,7 @@ test('Exercises', async () => {
         exerciseNumber: 1,
         classroom: classroom1,
         teacher: user1,
+        moodleUrl: 'https://enauczanie.pg.edu.pl/',
     });
 
     expect(exercise1).toHaveProperty('name', 'Diagnostyka sieci IP');
@@ -70,6 +71,7 @@ test('Exercises', async () => {
     expect(exercise1).toHaveProperty('exerciseNumber', 1);
     expect(exercise1).toHaveProperty('classroomId', classroom1.id);
     expect(exercise1).toHaveProperty('teacherId', user1.id);
+    expect(exercise1).toHaveProperty('moodleUrl', exercise1.moodleUrl);
 
     expect(await exercise1.getTeacher()).toStrictEqual(user1);
 
@@ -85,6 +87,7 @@ test('Exercises', async () => {
         exerciseNumber: 2,
         classroom: classroom2,
         teacher: user1,
+        moodleUrl: '',
     });
 
     expect(exercise2).toHaveProperty('name', 'Firewall');
@@ -92,6 +95,7 @@ test('Exercises', async () => {
     expect(exercise2).toHaveProperty('exerciseNumber', 2);
     expect(exercise2).toHaveProperty('classroomId', classroom2.id);
     expect(exercise2).toHaveProperty('teacherId', user1.id);
+    expect(exercise2).toHaveProperty('moodleUrl', exercise2.moodleUrl);
 
     expect(await exercise2.getTeacher()).toStrictEqual(user1);
 
@@ -122,6 +126,7 @@ test('Exercises', async () => {
         exerciseNumber: 4,
         classroom: classroom1,
         teacher: user2,
+        moodleUrl: 'https://enauczanie.pg.edu.pl/',
     });
 
     expect(exercise2).toHaveProperty('name', 'IPv6');
@@ -129,6 +134,7 @@ test('Exercises', async () => {
     expect(exercise2).toHaveProperty('exerciseNumber', 4);
     expect(exercise2).toHaveProperty('classroomId', classroom1.id);
     expect(exercise2).toHaveProperty('teacherId', user2.id);
+    expect(exercise2).toHaveProperty('moodleUrl', exercise2.moodleUrl);
 
     expect(await exercise2.getTeacher()).toStrictEqual(user2);
 
@@ -137,6 +143,7 @@ test('Exercises', async () => {
     expect(exercise1).toHaveProperty('exerciseNumber', 1);
     expect(exercise1).toHaveProperty('classroomId', classroom1.id);
     expect(exercise1).toHaveProperty('teacherId', user1.id);
+    expect(exercise1).toHaveProperty('moodleUrl', exercise1.moodleUrl);
 
     expect(await exercise1.getTeacher()).toStrictEqual(user1);
 
@@ -146,6 +153,7 @@ test('Exercises', async () => {
         exerciseNumber: 2,
         classroom: classroom2,
         teacher: user1,
+        moodleUrl: '',
     });
 
     expect(await Exercise.fetch(exercise2.id)).toStrictEqual(exercise2);
