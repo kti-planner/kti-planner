@@ -19,10 +19,11 @@ import FullCalendar from '@fullcalendar/vue3';
 import { useWindowSize } from '@vueuse/core';
 import { langId } from '@components/frontend/lang';
 
-const { selectable, events, initialDate } = defineProps<{
+const { selectable, events, initialDate, initialView } = defineProps<{
     selectable?: boolean | undefined;
     events: CalendarEvent[];
     initialDate: DateInput | undefined;
+    initialView?: string | undefined;
 }>();
 
 const emit = defineEmits<{
@@ -62,7 +63,7 @@ const options = computed((): CalendarOptions => {
     return {
         plugins: [dayGridPlugin, timeGridPlugin, listPlugin, bootstrap5Plugin, interactionPlugin],
         themeSystem: 'bootstrap5',
-        initialView: windowWidth.value >= 992 ? 'timeGridWeek' : 'timeGridDay',
+        initialView: initialView ?? (windowWidth.value >= 992 ? 'timeGridWeek' : 'timeGridDay'),
         height: '80vh',
         headerToolbar: {
             left: 'prev,next today',
