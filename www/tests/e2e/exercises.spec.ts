@@ -65,6 +65,7 @@ test('Can add new exercise and prevent duplicate exercise creation', async ({ pa
     await page.getByRole('button', { name: 'Add', exact: true }).click();
 
     await expect(page.locator('.breadcrumb')).toContainText('Wirtualne sieci lokalne (VLAN)');
+    await expect(page.getByRole('link', { name: 'eNauczanie' })).not.toBeVisible();
 
     await page.goto('/semesters/2024-winter/subjects/sieci-komputerowe---informatyka-sem.-v/');
     await expect(page.getByRole('link', { name: 'Wirtualne sieci lokalne (VLAN)' })).toBeVisible();
@@ -147,12 +148,17 @@ test('Can edit exercise and prevent duplicate exercise', async ({ page }) => {
 
     await page.getByRole('textbox', { name: 'Exercise name' }).fill('Wirtualne sieci lokalne (VLAN)');
     await page.getByRole('spinbutton', { name: 'Exercise number' }).fill('4');
+    await page.getByRole('textbox', { name: 'eNauczanie link' }).fill('https://enauczanie.pg.edu.pl/');
     await page.getByRole('combobox', { name: 'Classroom' }).selectOption('EA 142');
 
     await page.getByRole('button', { name: 'Save' }).click();
 
     await expect(page.locator('.breadcrumb')).toContainText('Wirtualne sieci lokalne (VLAN)');
     await expect(page.locator('body')).toContainText('Wirtualne sieci lokalne (VLAN)');
+
+    const moodleLink = page.getByRole('link', { name: 'eNauczanie' });
+    await expect(moodleLink).toBeVisible();
+    await expect(moodleLink).toHaveAttribute('href', 'https://enauczanie.pg.edu.pl/');
 
     // Can not edit exercise with data that match already existing exercise
     await page.getByRole('button', { name: 'Edit exercise' }).click();
@@ -192,6 +198,7 @@ test.describe('API fetch tests', () => {
                 subjectId: '25108321-0391-4c7a-b4d8-5ea20388e813',
                 classroomId: '2affdc99-7dd6-47f0-b26c-3c413bf063dd',
                 teacherId: 'c393c524-453c-4b02-bfad-5114fe828200',
+                moodleUrl: '',
             },
         });
 
@@ -209,6 +216,7 @@ test.describe('API fetch tests', () => {
                 subjectId: '25108321-0391-4c7a-b4d8-5ea20388e813',
                 classroomId: '2affdc99-7dd6-47f0-b26c-3c413bf063dd',
                 teacherId: 'c393c524-453c-4b02-bfad-5114fe828200',
+                moodleUrl: '',
             },
         });
 
@@ -225,6 +233,7 @@ test.describe('API fetch tests', () => {
                 exerciseNumber: 8,
                 classroomId: '8689d55d-508e-4f5d-aef8-d5052f220d20',
                 teacherId: 'c393c524-453c-4b02-bfad-5114fe828200',
+                moodleUrl: '',
             },
         });
 
@@ -242,6 +251,7 @@ test.describe('API fetch tests', () => {
                 exerciseNumber: 8,
                 classroomId: '8689d55d-508e-4f5d-aef8-d5052f220d20',
                 teacherId: 'c393c524-453c-4b02-bfad-5114fe828200',
+                moodleUrl: '',
             },
         });
 
