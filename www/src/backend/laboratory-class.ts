@@ -92,7 +92,10 @@ export class LaboratoryClass {
 
     static async fetchAllFromExercise(exercise: Exercise): Promise<LaboratoryClass[]> {
         const records = (
-            await db.query<DbLaboratoryClass>('SELECT * FROM laboratory_classes WHERE exercise_id = $1', [exercise.id])
+            await db.query<DbLaboratoryClass>(
+                'SELECT * FROM laboratory_classes WHERE exercise_id = $1 ORDER BY start_date',
+                [exercise.id],
+            )
         ).rows;
 
         return records.map(record => new LaboratoryClass(record));
