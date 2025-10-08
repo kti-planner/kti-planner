@@ -8,7 +8,7 @@ const { src } = defineProps<{
 }>();
 
 const md = new MarkdownIt({
-    html: false,
+    html: true,
     linkify: true,
     breaks: true,
 });
