@@ -1,11 +1,12 @@
 CREATE TYPE user_role AS ENUM ('admin', 'teacher');
 
 CREATE TABLE users (
-    id            uuid PRIMARY KEY,
-    name          text NOT NULL,
-    email         text UNIQUE,
-    password_hash text,
-    role          user_role NOT NULL
+    id                 uuid PRIMARY KEY,
+    name               text NOT NULL,
+    email              text UNIQUE,
+    password_hash      text,
+    role               user_role NOT NULL,
+    email_img_filename text
 );
 
 CREATE TYPE semester_type AS ENUM ('winter', 'summer');

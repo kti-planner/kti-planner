@@ -1,9 +1,15 @@
 import assert from 'node:assert';
+import { once } from 'node:events';
+import fs from 'node:fs';
+import { join } from 'node:path';
 import bcrypt from 'bcrypt';
+import { createCanvas } from 'canvas';
 import { db } from '@backend/db';
 import type { UserData } from '@components/users/types';
 
 export type UserRole = 'admin' | 'teacher';
+
+const env = import.meta.env.PROD ? process.env : import.meta.env;
 
 interface DbUser {
     id: string;
@@ -11,6 +17,7 @@ interface DbUser {
     email: string;
     password_hash: string | null;
     role: UserRole;
+    email_img_filename: string | null;
 }
 
 export interface UserCreateData {
@@ -33,6 +40,7 @@ export class User {
     email: string;
     passwordHash: string | null;
     role: UserRole;
+    emailImgFilename: string | null;
 
     constructor(data: DbUser) {
         this.id = data.id;
@@ -40,6 +48,7 @@ export class User {
         this.email = data.email;
         this.passwordHash = data.password_hash;
         this.role = data.role;
+        this.emailImgFilename = data.email_img_filename;
     }
 
     static async fetch(id: string): Promise<User | null> {
@@ -68,11 +77,12 @@ export class User {
 
     static async create(data: UserCreateData): Promise<User> {
         const passwordHash = data.password === null ? null : await User.hashPassword(data.password);
+        const emailImgUrl = await User.createEmailImg(data.email);
 
         const result = (
             await db.query<DbUser>(
-                'INSERT INTO users (id, name, email, password_hash, role) VALUES ($1, $2, $3, $4, $5) RETURNING *',
-                [crypto.randomUUID(), data.name, data.email, passwordHash, data.role],
+                'INSERT INTO users (id, name, email, password_hash, role, email_img_filename) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
+                [crypto.randomUUID(), data.name, data.email, passwordHash, data.role, emailImgUrl],
             )
         ).rows[0];
 
@@ -88,6 +98,7 @@ export class User {
 
         if (data.email !== undefined) {
             this.email = data.email;
+            this.emailImgFilename = await User.createEmailImg(data.email);
         }
 
         if (data.password !== undefined) {
@@ -98,13 +109,10 @@ export class User {
             this.role = data.role;
         }
 
-        await db.query('UPDATE users SET name = $2, email = $3, password_hash = $4, role = $5 WHERE id = $1', [
-            this.id,
-            this.name,
-            this.email,
-            this.passwordHash,
-            this.role,
-        ]);
+        await db.query(
+            'UPDATE users SET name = $2, email = $3, password_hash = $4, role = $5, email_img_filename = $6 WHERE id = $1',
+            [this.id, this.name, this.email, this.passwordHash, this.role, this.emailImgFilename],
+        );
     }
 
     async checkPassword(password: string): Promise<boolean> {
@@ -114,6 +122,35 @@ export class User {
     static async hashPassword(password: string): Promise<string> {
         const saltRounds = 10;
         return await bcrypt.hash(password, saltRounds);
+    }
+
+    static async createEmailImg(email: string): Promise<string> {
+        assert(env.EMAIL_IMG_DIR !== undefined);
+
+        const canvas = createCanvas(200, 100);
+        const ctx = canvas.getContext('2d');
+        const font = '16px sans-serif';
+        ctx.font = font;
+
+        const metrics = ctx.measureText(email);
+        canvas.width = Math.ceil(metrics.actualBoundingBoxLeft + metrics.actualBoundingBoxRight);
+        canvas.height = Math.ceil(metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent);
+
+        // Canvas looses state after resize
+        ctx.font = font;
+        ctx.fillText(email, metrics.actualBoundingBoxLeft, metrics.actualBoundingBoxAscent);
+
+        await fs.promises.mkdir(env.EMAIL_IMG_DIR, { recursive: true });
+
+        const imgFilename = `${crypto.randomUUID()}.png`;
+        const destination = join(env.EMAIL_IMG_DIR, imgFilename);
+
+        const out = fs.createWriteStream(destination);
+        const pngStream = canvas.createPNGStream();
+        const writeStream = pngStream.pipe(out);
+        await once(writeStream, 'finish');
+
+        return imgFilename;
     }
 }
 
