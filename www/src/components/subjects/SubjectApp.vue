@@ -126,8 +126,11 @@ const laboratoryGroupOptions = computed(() => Object.fromEntries(laboratoryGroup
                 <ul>
                     <li v-for="teacher in subject.teachers" :key="teacher.id">
                         {{ teacher.name }}
-                        -
-                        <img :src="`/users/email/${teacher.id}/`" :alt="translate('Teacher email')" height="16" />
+                        &lt;<img
+                            :src="`/users/email/${teacher.id}/`"
+                            :alt="translate('Teacher email')"
+                            height="16"
+                        />&gt;
                     </li>
                 </ul>
             </div>
