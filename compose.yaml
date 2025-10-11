@@ -15,7 +15,7 @@ services:
       - .env
     environment:
       POSTGRES_HOST: postgres
-      EMAIL_IMG_DIR: "/home/node/app/uploads"
+      EMAIL_IMG_DIR: "/home/node/app/uploads/user-emails"
     stop_grace_period: 1s
   postgres:
     build:
