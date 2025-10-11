@@ -1,7 +1,4 @@
-FROM node:22-alpine AS builder
-
-# node-canvas native dependencies
-RUN apk add build-base g++ cairo-dev pango-dev
+FROM node:22 AS builder
 
 # This is a build time environment variable used in www/astro.config.mjs
 # It is set in compose.yaml
@@ -25,14 +22,9 @@ COPY --chown=node:node www/public/ www/public/
 
 RUN npm run build
 
-FROM node:22-alpine AS runner
+FROM node:22 AS runner
 
-RUN apk add tzdata
 ENV TZ="Europe/Warsaw"
-
-# node-canvas native dependencies
-RUN apk add --virtual .build-deps build-base g++
-RUN apk add cairo-dev pango-dev font-noto
 
 RUN mkdir -p /home/node/app && chown -R node:node /home/node/app
 WORKDIR /home/node/app
@@ -45,10 +37,6 @@ RUN npm ci --omit=dev
 
 COPY --chown=node:node --from=builder /home/node/build/build/ build/
 COPY --chown=node:node --from=builder /home/node/build/www/dist/ www/dist/
-
-USER root
-RUN apk del .build-deps
-USER node
 
 EXPOSE 8080
 
