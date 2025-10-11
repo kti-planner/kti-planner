@@ -21,13 +21,11 @@ const translations = {
         'Laboratory groups': 'Laboratory groups',
         'Exercises': 'Exercises',
         'Teachers': 'Teachers',
-        'Description': 'Description',
     },
     'pl': {
         'Laboratory groups': 'Grupy laboratoryjne',
         'Exercises': 'Ćwiczenia',
         'Teachers': 'Prowadzący',
-        'Description': 'Opis',
     },
 };
 
@@ -59,7 +57,6 @@ const laboratoryGroupOptions = computed(() => Object.fromEntries(laboratoryGroup
         <EditSubject v-if="currentUser" :semester :subject :all-users />
     </h1>
     <div v-if="subject.description !== ''" class="mb-4">
-        <h2 class="fs-5">{{ translate('Description') }}</h2>
         <Markdown :src="subject.description" />
     </div>
     <div class="row g-4">
