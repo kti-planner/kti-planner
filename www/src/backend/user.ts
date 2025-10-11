@@ -85,7 +85,7 @@ export class User {
         assert(result);
 
         const user = new User(result);
-        await user.createEmailImg();
+        await user.createEmailImage();
 
         return user;
     }
@@ -117,7 +117,7 @@ export class User {
         ]);
 
         if (data.email !== undefined && data.email !== prevEmail) {
-            await this.createEmailImg();
+            await this.createEmailImage();
         }
     }
 
@@ -130,7 +130,7 @@ export class User {
         return await bcrypt.hash(password, saltRounds);
     }
 
-    async createEmailImg(): Promise<void> {
+    async createEmailImage(): Promise<void> {
         if (env.EMAIL_IMG_DIR === undefined) {
             console.warn('ENV variable EMAIL_IMG_DIR is unset, skipping email image generation');
             return;
@@ -142,13 +142,13 @@ export class User {
         ctx.font = font;
 
         const metrics = ctx.measureText(this.email);
-        canvas.width = Math.ceil(metrics.actualBoundingBoxLeft + metrics.actualBoundingBoxRight);
+        canvas.width = Math.ceil(metrics.width);
         canvas.height = Math.ceil(metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent);
 
         // Canvas looses state after resize
         ctx.font = font;
         ctx.fillStyle = '#212529';
-        ctx.fillText(this.email, metrics.actualBoundingBoxLeft, metrics.actualBoundingBoxAscent);
+        ctx.fillText(this.email, 0, metrics.actualBoundingBoxAscent);
 
         await fs.promises.mkdir(env.EMAIL_IMG_DIR, { recursive: true });
 

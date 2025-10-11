@@ -6,11 +6,9 @@ import { User } from '@backend/user';
 
 const env = import.meta.env.PROD ? process.env : import.meta.env;
 
-async function sendImage(path: string): Promise<Response> {
+async function createImageResponse(path: string): Promise<Response> {
     const data = await fs.promises.readFile(path);
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-expect-error
-    return new Response(data, { headers: { 'Content-Type': 'image/png' } });
+    return new Response(data as BodyInit, { headers: { 'Content-Type': 'image/png' } });
 }
 
 export const GET: APIRoute = async ({ params }) => {
@@ -27,14 +25,15 @@ export const GET: APIRoute = async ({ params }) => {
         return new Response(null, { status: 404 });
     }
 
-    const imgPath = join(env.EMAIL_IMG_DIR, `${user.id}.png`);
+    const imagePath = join(env.EMAIL_IMG_DIR, `${user.id}.png`);
+
     try {
-        return await sendImage(imgPath);
+        return await createImageResponse(imagePath);
     } catch (error) {
-        console.warn(`Cannot read email image for user ${user.name}, generating new one... (error: ${String(error)})`);
+        console.warn(`Cannot read email image for user ${user.name}, generating new one... error: `, error);
     }
 
-    await user.createEmailImg();
+    await user.createEmailImage();
 
-    return await sendImage(imgPath);
+    return await createImageResponse(imagePath);
 };
