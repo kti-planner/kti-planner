@@ -39,6 +39,7 @@ export const POST: APIRoute = async ({ locals }) => {
         name: data.name,
         semester: semester,
         teachers: teachers,
+        description: data.description,
     });
 
     return Response.json(true, { status: 201 });
@@ -86,6 +87,7 @@ export const PATCH: APIRoute = async ({ locals }) => {
     await subject.edit({
         name: data.name,
         teachers: teachers,
+        description: data.description,
     });
 
     return Response.json(true, { status: 200 });
