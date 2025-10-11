@@ -13,15 +13,17 @@ import enGbLocale from '@fullcalendar/core/locales/en-gb';
 import plLocale from '@fullcalendar/core/locales/pl';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
+import listPlugin from '@fullcalendar/list';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import FullCalendar from '@fullcalendar/vue3';
 import { useWindowSize } from '@vueuse/core';
 import { langId } from '@components/frontend/lang';
 
-const { selectable, events, initialDate } = defineProps<{
+const { selectable, events, initialDate, initialView } = defineProps<{
     selectable?: boolean | undefined;
     events: CalendarEvent[];
     initialDate: DateInput | undefined;
+    initialView?: string | undefined;
 }>();
 
 const emit = defineEmits<{
@@ -40,6 +42,9 @@ defineSlots<{
 // Customize buttons
 bootstrap5Plugin.themeClasses.bootstrap5!.prototype.classes.button = 'btn btn-success btn-sm';
 
+// Customize locale
+plLocale.buttonText!.list = 'Lista';
+
 const calendar = useTemplateRef('calendar');
 
 watch(
@@ -56,14 +61,14 @@ const { width: windowWidth } = useWindowSize();
 
 const options = computed((): CalendarOptions => {
     return {
-        plugins: [dayGridPlugin, timeGridPlugin, bootstrap5Plugin, interactionPlugin],
+        plugins: [dayGridPlugin, timeGridPlugin, listPlugin, bootstrap5Plugin, interactionPlugin],
         themeSystem: 'bootstrap5',
-        initialView: windowWidth.value >= 992 ? 'timeGridWeek' : 'timeGridDay',
+        initialView: initialView ?? (windowWidth.value >= 992 ? 'timeGridWeek' : 'timeGridDay'),
         height: '80vh',
         headerToolbar: {
             left: 'prev,next today',
             center: 'title',
-            right: 'timeGridDay,timeGridWeek,dayGridMonth',
+            right: 'timeGridDay,timeGridWeek,dayGridMonth,listYear',
         },
         firstDay: 1,
         locale: langId === 'pl' ? plLocale : enGbLocale,
@@ -109,18 +114,26 @@ const options = computed((): CalendarOptions => {
 </template>
 
 <style scoped lang="scss">
-.calendar-wrapper :deep(.fc) {
-    .fc-toolbar-title {
-        font-size: 1.25rem;
+.calendar-wrapper {
+    :deep(.fc) {
+        .fc-toolbar-title {
+            font-size: 1.25rem;
+        }
+
+        .fc-event {
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        .fc-timegrid-event:hover {
+            background-color: #157347 !important;
+        }
     }
 
-    .fc-event {
-        cursor: pointer;
-        overflow: hidden;
-    }
-
-    .fc-timegrid-event:hover {
-        background-color: #157347 !important;
+    // This prevents the event content from appearing over the day header in list view (on Firefox)
+    // https://github.com/fullcalendar/fullcalendar/issues/6230
+    :deep(.fc-liquid-hack .fc-list-event td) {
+        position: static;
     }
 }
 </style>

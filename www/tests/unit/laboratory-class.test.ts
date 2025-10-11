@@ -177,4 +177,7 @@ test('Laboratory classes', async () => {
         laboratoryClass3,
         laboratoryClass2,
     ]);
+
+    expect(await LaboratoryClass.fetchAllFromExercise(exercise1)).toStrictEqual([laboratoryClass1, laboratoryClass3]);
+    expect(await LaboratoryClass.fetchAllFromExercise(exercise2)).toStrictEqual([laboratoryClass2]);
 });
