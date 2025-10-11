@@ -5,7 +5,7 @@ import { LaboratoryClass, makeLaboratoryClassData } from '@backend/laboratory-cl
 import { LaboratoryGroup } from '@backend/laboratory-group';
 import { makeScheduleChangeData, makeSemesterData, Semester } from '@backend/semester';
 import { makeSubjectData, Subject } from '@backend/subject';
-import { makeUserData } from '@backend/user';
+import { makeUserPublicData } from '@backend/user';
 import Layout from '@layouts/Layout.astro';
 import EditExercise from '@components/exercises/EditExercise.vue';
 import ExerciseCalendar from '@components/exercises/ExerciseCalendar.vue';
@@ -70,7 +70,7 @@ if (!classroom) {
 const exerciseData = makeExerciseData(exercise, classroom, await exercise.getTeacher());
 
 const teachers = await subject.getTeachers();
-const teachersData = teachers.map(makeUserData);
+const teachersData = teachers.map(makeUserPublicData);
 const teacher = teachers.find(teacher => teacher.id === exercise.teacherId);
 if (!teacher) {
     throw new Error('Exercise teacher not found');
