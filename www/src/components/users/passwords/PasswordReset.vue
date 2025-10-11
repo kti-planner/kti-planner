@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { langId } from '@components/frontend/lang';
-import type { UserData } from '@components/users/types';
+import type { UserPublicData } from '@components/users/types';
 import Modal from '@components/Modal.vue';
 import PasswordResetForm from '@components/users/passwords/PasswordResetForm.vue';
 
 defineProps<{
-    user: UserData;
+    user: UserPublicData;
 }>();
 
 const translations = {

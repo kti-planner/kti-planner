@@ -1,5 +1,5 @@
-import type { UserData } from '@components/users/types';
+import type { UserDetailsData } from '@components/users/types';
 
-declare const user: UserData | null;
+declare const user: UserDetailsData | null;
 
 export const currentUser = user;

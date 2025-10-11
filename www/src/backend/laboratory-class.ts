@@ -4,7 +4,7 @@ import { db } from '@backend/db';
 import { type Exercise, makeExerciseData } from '@backend/exercise';
 import { type LaboratoryGroup, makeLaboratoryGroupData } from '@backend/laboratory-group';
 import type { Subject } from '@backend/subject';
-import { makeUserData, type User } from '@backend/user';
+import { makeUserPublicData, type User } from '@backend/user';
 import type { LaboratoryClassData } from '@components/laboratory-classes/types';
 import { formatDateLocalYyyyMmDdHhMm } from '@components/utils';
 
@@ -147,6 +147,6 @@ export function makeLaboratoryClassData(
         laboratoryGroup: makeLaboratoryGroupData(group),
         startDate: formatDateLocalYyyyMmDdHhMm(laboratoryClass.startDate),
         endDate: formatDateLocalYyyyMmDdHhMm(laboratoryClass.endDate),
-        teacher: makeUserData(classTeacher),
+        teacher: makeUserPublicData(classTeacher),
     };
 }

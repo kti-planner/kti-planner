@@ -3,12 +3,12 @@ import { ref } from 'vue';
 import { langId } from '@components/frontend/lang';
 import { apiPatch } from '@components/api';
 import type { PasswordResetApiData } from '@components/users/passwords/types';
-import type { UserData } from '@components/users/types';
+import type { UserPublicData } from '@components/users/types';
 import { generatePassword } from '@components/utils';
 import PasswordInputField from '@components/users/passwords/PasswordInputField.vue';
 
 const props = defineProps<{
-    user: UserData;
+    user: UserPublicData;
 }>();
 
 const password = ref<string>('');

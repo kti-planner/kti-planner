@@ -5,7 +5,7 @@ import { join } from 'node:path';
 import bcrypt from 'bcrypt';
 import { createCanvas } from 'canvas';
 import { db } from '@backend/db';
-import type { UserData } from '@components/users/types';
+import type { UserDetailsData, UserPublicData } from '@components/users/types';
 
 export type UserRole = 'admin' | 'teacher';
 
@@ -157,7 +157,15 @@ export class User {
     }
 }
 
-export function makeUserData(user: User): UserData {
+export function makeUserPublicData(user: User): UserPublicData {
+    return {
+        id: user.id,
+        name: user.name,
+        role: user.role,
+    };
+}
+
+export function makeUserDetailsData(user: User): UserDetailsData {
     return {
         id: user.id,
         name: user.name,

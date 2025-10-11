@@ -1,7 +1,7 @@
 import z from 'zod';
 import type { ExerciseData } from '@components/exercises/types';
 import type { LaboratoryGroupData } from '@components/laboratory-groups/types';
-import type { UserData } from '@components/users/types';
+import type { UserPublicData } from '@components/users/types';
 import { dateTimeStringSchema } from '@components/utils';
 
 export interface LaboratoryClassData {
@@ -10,7 +10,7 @@ export interface LaboratoryClassData {
     laboratoryGroup: LaboratoryGroupData;
     startDate: string;
     endDate: string;
-    teacher: UserData;
+    teacher: UserPublicData;
 }
 
 export const laboratoryClassCreateApiSchema = z

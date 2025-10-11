@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { langId } from '@components/frontend/lang';
 import { currentUser } from '@components/frontend/user';
-import type { UserData } from '@components/users/types';
+import type { UserDetailsData } from '@components/users/types';
 import IconButton from '@components/IconButton.vue';
 import Modal from '@components/Modal.vue';
 import PasswordChange from '@components/users/passwords/PasswordChange.vue';
@@ -9,7 +9,7 @@ import PasswordReset from '@components/users/passwords/PasswordReset.vue';
 import UserForm from '@components/users/UserForm.vue';
 
 defineProps<{
-    user: UserData;
+    user: UserDetailsData;
 }>();
 
 const translations = {

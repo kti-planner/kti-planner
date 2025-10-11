@@ -1,12 +1,12 @@
 import z from 'zod';
-import type { UserData } from '@components/users/types';
+import type { UserPublicData } from '@components/users/types';
 
 export interface SubjectData {
     id: string;
     name: string;
     semesterId: string;
     slug: string;
-    teachers: UserData[];
+    teachers: UserPublicData[];
 }
 
 export const subjectCreateApiSchema = z.object({

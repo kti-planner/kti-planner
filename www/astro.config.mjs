@@ -16,7 +16,7 @@ export default defineConfig({
         ssr: {
             target: 'node',
             noExternal: import.meta.env.PROD ? true : undefined,
-            external: ['bcrypt', 'express', 'on-headers', 'pg'],
+            external: ['bcrypt', 'express', 'on-headers', 'pg', 'canvas'],
         },
         envDir: '.',
     },

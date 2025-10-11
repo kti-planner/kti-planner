@@ -1,6 +1,6 @@
 import z from 'zod';
 import type { ClassroomData } from '@components/classrooms/types';
-import type { UserData } from '@components/users/types';
+import type { UserPublicData } from '@components/users/types';
 
 export interface ExerciseData {
     id: string;
@@ -8,7 +8,7 @@ export interface ExerciseData {
     subjectId: string;
     exerciseNumber: number;
     classroom: ClassroomData;
-    teacher: UserData;
+    teacher: UserPublicData;
 }
 
 export const exerciseCreateApiSchema = z.object({

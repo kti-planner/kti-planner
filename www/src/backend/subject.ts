@@ -1,7 +1,7 @@
 import assert from 'node:assert';
 import { db } from '@backend/db';
 import type { Semester } from '@backend/semester';
-import { makeUserData, User } from '@backend/user';
+import { makeUserPublicData, User } from '@backend/user';
 import type { SubjectData } from '@components/subjects/types';
 import { toHyphenatedLowercase } from '@components/utils';
 
@@ -122,6 +122,6 @@ export function makeSubjectData(subject: Subject, allUsers: User[]): SubjectData
         name: subject.name,
         semesterId: subject.semesterId,
         slug: subject.slug,
-        teachers: teachers.map(makeUserData),
+        teachers: teachers.map(makeUserPublicData),
     };
 }
