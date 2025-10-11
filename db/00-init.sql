@@ -5,8 +5,7 @@ CREATE TABLE users (
     name               text NOT NULL,
     email              text UNIQUE,
     password_hash      text,
-    role               user_role NOT NULL,
-    email_img_filename text
+    role               user_role NOT NULL
 );
 
 CREATE TYPE semester_type AS ENUM ('winter', 'summer');
