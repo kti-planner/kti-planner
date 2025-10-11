@@ -566,4 +566,21 @@ test.describe('API fetch tests', () => {
 
         expect(response.status()).toBe(200);
     });
+
+    test('Can access user email image', async ({ page }) => {
+        await page.goto('/');
+
+        const response = await page.request.get('/users/email/c393c524-453c-4b02-bfad-5114fe828200/');
+
+        expect(response.status()).toBe(200);
+        expect(response.headers()['Content-Type']).toBe('image/png');
+    });
+
+    test('Cannot access non-existant user email image', async ({ page }) => {
+        await page.goto('/');
+
+        const response = await page.request.get('/users/email/c393c524-453c-4b02-bfad-5114fe828333/');
+
+        expect(response.status()).toBe(404);
+    });
 });
