@@ -20,11 +20,13 @@ const translations = {
         'Laboratory groups': 'Laboratory groups',
         'Exercises': 'Exercises',
         'Teachers': 'Teachers',
+        'Teacher email': 'Teacher email',
     },
     'pl': {
         'Laboratory groups': 'Grupy laboratoryjne',
         'Exercises': 'Ćwiczenia',
         'Teachers': 'Prowadzący',
+        'Teacher email': 'Email prowadzącego',
     },
 };
 
@@ -120,6 +122,7 @@ const laboratoryGroupOptions = computed(() => Object.fromEntries(laboratoryGroup
                 <ul>
                     <li v-for="teacher in subject.teachers" :key="teacher.id">
                         {{ teacher.name }}
+                        <img :src="`/users/email/${teacher.id}/`" :alt="translate('Teacher email')" height="16" />
                     </li>
                 </ul>
             </div>
