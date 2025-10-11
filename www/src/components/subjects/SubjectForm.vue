@@ -19,6 +19,7 @@ const isEditing = computed(() => props.subject !== undefined);
 const submitFailed = ref(false);
 
 const subjectName = ref<string>(props.subject?.name ?? '');
+const description = ref<string>(props.subject?.description ?? '');
 const teachers = ref<UserPublicData[]>(props.subject?.teachers ?? []);
 
 async function submit() {
@@ -28,11 +29,13 @@ async function submit() {
                   name: subjectName.value,
                   semesterId: props.semester.id,
                   teacherIds: teachers.value.map(user => user.id),
+                  description: description.value,
               } satisfies SubjectCreateApiData)
             : await apiPatch<boolean>('/semesters/api/subjects/', {
                   id: props.subject.id,
                   name: subjectName.value,
                   teacherIds: teachers.value.map(user => user.id),
+                  description: description.value,
               } satisfies SubjectEditApiData);
 
     if (success === undefined) {
@@ -56,17 +59,21 @@ async function submit() {
 const translations = {
     'en': {
         'Subject name': 'Subject name',
+        'Description': 'Description',
         'Teachers': 'Teachers',
         'Save': 'Save',
         'Add': 'Add',
         'Subject with this name already exists.': 'Subject with this name already exists.',
+        'Markdown is supported': 'Markdown is supported',
     },
     'pl': {
         'Subject name': 'Nazwa przedmiotu',
+        'Description': 'Opis',
         'Teachers': 'Nauczyciele',
         'Save': 'Zapisz',
         'Add': 'Dodaj',
         'Subject with this name already exists.': 'Przedmiot o podanej nazwie już isnieje.',
+        'Markdown is supported': 'Markdown jest wspierany',
     },
 };
 
@@ -75,6 +82,7 @@ function translate(text: keyof (typeof translations)[LangId]): string {
 }
 
 const nameId = crypto.randomUUID();
+const descriptionId = crypto.randomUUID();
 const teachersId = crypto.randomUUID();
 </script>
 
@@ -83,6 +91,16 @@ const teachersId = crypto.randomUUID();
         <div>
             <label :for="nameId" class="form-label">{{ translate('Subject name') }}</label>
             <input :id="nameId" v-model="subjectName" type="text" class="form-control" required autofocus />
+        </div>
+
+        <div>
+            <label :for="descriptionId" class="form-label">{{ translate('Description') }}</label>
+            <textarea
+                :id="descriptionId"
+                v-model="description"
+                class="form-control"
+                :placeholder="translate('Markdown is supported')"
+            ></textarea>
         </div>
 
         <div>
@@ -99,3 +117,9 @@ const teachersId = crypto.randomUUID();
         </div>
     </form>
 </template>
+
+<style scoped lang="scss">
+textarea {
+    min-height: 160px;
+}
+</style>

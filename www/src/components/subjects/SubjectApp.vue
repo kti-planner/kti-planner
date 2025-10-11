@@ -11,6 +11,7 @@ import type { UserPublicData } from '@components/users/types';
 import AddExercise from '@components/exercises/AddExercise.vue';
 import GenerateClasses from '@components/laboratory-classes/GenerateClasses.vue';
 import LaboratoryGroupListModal from '@components/laboratory-groups/LaboratoryGroupListModal.vue';
+import Markdown from '@components/Markdown.vue';
 import EditSubject from '@components/subjects/EditSubject.vue';
 import SubjectCalendar from '@components/subjects/SubjectCalendar.vue';
 import ToggleButtonPicker from '@components/ToggleButtonPicker.vue';
@@ -57,6 +58,9 @@ const laboratoryGroupOptions = computed(() => Object.fromEntries(laboratoryGroup
         {{ subject.name }}
         <EditSubject v-if="currentUser" :semester :subject :all-users />
     </h1>
+    <div v-if="subject.description !== ''" class="mb-4">
+        <Markdown :src="subject.description" />
+    </div>
     <div class="row g-4">
         <div class="col-12 col-lg-9 mb-2 order-2 order-lg-1">
             <SubjectCalendar
