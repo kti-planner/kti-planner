@@ -131,7 +131,10 @@ export class User {
     }
 
     async createEmailImg(): Promise<void> {
-        assert(env.EMAIL_IMG_DIR !== undefined);
+        if (env.EMAIL_IMG_DIR === undefined) {
+            console.warn('ENV variable EMAIL_IMG_DIR is unset, skipping email image generation');
+            return;
+        }
 
         const canvas = createCanvas(200, 100);
         const ctx = canvas.getContext('2d');

@@ -8,5 +8,6 @@ export default defineConfig({
     test: {
         include: ['www/tests/unit/**/*.test.ts'],
         setupFiles: ['www/tests/unit/test-db.ts'],
+        silent: 'passed-only',
     },
 });
