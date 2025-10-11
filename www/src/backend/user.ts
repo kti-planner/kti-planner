@@ -144,6 +144,7 @@ export class User {
 
         // Canvas looses state after resize
         ctx.font = font;
+        ctx.fillStyle = '#212529';
         ctx.fillText(this.email, metrics.actualBoundingBoxLeft, metrics.actualBoundingBoxAscent);
 
         await fs.promises.mkdir(env.EMAIL_IMG_DIR, { recursive: true });
