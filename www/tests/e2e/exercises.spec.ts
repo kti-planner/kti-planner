@@ -17,10 +17,14 @@ test('Can access exercises list', async ({ page }) => {
 });
 
 test('Can access exercise page', async ({ page }) => {
-    await page.goto('/semesters/2024-summer/subjects/lokalne-sieci-bezprzewodowe---informatyka-sem.-vi/');
-    await page.getByRole('link', { name: 'Tryby pracy punktów dostępowych' }).click();
+    await page.goto('/semesters/2025-winter/subjects/sieci-komputerowe---informatyka-sem.-v/');
+    await page.getByRole('link', { name: 'Diagnostyka sieci IPv4' }).click();
 
-    await expect(page.locator('.breadcrumb')).toContainText('Tryby pracy punktów dostępowych');
+    await expect(page.locator('.breadcrumb')).toContainText('Diagnostyka sieci IPv4');
+    await expect(page.locator('.fc')).toContainText('1 October 2025');
+    await expect(page.locator('.fc')).toContainText('1A');
+    await expect(page.locator('.fc')).toContainText('Jan Kowalski');
+    await expect(page.locator('.fc')).toContainText('EA 142');
 });
 
 test('Add new exercise button is hidden for logged-out user', async ({ page }) => {

@@ -21,10 +21,11 @@ function translate(text: keyof (typeof translations)[LangId]): string {
     return translations[langId][text];
 }
 
-const { laboratoryClass, subject } = defineProps<{
+const { laboratoryClass, subject, hideExerciseName } = defineProps<{
     timeText: string;
     laboratoryClass: LaboratoryClassData;
     subject?: SubjectData | undefined;
+    hideExerciseName?: boolean | undefined;
 }>();
 
 const title = computed(
@@ -43,7 +44,7 @@ const title = computed(
         <p v-if="subject" class="text-truncate fw-bold">
             {{ subject.name }}
         </p>
-        <p class="text-truncate" :class="{ 'fw-bold': !subject }">
+        <p v-if="!hideExerciseName" class="text-truncate" :class="{ 'fw-bold': !subject }">
             {{ laboratoryClass.exercise.name }}
         </p>
         <div class="text-truncate">

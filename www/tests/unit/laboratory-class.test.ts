@@ -51,12 +51,14 @@ test('Laboratory classes', async () => {
         name: 'Sieci komputerowe - Informatyka sem. V',
         semester: semester1,
         teachers: [user1],
+        description: '',
     });
 
     const subject2 = await Subject.create({
         name: 'Zarządzanie bezpieczeństwem sieci - Informatyka sem. VI',
         semester: semester2,
         teachers: [user1, user2],
+        description: '',
     });
 
     const exercise1 = await Exercise.create({
@@ -177,4 +179,7 @@ test('Laboratory classes', async () => {
         laboratoryClass3,
         laboratoryClass2,
     ]);
+
+    expect(await LaboratoryClass.fetchAllFromExercise(exercise1)).toStrictEqual([laboratoryClass1, laboratoryClass3]);
+    expect(await LaboratoryClass.fetchAllFromExercise(exercise2)).toStrictEqual([laboratoryClass2]);
 });

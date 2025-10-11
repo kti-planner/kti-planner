@@ -1,10 +1,14 @@
 ---
 import { Classroom, makeClassroomData } from '@backend/classroom';
 import { Exercise, makeExerciseData } from '@backend/exercise';
-import { makeSemesterData, Semester } from '@backend/semester';
+import { LaboratoryClass, makeLaboratoryClassData } from '@backend/laboratory-class';
+import { LaboratoryGroup } from '@backend/laboratory-group';
+import { makeScheduleChangeData, makeSemesterData, Semester } from '@backend/semester';
 import { makeSubjectData, Subject } from '@backend/subject';
+import { makeUserData } from '@backend/user';
 import Layout from '@layouts/Layout.astro';
 import EditExercise from '@components/exercises/EditExercise.vue';
+import ExerciseCalendar from '@components/exercises/ExerciseCalendar.vue';
 import Show from '@components/Show.astro';
 
 const { semesterSlug, subjectSlug, exerciseNumber } = Astro.params;
@@ -66,6 +70,34 @@ if (!classroom) {
 const exerciseData = makeExerciseData(exercise, classroom, await exercise.getTeacher());
 
 const MoodleLink = exercise.moodleUrl !== '' ? 'a' : 'div';
+
+const teachers = await subject.getTeachers();
+const teachersData = teachers.map(makeUserData);
+const teacher = teachers.find(teacher => teacher.id === exercise.teacherId);
+if (!teacher) {
+    throw new Error('Exercise teacher not found');
+}
+
+const scheduleChanges = await semester.getScheduleChanges();
+const scheduleChangesData = scheduleChanges.map(makeScheduleChangeData);
+
+const groups = await LaboratoryGroup.fetchAllFromSubject(subject);
+
+const laboratoryClasses = await LaboratoryClass.fetchAllFromExercise(exercise);
+
+const laboratoryClassesData = laboratoryClasses.map(laboratoryClass => {
+    const group = groups.find(g => g.id === laboratoryClass.laboratoryGroupId);
+    if (!group) {
+        throw new Error('Class group not found');
+    }
+
+    const classTeacher = teachers.find(teacher => teacher.id === laboratoryClass.teacherId);
+    if (!classTeacher) {
+        throw new Error('Class teacher not found');
+    }
+
+    return makeLaboratoryClassData(laboratoryClass, exercise, classroom, teacher, group, classTeacher);
+});
 ---
 
 <Layout
@@ -111,6 +143,17 @@ const MoodleLink = exercise.moodleUrl !== '' ? 'a' : 'div';
             class={exercise.moodleUrl === '' ? 'grayscale' : ''}
         />
     </MoodleLink>
+
+    <div class="mt-4">
+        <ExerciseCalendar
+            client:only="vue"
+            semester={semesterData}
+            subject={subjectData}
+            teachers={teachersData}
+            scheduleChanges={scheduleChangesData}
+            laboratoryClasses={laboratoryClassesData}
+        />
+    </div>
 </Layout>
 
 <style lang="scss">

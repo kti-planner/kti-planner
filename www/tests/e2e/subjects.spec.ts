@@ -43,11 +43,14 @@ test('Can add new subject and prevent duplicate subject creation', async ({ page
     await expect(page.getByRole('heading', { name: 'Add new subject' })).toBeVisible();
 
     await page.getByRole('textbox', { name: 'Subject name' }).fill('Sieci komputerowe - Informatyka sem. V');
+    await page.getByRole('textbox', { name: 'Description' }).fill('Subject test description <script>alert(0)</script>');
     await page.getByRole('combobox', { name: 'Teachers' }).selectOption('Jan Kowalski');
 
     await page.getByRole('button', { name: 'Add', exact: true }).click();
 
     await expect(page.locator('.breadcrumb')).toContainText('Sieci komputerowe - Informatyka sem. V');
+    await expect(page.locator('body')).toContainText('Subject test description');
+    await expect(page.locator('body')).not.toContainText('<script>alert(0)</script>');
 
     await page.goto('/semesters/2024-summer/');
     await expect(page.getByRole('link', { name: 'Sieci komputerowe - Informatyka sem. V' })).toBeVisible();
@@ -108,12 +111,14 @@ test('Can edit subject and prevent duplicate subject', async ({ page }) => {
     await expect(page.getByRole('heading', { name: 'Edit subject Lokalne sieci bezprzewodowe' })).toBeVisible();
 
     await page.getByRole('textbox', { name: 'Subject name' }).fill('Sieci Ethernet i IP');
+    await page.getByRole('textbox', { name: 'Description' }).fill('Test description');
     await page.getByRole('combobox', { name: 'Teachers' }).selectOption('Admin');
 
     await page.getByRole('button', { name: 'Save' }).click();
 
     await expect(page.locator('.breadcrumb')).toContainText('Sieci Ethernet i IP');
     await expect(page.locator('body')).toContainText('Sieci Ethernet i IP');
+    await expect(page.locator('body')).toContainText('Test description');
 
     // Can not edit subject with data that match already existing subject
     await page.getByRole('button', { name: 'Edit subject' }).click();
@@ -143,6 +148,7 @@ test.describe('API fetch tests', () => {
                 name: 'New Subject',
                 semesterId: '094f8324-7c58-4566-b5d7-e4fe8ed03a18',
                 teacherIds: ['c393c524-453c-4b02-bfad-5114fe828200'],
+                description: '',
             },
         });
 
@@ -158,6 +164,7 @@ test.describe('API fetch tests', () => {
                 name: 'New Subject',
                 semesterId: '094f8324-7c58-4566-b5d7-e4fe8ed03a18',
                 teacherIds: ['c393c524-453c-4b02-bfad-5114fe828200'],
+                description: '',
             },
         });
 
@@ -172,6 +179,7 @@ test.describe('API fetch tests', () => {
                 id: '3f58b671-5b38-43f8-bf0f-49d93048c52e',
                 name: 'Updated Subject',
                 teacherIds: ['feeaa186-3d69-4801-a580-88be10d53553'],
+                description: '',
             },
         });
 
@@ -187,6 +195,7 @@ test.describe('API fetch tests', () => {
                 id: '3f58b671-5b38-43f8-bf0f-49d93048c52e',
                 name: 'Updated Subject',
                 teacherIds: ['feeaa186-3d69-4801-a580-88be10d53553'],
+                description: '',
             },
         });
 
