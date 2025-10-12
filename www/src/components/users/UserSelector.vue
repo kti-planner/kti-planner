@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import type { UserData } from '@components/users/types';
+import type { UserPublicData } from '@components/users/types';
 
 const {
     id = crypto.randomUUID(),
@@ -8,16 +8,16 @@ const {
     modelValue = null,
 } = defineProps<{
     id?: string | undefined;
-    options: UserData[];
+    options: UserPublicData[];
     required?: boolean | undefined;
-    modelValue?: UserData | null | undefined;
+    modelValue?: UserPublicData | null | undefined;
 }>();
 
 const emit = defineEmits<{
-    'update:model-value': [value: UserData];
+    'update:model-value': [value: UserPublicData];
 }>();
 
-const value = computed<UserData | null>({
+const value = computed<UserPublicData | null>({
     get() {
         return modelValue;
     },

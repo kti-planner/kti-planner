@@ -1,18 +1,18 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
-import type { UserData } from '@components/users/types';
+import type { UserPublicData } from '@components/users/types';
 import IconButton from '@components/IconButton.vue';
 import UserSelector from '@components/users/UserSelector.vue';
 
-const model = defineModel<UserData[]>({ default: [] });
+const model = defineModel<UserPublicData[]>({ default: [] });
 
 defineProps<{
     id?: string | undefined;
-    options: UserData[];
+    options: UserPublicData[];
     required?: boolean | undefined;
 }>();
 
-const newSelection = ref<UserData | null>(null);
+const newSelection = ref<UserPublicData | null>(null);
 
 watch(newSelection, () => {
     if (newSelection.value !== null) {

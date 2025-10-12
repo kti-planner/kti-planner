@@ -9,7 +9,7 @@ import type { ClassroomData } from '@components/classrooms/types';
 import type { LaboratoryClassData } from '@components/laboratory-classes/types';
 import type { ScheduleChangeData, SemesterData } from '@components/semesters/types';
 import type { SubjectData } from '@components/subjects/types';
-import type { UserData } from '@components/users/types';
+import type { UserPublicData } from '@components/users/types';
 import Calendar from '@components/Calendar.vue';
 import EditLaboratoryClassForm from '@components/laboratory-classes/EditLaboratoryClassForm.vue';
 import LaboratoryClassEvent from '@components/laboratory-classes/LaboratoryClassEvent.vue';
@@ -44,15 +44,15 @@ const { semester, scheduleChanges, subjects, classrooms } = defineProps<{
     classrooms: ClassroomData[];
 }>();
 
-const teachers = computed<UserData[]>(() => {
+const teachers = computed<UserPublicData[]>(() => {
     const allTeachers = subjects.flatMap(subject => subject.teachers);
     const teachersById = Object.groupBy(allTeachers, teacher => teacher.id);
-    return Object.values(teachersById).map<UserData>(teachers => teachers![0]!);
+    return Object.values(teachersById).map<UserPublicData>(teachers => teachers![0]!);
 });
 
 const selectedSubjects = ref<SubjectData[]>([]);
 const selectedClassrooms = ref<ClassroomData[]>([]);
-const selectedTeachers = ref<UserData[]>([]);
+const selectedTeachers = ref<UserPublicData[]>([]);
 
 const { data: laboratoryClasses } = useApiFetch<LaboratoryClassData[]>(
     `/semesters/${semester.slug}/api/laboratory-classes/`,

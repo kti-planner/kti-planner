@@ -2,7 +2,7 @@ import assert from 'node:assert';
 import { type Classroom, makeClassroomData } from '@backend/classroom';
 import { db } from '@backend/db';
 import type { Subject } from '@backend/subject';
-import { makeUserData, User } from '@backend/user';
+import { makeUserPublicData, User } from '@backend/user';
 import type { ExerciseData } from '@components/exercises/types';
 
 interface DbExercise {
@@ -150,6 +150,6 @@ export function makeExerciseData(exercise: Exercise, classroom: Classroom, teach
         subjectId: exercise.subjectId,
         exerciseNumber: exercise.exerciseNumber,
         classroom: makeClassroomData(classroom),
-        teacher: makeUserData(teacher),
+        teacher: makeUserPublicData(teacher),
     };
 }

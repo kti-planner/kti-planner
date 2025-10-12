@@ -9,7 +9,7 @@ import type { LaboratoryClassData } from '@components/laboratory-classes/types';
 import type { LaboratoryGroupData } from '@components/laboratory-groups/types';
 import type { ScheduleChangeData, SemesterData } from '@components/semesters/types';
 import type { SubjectData } from '@components/subjects/types';
-import type { UserData } from '@components/users/types';
+import type { UserPublicData } from '@components/users/types';
 import Calendar from '@components/Calendar.vue';
 import EditLaboratoryClassForm from '@components/laboratory-classes/EditLaboratoryClassForm.vue';
 import LaboratoryClassEvent from '@components/laboratory-classes/LaboratoryClassEvent.vue';
@@ -21,7 +21,7 @@ const { apiUrl, selectedLaboratoryGroups, scheduleChanges } = defineProps<{
     scheduleChanges: ScheduleChangeData[];
     semester: SemesterData;
     subject: SubjectData;
-    teachers: UserData[];
+    teachers: UserPublicData[];
 }>();
 
 const translations = {

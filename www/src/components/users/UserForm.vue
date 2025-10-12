@@ -4,12 +4,12 @@ import type { UserRole } from '@backend/user';
 import { langId } from '@components/frontend/lang';
 import { currentUser } from '@components/frontend/user';
 import { apiPatch, apiPost } from '@components/api';
-import type { UserCreateApiData, UserData, UserEditApiData } from '@components/users/types';
+import type { UserCreateApiData, UserDetailsData, UserEditApiData } from '@components/users/types';
 import { generatePassword } from '@components/utils';
 import PasswordInputField from '@components/users/passwords/PasswordInputField.vue';
 
 const props = defineProps<{
-    user?: UserData;
+    user?: UserDetailsData;
 }>();
 
 const isEditing = computed(() => props.user !== undefined);

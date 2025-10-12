@@ -1,9 +1,15 @@
 import assert from 'node:assert';
+import { once } from 'node:events';
+import fs from 'node:fs';
+import { join } from 'node:path';
 import bcrypt from 'bcrypt';
+import { createCanvas } from 'canvas';
 import { db } from '@backend/db';
-import type { UserData } from '@components/users/types';
+import type { UserDetailsData, UserPublicData } from '@components/users/types';
 
 export type UserRole = 'admin' | 'teacher';
+
+const env = import.meta.env.PROD ? process.env : import.meta.env;
 
 interface DbUser {
     id: string;
@@ -78,7 +84,10 @@ export class User {
 
         assert(result);
 
-        return new User(result);
+        const user = new User(result);
+        await user.createEmailImage();
+
+        return user;
     }
 
     async edit(data: UserEditData): Promise<void> {
@@ -86,6 +95,7 @@ export class User {
             this.name = data.name;
         }
 
+        const prevEmail = this.email;
         if (data.email !== undefined) {
             this.email = data.email;
         }
@@ -105,6 +115,10 @@ export class User {
             this.passwordHash,
             this.role,
         ]);
+
+        if (data.email !== undefined && data.email !== prevEmail) {
+            await this.createEmailImage();
+        }
     }
 
     async checkPassword(password: string): Promise<boolean> {
@@ -115,9 +129,47 @@ export class User {
         const saltRounds = 10;
         return await bcrypt.hash(password, saltRounds);
     }
+
+    async createEmailImage(): Promise<void> {
+        if (env.EMAIL_IMG_DIR === undefined) {
+            console.warn('ENV variable EMAIL_IMG_DIR is unset, skipping email image generation');
+            return;
+        }
+
+        const canvas = createCanvas(200, 100);
+        const ctx = canvas.getContext('2d');
+        const font = '16px sans-serif';
+        ctx.font = font;
+
+        const metrics = ctx.measureText(this.email);
+        canvas.width = Math.ceil(metrics.width);
+        canvas.height = Math.ceil(metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent);
+
+        // Canvas looses state after resize
+        ctx.font = font;
+        ctx.fillStyle = '#212529';
+        ctx.fillText(this.email, 0, metrics.actualBoundingBoxAscent);
+
+        await fs.promises.mkdir(env.EMAIL_IMG_DIR, { recursive: true });
+
+        const destination = join(env.EMAIL_IMG_DIR, `${this.id}.png`);
+
+        const out = fs.createWriteStream(destination);
+        const pngStream = canvas.createPNGStream();
+        const writeStream = pngStream.pipe(out);
+        await once(writeStream, 'finish');
+    }
 }
 
-export function makeUserData(user: User): UserData {
+export function makeUserPublicData(user: User): UserPublicData {
+    return {
+        id: user.id,
+        name: user.name,
+        role: user.role,
+    };
+}
+
+export function makeUserDetailsData(user: User): UserDetailsData {
     return {
         id: user.id,
         name: user.name,

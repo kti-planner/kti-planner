@@ -1,5 +1,5 @@
 ---
-import { makeUserData } from '@backend/user';
+import { makeUserDetailsData } from '@backend/user';
 
 interface Props {
     title?: string | undefined;
@@ -9,7 +9,7 @@ interface Props {
 const { title = 'KTI Planner', description = null } = Astro.props;
 const { langId, user } = Astro.locals;
 
-const userData = user ? makeUserData(user) : null;
+const userData = user ? makeUserDetailsData(user) : null;
 ---
 
 <!doctype html>

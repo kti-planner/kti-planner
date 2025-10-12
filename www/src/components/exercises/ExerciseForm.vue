@@ -6,7 +6,7 @@ import type { ClassroomData } from '@components/classrooms/types';
 import type { ExerciseCreateApiData, ExerciseData, ExerciseEditApiData } from '@components/exercises/types';
 import type { SemesterData } from '@components/semesters/types';
 import type { SubjectData } from '@components/subjects/types';
-import type { UserData } from '@components/users/types';
+import type { UserPublicData } from '@components/users/types';
 import UserSelector from '@components/users/UserSelector.vue';
 
 const props = defineProps<{
@@ -23,7 +23,7 @@ const submitFailed = ref(false);
 const exerciseName = ref<string | undefined>(props.exercise?.name);
 const exerciseNumber = ref<number | undefined>(props.exercise?.exerciseNumber);
 const exerciseClassroomId = ref<string | undefined>(props.exercise?.classroom?.id);
-const teacher = ref<UserData | null>(props.exercise?.teacher ?? props.subject.teachers[0] ?? null);
+const teacher = ref<UserPublicData | null>(props.exercise?.teacher ?? props.subject.teachers[0] ?? null);
 
 async function submit() {
     if (

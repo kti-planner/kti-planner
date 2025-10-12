@@ -7,7 +7,7 @@ import type { ExerciseData } from '@components/exercises/types';
 import type { LaboratoryGroupData } from '@components/laboratory-groups/types';
 import type { ScheduleChangeData, SemesterData } from '@components/semesters/types';
 import type { SubjectData } from '@components/subjects/types';
-import type { UserData } from '@components/users/types';
+import type { UserPublicData } from '@components/users/types';
 import AddExercise from '@components/exercises/AddExercise.vue';
 import GenerateClasses from '@components/laboratory-classes/GenerateClasses.vue';
 import LaboratoryGroupListModal from '@components/laboratory-groups/LaboratoryGroupListModal.vue';
@@ -21,11 +21,13 @@ const translations = {
         'Laboratory groups': 'Laboratory groups',
         'Exercises': 'Exercises',
         'Teachers': 'Teachers',
+        'Teacher email': 'Teacher email',
     },
     'pl': {
         'Laboratory groups': 'Grupy laboratoryjne',
         'Exercises': 'Ćwiczenia',
         'Teachers': 'Prowadzący',
+        'Teacher email': 'Email prowadzącego',
     },
 };
 
@@ -36,7 +38,7 @@ function translate(text: keyof (typeof translations)[LangId]): string {
 const { subject, semester, laboratoryGroups } = defineProps<{
     subject: SubjectData;
     semester: SemesterData;
-    allUsers: UserData[];
+    allUsers: UserPublicData[];
     exercises: ExerciseData[];
     classrooms: ClassroomData[];
     laboratoryGroups: LaboratoryGroupData[];
@@ -123,7 +125,14 @@ const laboratoryGroupOptions = computed(() => Object.fromEntries(laboratoryGroup
                 </h2>
                 <ul>
                     <li v-for="teacher in subject.teachers" :key="teacher.id">
-                        {{ teacher.name }} &lt;{{ teacher.email }}&gt;
+                        {{ teacher.name }}
+                        <span class="text-nowrap"
+                            >&lt;<img
+                                :src="`/users/email/${teacher.id}/`"
+                                :alt="translate('Teacher email')"
+                                height="16"
+                            />&gt;</span
+                        >
                     </li>
                 </ul>
             </div>

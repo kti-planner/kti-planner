@@ -27,6 +27,7 @@
   "homepage": "https://github.com/kti-planner/kti-planner#readme",
   "dependencies": {
     "bcrypt": "^6.0.0",
+    "canvas": "^3.2.0",
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
     "ioredis": "^5.8.1",

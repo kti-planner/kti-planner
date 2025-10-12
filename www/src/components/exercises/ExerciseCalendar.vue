@@ -7,7 +7,7 @@ import { getInitialDate, getLaboratoryClassEvents, getScheduleChangeEvents } fro
 import type { LaboratoryClassData } from '@components/laboratory-classes/types';
 import type { ScheduleChangeData, SemesterData } from '@components/semesters/types';
 import type { SubjectData } from '@components/subjects/types';
-import type { UserData } from '@components/users/types';
+import type { UserPublicData } from '@components/users/types';
 import Calendar from '@components/Calendar.vue';
 import EditLaboratoryClassForm from '@components/laboratory-classes/EditLaboratoryClassForm.vue';
 import LaboratoryClassEvent from '@components/laboratory-classes/LaboratoryClassEvent.vue';
@@ -16,7 +16,7 @@ import Modal from '@components/Modal.vue';
 const { scheduleChanges, laboratoryClasses } = defineProps<{
     semester: SemesterData;
     subject: SubjectData;
-    teachers: UserData[];
+    teachers: UserPublicData[];
     scheduleChanges: ScheduleChangeData[];
     laboratoryClasses: LaboratoryClassData[];
 }>();

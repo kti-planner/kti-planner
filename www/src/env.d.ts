@@ -21,7 +21,8 @@ interface ImportMetaEnv {
     readonly POSTGRES_USER: string;
     readonly POSTGRES_PASSWORD: string;
     readonly POSTGRES_HOST: string;
-    readonly POSTGRES_PORT: string;
+    readonly POSTGRES_PORT: string | undefined;
+    readonly EMAIL_IMG_DIR: string;
 }
 
 interface ImportMeta {

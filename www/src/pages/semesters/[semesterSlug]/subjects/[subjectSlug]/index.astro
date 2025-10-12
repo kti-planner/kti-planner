@@ -4,7 +4,7 @@ import { Exercise, makeExerciseData } from '@backend/exercise';
 import { LaboratoryGroup, makeLaboratoryGroupData } from '@backend/laboratory-group';
 import { makeScheduleChangeData, makeSemesterData, Semester } from '@backend/semester';
 import { makeSubjectData, Subject } from '@backend/subject';
-import { makeUserData, User } from '@backend/user';
+import { makeUserPublicData, User } from '@backend/user';
 import Layout from '@layouts/Layout.astro';
 import SubjectApp from '@components/subjects/SubjectApp.vue';
 
@@ -51,7 +51,7 @@ const scheduleChanges = await semester.getScheduleChanges();
 const scheduleChangesData = scheduleChanges.map(makeScheduleChangeData);
 
 const allUsers = await User.fetchAll();
-const allUsersData = allUsers.map(makeUserData);
+const allUsersData = allUsers.map(makeUserPublicData);
 
 const classrooms = await Classroom.fetchAll();
 const classroomsData = classrooms.map(makeClassroomData);

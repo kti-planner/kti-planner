@@ -16,6 +16,7 @@ A dedicated content management system for planning classes organized by the Depa
     POSTGRES_DB=kti_planner
     POSTGRES_USER=webapp
     POSTGRES_PASSWORD=secret-password
+    EMAIL_IMG_DIR=<some directory>
     ```
 
 3. Start the database and Redis (needs to be restarted when files in the [db](db) directory change):

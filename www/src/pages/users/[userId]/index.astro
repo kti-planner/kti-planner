@@ -1,5 +1,5 @@
 ---
-import { makeUserData, User } from '@backend/user';
+import { makeUserDetailsData, User } from '@backend/user';
 import Layout from '@layouts/Layout.astro';
 import Show from '@components/Show.astro';
 import EditUser from '@components/users/EditUser.vue';
@@ -44,7 +44,7 @@ if (!targetUser) {
     return new Response(null, { status: 404 });
 }
 
-const userData = makeUserData(targetUser);
+const userData = makeUserDetailsData(targetUser);
 ---
 
 <Layout

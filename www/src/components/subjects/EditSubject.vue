@@ -2,7 +2,7 @@
 import { langId } from '@components/frontend/lang';
 import type { SemesterData } from '@components/semesters/types';
 import type { SubjectData } from '@components/subjects/types';
-import type { UserData } from '@components/users/types';
+import type { UserPublicData } from '@components/users/types';
 import IconButton from '@components/IconButton.vue';
 import Modal from '@components/Modal.vue';
 import SubjectForm from '@components/subjects/SubjectForm.vue';
@@ -10,7 +10,7 @@ import SubjectForm from '@components/subjects/SubjectForm.vue';
 defineProps<{
     semester: SemesterData;
     subject: SubjectData;
-    allUsers: UserData[];
+    allUsers: UserPublicData[];
 }>();
 
 const translations = {

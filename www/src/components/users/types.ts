@@ -1,7 +1,13 @@
 import z from 'zod';
 import type { UserRole } from '@backend/user';
 
-export interface UserData {
+export interface UserPublicData {
+    id: string;
+    name: string;
+    role: UserRole;
+}
+
+export interface UserDetailsData {
     id: string;
     name: string;
     email: string;

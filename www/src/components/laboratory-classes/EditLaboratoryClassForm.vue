@@ -6,13 +6,13 @@ import { apiPatch } from '@components/api';
 import type { LaboratoryClassData, LaboratoryClassEditApiData } from '@components/laboratory-classes/types';
 import type { SemesterData } from '@components/semesters/types';
 import type { SubjectData } from '@components/subjects/types';
-import type { UserData } from '@components/users/types';
+import type { UserPublicData } from '@components/users/types';
 import { formatDateLocalHhMm, formatDateLocalYyyyMmDd, parseDateLocalYyyyMmDd } from '@components/utils';
 import UserSelector from '@components/users/UserSelector.vue';
 
 const { laboratoryClass, semester, apiUrl } = defineProps<{
     laboratoryClass: LaboratoryClassData;
-    teachers: UserData[];
+    teachers: UserPublicData[];
     semester: SemesterData;
     apiUrl: string;
     subject: SubjectData;
@@ -51,7 +51,7 @@ function translate(text: keyof (typeof translations)[LangId]): string {
 const date = ref<string>(formatDateLocalYyyyMmDd(new Date(laboratoryClass.startDate)));
 const startTime = ref<string>(formatDateLocalHhMm(new Date(laboratoryClass.startDate)));
 const endTime = ref<string>(formatDateLocalHhMm(new Date(laboratoryClass.endDate)));
-const teacher = ref<UserData>(laboratoryClass.teacher);
+const teacher = ref<UserPublicData>(laboratoryClass.teacher);
 
 async function saveLaboratoryClass() {
     if (!currentUser) {

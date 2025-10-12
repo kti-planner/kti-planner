@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { langId } from '@components/frontend/lang';
 import type { SemesterData } from '@components/semesters/types';
-import type { UserData } from '@components/users/types';
+import type { UserPublicData } from '@components/users/types';
 import Modal from '@components/Modal.vue';
 import SubjectForm from '@components/subjects/SubjectForm.vue';
 
 defineProps<{
     semester: SemesterData;
-    allUsers: UserData[];
+    allUsers: UserPublicData[];
 }>();
 
 const translations = {

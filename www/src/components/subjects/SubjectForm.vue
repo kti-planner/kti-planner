@@ -4,14 +4,14 @@ import { langId } from '@components/frontend/lang';
 import { apiPatch, apiPost } from '@components/api';
 import type { SemesterData } from '@components/semesters/types';
 import type { SubjectCreateApiData, SubjectData, SubjectEditApiData } from '@components/subjects/types';
-import type { UserData } from '@components/users/types';
+import type { UserPublicData } from '@components/users/types';
 import { toHyphenatedLowercase } from '@components/utils';
 import UserMultiSelector from '@components/users/UserMultiSelector.vue';
 
 const props = defineProps<{
     semester: SemesterData;
     subject?: SubjectData;
-    allUsers: UserData[];
+    allUsers: UserPublicData[];
 }>();
 
 const isEditing = computed(() => props.subject !== undefined);
@@ -20,7 +20,7 @@ const submitFailed = ref(false);
 
 const subjectName = ref<string>(props.subject?.name ?? '');
 const description = ref<string>(props.subject?.description ?? '');
-const teachers = ref<UserData[]>(props.subject?.teachers ?? []);
+const teachers = ref<UserPublicData[]>(props.subject?.teachers ?? []);
 
 async function submit() {
     const success =

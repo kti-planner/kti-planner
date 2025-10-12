@@ -1,4 +1,4 @@
-FROM node:22-alpine AS builder
+FROM node:22 AS builder
 
 # This is a build time environment variable used in www/astro.config.mjs
 # It is set in compose.yaml
@@ -22,9 +22,8 @@ COPY --chown=node:node www/public/ www/public/
 
 RUN npm run build
 
-FROM node:22-alpine AS runner
+FROM node:22 AS runner
 
-RUN apk add tzdata
 ENV TZ="Europe/Warsaw"
 
 RUN mkdir -p /home/node/app && chown -R node:node /home/node/app
