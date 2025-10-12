@@ -19,7 +19,7 @@ const toggleBtnId = useId();
 </script>
 
 <template>
-    <div class="hstack flex-wrap gap-2">
+    <div class="hstack flex-wrap justify-content-center gap-2">
         <div v-for="(value, label) in options" :key="value.id">
             <input
                 :id="`${toggleBtnId}-${value.id}`"
