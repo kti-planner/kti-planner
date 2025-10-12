@@ -3,7 +3,7 @@ import { computed, ref } from 'vue';
 import { langId } from '@components/frontend/lang';
 import { apiPost } from '@components/api';
 import type { ExerciseData } from '@components/exercises/types';
-import { getNextDayOfTheWeekOccurance, isSameDay } from '@components/laboratory-classes/dates';
+import { getNextDayOfTheWeekOccurrence, isSameDay } from '@components/laboratory-classes/dates';
 import type { LaboratoryClassCreateApiData } from '@components/laboratory-classes/types';
 import type { LaboratoryGroupData } from '@components/laboratory-groups/types';
 import type { ScheduleChangeData, SemesterData } from '@components/semesters/types';
@@ -92,7 +92,7 @@ const plannedClasses = computed<PlannedClass[]>(() => {
     let last: Date | undefined;
     return exercises.map<PlannedClass>(exercise => {
         const date = last
-            ? getNextDayOfTheWeekOccurance(new Date(last), scheduleChanges, repeatWeeks.value - 1)
+            ? getNextDayOfTheWeekOccurrence(new Date(last), scheduleChanges, repeatWeeks.value - 1)
             : parseDateLocalYyyyMmDd(firstClassDateStr.value!);
 
         last = date;
