@@ -102,7 +102,7 @@ const options = computed((): CalendarOptions => {
 
 <template>
     <div class="overflow-y-auto">
-        <div class="calendar-wrapper" style="min-width: 480px">
+        <div class="calendar-wrapper" style="min-width: 600px">
             <FullCalendar ref="calendar" :options>
                 <!-- eslint-disable-next-line vue/no-unused-vars -->
                 <template #eventContent="arg">
