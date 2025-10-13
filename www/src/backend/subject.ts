@@ -11,6 +11,7 @@ interface DbSubject {
     semester_id: string;
     teacher_ids: string[];
     description: string;
+    moodle_course_id: string;
 }
 
 export interface SubjectCreateData {
@@ -18,6 +19,7 @@ export interface SubjectCreateData {
     semester: Semester;
     teachers: User[];
     description: string;
+    moodleCourseId: string;
 }
 
 export interface SubjectEditData {
@@ -25,6 +27,7 @@ export interface SubjectEditData {
     semester?: Semester | undefined;
     teachers?: User[] | undefined;
     description?: string | undefined;
+    moodleCourseId?: string | undefined;
 }
 
 export class Subject {
@@ -33,6 +36,7 @@ export class Subject {
     semesterId: string;
     teacherIds: string[];
     description: string;
+    moodleCourseId: string;
 
     constructor(data: DbSubject) {
         this.id = data.id;
@@ -40,6 +44,7 @@ export class Subject {
         this.semesterId = data.semester_id;
         this.teacherIds = data.teacher_ids;
         this.description = data.description;
+        this.moodleCourseId = data.moodle_course_id;
     }
 
     get slug(): string {
@@ -87,13 +92,14 @@ export class Subject {
 
         const result = (
             await db.query<DbSubject>(
-                'INSERT INTO subjects (id, name, semester_id, teacher_ids, description) VALUES ($1, $2, $3, $4, $5) RETURNING *',
+                'INSERT INTO subjects (id, name, semester_id, teacher_ids, description, moodle_course_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
                 [
                     crypto.randomUUID(),
                     data.name,
                     data.semester.id,
                     data.teachers.map(user => user.id),
                     data.description,
+                    data.moodleCourseId,
                 ],
             )
         ).rows[0];
@@ -120,9 +126,13 @@ export class Subject {
             this.description = data.description;
         }
 
+        if (data.moodleCourseId !== undefined) {
+            this.moodleCourseId = data.moodleCourseId;
+        }
+
         await db.query(
-            'UPDATE subjects SET name = $2, semester_id = $3, teacher_ids = $4, description = $5 WHERE id = $1',
-            [this.id, this.name, this.semesterId, this.teacherIds, this.description],
+            'UPDATE subjects SET name = $2, semester_id = $3, teacher_ids = $4, description = $5, moodle_course_id = $6 WHERE id = $1',
+            [this.id, this.name, this.semesterId, this.teacherIds, this.description, this.moodleCourseId],
         );
     }
 }
@@ -137,5 +147,6 @@ export function makeSubjectData(subject: Subject, allUsers: User[]): SubjectData
         slug: subject.slug,
         teachers: teachers.map(makeUserPublicData),
         description: subject.description,
+        moodleCourseId: subject.moodleCourseId,
     };
 }
