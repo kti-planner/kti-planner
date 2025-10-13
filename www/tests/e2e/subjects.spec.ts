@@ -43,12 +43,14 @@ test('Can add new subject and prevent duplicate subject creation', async ({ page
     await expect(page.getByRole('heading', { name: 'Add new subject' })).toBeVisible();
 
     await page.getByRole('textbox', { name: 'Subject name' }).fill('Sieci komputerowe - Informatyka sem. V');
+    await page.getByRole('textbox', { name: 'Moodle course ID' }).fill('1472');
     await page.getByRole('textbox', { name: 'Description' }).fill('Subject test description <script>alert(0)</script>');
     await page.getByRole('combobox', { name: 'Teachers' }).selectOption('Jan Kowalski');
 
     await page.getByRole('button', { name: 'Add', exact: true }).click();
 
     await expect(page.locator('.breadcrumb')).toContainText('Sieci komputerowe - Informatyka sem. V');
+    await expect(page.getByRole('link', { name: 'enauczanie' })).toHaveAttribute('href', /^.+1472$/);
     await expect(page.locator('body')).toContainText('Subject test description');
     await expect(page.locator('body')).not.toContainText('<script>alert(0)</script>');
 
@@ -111,12 +113,14 @@ test('Can edit subject and prevent duplicate subject', async ({ page }) => {
     await expect(page.getByRole('heading', { name: 'Edit subject Lokalne sieci bezprzewodowe' })).toBeVisible();
 
     await page.getByRole('textbox', { name: 'Subject name' }).fill('Sieci Ethernet i IP');
+    await page.getByRole('textbox', { name: 'Moodle course ID' }).fill('15');
     await page.getByRole('textbox', { name: 'Description' }).fill('Test description');
     await page.getByRole('combobox', { name: 'Teachers' }).selectOption('Admin');
 
     await page.getByRole('button', { name: 'Save' }).click();
 
     await expect(page.locator('.breadcrumb')).toContainText('Sieci Ethernet i IP');
+    await expect(page.getByRole('link', { name: 'enauczanie' })).toHaveAttribute('href', /^.+15$/);
     await expect(page.locator('body')).toContainText('Sieci Ethernet i IP');
     await expect(page.locator('body')).toContainText('Test description');
 
@@ -149,6 +153,7 @@ test.describe('API fetch tests', () => {
                 semesterId: '094f8324-7c58-4566-b5d7-e4fe8ed03a18',
                 teacherIds: ['c393c524-453c-4b02-bfad-5114fe828200'],
                 description: '',
+                moodleCourseId: '',
             },
         });
 
@@ -165,6 +170,7 @@ test.describe('API fetch tests', () => {
                 semesterId: '094f8324-7c58-4566-b5d7-e4fe8ed03a18',
                 teacherIds: ['c393c524-453c-4b02-bfad-5114fe828200'],
                 description: '',
+                moodleCourseId: '',
             },
         });
 
@@ -180,6 +186,7 @@ test.describe('API fetch tests', () => {
                 name: 'Updated Subject',
                 teacherIds: ['feeaa186-3d69-4801-a580-88be10d53553'],
                 description: '',
+                moodleCourseId: '',
             },
         });
 
@@ -196,6 +203,7 @@ test.describe('API fetch tests', () => {
                 name: 'Updated Subject',
                 teacherIds: ['feeaa186-3d69-4801-a580-88be10d53553'],
                 description: '',
+                moodleCourseId: '',
             },
         });
 
