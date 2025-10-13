@@ -9,6 +9,7 @@ export interface SubjectData {
     teachers: UserPublicData[];
     description: string;
     moodleCourseId: string;
+    moodleCourseUrl: string;
 }
 
 export const subjectCreateApiSchema = z.object({

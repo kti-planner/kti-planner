@@ -1,4 +1,5 @@
 import assert from 'node:assert';
+import { env } from 'src/utils';
 import { db } from '@backend/db';
 import type { Semester } from '@backend/semester';
 import { makeUserPublicData, User } from '@backend/user';
@@ -138,6 +139,8 @@ export class Subject {
 }
 
 export function makeSubjectData(subject: Subject, allUsers: User[]): SubjectData {
+    assert(env.MOODLE_BASE_URL !== undefined);
+
     const teachers = allUsers.filter(user => subject.teacherIds.includes(user.id));
 
     return {
@@ -148,5 +151,6 @@ export function makeSubjectData(subject: Subject, allUsers: User[]): SubjectData
         teachers: teachers.map(makeUserPublicData),
         description: subject.description,
         moodleCourseId: subject.moodleCourseId,
+        moodleCourseUrl: subject.moodleCourseId !== '' ? env.MOODLE_BASE_URL + subject.moodleCourseId : '',
     };
 }
