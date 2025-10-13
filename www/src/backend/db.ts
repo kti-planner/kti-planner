@@ -1,6 +1,5 @@
 import pg from 'pg';
-
-const env = import.meta.env.PROD ? process.env : import.meta.env;
+import { env } from 'src/utils';
 
 export const dbOptions = Object.freeze<pg.PoolConfig>({
     database: env.POSTGRES_DB,
