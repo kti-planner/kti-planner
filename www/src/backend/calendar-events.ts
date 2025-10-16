@@ -1,8 +1,10 @@
 import assert from 'node:assert';
-import type { Classroom } from '@backend/classroom';
+import { type Classroom, makeClassroomData } from '@backend/classroom';
 import { db } from '@backend/db';
-import type { Semester } from '@backend/semester';
-import type { User } from '@backend/user';
+import { makeSemesterData, type Semester } from '@backend/semester';
+import { makeUserPublicData, type User } from '@backend/user';
+import type { CalendarEventData } from '@components/calendar-events/types';
+import { formatDateLocalYyyyMmDdHhMm } from '@components/utils';
 
 interface DbCalendarEvent {
     id: string;
@@ -116,4 +118,21 @@ export class CalendarEvent {
             [this.id, this.name, this.classroomId, this.startDate, this.endDate],
         );
     }
+}
+
+export function makeCalendarEventData(
+    calendarEvent: CalendarEvent,
+    user: User,
+    classroom: Classroom,
+    semester: Semester,
+): CalendarEventData {
+    return {
+        id: calendarEvent.id,
+        name: calendarEvent.name,
+        user: makeUserPublicData(user),
+        classroom: makeClassroomData(classroom),
+        semester: makeSemesterData(semester),
+        startDate: formatDateLocalYyyyMmDdHhMm(calendarEvent.startDate),
+        endDate: formatDateLocalYyyyMmDdHhMm(calendarEvent.endDate),
+    };
 }
