@@ -10,7 +10,7 @@ import {
     calendarEventEditApiSchema,
 } from '@components/calendar-events/types';
 
-export const GET: APIRoute = async ({ params }) => {
+export const GET: APIRoute = async ({ params, url }) => {
     const { semesterSlug } = params;
     if (semesterSlug === undefined) {
         return new Response(null, { status: 404 });
@@ -21,20 +21,28 @@ export const GET: APIRoute = async ({ params }) => {
         return new Response(null, { status: 404 });
     }
 
+    const classroomFilter = url.searchParams.getAll('classroom');
+
     const calendarEvents = await CalendarEvent.fetchAllFromSemester(semester);
     const users = await User.fetchAll();
     const classrooms = await Classroom.fetchAll();
 
     return Response.json(
-        calendarEvents.map(calendarEvent => {
-            const user = users.find(u => u.id === calendarEvent.userId);
-            assert(user);
+        calendarEvents
+            .map<CalendarEventData | null>(calendarEvent => {
+                const user = users.find(u => u.id === calendarEvent.userId);
+                assert(user);
 
-            const classroom = classrooms.find(c => c.id === calendarEvent.classroomId);
-            assert(classroom);
+                const classroom = classrooms.find(c => c.id === calendarEvent.classroomId);
+                assert(classroom);
 
-            return makeCalendarEventData(calendarEvent, user, classroom, semester);
-        }) satisfies CalendarEventData[],
+                if (classroomFilter.length > 0 && !classroomFilter.includes(calendarEvent.classroomId)) {
+                    return null;
+                }
+
+                return makeCalendarEventData(calendarEvent, user, classroom, semester);
+            })
+            .filter(data => data !== null) satisfies CalendarEventData[],
     );
 };
 
