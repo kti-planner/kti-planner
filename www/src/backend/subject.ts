@@ -6,6 +6,9 @@ import { makeUserPublicData, User } from '@backend/user';
 import type { SubjectData } from '@components/subjects/types';
 import { toHyphenatedLowercase } from '@components/utils';
 
+assert(env.MOODLE_BASE_URL !== undefined);
+const moodleBaseUrl = env.MOODLE_BASE_URL;
+
 interface DbSubject {
     id: string;
     name: string;
@@ -139,8 +142,6 @@ export class Subject {
 }
 
 export function makeSubjectData(subject: Subject, allUsers: User[]): SubjectData {
-    assert(env.MOODLE_BASE_URL !== undefined);
-
     const teachers = allUsers.filter(user => subject.teacherIds.includes(user.id));
 
     return {
@@ -151,6 +152,6 @@ export function makeSubjectData(subject: Subject, allUsers: User[]): SubjectData
         teachers: teachers.map(makeUserPublicData),
         description: subject.description,
         moodleCourseId: subject.moodleCourseId,
-        moodleCourseUrl: subject.moodleCourseId !== '' ? env.MOODLE_BASE_URL + subject.moodleCourseId : '',
+        moodleCourseUrl: subject.moodleCourseId !== '' ? moodleBaseUrl + subject.moodleCourseId : '',
     };
 }
