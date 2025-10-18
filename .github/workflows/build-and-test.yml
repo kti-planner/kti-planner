@@ -31,6 +31,7 @@ jobs:
           POSTGRES_USER=CI
           POSTGRES_PASSWORD=CI_PASS
           POSTGRES_DB=kti_planner
+          MOODLE_BASE_URL=https://enauczanie.pg.edu.pl/2025/course/view.php?id=
           EOF
 
       - name: Run app
