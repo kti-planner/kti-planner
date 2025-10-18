@@ -10,13 +10,14 @@ A dedicated content management system for planning classes organized by the Depa
     npm install
     ```
 
-2. Make a `.env` file in the root of the project for database credentials (example values below):
+2. Make a `.env` file in the root of the project for environment variables (example values below):
 
     ```ini
     POSTGRES_DB=kti_planner
     POSTGRES_USER=webapp
     POSTGRES_PASSWORD=secret-password
     EMAIL_IMG_DIR=<some directory>
+    MOODLE_BASE_URL=https://enauczanie.pg.edu.pl/2025/course/view.php?id=
     ```
 
 3. Start the database and Redis (needs to be restarted when files in the [db](db) directory change):

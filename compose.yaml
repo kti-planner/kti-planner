@@ -16,6 +16,7 @@ services:
     environment:
       POSTGRES_HOST: postgres
       EMAIL_IMG_DIR: "/home/node/app/uploads/user-emails"
+      MOODLE_BASE_URL: "https://enauczanie.pg.edu.pl/2025/course/view.php?id="
     stop_grace_period: 1s
   postgres:
     build:

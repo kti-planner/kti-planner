@@ -4,12 +4,11 @@ import fs from 'node:fs';
 import { join } from 'node:path';
 import bcrypt from 'bcrypt';
 import { createCanvas } from 'canvas';
+import { env } from 'src/utils';
 import { db } from '@backend/db';
 import type { UserDetailsData, UserPublicData } from '@components/users/types';
 
 export type UserRole = 'admin' | 'teacher';
-
-const env = import.meta.env.PROD ? process.env : import.meta.env;
 
 interface DbUser {
     id: string;
