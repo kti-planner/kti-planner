@@ -61,24 +61,14 @@ const laboratoryGroupOptions = computed(() => Object.fromEntries(laboratoryGroup
         <EditSubject v-if="currentUser" :semester :subject :all-users />
     </h1>
     <a
-        v-if="subject.moodleCourseUrl !== ''"
-        :href="subject.moodleCourseUrl"
-        target="_blank"
-        class="d-block mx-auto mb-3"
+        :href="subject.moodleCourseUrl !== '' ? subject.moodleCourseUrl : undefined"
+        :target="subject.moodleCourseUrl !== '' ? '_blank' : undefined"
+        class="moodle-url d-block mx-auto mb-3"
         style="width: fit-content"
+        :title="subject.moodleCourseUrl === '' && currentUser ? translate('No course ID in subject data') : undefined"
     >
         <img src="/assets/images/enauczanie.png" alt="enauczanie" width="142" height="23" />
     </a>
-    <div v-else class="mx-auto mb-3" style="width: fit-content">
-        <img
-            src="/assets/images/enauczanie.png"
-            alt="enauczanie"
-            width="142"
-            height="23"
-            class="no-moodle-url"
-            :title="currentUser ? translate('No course ID in subject data') : ''"
-        />
-    </div>
     <div v-if="subject.description !== ''" class="mb-4">
         <Markdown :src="subject.description" />
     </div>
@@ -166,7 +156,7 @@ const laboratoryGroupOptions = computed(() => Object.fromEntries(laboratoryGroup
     max-width: 600px;
 }
 
-.no-moodle-url {
+.moodle-url:not(:any-link) > img {
     filter: grayscale(1) brightness(2.5);
     cursor: not-allowed;
 }
