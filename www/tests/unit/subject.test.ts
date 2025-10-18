@@ -40,6 +40,7 @@ test('Subjects', async () => {
         semester: semester1,
         teachers: [user1],
         description: 'Opis',
+        moodleCourseId: '1472',
     });
 
     expect(subject1).toHaveProperty('name', 'Sieci komputerowe - Informatyka sem. V');
@@ -47,6 +48,7 @@ test('Subjects', async () => {
     expect(subject1).toHaveProperty('slug', 'sieci-komputerowe---informatyka-sem.-v');
     expect(subject1).toHaveProperty('teacherIds', [user1.id]);
     expect(subject1).toHaveProperty('description', subject1.description);
+    expect(subject1).toHaveProperty('moodleCourseId', subject1.moodleCourseId);
 
     expect(await subject1.getTeachers()).toStrictEqual([user1]);
 
@@ -66,6 +68,7 @@ test('Subjects', async () => {
         semester: semester2,
         teachers: [user1, user2],
         description: '',
+        moodleCourseId: '',
     });
 
     expect(subject2).toHaveProperty('name', 'Zarządzanie bezpieczeństwem sieci - Informatyka sem. VI');
@@ -73,6 +76,7 @@ test('Subjects', async () => {
     expect(subject2).toHaveProperty('slug', 'zarządzanie-bezpieczeństwem-sieci---informatyka-sem.-vi');
     expect(subject2).toHaveProperty('teacherIds', [user1.id, user2.id]);
     expect(subject2).toHaveProperty('description', subject2.description);
+    expect(subject2).toHaveProperty('moodleCourseId', subject2.moodleCourseId);
 
     expect(await subject2.getTeachers()).toStrictEqual([user1, user2]);
 
@@ -104,6 +108,7 @@ test('Subjects', async () => {
     expect(subject2).toHaveProperty('slug', 'lokalne-sieci-bezprzewodowe---informatyka-sem.-vi');
     expect(subject2).toHaveProperty('teacherIds', [user2.id]);
     expect(subject2).toHaveProperty('description', subject2.description);
+    expect(subject2).toHaveProperty('moodleCourseId', subject2.moodleCourseId);
 
     expect(await subject2.getTeachers()).toStrictEqual([user2]);
 
@@ -112,6 +117,7 @@ test('Subjects', async () => {
     expect(subject1).toHaveProperty('slug', 'sieci-komputerowe---informatyka-sem.-v');
     expect(subject1).toHaveProperty('teacherIds', [user1.id]);
     expect(subject1).toHaveProperty('description', subject1.description);
+    expect(subject1).toHaveProperty('moodleCourseId', subject1.moodleCourseId);
 
     expect(await subject1.getTeachers()).toStrictEqual([user1]);
 

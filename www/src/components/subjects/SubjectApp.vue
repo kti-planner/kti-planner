@@ -22,12 +22,14 @@ const translations = {
         'Exercises': 'Exercises',
         'Teachers': 'Teachers',
         'Teacher email': 'Teacher email',
+        'No course ID in subject data': 'No course ID in subject data',
     },
     'pl': {
         'Laboratory groups': 'Grupy laboratoryjne',
         'Exercises': 'Ćwiczenia',
         'Teachers': 'Prowadzący',
         'Teacher email': 'Email prowadzącego',
+        'No course ID in subject data': 'Brak ID kursu w danych przedmiotu',
     },
 };
 
@@ -58,6 +60,15 @@ const laboratoryGroupOptions = computed(() => Object.fromEntries(laboratoryGroup
         {{ subject.name }}
         <EditSubject v-if="currentUser" :semester :subject :all-users />
     </h1>
+    <a
+        :href="subject.moodleCourseUrl !== '' ? subject.moodleCourseUrl : undefined"
+        :target="subject.moodleCourseUrl !== '' ? '_blank' : undefined"
+        class="moodle-url d-block mx-auto mb-3"
+        style="width: fit-content"
+        :title="subject.moodleCourseUrl === '' && currentUser ? translate('No course ID in subject data') : undefined"
+    >
+        <img src="/assets/images/enauczanie.png" alt="enauczanie" width="142" height="23" />
+    </a>
     <div v-if="subject.description !== ''" class="mb-4">
         <Markdown :src="subject.description" />
     </div>
@@ -143,5 +154,10 @@ const laboratoryGroupOptions = computed(() => Object.fromEntries(laboratoryGroup
 <style scoped lang="scss">
 .exercises-list {
     max-width: 600px;
+}
+
+.moodle-url:not(:any-link) > img {
+    filter: grayscale(1) brightness(2.5);
+    cursor: not-allowed;
 }
 </style>

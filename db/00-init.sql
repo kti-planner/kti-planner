@@ -32,11 +32,12 @@ CREATE TABLE classrooms (
 );
 
 CREATE TABLE subjects (
-    id          uuid PRIMARY KEY,
-    name        text NOT NULL,
-    semester_id uuid REFERENCES semesters NOT NULL,
-    teacher_ids uuid[] NOT NULL,
-    description text NOT NULL
+    id               uuid PRIMARY KEY,
+    name             text NOT NULL,
+    semester_id      uuid REFERENCES semesters NOT NULL,
+    teacher_ids      uuid[] NOT NULL,
+    description      text NOT NULL,
+    moodle_course_id text NOT NULL
 );
 
 CREATE TABLE exercises (

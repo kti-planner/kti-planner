@@ -19,6 +19,7 @@ const isEditing = computed(() => props.subject !== undefined);
 const submitFailed = ref(false);
 
 const subjectName = ref<string>(props.subject?.name ?? '');
+const moodleCourseId = ref<string>(props.subject?.moodleCourseId ?? '');
 const description = ref<string>(props.subject?.description ?? '');
 const teachers = ref<UserPublicData[]>(props.subject?.teachers ?? []);
 
@@ -30,12 +31,14 @@ async function submit() {
                   semesterId: props.semester.id,
                   teacherIds: teachers.value.map(user => user.id),
                   description: description.value,
+                  moodleCourseId: moodleCourseId.value,
               } satisfies SubjectCreateApiData)
             : await apiPatch<boolean>('/semesters/api/subjects/', {
                   id: props.subject.id,
                   name: subjectName.value,
                   teacherIds: teachers.value.map(user => user.id),
                   description: description.value,
+                  moodleCourseId: moodleCourseId.value,
               } satisfies SubjectEditApiData);
 
     if (success === undefined) {
@@ -59,6 +62,7 @@ async function submit() {
 const translations = {
     'en': {
         'Subject name': 'Subject name',
+        'Moodle course ID': 'Moodle course ID',
         'Description': 'Description',
         'Teachers': 'Teachers',
         'Save': 'Save',
@@ -68,6 +72,7 @@ const translations = {
     },
     'pl': {
         'Subject name': 'Nazwa przedmiotu',
+        'Moodle course ID': 'ID kursu Moodle',
         'Description': 'Opis',
         'Teachers': 'Nauczyciele',
         'Save': 'Zapisz',
@@ -82,6 +87,7 @@ function translate(text: keyof (typeof translations)[LangId]): string {
 }
 
 const nameId = crypto.randomUUID();
+const moodleCourseInputId = crypto.randomUUID();
 const descriptionId = crypto.randomUUID();
 const teachersId = crypto.randomUUID();
 </script>
@@ -91,6 +97,11 @@ const teachersId = crypto.randomUUID();
         <div>
             <label :for="nameId" class="form-label">{{ translate('Subject name') }}</label>
             <input :id="nameId" v-model="subjectName" type="text" class="form-control" required autofocus />
+        </div>
+
+        <div>
+            <label :for="moodleCourseInputId" class="form-label">{{ translate('Moodle course ID') }}</label>
+            <input :id="moodleCourseInputId" v-model="moodleCourseId" type="text" class="form-control" />
         </div>
 
         <div>

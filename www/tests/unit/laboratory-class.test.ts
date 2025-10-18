@@ -52,6 +52,7 @@ test('Laboratory classes', async () => {
         semester: semester1,
         teachers: [user1],
         description: '',
+        moodleCourseId: '',
     });
 
     const subject2 = await Subject.create({
@@ -59,6 +60,7 @@ test('Laboratory classes', async () => {
         semester: semester2,
         teachers: [user1, user2],
         description: '',
+        moodleCourseId: '',
     });
 
     const exercise1 = await Exercise.create({

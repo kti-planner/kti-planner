@@ -8,6 +8,8 @@ export interface SubjectData {
     slug: string;
     teachers: UserPublicData[];
     description: string;
+    moodleCourseId: string;
+    moodleCourseUrl: string;
 }
 
 export const subjectCreateApiSchema = z.object({
@@ -15,6 +17,7 @@ export const subjectCreateApiSchema = z.object({
     semesterId: z.uuid(),
     teacherIds: z.uuid().array(),
     description: z.string(),
+    moodleCourseId: z.string(),
 });
 
 export type SubjectCreateApiData = z.input<typeof subjectCreateApiSchema>;
@@ -24,6 +27,7 @@ export const subjectEditApiSchema = z.object({
     name: z.string().optional(),
     teacherIds: z.uuid().array().optional(),
     description: z.string().optional(),
+    moodleCourseId: z.string().optional(),
 });
 
 export type SubjectEditApiData = z.input<typeof subjectEditApiSchema>;

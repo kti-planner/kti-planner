@@ -4,7 +4,7 @@ import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
     plugins: [tsconfigPaths()],
-    envPrefix: 'POSTGRES_',
+    envPrefix: ['POSTGRES_', 'MOODLE_BASE_URL'],
     test: {
         include: ['www/tests/unit/**/*.test.ts'],
         setupFiles: ['www/tests/unit/test-db.ts'],

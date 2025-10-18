@@ -23,6 +23,7 @@ interface ImportMetaEnv {
     readonly POSTGRES_HOST: string;
     readonly POSTGRES_PORT: string | undefined;
     readonly EMAIL_IMG_DIR: string;
+    readonly MOODLE_BASE_URL: string;
 }
 
 interface ImportMeta {

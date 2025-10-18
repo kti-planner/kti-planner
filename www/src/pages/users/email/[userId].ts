@@ -2,9 +2,8 @@ import assert from 'node:assert';
 import fs from 'node:fs';
 import { join } from 'node:path';
 import type { APIRoute } from 'astro';
+import { env } from 'src/utils';
 import { User } from '@backend/user';
-
-const env = import.meta.env.PROD ? process.env : import.meta.env;
 
 async function createImageResponse(path: string): Promise<Response> {
     const data = await fs.promises.readFile(path);
