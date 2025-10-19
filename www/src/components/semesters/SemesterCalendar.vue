@@ -16,6 +16,7 @@ import type { LaboratoryClassData } from '@components/laboratory-classes/types';
 import type { ScheduleChangeData, SemesterData } from '@components/semesters/types';
 import type { SubjectData } from '@components/subjects/types';
 import type { UserPublicData } from '@components/users/types';
+import { formatDateLocalYyyyMmDdHhMm } from '@components/utils';
 import Calendar from '@components/Calendar.vue';
 import CalendarEvent from '@components/calendar-events/CalendarEvent.vue';
 import CalendarEventForm from '@components/calendar-events/CalendarEventForm.vue';
@@ -32,6 +33,8 @@ const translations = {
         'Edit class': 'Edit class',
         'Class details': 'Class details',
         'Add event': 'Add event',
+        'Edit event': 'Edit event',
+        'Event details': 'Event details',
     },
     'pl': {
         'Subjects': 'Przedmioty',
@@ -40,6 +43,8 @@ const translations = {
         'Edit class': 'Edytuj zajęcia',
         'Class details': 'Szczegóły zajęć',
         'Add event': 'Dodaj wydarzenie',
+        'Edit event': 'Edytuj wydarzenie',
+        'Event details': 'Szczegóły wydarzenia',
     },
 };
 
@@ -95,23 +100,33 @@ const classDetailsModal = useTemplateRef('classDetailsModal');
 const clickedLaboratoryClass = shallowRef<LaboratoryClassData | null>(null);
 const clickedClassSubject = shallowRef<SubjectData | null>(null);
 
-function handleEventClick(arg: EventClickArg) {
-    if (!('laboratoryClass' in arg.event.extendedProps)) {
-        return;
-    }
-
-    clickedLaboratoryClass.value = arg.event.extendedProps.laboratoryClass;
-    clickedClassSubject.value = subjects.find(s => s.id === clickedLaboratoryClass.value!.exercise.subjectId) ?? null;
-    classDetailsModal.value?.show();
-}
-
-const addEventModal = useTemplateRef('addEventModal');
+const calendarEventModal = useTemplateRef('addEventModal');
+const clickedCalendarEvent = shallowRef<CalendarEventData | null>(null);
 const calendarSelectionStart = shallowRef(new Date());
 const calendarSelectionEnd = shallowRef(new Date());
+
+function handleEventClick(arg: EventClickArg) {
+    if ('laboratoryClass' in arg.event.extendedProps) {
+        clickedLaboratoryClass.value = arg.event.extendedProps.laboratoryClass;
+
+        clickedClassSubject.value =
+            subjects.find(s => s.id === clickedLaboratoryClass.value!.exercise.subjectId) ?? null;
+
+        classDetailsModal.value?.show();
+    }
+
+    if ('calendarEvent' in arg.event.extendedProps) {
+        clickedCalendarEvent.value = arg.event.extendedProps.calendarEvent;
+        calendarEventModal.value?.show();
+    }
+}
+
 function handleCalendarSelection(info: DateSelectArg) {
     calendarSelectionStart.value = info.start;
     calendarSelectionEnd.value = info.end;
-    addEventModal.value?.show();
+    clickedCalendarEvent.value = null;
+
+    calendarEventModal.value?.show();
 }
 </script>
 
@@ -144,14 +159,22 @@ function handleCalendarSelection(info: DateSelectArg) {
             </Calendar>
 
             <Modal ref="addEventModal">
-                <template #header>{{ translate('Add event') }}</template>
+                <template #header>{{
+                    clickedCalendarEvent === null
+                        ? translate('Add event')
+                        : currentUser
+                          ? translate('Edit event')
+                          : translate('Event details')
+                }}</template>
                 <CalendarEventForm
                     :semester
                     :classrooms
-                    :calendar-event="{
-                        startDate: calendarSelectionStart,
-                        endDate: calendarSelectionEnd,
-                    }"
+                    :calendar-event="
+                        clickedCalendarEvent ?? {
+                            startDate: formatDateLocalYyyyMmDdHhMm(calendarSelectionStart),
+                            endDate: formatDateLocalYyyyMmDdHhMm(calendarSelectionEnd),
+                        }
+                    "
                 />
             </Modal>
 

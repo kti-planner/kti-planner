@@ -1,28 +1,30 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import type { CalendarEvent } from '@backend/calendar-events';
 import { langId } from '@components/frontend/lang';
+import { currentUser } from '@components/frontend/user';
 import { apiPatch, apiPost } from '@components/api';
-import type { CalendarEventCreateApiData, CalendarEventEditApiData } from '@components/calendar-events/types';
+import type {
+    CalendarEventCreateApiData,
+    CalendarEventData,
+    CalendarEventEditApiData,
+} from '@components/calendar-events/types';
 import type { ClassroomData } from '@components/classrooms/types';
 import type { SemesterData } from '@components/semesters/types';
-import { formatDateLocalHhMm, formatDateLocalYyyyMmDd } from '@components/utils';
+import { parseDateLocalYyyyMmDd } from '@components/utils';
 
 const props = defineProps<{
     semester: SemesterData;
     classrooms: ClassroomData[];
-    calendarEvent?: Partial<CalendarEvent>;
+    calendarEvent?: Partial<CalendarEventData>;
 }>();
 
-const isEditing = computed(() => false);
-
-const submitFailed = ref(false);
+const isEditing = computed(() => props.calendarEvent?.id !== undefined);
 
 const name = ref<string>(props.calendarEvent?.name ?? '');
-const date = ref<string>(formatDateLocalYyyyMmDd(new Date(props.calendarEvent?.startDate ?? new Date())));
-const startTime = ref<string>(formatDateLocalHhMm(new Date(props.calendarEvent?.startDate ?? new Date())));
-const endTime = ref<string>(formatDateLocalHhMm(new Date(props.calendarEvent?.endDate ?? new Date())));
-const classroomId = ref<string | undefined>(props.calendarEvent?.classroomId);
+const date = ref<string>(props.calendarEvent?.startDate?.split('T')[0] ?? '');
+const startTime = ref<string>(props.calendarEvent?.startDate?.split('T')[1] ?? '');
+const endTime = ref<string>(props.calendarEvent?.endDate?.split('T')[1] ?? '');
+const classroomId = ref<string | undefined>(props.calendarEvent?.classroom?.id);
 
 async function submit() {
     if (name.value === '' || classroomId.value === undefined) {
@@ -53,8 +55,6 @@ async function submit() {
         return;
     }
 
-    submitFailed.value = !success;
-
     if (success) {
         window.location.reload();
     }
@@ -64,9 +64,9 @@ const translations = {
     'en': {
         'Name': 'Name',
         'Classroom': 'Classroom',
+        'Teacher': 'Teacher',
         'Save': 'Save',
         'Add': 'Add',
-        'Exercise with this name or number already exists.': 'Exercise with this name or number already exists.',
         'Manage classrooms': 'Manage classrooms',
         'Date': 'Date',
         'Start time': 'Start time',
@@ -75,9 +75,9 @@ const translations = {
     'pl': {
         'Name': 'Nazwa',
         'Classroom': 'Sala',
+        'Teacher': 'Nauczyciel',
         'Save': 'Zapisz',
         'Add': 'Dodaj',
-        'Exercise with this name or number already exists.': 'Ćwiczenie o podanej nazwie lub numerze już isnieje.',
         'Manage classrooms': 'Zarządzaj salami',
         'Date': 'Data',
         'Start time': 'Czas rozpoczęcia',
@@ -98,35 +98,53 @@ const classroomInputId = crypto.randomUUID();
 
 <template>
     <form class="vstack gap-3 mx-auto" style="max-width: 500px" @submit.prevent="submit">
-        <div>
-            <label :for="dateId" class="form-label">{{ translate('Date') }}</label>
-            <input
-                :id="dateId"
-                v-model="date"
-                type="date"
-                :min="semester.startDate"
-                :max="semester.endDate"
-                required
-                class="form-control"
-            />
+        <template v-if="currentUser">
+            <div>
+                <label :for="dateId" class="form-label">{{ translate('Date') }}</label>
+                <input
+                    :id="dateId"
+                    v-model="date"
+                    type="date"
+                    :min="semester.startDate"
+                    :max="semester.endDate"
+                    required
+                    class="form-control"
+                />
+            </div>
+
+            <div>
+                <label :for="startTimeId" class="form-label">{{ translate('Start time') }}</label>
+                <input :id="startTimeId" v-model="startTime" type="time" step="300" required class="form-control" />
+            </div>
+
+            <div>
+                <label :for="endTimeId" class="form-label">{{ translate('End time') }}</label>
+                <input :id="endTimeId" v-model="endTime" type="time" step="300" required class="form-control" />
+            </div>
+        </template>
+        <div v-else>
+            {{ translate('Date') }}:
+            <br />
+            {{ parseDateLocalYyyyMmDd(date).toLocaleDateString('pl-PL') }} {{ startTime }} - {{ endTime }}
         </div>
 
-        <div>
-            <label :for="startTimeId" class="form-label">{{ translate('Start time') }}</label>
-            <input :id="startTimeId" v-model="startTime" type="time" step="300" required class="form-control" />
-        </div>
-
-        <div>
-            <label :for="endTimeId" class="form-label">{{ translate('End time') }}</label>
-            <input :id="endTimeId" v-model="endTime" type="time" step="300" required class="form-control" />
-        </div>
-
-        <div>
+        <div v-if="currentUser">
             <label :for="nameId" class="form-label">{{ translate('Name') }}</label>
             <input :id="nameId" v-model="name" type="text" class="form-control" required autofocus />
         </div>
+        <div v-else>
+            {{ translate('Name') }}:
+            <br />
+            {{ name }}
+        </div>
 
-        <div>
+        <div v-if="calendarEvent?.user">
+            {{ translate('Teacher') }}:
+            <br />
+            {{ calendarEvent.user.name }}
+        </div>
+
+        <div v-if="currentUser">
             <label :for="classroomInputId" class="form-label">{{ translate('Classroom') }}</label>
             <select :id="classroomInputId" v-model="classroomId" class="form-select" required>
                 <option v-for="classroom in classrooms" :key="classroom.id" :value="classroom.id">
@@ -139,13 +157,14 @@ const classroomInputId = crypto.randomUUID();
                 >{{ translate('Manage classrooms') }}</a
             >
         </div>
-
-        <div class="text-center">
-            <button type="submit" class="btn btn-success">{{ translate(isEditing ? 'Save' : 'Add') }}</button>
+        <div v-else>
+            {{ translate('Classroom') }}:
+            <br />
+            {{ calendarEvent?.classroom?.name }}
         </div>
 
-        <div v-if="submitFailed" class="text-center text-danger">
-            {{ translate('Exercise with this name or number already exists.') }}
+        <div v-if="currentUser" class="text-center">
+            <button type="submit" class="btn btn-success">{{ translate(isEditing ? 'Save' : 'Add') }}</button>
         </div>
     </form>
 </template>
