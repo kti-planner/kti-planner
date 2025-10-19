@@ -3,6 +3,7 @@ import { computed, ref } from 'vue';
 import { langId } from '@components/frontend/lang';
 import { currentUser } from '@components/frontend/user';
 import { apiPatch, apiPost } from '@components/api';
+import { CalendarEventRepeatState } from '@components/calendar-events/state';
 import type {
     CalendarEventCreateApiData,
     CalendarEventData,
@@ -15,16 +16,19 @@ import { parseDateLocalYyyyMmDd } from '@components/utils';
 const props = defineProps<{
     semester: SemesterData;
     classrooms: ClassroomData[];
-    calendarEvent?: Partial<CalendarEventData>;
+    calendarEvent: Pick<CalendarEventData, 'startDate' | 'endDate'> &
+        Partial<Omit<CalendarEventData, 'startDate' | 'endDate'>>;
 }>();
 
 const isEditing = computed(() => props.calendarEvent?.id !== undefined);
 
-const name = ref<string>(props.calendarEvent?.name ?? '');
-const date = ref<string>(props.calendarEvent?.startDate?.split('T')[0] ?? '');
-const startTime = ref<string>(props.calendarEvent?.startDate?.split('T')[1] ?? '');
-const endTime = ref<string>(props.calendarEvent?.endDate?.split('T')[1] ?? '');
+const name = ref<string>(props.calendarEvent.name ?? '');
+const date = ref<string>(props.calendarEvent.startDate.split('T')[0] ?? '');
+const startTime = ref<string>(props.calendarEvent.startDate.split('T')[1] ?? '');
+const endTime = ref<string>(props.calendarEvent.endDate.split('T')[1] ?? '');
 const classroomId = ref<string | undefined>(props.calendarEvent?.classroom?.id);
+
+const repeatOptions = ref(new CalendarEventRepeatState(props.semester, date.value));
 
 async function submit() {
     if (name.value === '' || classroomId.value === undefined) {
@@ -36,12 +40,7 @@ async function submit() {
             ? await apiPost<boolean>(`/semesters/${props.semester.slug}/api/calendar-events/`, {
                   name: name.value,
                   classroomId: classroomId.value,
-                  durations: [
-                      {
-                          startDate: `${date.value}T${startTime.value}`,
-                          endDate: `${date.value}T${endTime.value}`,
-                      },
-                  ],
+                  durations: repeatOptions.value.generateDurations(startTime.value, endTime.value),
               } satisfies CalendarEventCreateApiData)
             : await apiPatch<boolean>(`/semesters/${props.semester.slug}/api/calendar-events/`, {
                   id: props.calendarEvent.id,
@@ -71,6 +70,16 @@ const translations = {
         'Date': 'Date',
         'Start time': 'Start time',
         'End time': 'End time',
+        'Repeats': 'Repeats',
+        'Repeats every': 'Repeats every',
+        'week': 'week',
+        'weeks': 'weeks',
+        'Ends': 'Ends',
+        'When the semester ends': 'When the semester ends',
+        'Before the semester ends': 'Before the semester ends',
+        'Last event': 'Last event',
+        'Repeat amount': 'Repeat amount',
+        'The events do not fit in the semester': 'The events do not fit in the semester',
     },
     'pl': {
         'Name': 'Nazwa',
@@ -82,6 +91,16 @@ const translations = {
         'Date': 'Data',
         'Start time': 'Czas rozpoczęcia',
         'End time': 'Czas zakończenia',
+        'Repeats': 'Powtarza się',
+        'Repeats every': 'Powtarza się co',
+        'week': 'tydzień',
+        'weeks': 'tygodnie',
+        'Ends': 'Kończy się',
+        'When the semester ends': 'Razem z końcem semestru',
+        'Before the semester ends': 'Przed końcem semestru',
+        'Last event': 'Ostatnie wydarzenie',
+        'Repeat amount': 'Ilość powtórzeń',
+        'The events do not fit in the semester': 'Wydarzenia nie mieszczą się w semestrze',
     },
 };
 
@@ -92,6 +111,12 @@ function translate(text: keyof (typeof translations)[LangId]): string {
 const dateId = crypto.randomUUID();
 const startTimeId = crypto.randomUUID();
 const endTimeId = crypto.randomUUID();
+const repeatsId = crypto.randomUUID();
+const repeatWeekAmountId = crypto.randomUUID();
+const repeatWeekId = crypto.randomUUID();
+const repeatEndId = crypto.randomUUID();
+const repeatEndDateId = crypto.randomUUID();
+const repeatCountId = crypto.randomUUID();
 const nameId = crypto.randomUUID();
 const classroomInputId = crypto.randomUUID();
 </script>
@@ -127,6 +152,71 @@ const classroomInputId = crypto.randomUUID();
             <br />
             {{ parseDateLocalYyyyMmDd(date).toLocaleDateString('pl-PL') }} {{ startTime }} - {{ endTime }}
         </div>
+
+        <div v-if="currentUser && !isEditing" class="form-check">
+            <input :id="repeatsId" v-model="repeatOptions.repeats" class="form-check-input" type="checkbox" />
+            <label class="form-check-label" :for="repeatsId">{{ translate('Repeats') }}</label>
+        </div>
+
+        <template v-if="repeatOptions.repeats">
+            <div class="input-group">
+                <span :id="repeatWeekAmountId" class="input-group-text">{{ translate('Repeats every') }}:</span>
+                <input
+                    v-model="repeatOptions.repeatWeeks"
+                    type="number"
+                    :min="1"
+                    class="form-control"
+                    :aria-label="translate('Repeats every')"
+                    :aria-describedby="`${repeatWeekAmountId} ${repeatWeekId}`"
+                />
+                <span
+                    :id="repeatWeekId"
+                    class="input-group-text text-center d-inline-block"
+                    :style="{ minWidth: '94px' }"
+                    >{{ repeatOptions.repeatWeeks === 1 ? translate('week') : translate('weeks') }}</span
+                >
+            </div>
+
+            <div>
+                <label :for="repeatEndId" class="form-label">{{ translate('Ends') }}</label>
+                <select :id="repeatEndId" v-model="repeatOptions.endsBeforeSemester" class="form-select" required>
+                    <option :value="false">{{ translate('When the semester ends') }}</option>
+                    <option :value="true">{{ translate('Before the semester ends') }}</option>
+                </select>
+            </div>
+
+            <div v-if="repeatOptions.endsBeforeSemester">
+                <div class="row">
+                    <div class="col">
+                        <label :for="repeatEndDateId" class="form-label">{{ translate('Last event') }}</label>
+                        <input
+                            :id="repeatEndDateId"
+                            v-model="repeatOptions.repeatEndDate"
+                            type="date"
+                            :min="date"
+                            :max="semester.endDate"
+                            required
+                            class="form-control"
+                        />
+                    </div>
+                    <div class="col">
+                        <label :for="repeatCountId" class="form-label">{{ translate('Repeat amount') }}</label>
+                        <input
+                            :id="repeatCountId"
+                            v-model="repeatOptions.repeatCount"
+                            type="number"
+                            :min="0"
+                            required
+                            class="form-control"
+                        />
+                    </div>
+                </div>
+
+                <p v-if="!repeatOptions.containedInSemester" class="text-danger mt-2 mb-0">
+                    {{ translate('The events do not fit in the semester') }}
+                </p>
+            </div>
+        </template>
 
         <div v-if="currentUser">
             <label :for="nameId" class="form-label">{{ translate('Name') }}</label>
