@@ -114,7 +114,7 @@ export class CalendarEvent {
         }
 
         await db.query(
-            'UPDATE laboratory_classes SET name = $2, classroom_id = $3, start_date = $4, end_date = $5 WHERE id = $1',
+            'UPDATE calendar_events SET name = $2, classroom_id = $3, start_date = $4, end_date = $5 WHERE id = $1',
             [this.id, this.name, this.classroomId, this.startDate, this.endDate],
         );
     }
