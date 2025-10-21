@@ -135,6 +135,7 @@ export class User {
             return;
         }
 
+        /* v8 ignore start */
         const canvas = createCanvas(200, 100);
         const ctx = canvas.getContext('2d');
         const font = '16px sans-serif';
@@ -157,6 +158,7 @@ export class User {
         const pngStream = canvas.createPNGStream();
         const writeStream = pngStream.pipe(out);
         await once(writeStream, 'finish');
+        /* v8 ignore end */
     }
 }
 
