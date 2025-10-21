@@ -12,6 +12,7 @@ export default defineConfig({
         coverage: {
             enabled: true,
             include: ['www/src/backend/**/*.ts'],
+            reporter: ['text', 'json-summary', 'json'],
         },
     },
 });
