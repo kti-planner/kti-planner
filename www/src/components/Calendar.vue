@@ -39,6 +39,10 @@ defineSlots<{
     eventContent(ev: CalendarEventArg): any;
 }>();
 
+defineOptions({
+    inheritAttrs: false,
+});
+
 // Customize buttons
 bootstrap5Plugin.themeClasses.bootstrap5!.prototype.classes.button = 'btn btn-success btn-sm';
 

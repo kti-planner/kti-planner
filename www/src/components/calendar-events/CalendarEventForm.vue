@@ -16,8 +16,7 @@ import { parseDateLocalYyyyMmDd } from '@components/utils';
 const props = defineProps<{
     semester: SemesterData;
     classrooms: ClassroomData[];
-    calendarEvent: Pick<CalendarEventData, 'startDate' | 'endDate'> &
-        Partial<Omit<CalendarEventData, 'startDate' | 'endDate'>>;
+    calendarEvent: Pick<CalendarEventData, 'startDate' | 'endDate'> & Partial<CalendarEventData>;
 }>();
 
 const isEditing = computed(() => props.calendarEvent?.id !== undefined);
@@ -134,6 +133,7 @@ const classroomInputId = crypto.randomUUID();
                     :max="semester.endDate"
                     required
                     class="form-control"
+                    :disabled="!isEditing"
                 />
             </div>
 

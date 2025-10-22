@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, shallowRef, useTemplateRef, watchEffect } from 'vue';
+import { computed, ref, shallowRef, useTemplateRef } from 'vue';
 import type { DateSelectArg, EventClickArg, EventInput } from '@fullcalendar/core';
 import { langId } from '@components/frontend/lang';
 import { currentUser } from '@components/frontend/user';
@@ -90,8 +90,6 @@ const events = computed<EventInput[]>(() => [
     ...getCalendarEvents(calendarEvents.value ?? []),
 ]);
 
-watchEffect(() => console.log(events.value));
-
 const initialDate = computed(() => getInitialDate(laboratoryClasses.value ?? []));
 
 const subjectOptions = computed(() => Object.fromEntries(subjects.map(subject => [subject.name, subject])));
@@ -135,7 +133,6 @@ function handleCalendarSelection(info: DateSelectArg) {
 <template>
     <div class="row g-4">
         <div class="col-12 col-lg-9 mb-2 order-2 order-lg-1">
-            <!-- @vue-ignore -->
             <Calendar
                 :events
                 :initial-date
