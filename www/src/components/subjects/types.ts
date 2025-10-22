@@ -33,8 +33,8 @@ export const subjectEditApiSchema = z.object({
 export type SubjectEditApiData = z.input<typeof subjectEditApiSchema>;
 
 export const subjectCopyFromPreviousSemesterApiSchema = z.object({
-    semesterId: z.string(),
-    subjectId: z.string(),
+    semesterId: z.uuid(),
+    subjectId: z.uuid(),
 });
 
 export type SubjectCopyFromPreviousSemesterApiData = z.input<typeof subjectCopyFromPreviousSemesterApiSchema>;
