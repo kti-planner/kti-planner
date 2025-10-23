@@ -7,17 +7,17 @@ const daysInWeek = 7;
 export class CalendarEventRepeatState {
     repeats: boolean;
     readonly semester: SemesterData;
-    readonly startDate: Date;
 
+    private _startDate: Date;
     private _repeatWeeks: number;
     private _endsBeforeSemester: boolean;
     private _repeatCount: number;
     private _repeatEndDate: string;
 
-    constructor(semester: SemesterData, startDate: string) {
+    constructor(semester: SemesterData, startDate: Date) {
         this.repeats = false;
         this.semester = semester;
-        this.startDate = parseDateLocalYyyyMmDd(startDate);
+        this._startDate = startDate;
         this._repeatWeeks = 1;
         this._endsBeforeSemester = false;
         this._repeatCount = this.findRepeatCount();
@@ -28,14 +28,14 @@ export class CalendarEventRepeatState {
         if (!this.repeats) {
             return [
                 {
-                    startDate: `${formatDateLocalYyyyMmDd(this.startDate)}T${startTime}`,
-                    endDate: `${formatDateLocalYyyyMmDd(this.startDate)}T${endTime}`,
+                    startDate: `${formatDateLocalYyyyMmDd(this._startDate)}T${startTime}`,
+                    endDate: `${formatDateLocalYyyyMmDd(this._startDate)}T${endTime}`,
                 },
             ];
         }
 
         const durations: { startDate: string; endDate: string }[] = [];
-        const day = new Date(this.startDate);
+        const day = new Date(this._startDate);
         for (let i = 0; i < this._repeatCount; i++) {
             durations.push({
                 startDate: `${formatDateLocalYyyyMmDd(day)}T${startTime}`,
@@ -46,6 +46,20 @@ export class CalendarEventRepeatState {
         }
 
         return durations;
+    }
+
+    get startDate(): Date {
+        return this._startDate;
+    }
+
+    set startDate(value: Date) {
+        this._startDate = value;
+
+        if (!this._endsBeforeSemester) {
+            this._repeatCount = this.findRepeatCount();
+        }
+
+        this._repeatEndDate = this.findEndDate();
     }
 
     get containedInSemester() {
@@ -67,10 +81,9 @@ export class CalendarEventRepeatState {
         this._repeatWeeks = value;
         if (!this._endsBeforeSemester) {
             this._repeatCount = this.findRepeatCount();
-            this._repeatEndDate = this.findEndDate();
-        } else {
-            this._repeatEndDate = this.findEndDate();
         }
+
+        this._repeatEndDate = this.findEndDate();
     }
 
     get endsBeforeSemester(): boolean {
@@ -116,14 +129,14 @@ export class CalendarEventRepeatState {
     }
 
     private findRepeatCount(maxDate: Date = parseDateLocalYyyyMmDd(this.semester.endDate)): number {
-        const msDuration = maxDate.getTime() - this.startDate.getTime();
+        const msDuration = maxDate.getTime() - this._startDate.getTime();
         const weeksDuration = Math.floor(msDuration / msInDay / (daysInWeek * this._repeatWeeks));
 
         return weeksDuration + 1;
     }
 
     private findEndDate(): string {
-        const endDate = new Date(this.startDate);
+        const endDate = new Date(this._startDate);
         endDate.setDate(endDate.getDate() + daysInWeek * this._repeatWeeks * (this._repeatCount - 1));
 
         return formatDateLocalYyyyMmDd(endDate);

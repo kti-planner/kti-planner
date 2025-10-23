@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { langId } from '@components/frontend/lang';
 import { currentUser } from '@components/frontend/user';
 import { apiPatch, apiPost } from '@components/api';
@@ -27,7 +27,8 @@ const startTime = ref<string>(props.calendarEvent.startDate.split('T')[1] ?? '')
 const endTime = ref<string>(props.calendarEvent.endDate.split('T')[1] ?? '');
 const classroomId = ref<string | undefined>(props.calendarEvent?.classroom?.id);
 
-const repeatOptions = ref(new CalendarEventRepeatState(props.semester, date.value));
+const repeatOptions = ref(new CalendarEventRepeatState(props.semester, parseDateLocalYyyyMmDd(date.value)));
+watch(date, newDate => (repeatOptions.value.startDate = parseDateLocalYyyyMmDd(newDate)));
 
 async function submit() {
     if (name.value === '' || classroomId.value === undefined) {
@@ -133,7 +134,6 @@ const classroomInputId = crypto.randomUUID();
                     :max="semester.endDate"
                     required
                     class="form-control"
-                    :disabled="!isEditing"
                 />
             </div>
 
