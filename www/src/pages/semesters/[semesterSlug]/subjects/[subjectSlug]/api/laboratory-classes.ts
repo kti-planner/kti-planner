@@ -37,14 +37,9 @@ export const GET: APIRoute = async ({ params, url }) => {
                 const group = groups.find(g => g.id === laboratoryClass.laboratoryGroupId);
                 assert(group);
 
-                const classTeacher = users.find(u => u.id === laboratoryClass.teacherId);
-                assert(classTeacher);
-
-                const exerciseClassroom = classrooms.find(c => c.id === exercise.classroomId);
-                assert(exerciseClassroom);
-
-                const exerciseTeacher = users.find(u => u.id === exercise.teacherId);
-                assert(exerciseTeacher);
+                const classTeacher = users.find(u => u.id === laboratoryClass.teacherId) ?? null;
+                const exerciseClassroom = classrooms.find(c => c.id === exercise.classroomId) ?? null;
+                const exerciseTeacher = users.find(u => u.id === exercise.teacherId) ?? null;
 
                 return makeLaboratoryClassData(
                     laboratoryClass,
@@ -122,7 +117,8 @@ export const PATCH: APIRoute = async ({ locals }) => {
         return Response.json(null, { status: 404 });
     }
 
-    const teacher = data.teacherId !== undefined ? await User.fetch(data.teacherId) : undefined;
+    const teacher =
+        data.teacherId === undefined ? undefined : data.teacherId === null ? null : await User.fetch(data.teacherId);
 
     if (teacher === null) {
         return Response.json(null, { status: 400 });

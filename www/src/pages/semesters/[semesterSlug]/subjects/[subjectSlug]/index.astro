@@ -59,15 +59,9 @@ const classroomsData = classrooms.map(makeClassroomData);
 const exercises = await Exercise.fetchAllFromSubject(subject);
 
 const exercisesData = exercises.map(exercise => {
-    const teacher = allUsers.find(user => user.id === exercise.teacherId);
-    if (teacher === undefined) {
-        throw new Error('Exercise teacher not found');
-    }
+    const teacher = allUsers.find(user => user.id === exercise.teacherId) ?? null;
 
-    const classroom = classrooms.find(classroom => classroom.id === exercise.classroomId);
-    if (classroom === undefined) {
-        throw new Error('Exercise classroom not found');
-    }
+    const classroom = classrooms.find(classroom => classroom.id === exercise.classroomId) ?? null;
 
     return makeExerciseData(exercise, classroom, teacher);
 });

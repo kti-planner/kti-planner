@@ -112,4 +112,8 @@ test('Users', async () => {
 
     // Rejects invalid password
     expect(await user2.checkPassword(secondUser.password + ' ')).toBe(false);
+
+    await user1.delete();
+
+    expect(await User.fetchAll()).toStrictEqual([user2]);
 });

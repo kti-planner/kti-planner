@@ -18,11 +18,7 @@ export const POST: APIRoute = async ({ locals }) => {
         return Response.json(null, { status: 400 });
     }
 
-    const classroom = await Classroom.fetch(data.classroomId);
-
-    if (classroom === null) {
-        return Response.json(false, { status: 404 });
-    }
+    const classroom = data.classroomId !== null ? await Classroom.fetch(data.classroomId) : null;
 
     const subject = await Subject.fetch(data.subjectId);
 
@@ -30,11 +26,7 @@ export const POST: APIRoute = async ({ locals }) => {
         return Response.json(false, { status: 404 });
     }
 
-    const teacher = await User.fetch(data.teacherId);
-
-    if (teacher === null) {
-        return Response.json(false, { status: 404 });
-    }
+    const teacher = data.teacherId !== null ? await User.fetch(data.teacherId) : null;
 
     const subjectExercises = await Exercise.fetchAllFromSubject(subject);
 
@@ -76,17 +68,15 @@ export const PATCH: APIRoute = async ({ locals }) => {
         return Response.json(null, { status: 404 });
     }
 
-    const classroom = data.classroomId === undefined ? undefined : await Classroom.fetch(data.classroomId);
+    const classroom =
+        data.classroomId === undefined
+            ? undefined
+            : data.classroomId === null
+              ? null
+              : await Classroom.fetch(data.classroomId);
 
-    if (classroom === null) {
-        return Response.json(false, { status: 404 });
-    }
-
-    const teacher = data.teacherId === undefined ? undefined : await User.fetch(data.teacherId);
-
-    if (teacher === null) {
-        return Response.json(false, { status: 404 });
-    }
+    const teacher =
+        data.teacherId === undefined ? undefined : data.teacherId === null ? null : await User.fetch(data.teacherId);
 
     const subject = await Subject.fetch(exercise.subjectId);
 

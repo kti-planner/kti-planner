@@ -25,10 +25,12 @@ const translations = {
         'Exercise': 'Exercise',
         'Laboratory group': 'Laboratory group',
         'Classroom': 'Classroom',
+        'Unknown [classroom]': 'Unknown',
         'Date': 'Date',
         'Start time': 'Start time',
         'End time': 'End time',
         'Teacher': 'Teacher',
+        'Unknown [teacher]': 'Unknown',
         'Save': 'Save',
     },
     'pl': {
@@ -36,10 +38,12 @@ const translations = {
         'Exercise': 'Ćwiczenie',
         'Laboratory group': 'Grupa laboratoryjna',
         'Classroom': 'Sala',
+        'Unknown [classroom]': 'Nieznana',
         'Date': 'Data',
         'Start time': 'Czas rozpoczęcia',
         'End time': 'Czas zakończenia',
         'Teacher': 'Nauczyciel',
+        'Unknown [teacher]': 'Nieznany',
         'Save': 'Zapisz',
     },
 };
@@ -51,7 +55,7 @@ function translate(text: keyof (typeof translations)[LangId]): string {
 const date = ref<string>(formatDateLocalYyyyMmDd(new Date(laboratoryClass.startDate)));
 const startTime = ref<string>(formatDateLocalHhMm(new Date(laboratoryClass.startDate)));
 const endTime = ref<string>(formatDateLocalHhMm(new Date(laboratoryClass.endDate)));
-const teacher = ref<UserPublicData>(laboratoryClass.teacher);
+const teacher = ref<UserPublicData | null>(laboratoryClass.teacher);
 
 async function saveLaboratoryClass() {
     if (!currentUser) {
@@ -62,7 +66,7 @@ async function saveLaboratoryClass() {
         id: laboratoryClass.id,
         startDate: `${date.value}T${startTime.value}`,
         endDate: `${date.value}T${endTime.value}`,
-        teacherId: teacher.value.id,
+        teacherId: teacher.value?.id ?? null,
     } satisfies LaboratoryClassEditApiData);
 
     if (success === undefined) {
@@ -110,7 +114,7 @@ const teacherId = crypto.randomUUID();
         <div>
             {{ translate('Classroom') }}:
             <br />
-            {{ laboratoryClass.exercise.classroom.name }}
+            {{ laboratoryClass.exercise.classroom?.name ?? translate('Unknown [classroom]') }}
         </div>
 
         <template v-if="currentUser">
@@ -150,7 +154,7 @@ const teacherId = crypto.randomUUID();
         <div v-else>
             {{ translate('Teacher') }}:
             <br />
-            {{ teacher.name }}
+            {{ teacher?.name ?? translate('Unknown [teacher]') }}
         </div>
 
         <div v-if="currentUser" class="text-center">

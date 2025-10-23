@@ -142,4 +142,8 @@ test('Subjects', async () => {
     expect(await Subject.fetchBySlug(semester2, 'lokalne-sieci-bezprzewodowe---informatyka-sem.-vi')).toStrictEqual(
         null,
     );
+
+    await subject2.delete();
+
+    expect(await Subject.fetchAll()).toStrictEqual([subject1]);
 });

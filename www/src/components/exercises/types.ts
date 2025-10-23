@@ -7,16 +7,16 @@ export interface ExerciseData {
     name: string;
     subjectId: string;
     exerciseNumber: number;
-    classroom: ClassroomData;
-    teacher: UserPublicData;
+    classroom: ClassroomData | null;
+    teacher: UserPublicData | null;
 }
 
 export const exerciseCreateApiSchema = z.object({
     name: z.string().trim().nonempty(),
     exerciseNumber: z.number().int().min(0),
     subjectId: z.uuid(),
-    classroomId: z.uuid(),
-    teacherId: z.uuid(),
+    classroomId: z.uuid().nullable(),
+    teacherId: z.uuid().nullable(),
 });
 
 export type ExerciseCreateApiData = z.input<typeof exerciseCreateApiSchema>;
@@ -25,8 +25,8 @@ export const exerciseEditApiSchema = z.object({
     id: z.uuid(),
     name: z.string().optional(),
     exerciseNumber: z.number().optional(),
-    classroomId: z.uuid().optional(),
-    teacherId: z.uuid().optional(),
+    classroomId: z.uuid().nullable().optional(),
+    teacherId: z.uuid().nullable().optional(),
 });
 
 export type ExerciseEditApiData = z.input<typeof exerciseEditApiSchema>;

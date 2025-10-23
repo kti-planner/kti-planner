@@ -62,19 +62,13 @@ if (!exercise) {
 
 const classrooms = await Classroom.fetchAll();
 const classroomsData = classrooms.map(makeClassroomData);
-const classroom = classrooms.find(classroom => classroom.id === exercise.classroomId);
-if (!classroom) {
-    throw new Error('Exercise classroom not found');
-}
+const classroom = classrooms.find(classroom => classroom.id === exercise.classroomId) ?? null;
 
 const exerciseData = makeExerciseData(exercise, classroom, await exercise.getTeacher());
 
 const teachers = await subject.getTeachers();
 const teachersData = teachers.map(makeUserPublicData);
-const teacher = teachers.find(teacher => teacher.id === exercise.teacherId);
-if (!teacher) {
-    throw new Error('Exercise teacher not found');
-}
+const teacher = teachers.find(teacher => teacher.id === exercise.teacherId) ?? null;
 
 const scheduleChanges = await semester.getScheduleChanges();
 const scheduleChangesData = scheduleChanges.map(makeScheduleChangeData);
@@ -89,10 +83,7 @@ const laboratoryClassesData = laboratoryClasses.map(laboratoryClass => {
         throw new Error('Class group not found');
     }
 
-    const classTeacher = teachers.find(teacher => teacher.id === laboratoryClass.teacherId);
-    if (!classTeacher) {
-        throw new Error('Class teacher not found');
-    }
+    const classTeacher = teachers.find(teacher => teacher.id === laboratoryClass.teacherId) ?? null;
 
     return makeLaboratoryClassData(laboratoryClass, exercise, classroom, teacher, group, classTeacher);
 });

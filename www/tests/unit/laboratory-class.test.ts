@@ -182,4 +182,18 @@ test('Laboratory classes', async () => {
 
     expect(await LaboratoryClass.fetchAllFromExercise(exercise1)).toStrictEqual([laboratoryClass1, laboratoryClass3]);
     expect(await LaboratoryClass.fetchAllFromExercise(exercise2)).toStrictEqual([laboratoryClass2]);
+
+    await laboratoryClass3.delete();
+
+    expect(await LaboratoryClass.fetchAll()).toStrictEqual([laboratoryClass1, laboratoryClass2]);
+
+    await exercise1.delete();
+
+    expect(await LaboratoryClass.fetchAll()).toStrictEqual([laboratoryClass2]);
+    expect(await Exercise.fetchAll()).toStrictEqual([exercise2]);
+
+    await laboratoryGroup2.delete();
+
+    expect(await LaboratoryClass.fetchAll()).toStrictEqual([]);
+    expect(await LaboratoryGroup.fetchAll()).toStrictEqual([laboratoryGroup1]);
 });

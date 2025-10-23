@@ -56,6 +56,10 @@ export class Classroom {
 
         await db.query('UPDATE classrooms SET name = $2 WHERE id = $1', [this.id, this.name]);
     }
+
+    async delete(): Promise<void> {
+        await db.query('DELETE FROM classrooms WHERE id = $1', [this.id]);
+    }
 }
 
 export function makeClassroomData(classroom: Classroom): ClassroomData {

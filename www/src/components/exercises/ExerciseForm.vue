@@ -26,12 +26,7 @@ const exerciseClassroomId = ref<string | undefined>(props.exercise?.classroom?.i
 const teacher = ref<UserPublicData | null>(props.exercise?.teacher ?? props.subject.teachers[0] ?? null);
 
 async function submit() {
-    if (
-        exerciseName.value === undefined ||
-        exerciseNumber.value === undefined ||
-        exerciseClassroomId.value === undefined ||
-        teacher.value?.id === undefined
-    ) {
+    if (exerciseName.value === undefined || exerciseNumber.value === undefined) {
         return;
     }
 
@@ -41,15 +36,15 @@ async function submit() {
                   name: exerciseName.value,
                   exerciseNumber: exerciseNumber.value,
                   subjectId: props.subject.id,
-                  classroomId: exerciseClassroomId.value,
-                  teacherId: teacher.value?.id,
+                  classroomId: exerciseClassroomId.value ?? null,
+                  teacherId: teacher.value?.id ?? null,
               } satisfies ExerciseCreateApiData)
             : await apiPatch<boolean>('/semesters/api/exercises/', {
                   id: props.exercise.id,
                   name: exerciseName.value,
                   exerciseNumber: exerciseNumber.value,
-                  classroomId: exerciseClassroomId.value,
-                  teacherId: teacher.value?.id,
+                  classroomId: exerciseClassroomId.value ?? null,
+                  teacherId: teacher.value?.id ?? null,
               } satisfies ExerciseEditApiData);
 
     if (success === undefined) {

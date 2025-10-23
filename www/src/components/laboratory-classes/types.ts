@@ -10,7 +10,7 @@ export interface LaboratoryClassData {
     laboratoryGroup: LaboratoryGroupData;
     startDate: string;
     endDate: string;
-    teacher: UserPublicData;
+    teacher: UserPublicData | null;
 }
 
 export const laboratoryClassCreateApiSchema = z
@@ -28,7 +28,7 @@ export const laboratoryClassEditApiSchema = z.object({
     id: z.uuid(),
     startDate: dateTimeStringSchema.optional(),
     endDate: dateTimeStringSchema.optional(),
-    teacherId: z.uuid().optional(),
+    teacherId: z.uuid().nullable().optional(),
 });
 
 export type LaboratoryClassEditApiData = z.input<typeof laboratoryClassEditApiSchema>;

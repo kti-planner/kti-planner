@@ -114,6 +114,10 @@ test('Semesters', async () => {
     expect(await Semester.fetchByDate(new Date('2026-04-30T00:00:00'))).toStrictEqual(semester2);
     expect(await Semester.fetchByDate(new Date('2026-09-10T00:00:00'))).toStrictEqual(semester2);
     expect(await Semester.fetchByDate(new Date('2026-09-11T00:00:00'))).toStrictEqual(null);
+
+    await semester1.delete();
+
+    expect(await Semester.fetchAll()).toStrictEqual([semester2]);
 });
 
 test('Schedule changes', async () => {

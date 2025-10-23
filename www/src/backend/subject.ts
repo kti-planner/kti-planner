@@ -56,11 +56,7 @@ export class Subject {
     }
 
     async getTeachers(): Promise<User[]> {
-        const teachers = await User.fetchBulk(this.teacherIds);
-
-        assert(teachers.every(teacher => teacher !== null));
-
-        return teachers;
+        return (await User.fetchBulk(this.teacherIds)).filter(user => user !== null);
     }
 
     static async fetch(id: string): Promise<Subject | null> {
@@ -138,6 +134,10 @@ export class Subject {
             'UPDATE subjects SET name = $2, semester_id = $3, teacher_ids = $4, description = $5, moodle_course_id = $6 WHERE id = $1',
             [this.id, this.name, this.semesterId, this.teacherIds, this.description, this.moodleCourseId],
         );
+    }
+
+    async delete(): Promise<void> {
+        await db.query('DELETE FROM subjects WHERE id = $1', [this.id]);
     }
 }
 
