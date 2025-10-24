@@ -96,7 +96,12 @@ test('Can use teachers filter in semester calendar', async ({ page }) => {
 test('Can view class details', async ({ page }) => {
     await page.goto('/semesters/2025-winter/');
 
-    await page.locator('.calendar-wrapper a').filter({ hasText: '11:15 - 13:00' }).click();
+    await page
+        .locator('.calendar-wrapper a')
+        .filter({ hasText: '11:15 - 13:00' })
+        .filter({ hasText: 'Sieci komputerowe' })
+        .click();
+
     await expect(page.getByRole('heading', { name: 'Class details' })).toBeVisible();
 
     await expect(
@@ -116,7 +121,11 @@ test('Can edit class time when logged in', async ({ page }) => {
     await page.goto('/semesters/2025-winter/');
     await loginAsTeacher(page);
 
-    await page.locator('.calendar-wrapper a').filter({ hasText: '11:15 - 13:00' }).click();
+    await page
+        .locator('.calendar-wrapper a')
+        .filter({ hasText: '11:15 - 13:00' })
+        .filter({ hasText: 'Sieci komputerowe' })
+        .click();
 
     await expect(page.getByRole('heading', { name: 'Edit class' })).toBeVisible();
 
@@ -138,6 +147,14 @@ test('Can edit class time when logged in', async ({ page }) => {
     await page.getByRole('textbox', { name: 'End time' }).fill('15:00');
     await page.getByRole('button', { name: 'Save' }).click();
 
-    await expect(page.locator('.calendar-wrapper a').filter({ hasText: '11:15 - 13:00' })).not.toBeVisible();
+    await expect(
+        page
+            .locator('.calendar-wrapper a')
+            .filter({ hasText: '11:15 - 13:00' })
+            .filter({ hasText: 'Sieci komputerowe' }),
+    ).not.toBeVisible();
+
+    await expect(page.locator('.calendar-wrapper a').filter({ hasText: '13:15 - 15:00' })).toBeVisible();
+});
     await expect(page.locator('.calendar-wrapper a').filter({ hasText: '13:15 - 15:00' })).toBeVisible();
 });
