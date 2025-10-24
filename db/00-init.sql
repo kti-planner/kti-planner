@@ -65,3 +65,13 @@ CREATE TABLE laboratory_classes (
     end_date            timestamptz NOT NULL,
     teacher_id          uuid REFERENCES users NOT NULL
 );
+
+CREATE TABLE calendar_events (
+    id           uuid PRIMARY KEY,
+    name         text NOT NULL,
+    user_id      uuid REFERENCES users NOT NULL,
+    classroom_id uuid REFERENCES classrooms NOT NULL,
+    semester_id  uuid REFERENCES semesters NOT NULL,
+    start_date   timestamptz NOT NULL,
+    end_date     timestamptz NOT NULL
+);
