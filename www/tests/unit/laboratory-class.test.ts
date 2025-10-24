@@ -1,7 +1,7 @@
 import { expect, test } from 'vitest';
 import { Classroom } from '@backend/classroom';
 import { Exercise } from '@backend/exercise';
-import { LaboratoryClass } from '@backend/laboratory-class';
+import { LaboratoryClass, makeLaboratoryClassData } from '@backend/laboratory-class';
 import { LaboratoryGroup } from '@backend/laboratory-group';
 import { Semester } from '@backend/semester';
 import { Subject } from '@backend/subject';
@@ -102,6 +102,45 @@ test('Laboratory classes', async () => {
     expect(laboratoryClass1).toHaveProperty('startDate', new Date('2024-10-23T11:00:00'));
     expect(laboratoryClass1).toHaveProperty('endDate', new Date('2024-10-23T13:00:00'));
     expect(laboratoryClass1).toHaveProperty('teacherId', user1.id);
+
+    const laboratoryClassData1 = makeLaboratoryClassData(
+        laboratoryClass1,
+        exercise1,
+        classroom1,
+        user1,
+        laboratoryGroup1,
+        user1,
+    );
+
+    expect(laboratoryClassData1).toStrictEqual({
+        endDate: '2024-10-23T13:00',
+        exercise: {
+            classroom: {
+                id: classroom1.id,
+                name: 'EA 142',
+            },
+            exerciseNumber: 1,
+            id: exercise1.id,
+            name: 'Diagnostyka sieci IP',
+            subjectId: subject1.id,
+            teacher: {
+                id: user1.id,
+                name: 'Jan Kowalski',
+                role: 'teacher',
+            },
+        },
+        id: laboratoryClass1.id,
+        laboratoryGroup: {
+            id: laboratoryGroup1.id,
+            name: '1A',
+        },
+        startDate: '2024-10-23T11:00',
+        teacher: {
+            id: user1.id,
+            name: 'Jan Kowalski',
+            role: 'teacher',
+        },
+    });
 
     expect(await LaboratoryClass.fetch(laboratoryClass1.id)).toStrictEqual(laboratoryClass1);
     expect(await LaboratoryClass.fetchAll()).toStrictEqual([laboratoryClass1]);

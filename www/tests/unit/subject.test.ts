@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest';
 import { Semester } from '@backend/semester';
-import { Subject } from '@backend/subject';
+import { makeSubjectData, Subject } from '@backend/subject';
 import { User } from '@backend/user';
 
 test('Subjects', async () => {
@@ -49,6 +49,25 @@ test('Subjects', async () => {
     expect(subject1).toHaveProperty('teacherIds', [user1.id]);
     expect(subject1).toHaveProperty('description', subject1.description);
     expect(subject1).toHaveProperty('moodleCourseId', subject1.moodleCourseId);
+
+    const subjectData1 = makeSubjectData(subject1, [user1]);
+
+    expect(subjectData1).toStrictEqual({
+        description: 'Opis',
+        id: subject1.id,
+        moodleCourseId: '1472',
+        moodleCourseUrl: 'https://enauczanie.pg.edu.pl/2025/course/view.php?id=1472',
+        name: 'Sieci komputerowe - Informatyka sem. V',
+        semesterId: semester1.id,
+        slug: 'sieci-komputerowe---informatyka-sem.-v',
+        teachers: [
+            {
+                id: user1.id,
+                name: 'Jan Kowalski',
+                role: 'teacher',
+            },
+        ],
+    });
 
     expect(await subject1.getTeachers()).toStrictEqual([user1]);
 

@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest';
-import { User, type UserCreateData, type UserEditData } from '@backend/user';
+import { makeUserDetailsData, makeUserPublicData, User, type UserCreateData, type UserEditData } from '@backend/user';
 
 interface UserCreateTestData extends UserCreateData {
     password: string;
@@ -25,6 +25,23 @@ test('Users', async () => {
     expect(user1).toHaveProperty('name', exampleUser.name);
     expect(user1).toHaveProperty('email', exampleUser.email);
     expect(user1).toHaveProperty('role', exampleUser.role);
+
+    const userPublicData1 = makeUserPublicData(user1);
+
+    expect(userPublicData1).toStrictEqual({
+        id: user1.id,
+        name: 'First',
+        role: 'admin',
+    });
+
+    const UserDetailsData1 = makeUserDetailsData(user1);
+
+    expect(UserDetailsData1).toStrictEqual({
+        email: 'first@test.com',
+        id: user1.id,
+        name: 'First',
+        role: 'admin',
+    });
 
     const user2 = await User.create(secondUser);
 

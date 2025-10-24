@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest';
 import { Classroom } from '@backend/classroom';
-import { Exercise } from '@backend/exercise';
+import { Exercise, makeExerciseData } from '@backend/exercise';
 import { Semester } from '@backend/semester';
 import { Subject } from '@backend/subject';
 import { User } from '@backend/user';
@@ -74,8 +74,25 @@ test('Exercises', async () => {
     expect(exercise1).toHaveProperty('exerciseNumber', 1);
     expect(exercise1).toHaveProperty('classroomId', classroom1.id);
     expect(exercise1).toHaveProperty('teacherId', user1.id);
-
     expect(await exercise1.getTeacher()).toStrictEqual(user1);
+
+    const exerciseData1 = makeExerciseData(exercise1, classroom1, user1);
+
+    expect(exerciseData1).toStrictEqual({
+        classroom: {
+            id: classroom1.id,
+            name: 'EA 142',
+        },
+        exerciseNumber: 1,
+        id: exercise1.id,
+        name: 'Diagnostyka sieci IP',
+        subjectId: subject1.id,
+        teacher: {
+            id: user1.id,
+            name: 'Jan Kowalski',
+            role: 'teacher',
+        },
+    });
 
     expect(await Exercise.fetch(exercise1.id)).toStrictEqual(exercise1);
     expect(await Exercise.fetchAll()).toStrictEqual([exercise1]);
