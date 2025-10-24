@@ -133,9 +133,9 @@ export class User {
         if (env.EMAIL_IMG_DIR === undefined) {
             console.warn('ENV variable EMAIL_IMG_DIR is unset, skipping email image generation');
             return;
+            /* v8 ignore start */
         }
 
-        /* v8 ignore start */
         const canvas = createCanvas(200, 100);
         const ctx = canvas.getContext('2d');
         const font = '16px sans-serif';

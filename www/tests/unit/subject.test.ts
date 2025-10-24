@@ -82,6 +82,16 @@ test('Subjects', async () => {
 
     expect(await Subject.fetchBySlug(semester2, 'sieci-komputerowe---informatyka-sem.-v')).toStrictEqual(null);
 
+    await expect(
+        Subject.create({
+            name: 'Sieci komputerowe - Informatyka sem. V',
+            semester: semester1,
+            teachers: [user1],
+            description: 'Opis',
+            moodleCourseId: '1472',
+        }),
+    ).rejects.toThrow(Error);
+
     const subject2 = await Subject.create({
         name: 'Zarządzanie bezpieczeństwem sieci - Informatyka sem. VI',
         semester: semester2,
@@ -96,6 +106,30 @@ test('Subjects', async () => {
     expect(subject2).toHaveProperty('teacherIds', [user1.id, user2.id]);
     expect(subject2).toHaveProperty('description', subject2.description);
     expect(subject2).toHaveProperty('moodleCourseId', subject2.moodleCourseId);
+
+    const subjectData2 = makeSubjectData(subject2, [user1, user2]);
+
+    expect(subjectData2).toStrictEqual({
+        description: '',
+        id: subject2.id,
+        moodleCourseId: '',
+        moodleCourseUrl: '',
+        name: 'Zarządzanie bezpieczeństwem sieci - Informatyka sem. VI',
+        semesterId: semester2.id,
+        slug: 'zarządzanie-bezpieczeństwem-sieci---informatyka-sem.-vi',
+        teachers: [
+            {
+                id: user1.id,
+                name: 'Jan Kowalski',
+                role: 'teacher',
+            },
+            {
+                id: user2.id,
+                name: 'Bogdan Nowak',
+                role: 'teacher',
+            },
+        ],
+    });
 
     expect(await subject2.getTeachers()).toStrictEqual([user1, user2]);
 
@@ -120,6 +154,8 @@ test('Subjects', async () => {
         name: 'Lokalne sieci bezprzewodowe - Informatyka sem. VI',
         semester: semester1,
         teachers: [user2],
+        description: 'foo',
+        moodleCourseId: '230',
     });
 
     expect(subject2).toHaveProperty('name', 'Lokalne sieci bezprzewodowe - Informatyka sem. VI');

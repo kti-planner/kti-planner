@@ -4,6 +4,7 @@ import { makeScheduleChangeData, makeSemesterData, Semester } from '@backend/sem
 test('Semesters', async () => {
     expect(await Semester.fetchAll()).toStrictEqual([]);
     expect(await Semester.fetch(crypto.randomUUID())).toStrictEqual(null);
+    expect(await Semester.fetchBySlug('-foo')).toStrictEqual(null);
 
     const semester1 = await Semester.create({
         year: 2024,
@@ -148,6 +149,13 @@ test('Schedule changes', async () => {
         { date: new Date('2025-01-08T00:00:00'), type: 'friday' },
         { date: new Date('2024-11-12T00:00:00'), type: 'monday' },
     ]);
+
+    await expect(
+        semester1.setScheduleChanges([
+            { date: new Date('2025-01-08T00:00:00'), type: 'friday' },
+            { date: new Date('2025-01-08T00:00:00'), type: 'friday' },
+        ]),
+    ).rejects.toThrow(Error);
 
     await semester2.setScheduleChanges([
         { date: new Date('2025-04-18T00:00:00'), type: 'holiday' },

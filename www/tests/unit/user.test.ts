@@ -103,6 +103,15 @@ test('Users', async () => {
         expect(users[1]).toHaveProperty('name', exampleUser.name);
         expect(users[1]).toHaveProperty('email', exampleUser.email);
         expect(users[1]).toHaveProperty('role', exampleUser.role);
+
+        users = await User.fetchBulk([user2.id, user1.id, 'foo']);
+        expect(users[0]).toHaveProperty('name', secondUser.name);
+        expect(users[0]).toHaveProperty('email', secondUser.email);
+        expect(users[0]).toHaveProperty('role', secondUser.role);
+        expect(users[1]).toHaveProperty('name', exampleUser.name);
+        expect(users[1]).toHaveProperty('email', exampleUser.email);
+        expect(users[1]).toHaveProperty('role', exampleUser.role);
+        expect(users[2]).toBe(null);
     }
 
     // Can edit
@@ -129,4 +138,10 @@ test('Users', async () => {
 
     // Rejects invalid password
     expect(await user2.checkPassword(secondUser.password + ' ')).toBe(false);
+
+    await user1.edit({
+        password: null,
+    });
+
+    expect(user1.passwordHash).toStrictEqual(null);
 });
