@@ -22,6 +22,7 @@ export const GET: APIRoute = async ({ params, url }) => {
     }
 
     const classroomFilter = url.searchParams.getAll('classroom');
+    const teacherFilter = url.searchParams.getAll('teacher');
 
     const calendarEvents = await CalendarEvent.fetchAllFromSemester(semester);
     const users = await User.fetchAll();
@@ -35,6 +36,10 @@ export const GET: APIRoute = async ({ params, url }) => {
 
                 const classroom = classrooms.find(c => c.id === calendarEvent.classroomId);
                 assert(classroom);
+
+                if (teacherFilter.length > 0 && !teacherFilter.includes(calendarEvent.userId)) {
+                    return null;
+                }
 
                 if (classroomFilter.length > 0 && !classroomFilter.includes(calendarEvent.classroomId)) {
                     return null;

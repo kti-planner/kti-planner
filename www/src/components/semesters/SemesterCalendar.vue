@@ -81,7 +81,11 @@ const { data: laboratoryClasses } = useApiFetch<LaboratoryClassData[]>(
 
 const { data: calendarEvents } = useApiFetch<CalendarEventData[]>(
     `/semesters/${semester.slug}/api/calendar-events/`,
-    () => new URLSearchParams([...selectedClassrooms.value.map(classroom => ['classroom', classroom.id])]),
+    () =>
+        new URLSearchParams([
+            ...selectedClassrooms.value.map(classroom => ['classroom', classroom.id]),
+            ...selectedTeachers.value.map(teacher => ['teacher', teacher.id]),
+        ]),
 );
 
 const events = computed<EventInput[]>(() => [
