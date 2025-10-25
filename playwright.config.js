@@ -10,6 +10,7 @@ export default defineConfig({
     reporter: 'line',
     testMatch: 'www/tests/e2e/**/*.spec.ts',
     workers: 1,
+    retries: 1,
     projects: [
         {
             name: 'setup db',

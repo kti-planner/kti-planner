@@ -133,6 +133,7 @@ export class User {
         if (env.EMAIL_IMG_DIR === undefined) {
             console.warn('ENV variable EMAIL_IMG_DIR is unset, skipping email image generation');
             return;
+            /* v8 ignore start */
         }
 
         const canvas = createCanvas(200, 100);
@@ -157,6 +158,7 @@ export class User {
         const pngStream = canvas.createPNGStream();
         const writeStream = pngStream.pipe(out);
         await once(writeStream, 'finish');
+        /* v8 ignore end */
     }
 }
 

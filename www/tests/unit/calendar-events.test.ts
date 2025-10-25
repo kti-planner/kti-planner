@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest';
-import { CalendarEvent } from '@backend/calendar-events';
+import { CalendarEvent, makeCalendarEventData } from '@backend/calendar-events';
 import { Classroom } from '@backend/classroom';
 import { Semester } from '@backend/semester';
 import { User } from '@backend/user';
@@ -59,6 +59,32 @@ test('Calendar events', async () => {
     expect(calendarEvent1).toHaveProperty('semesterId', semester1.id);
     expect(calendarEvent1).toHaveProperty('startDate', new Date('2024-10-23T11:00:00'));
     expect(calendarEvent1).toHaveProperty('endDate', new Date('2024-10-23T13:00:00'));
+
+    const calendarEventData1 = makeCalendarEventData(calendarEvent1, user1, classroom1, semester1);
+
+    expect(calendarEventData1).toStrictEqual({
+        classroom: {
+            id: classroom1.id,
+            name: 'EA 142',
+        },
+        endDate: '2024-10-23T13:00',
+        id: calendarEvent1.id,
+        name: 'event1',
+        semester: {
+            endDate: '2025-01-30',
+            id: semester1.id,
+            slug: '2024-winter',
+            startDate: '2024-10-01',
+            type: 'winter',
+            year: 2024,
+        },
+        startDate: '2024-10-23T11:00',
+        user: {
+            id: user1.id,
+            name: 'Jan Kowalski',
+            role: 'teacher',
+        },
+    });
 
     expect(await CalendarEvent.fetch(calendarEvent1.id)).toStrictEqual(calendarEvent1);
     expect(await CalendarEvent.fetchAll()).toStrictEqual([calendarEvent1]);
