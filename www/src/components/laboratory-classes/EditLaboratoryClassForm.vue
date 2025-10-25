@@ -58,7 +58,7 @@ const endTime = ref<string>(formatDateLocalHhMm(new Date(laboratoryClass.endDate
 const teacher = ref<UserPublicData | null>(laboratoryClass.teacher);
 
 async function saveLaboratoryClass() {
-    if (!currentUser) {
+    if (!currentUser || !teacher.value) {
         return;
     }
 
@@ -66,7 +66,7 @@ async function saveLaboratoryClass() {
         id: laboratoryClass.id,
         startDate: `${date.value}T${startTime.value}`,
         endDate: `${date.value}T${endTime.value}`,
-        teacherId: teacher.value?.id ?? null,
+        teacherId: teacher.value.id,
     } satisfies LaboratoryClassEditApiData);
 
     if (success === undefined) {

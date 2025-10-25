@@ -28,7 +28,7 @@ export const laboratoryClassEditApiSchema = z.object({
     id: z.uuid(),
     startDate: dateTimeStringSchema.optional(),
     endDate: dateTimeStringSchema.optional(),
-    teacherId: z.uuid().nullable().optional(),
+    teacherId: z.uuid().optional(),
 });
 
 export type LaboratoryClassEditApiData = z.input<typeof laboratoryClassEditApiSchema>;

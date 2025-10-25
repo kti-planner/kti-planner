@@ -117,8 +117,7 @@ export const PATCH: APIRoute = async ({ locals }) => {
         return Response.json(null, { status: 404 });
     }
 
-    const teacher =
-        data.teacherId === undefined ? undefined : data.teacherId === null ? null : await User.fetch(data.teacherId);
+    const teacher = data.teacherId === undefined ? undefined : await User.fetch(data.teacherId);
 
     if (teacher === null) {
         return Response.json(null, { status: 400 });
