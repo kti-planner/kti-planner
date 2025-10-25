@@ -34,9 +34,9 @@ test('Users', async () => {
         role: 'admin',
     });
 
-    const UserDetailsData1 = makeUserDetailsData(user1);
+    const userDetailsData1 = makeUserDetailsData(user1);
 
-    expect(UserDetailsData1).toStrictEqual({
+    expect(userDetailsData1).toStrictEqual({
         email: 'first@test.com',
         id: user1.id,
         name: 'First',
@@ -58,7 +58,7 @@ test('Users', async () => {
     // Can fetch by email
     expect(await User.fetchByEmail(exampleUser.email)).toStrictEqual(user1);
 
-    // Cannot fetch nonexistant
+    // Cannot fetch nonexistent
     expect(await User.fetch(crypto.randomUUID())).toBeNull();
     expect(await User.fetchByEmail('unknown@test.com')).toBeNull();
 
