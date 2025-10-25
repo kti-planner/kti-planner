@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest';
-import { User, type UserCreateData, type UserEditData } from '@backend/user';
+import { makeUserDetailsData, makeUserPublicData, User, type UserCreateData, type UserEditData } from '@backend/user';
 
 interface UserCreateTestData extends UserCreateData {
     password: string;
@@ -26,6 +26,23 @@ test('Users', async () => {
     expect(user1).toHaveProperty('email', exampleUser.email);
     expect(user1).toHaveProperty('role', exampleUser.role);
 
+    const userPublicData1 = makeUserPublicData(user1);
+
+    expect(userPublicData1).toStrictEqual({
+        id: user1.id,
+        name: 'First',
+        role: 'admin',
+    });
+
+    const userDetailsData1 = makeUserDetailsData(user1);
+
+    expect(userDetailsData1).toStrictEqual({
+        email: 'first@test.com',
+        id: user1.id,
+        name: 'First',
+        role: 'admin',
+    });
+
     const user2 = await User.create(secondUser);
 
     expect(user2).toHaveProperty('name', secondUser.name);
@@ -41,7 +58,7 @@ test('Users', async () => {
     // Can fetch by email
     expect(await User.fetchByEmail(exampleUser.email)).toStrictEqual(user1);
 
-    // Cannot fetch nonexistant
+    // Cannot fetch nonexistent
     expect(await User.fetch(crypto.randomUUID())).toBeNull();
     expect(await User.fetchByEmail('unknown@test.com')).toBeNull();
 
@@ -86,6 +103,15 @@ test('Users', async () => {
         expect(users[1]).toHaveProperty('name', exampleUser.name);
         expect(users[1]).toHaveProperty('email', exampleUser.email);
         expect(users[1]).toHaveProperty('role', exampleUser.role);
+
+        users = await User.fetchBulk([user2.id, user1.id, 'foo']);
+        expect(users[0]).toHaveProperty('name', secondUser.name);
+        expect(users[0]).toHaveProperty('email', secondUser.email);
+        expect(users[0]).toHaveProperty('role', secondUser.role);
+        expect(users[1]).toHaveProperty('name', exampleUser.name);
+        expect(users[1]).toHaveProperty('email', exampleUser.email);
+        expect(users[1]).toHaveProperty('role', exampleUser.role);
+        expect(users[2]).toBe(null);
     }
 
     // Can edit
@@ -112,6 +138,12 @@ test('Users', async () => {
 
     // Rejects invalid password
     expect(await user2.checkPassword(secondUser.password + ' ')).toBe(false);
+
+    await user1.edit({
+        password: null,
+    });
+
+    expect(user1.passwordHash).toStrictEqual(null);
 
     await user1.delete();
 
