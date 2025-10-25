@@ -10,7 +10,7 @@ import { Semester } from '@backend/semester';
 import { Subject } from '@backend/subject';
 import { User } from '@backend/user';
 
-// Calendar applications use WebCal HTTP methods like PROPFIND or standar methods like GET
+// Calendar applications use WebCal HTTP methods like PROPFIND or standard methods like GET
 export const ALL: APIRoute = async ({ params, url }) => {
     const { semesterSlug } = params;
 
@@ -73,10 +73,6 @@ export const ALL: APIRoute = async ({ params, url }) => {
                 title: `${subject.name} - ${exercise.name}`,
                 description: `Grupa: ${group.name}\nProwadzący: ${classTeacher.name}\nSala: ${exerciseClassroom.name}`,
                 location: exerciseClassroom.name,
-                organizer: { name: classTeacher.name },
-                attendees: [{ name: group.name }],
-                categories: ['Laboratory Class'],
-                calName: 'KTI Planner',
                 start: laboratoryClass.startDate.getTime(),
                 end: laboratoryClass.endDate.getTime(),
             };
@@ -104,9 +100,6 @@ export const ALL: APIRoute = async ({ params, url }) => {
                 title: calendarEvent.name,
                 description: `Prowadzący: ${user.name}\nSala: ${classroom.name}`,
                 location: classroom.name,
-                organizer: { name: user.name },
-                categories: ['Other Event'],
-                calName: 'KTI Planner',
                 start: calendarEvent.startDate.getTime(),
                 end: calendarEvent.endDate.getTime(),
             };
@@ -115,6 +108,7 @@ export const ALL: APIRoute = async ({ params, url }) => {
 
     const { error: icsError, value: icsString } = createEvents([...laboratoryClassEvents, ...calendarEventIcsEvents], {
         calName: 'KTI Planner',
+        productId: '-//KTI Planner//KTI Planner 0.1//PL',
     });
 
     if (icsError || icsString === undefined) {
