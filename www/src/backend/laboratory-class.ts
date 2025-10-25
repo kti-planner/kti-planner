@@ -14,7 +14,7 @@ interface DbLaboratoryClass {
     laboratory_group_id: string;
     start_date: Date;
     end_date: Date;
-    teacher_id: string;
+    teacher_id: string | null;
 }
 
 export interface LaboratoryClassCreateData {
@@ -22,13 +22,13 @@ export interface LaboratoryClassCreateData {
     laboratoryGroup: LaboratoryGroup;
     startDate: Date;
     endDate: Date;
-    teacher: User;
+    teacher: User | null;
 }
 
 export interface LaboratoryClassEditData {
     startDate?: Date | undefined;
     endDate?: Date | undefined;
-    teacher?: User | undefined;
+    teacher?: User | null | undefined;
 }
 
 export class LaboratoryClass {
@@ -37,7 +37,7 @@ export class LaboratoryClass {
     laboratoryGroupId: string;
     startDate: Date;
     endDate: Date;
-    teacherId: string;
+    teacherId: string | null;
 
     constructor(data: DbLaboratoryClass) {
         this.id = data.id;
@@ -112,7 +112,7 @@ export class LaboratoryClass {
                     data.laboratoryGroup.id,
                     data.startDate,
                     data.endDate,
-                    data.teacher.id,
+                    data.teacher?.id ?? null,
                 ],
             )
         ).rows[0];
@@ -132,7 +132,7 @@ export class LaboratoryClass {
         }
 
         if (data.teacher !== undefined) {
-            this.teacherId = data.teacher.id;
+            this.teacherId = data.teacher?.id ?? null;
         }
 
         await db.query('UPDATE laboratory_classes SET start_date = $2, end_date = $3, teacher_id = $4 WHERE id = $1', [
@@ -142,15 +142,19 @@ export class LaboratoryClass {
             this.teacherId,
         ]);
     }
+
+    async delete(): Promise<void> {
+        await db.query('DELETE FROM laboratory_classes WHERE id = $1', [this.id]);
+    }
 }
 
 export function makeLaboratoryClassData(
     laboratoryClass: LaboratoryClass,
     exercise: Exercise,
-    exerciseClassroom: Classroom,
-    exerciseTeacher: User,
+    exerciseClassroom: Classroom | null,
+    exerciseTeacher: User | null,
     group: LaboratoryGroup,
-    classTeacher: User,
+    classTeacher: User | null,
 ): LaboratoryClassData {
     return {
         id: laboratoryClass.id,
@@ -158,6 +162,6 @@ export function makeLaboratoryClassData(
         laboratoryGroup: makeLaboratoryGroupData(group),
         startDate: formatDateLocalYyyyMmDdHhMm(laboratoryClass.startDate),
         endDate: formatDateLocalYyyyMmDdHhMm(laboratoryClass.endDate),
-        teacher: makeUserPublicData(classTeacher),
+        teacher: classTeacher ? makeUserPublicData(classTeacher) : null,
     };
 }

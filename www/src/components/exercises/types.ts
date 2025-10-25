@@ -7,8 +7,8 @@ export interface ExerciseData {
     name: string;
     subjectId: string;
     exerciseNumber: number;
-    classroom: ClassroomData;
-    teacher: UserPublicData;
+    classroom: ClassroomData | null;
+    teacher: UserPublicData | null;
 }
 
 export const exerciseCreateApiSchema = z.object({

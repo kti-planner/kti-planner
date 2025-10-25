@@ -34,7 +34,7 @@ CREATE TABLE classrooms (
 CREATE TABLE subjects (
     id               uuid PRIMARY KEY,
     name             text NOT NULL,
-    semester_id      uuid REFERENCES semesters NOT NULL,
+    semester_id      uuid NOT NULL REFERENCES semesters ON DELETE NO ACTION,
     teacher_ids      uuid[] NOT NULL,
     description      text NOT NULL,
     moodle_course_id text NOT NULL
@@ -43,25 +43,35 @@ CREATE TABLE subjects (
 CREATE TABLE exercises (
     id              uuid PRIMARY KEY,
     name            text NOT NULL,
-    subject_id      uuid REFERENCES subjects NOT NULL,
+    subject_id      uuid NOT NULL REFERENCES subjects ON DELETE CASCADE,
     exercise_number integer NOT NULL,
-    classroom_id    uuid REFERENCES classrooms NOT NULL,
-    teacher_id      uuid REFERENCES users NOT NULL,
+    classroom_id    uuid REFERENCES classrooms ON DELETE SET NULL,
+    teacher_id      uuid REFERENCES users ON DELETE SET NULL,
     UNIQUE (subject_id, exercise_number)
 );
 
 CREATE TABLE laboratory_groups (
     id              uuid PRIMARY KEY,
     name            text NOT NULL,
-    subject_id      uuid REFERENCES subjects NOT NULL,
+    subject_id      uuid NOT NULL REFERENCES subjects ON DELETE CASCADE,
     UNIQUE (subject_id, name)
 );
 
 CREATE TABLE laboratory_classes (
     id                  uuid PRIMARY KEY,
-    exercise_id         uuid REFERENCES exercises NOT NULL,
-    laboratory_group_id uuid REFERENCES laboratory_groups NOT NULL,
+    exercise_id         uuid NOT NULL REFERENCES exercises ON DELETE CASCADE,
+    laboratory_group_id uuid NOT NULL REFERENCES laboratory_groups ON DELETE CASCADE,
     start_date          timestamptz NOT NULL,
     end_date            timestamptz NOT NULL,
-    teacher_id          uuid REFERENCES users NOT NULL
+    teacher_id          uuid REFERENCES users ON DELETE SET NULL
+);
+
+CREATE TABLE calendar_events (
+    id           uuid PRIMARY KEY,
+    name         text NOT NULL,
+    user_id      uuid REFERENCES users NOT NULL,
+    classroom_id uuid REFERENCES classrooms NOT NULL,
+    semester_id  uuid REFERENCES semesters NOT NULL,
+    start_date   timestamptz NOT NULL,
+    end_date     timestamptz NOT NULL
 );

@@ -10,23 +10,23 @@ interface DbExercise {
     name: string;
     subject_id: string;
     exercise_number: number;
-    classroom_id: string;
-    teacher_id: string;
+    classroom_id: string | null;
+    teacher_id: string | null;
 }
 
 export interface ExerciseCreateData {
     name: string;
     subject: Subject;
     exerciseNumber: number;
-    classroom: Classroom;
-    teacher: User;
+    classroom: Classroom | null;
+    teacher: User | null;
 }
 
 export interface ExerciseEditData {
     name?: string | undefined;
     exerciseNumber?: number | undefined;
-    classroom?: Classroom | undefined;
-    teacher?: User | undefined;
+    classroom?: Classroom | null | undefined;
+    teacher?: User | null | undefined;
 }
 
 export class Exercise {
@@ -34,8 +34,8 @@ export class Exercise {
     name: string;
     subjectId: string;
     exerciseNumber: number;
-    classroomId: string;
-    teacherId: string;
+    classroomId: string | null;
+    teacherId: string | null;
 
     constructor(data: DbExercise) {
         this.id = data.id;
@@ -46,12 +46,8 @@ export class Exercise {
         this.teacherId = data.teacher_id;
     }
 
-    async getTeacher(): Promise<User> {
-        const teacher = await User.fetch(this.teacherId);
-
-        assert(teacher);
-
-        return teacher;
+    async getTeacher(): Promise<User | null> {
+        return this.teacherId !== null ? await User.fetch(this.teacherId) : null;
     }
 
     static async fetch(id: string): Promise<Exercise | null> {
@@ -108,8 +104,8 @@ export class Exercise {
                     data.name,
                     data.subject.id,
                     data.exerciseNumber,
-                    data.classroom.id,
-                    data.teacher.id,
+                    data.classroom?.id ?? null,
+                    data.teacher?.id ?? null,
                 ],
             )
         ).rows[0];
@@ -129,11 +125,11 @@ export class Exercise {
         }
 
         if (data.classroom !== undefined) {
-            this.classroomId = data.classroom.id;
+            this.classroomId = data.classroom?.id ?? null;
         }
 
         if (data.teacher !== undefined) {
-            this.teacherId = data.teacher.id;
+            this.teacherId = data.teacher?.id ?? null;
         }
 
         await db.query(
@@ -141,15 +137,19 @@ export class Exercise {
             [this.id, this.name, this.subjectId, this.exerciseNumber, this.classroomId, this.teacherId],
         );
     }
+
+    async delete(): Promise<void> {
+        await db.query('DELETE FROM exercises WHERE id = $1', [this.id]);
+    }
 }
 
-export function makeExerciseData(exercise: Exercise, classroom: Classroom, teacher: User): ExerciseData {
+export function makeExerciseData(exercise: Exercise, classroom: Classroom | null, teacher: User | null): ExerciseData {
     return {
         id: exercise.id,
         name: exercise.name,
         subjectId: exercise.subjectId,
         exerciseNumber: exercise.exerciseNumber,
-        classroom: makeClassroomData(classroom),
-        teacher: makeUserPublicData(teacher),
+        classroom: classroom ? makeClassroomData(classroom) : null,
+        teacher: teacher ? makeUserPublicData(teacher) : null,
     };
 }

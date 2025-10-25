@@ -124,4 +124,9 @@ test('Laboratory groups', async () => {
             a.subjectId.localeCompare(b.subjectId),
         ),
     );
+
+    await laboratoryGroup1.delete();
+    await laboratoryGroup2.delete();
+
+    expect(await LaboratoryGroup.fetchAll()).toStrictEqual([laboratoryGroup3]);
 });

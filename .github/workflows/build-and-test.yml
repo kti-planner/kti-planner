@@ -7,6 +7,10 @@ jobs:
     name: Build and test
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: read
+      pull-requests: write
+
     steps:
       - uses: actions/checkout@v4
 
@@ -40,6 +44,12 @@ jobs:
 
       - name: Unit test
         run: npm run test-unit
+
+      - name: Code coverage Report
+        uses: davelosert/vitest-coverage-report-action@v2
+        with:
+          pr-number: auto
+          file-coverage-mode: all
 
       - name: Install Playwright dependencies
         run: npx playwright install --with-deps chromium

@@ -1,10 +1,17 @@
 import type { EventInput } from '@fullcalendar/core';
+import type { CalendarEventData } from '@components/calendar-events/types';
 import type { LaboratoryClassData } from '@components/laboratory-classes/types';
 import type { ScheduleChangeData } from '@components/semesters/types';
 
 export type LaboraoryClassEventInput = EventInput & {
     extendedProps: {
         laboratoryClass: LaboratoryClassData;
+    };
+};
+
+export type CalendarEventInput = EventInput & {
+    extendedProps: {
+        calendarEvent: CalendarEventData;
     };
 };
 
@@ -23,6 +30,15 @@ export function getScheduleChangeEvents(scheduleChanges: ScheduleChangeData[]): 
         allDay: true,
         start: scheduleChange.date,
         backgroundColor: scheduleChange.type === 'holiday' ? 'var(--bs-danger)' : 'var(--bs-warning)',
+    }));
+}
+
+export function getCalendarEvents(calendarEvents: CalendarEventData[]): CalendarEventInput[] {
+    return calendarEvents.map<CalendarEventInput>(calendarEvent => ({
+        title: calendarEvent.name,
+        start: calendarEvent.startDate,
+        end: calendarEvent.endDate,
+        extendedProps: { calendarEvent },
     }));
 }
 

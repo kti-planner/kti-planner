@@ -146,6 +146,10 @@ export class Semester {
         ]);
     }
 
+    async delete(): Promise<void> {
+        await db.query('DELETE FROM semesters WHERE id = $1', [this.id]);
+    }
+
     static async getAllScheduleChanges(): Promise<ScheduleChange[]> {
         const data = await db.query<DbScheduleChange>('SELECT * FROM schedule_changes ORDER BY date');
 

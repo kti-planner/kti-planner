@@ -20,10 +20,6 @@ export const POST: APIRoute = async ({ locals }) => {
 
     const classroom = await Classroom.fetch(data.classroomId);
 
-    if (classroom === null) {
-        return Response.json(false, { status: 404 });
-    }
-
     const subject = await Subject.fetch(data.subjectId);
 
     if (subject === null) {
@@ -31,10 +27,6 @@ export const POST: APIRoute = async ({ locals }) => {
     }
 
     const teacher = await User.fetch(data.teacherId);
-
-    if (teacher === null) {
-        return Response.json(false, { status: 404 });
-    }
 
     const subjectExercises = await Exercise.fetchAllFromSubject(subject);
 
@@ -78,15 +70,7 @@ export const PATCH: APIRoute = async ({ locals }) => {
 
     const classroom = data.classroomId === undefined ? undefined : await Classroom.fetch(data.classroomId);
 
-    if (classroom === null) {
-        return Response.json(false, { status: 404 });
-    }
-
     const teacher = data.teacherId === undefined ? undefined : await User.fetch(data.teacherId);
-
-    if (teacher === null) {
-        return Response.json(false, { status: 404 });
-    }
 
     const subject = await Subject.fetch(exercise.subjectId);
 

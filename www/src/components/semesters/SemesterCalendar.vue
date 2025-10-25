@@ -1,16 +1,25 @@
 <script setup lang="ts">
 import { computed, ref, shallowRef, useTemplateRef } from 'vue';
-import type { EventClickArg, EventInput } from '@fullcalendar/core';
+import type { DateSelectArg, EventClickArg, EventInput } from '@fullcalendar/core';
 import { langId } from '@components/frontend/lang';
 import { currentUser } from '@components/frontend/user';
 import { useApiFetch } from '@components/api';
-import { getInitialDate, getLaboratoryClassEvents, getScheduleChangeEvents } from '@components/calendar/events';
+import {
+    getCalendarEvents,
+    getInitialDate,
+    getLaboratoryClassEvents,
+    getScheduleChangeEvents,
+} from '@components/calendar/events';
+import type { CalendarEventData } from '@components/calendar-events/types';
 import type { ClassroomData } from '@components/classrooms/types';
 import type { LaboratoryClassData } from '@components/laboratory-classes/types';
 import type { ScheduleChangeData, SemesterData } from '@components/semesters/types';
 import type { SubjectData } from '@components/subjects/types';
 import type { UserPublicData } from '@components/users/types';
+import { formatDateLocalYyyyMmDdHhMm } from '@components/utils';
 import Calendar from '@components/Calendar.vue';
+import CalendarEvent from '@components/calendar-events/CalendarEvent.vue';
+import CalendarEventForm from '@components/calendar-events/CalendarEventForm.vue';
 import EditLaboratoryClassForm from '@components/laboratory-classes/EditLaboratoryClassForm.vue';
 import LaboratoryClassEvent from '@components/laboratory-classes/LaboratoryClassEvent.vue';
 import Modal from '@components/Modal.vue';
@@ -23,6 +32,9 @@ const translations = {
         'Teachers': 'Teachers',
         'Edit class': 'Edit class',
         'Class details': 'Class details',
+        'Add event': 'Add event',
+        'Edit event': 'Edit event',
+        'Event details': 'Event details',
     },
     'pl': {
         'Subjects': 'Przedmioty',
@@ -30,6 +42,9 @@ const translations = {
         'Teachers': 'Prowadzący',
         'Edit class': 'Edytuj zajęcia',
         'Class details': 'Szczegóły zajęć',
+        'Add event': 'Dodaj wydarzenie',
+        'Edit event': 'Edytuj wydarzenie',
+        'Event details': 'Szczegóły wydarzenia',
     },
 };
 
@@ -64,9 +79,19 @@ const { data: laboratoryClasses } = useApiFetch<LaboratoryClassData[]>(
         ]),
 );
 
+const { data: calendarEvents } = useApiFetch<CalendarEventData[]>(
+    `/semesters/${semester.slug}/api/calendar-events/`,
+    () =>
+        new URLSearchParams([
+            ...selectedClassrooms.value.map(classroom => ['classroom', classroom.id]),
+            ...selectedTeachers.value.map(teacher => ['teacher', teacher.id]),
+        ]),
+);
+
 const events = computed<EventInput[]>(() => [
     ...getLaboratoryClassEvents(laboratoryClasses.value ?? []),
     ...getScheduleChangeEvents(scheduleChanges),
+    ...getCalendarEvents(calendarEvents.value ?? []),
 ]);
 
 const initialDate = computed(() => getInitialDate(laboratoryClasses.value ?? []));
@@ -79,21 +104,46 @@ const classDetailsModal = useTemplateRef('classDetailsModal');
 const clickedLaboratoryClass = shallowRef<LaboratoryClassData | null>(null);
 const clickedClassSubject = shallowRef<SubjectData | null>(null);
 
+const calendarEventModal = useTemplateRef('addEventModal');
+const clickedCalendarEvent = shallowRef<CalendarEventData | null>(null);
+const calendarSelectionStart = shallowRef(new Date());
+const calendarSelectionEnd = shallowRef(new Date());
+
 function handleEventClick(arg: EventClickArg) {
-    if (!('laboratoryClass' in arg.event.extendedProps)) {
-        return;
+    if ('laboratoryClass' in arg.event.extendedProps) {
+        clickedLaboratoryClass.value = arg.event.extendedProps.laboratoryClass;
+
+        clickedClassSubject.value =
+            subjects.find(s => s.id === clickedLaboratoryClass.value!.exercise.subjectId) ?? null;
+
+        classDetailsModal.value?.show();
     }
 
-    clickedLaboratoryClass.value = arg.event.extendedProps.laboratoryClass;
-    clickedClassSubject.value = subjects.find(s => s.id === clickedLaboratoryClass.value!.exercise.subjectId) ?? null;
-    classDetailsModal.value?.show();
+    if ('calendarEvent' in arg.event.extendedProps) {
+        clickedCalendarEvent.value = arg.event.extendedProps.calendarEvent;
+        calendarEventModal.value?.show();
+    }
+}
+
+function handleCalendarSelection(info: DateSelectArg) {
+    calendarSelectionStart.value = info.start;
+    calendarSelectionEnd.value = info.end;
+    clickedCalendarEvent.value = null;
+
+    calendarEventModal.value?.show();
 }
 </script>
 
 <template>
     <div class="row g-4">
         <div class="col-12 col-lg-9 mb-2 order-2 order-lg-1">
-            <Calendar :events :initial-date @event-click="handleEventClick">
+            <Calendar
+                :events
+                :initial-date
+                :selectable="currentUser !== null"
+                @event-click="handleEventClick"
+                @select="handleCalendarSelection"
+            >
                 <template #eventContent="arg">
                     <LaboratoryClassEvent
                         v-if="'laboratoryClass' in arg.event.extendedProps"
@@ -103,8 +153,33 @@ function handleEventClick(arg: EventClickArg) {
                             subjects.find(s => s.id === arg.event.extendedProps.laboratoryClass.exercise.subjectId)
                         "
                     />
+                    <CalendarEvent
+                        v-else-if="'calendarEvent' in arg.event.extendedProps"
+                        :time-text="arg.timeText"
+                        :calendar-event="arg.event.extendedProps.calendarEvent"
+                    />
                 </template>
             </Calendar>
+
+            <Modal ref="addEventModal">
+                <template #header>{{
+                    clickedCalendarEvent === null
+                        ? translate('Add event')
+                        : currentUser
+                          ? translate('Edit event')
+                          : translate('Event details')
+                }}</template>
+                <CalendarEventForm
+                    :semester
+                    :classrooms
+                    :calendar-event="
+                        clickedCalendarEvent ?? {
+                            startDate: formatDateLocalYyyyMmDdHhMm(calendarSelectionStart),
+                            endDate: formatDateLocalYyyyMmDdHhMm(calendarSelectionEnd),
+                        }
+                    "
+                />
+            </Modal>
 
             <Modal ref="classDetailsModal">
                 <template #header>{{ currentUser ? translate('Edit class') : translate('Class details') }}</template>

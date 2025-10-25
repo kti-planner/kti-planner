@@ -9,5 +9,10 @@ export default defineConfig({
         include: ['www/tests/unit/**/*.test.ts'],
         setupFiles: ['www/tests/unit/test-db.ts'],
         silent: 'passed-only',
+        coverage: {
+            enabled: true,
+            include: ['www/src/backend/**/*.ts'],
+            reporter: ['text', 'json-summary', 'json'],
+        },
     },
 });

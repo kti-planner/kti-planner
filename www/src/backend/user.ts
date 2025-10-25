@@ -120,6 +120,10 @@ export class User {
         }
     }
 
+    async delete(): Promise<void> {
+        await db.query('DELETE FROM users WHERE id = $1', [this.id]);
+    }
+
     async checkPassword(password: string): Promise<boolean> {
         return this.passwordHash !== null && (await bcrypt.compare(password, this.passwordHash));
     }
@@ -133,6 +137,7 @@ export class User {
         if (env.EMAIL_IMG_DIR === undefined) {
             console.warn('ENV variable EMAIL_IMG_DIR is unset, skipping email image generation');
             return;
+            /* v8 ignore start */
         }
 
         const canvas = createCanvas(200, 100);
@@ -157,6 +162,7 @@ export class User {
         const pngStream = canvas.createPNGStream();
         const writeStream = pngStream.pipe(out);
         await once(writeStream, 'finish');
+        /* v8 ignore end */
     }
 }
 
