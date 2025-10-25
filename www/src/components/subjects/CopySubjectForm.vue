@@ -77,7 +77,7 @@ const translations = {
     'pl': {
         'Subject will be copied along with all its:': 'Przedmiot zostanie skopiowany wraz ze wszystkimi jego:',
         'Exercises': 'Ćwiczeniami',
-        'Laboratory groups': 'grupami laboratoryjnymi',
+        'Laboratory groups': 'Grupami laboratoryjnymi',
         "Calendar events won't be copied.": 'Wydarzenia kalendarza nie zostaną skopiowane.',
         'Semester to copy from': 'Semestr, z którego chcesz skopiować',
         'Summer semester': 'Semestr letni',
