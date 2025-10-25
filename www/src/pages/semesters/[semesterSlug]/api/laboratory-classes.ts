@@ -41,24 +41,25 @@ export const GET: APIRoute = async ({ params, url }) => {
                 const group = groups.find(g => g.id === laboratoryClass.laboratoryGroupId);
                 assert(group);
 
-                const classTeacher = users.find(u => u.id === laboratoryClass.teacherId);
-                assert(classTeacher);
-
-                const exerciseClassroom = classrooms.find(c => c.id === exercise.classroomId);
-                assert(exerciseClassroom);
-
-                const exerciseTeacher = users.find(u => u.id === exercise.teacherId);
-                assert(exerciseTeacher);
+                const classTeacher = users.find(u => u.id === laboratoryClass.teacherId) ?? null;
+                const exerciseClassroom = classrooms.find(c => c.id === exercise.classroomId) ?? null;
+                const exerciseTeacher = users.find(u => u.id === exercise.teacherId) ?? null;
 
                 if (subjectFilter.length > 0 && !subjectFilter.includes(exercise.subjectId)) {
                     return null;
                 }
 
-                if (classroomFilter.length > 0 && !classroomFilter.includes(exercise.classroomId)) {
+                if (
+                    classroomFilter.length > 0 &&
+                    (exercise.classroomId === null || !classroomFilter.includes(exercise.classroomId))
+                ) {
                     return null;
                 }
 
-                if (teacherFilter.length > 0 && !teacherFilter.includes(laboratoryClass.teacherId)) {
+                if (
+                    teacherFilter.length > 0 &&
+                    (laboratoryClass.teacherId === null || !teacherFilter.includes(laboratoryClass.teacherId))
+                ) {
                     return null;
                 }
 

@@ -144,4 +144,8 @@ test('Users', async () => {
     });
 
     expect(user1.passwordHash).toStrictEqual(null);
+
+    await user1.delete();
+
+    expect(await User.fetchAll()).toStrictEqual([user2]);
 });

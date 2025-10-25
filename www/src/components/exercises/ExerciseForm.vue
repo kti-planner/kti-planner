@@ -42,14 +42,14 @@ async function submit() {
                   exerciseNumber: exerciseNumber.value,
                   subjectId: props.subject.id,
                   classroomId: exerciseClassroomId.value,
-                  teacherId: teacher.value?.id,
+                  teacherId: teacher.value.id,
               } satisfies ExerciseCreateApiData)
             : await apiPatch<boolean>('/semesters/api/exercises/', {
                   id: props.exercise.id,
                   name: exerciseName.value,
                   exerciseNumber: exerciseNumber.value,
                   classroomId: exerciseClassroomId.value,
-                  teacherId: teacher.value?.id,
+                  teacherId: teacher.value.id,
               } satisfies ExerciseEditApiData);
 
     if (success === undefined) {

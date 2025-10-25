@@ -9,11 +9,15 @@ const translations = {
         'Group': 'Group',
         'Teacher': 'Teacher',
         'Classroom': 'Classroom',
+        'Unknown [teacher]': 'Unknown',
+        'Unknown [classroom]': 'Unknown',
     },
     'pl': {
         'Group': 'Grupa',
         'Teacher': 'Nauczyciel',
         'Classroom': 'Sala',
+        'Unknown [teacher]': 'Nieznany',
+        'Unknown [classroom]': 'Nieznana',
     },
 };
 
@@ -33,8 +37,8 @@ const title = computed(
         (subject ? `${subject.name}\n` : '') +
         `${laboratoryClass.exercise.name}\n` +
         `${translate('Group')}: ${laboratoryClass.laboratoryGroup.name}\n` +
-        `${translate('Teacher')}: ${laboratoryClass.teacher.name}\n` +
-        `${translate('Classroom')}: ${laboratoryClass.exercise.classroom.name}`,
+        `${translate('Teacher')}: ${laboratoryClass.teacher?.name ?? translate('Unknown [teacher]')}\n` +
+        `${translate('Classroom')}: ${laboratoryClass.exercise.classroom?.name ?? translate('Unknown [classroom]')}`,
 );
 </script>
 
@@ -53,11 +57,11 @@ const title = computed(
         </div>
         <div class="text-truncate">
             <i class="bi bi-person-fill"></i>
-            <span class="ms-1">{{ laboratoryClass.teacher.name }}</span>
+            <span class="ms-1">{{ laboratoryClass.teacher?.name ?? translate('Unknown [teacher]') }}</span>
         </div>
         <div class="text-truncate">
             <i class="bi bi-building-fill"></i>
-            <span class="ms-1">{{ laboratoryClass.exercise.classroom.name }}</span>
+            <span class="ms-1">{{ laboratoryClass.exercise.classroom?.name ?? translate('Unknown [classroom]') }}</span>
         </div>
     </div>
 </template>

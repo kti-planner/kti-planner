@@ -120,6 +120,10 @@ export class User {
         }
     }
 
+    async delete(): Promise<void> {
+        await db.query('DELETE FROM users WHERE id = $1', [this.id]);
+    }
+
     async checkPassword(password: string): Promise<boolean> {
         return this.passwordHash !== null && (await bcrypt.compare(password, this.passwordHash));
     }

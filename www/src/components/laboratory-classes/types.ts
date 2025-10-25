@@ -10,7 +10,7 @@ export interface LaboratoryClassData {
     laboratoryGroup: LaboratoryGroupData;
     startDate: string;
     endDate: string;
-    teacher: UserPublicData;
+    teacher: UserPublicData | null;
 }
 
 export const laboratoryClassCreateApiSchema = z

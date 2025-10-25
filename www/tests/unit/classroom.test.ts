@@ -35,4 +35,16 @@ test('Classrooms', async () => {
     expect(await Classroom.fetch(classroom2.id)).toStrictEqual(classroom2);
     expect(await Classroom.fetch(classroom1.id)).toStrictEqual(classroom1);
     expect(await Classroom.fetchAll()).toStrictEqual([classroom1, classroom2]);
+
+    await classroom1.delete();
+
+    expect(await Classroom.fetch(classroom2.id)).toStrictEqual(classroom2);
+    expect(await Classroom.fetch(classroom1.id)).toStrictEqual(null);
+    expect(await Classroom.fetchAll()).toStrictEqual([classroom2]);
+
+    await classroom2.delete();
+
+    expect(await Classroom.fetch(classroom2.id)).toStrictEqual(null);
+    expect(await Classroom.fetch(classroom1.id)).toStrictEqual(null);
+    expect(await Classroom.fetchAll()).toStrictEqual([]);
 });

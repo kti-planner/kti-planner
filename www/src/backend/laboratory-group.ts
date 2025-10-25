@@ -83,6 +83,10 @@ export class LaboratoryGroup {
 
         await db.query('UPDATE laboratory_groups SET name = $2 WHERE id = $1', [this.id, this.name]);
     }
+
+    async delete(): Promise<void> {
+        await db.query('DELETE FROM laboratory_groups WHERE id = $1', [this.id]);
+    }
 }
 
 export function makeLaboratoryGroupData(group: LaboratoryGroup): LaboratoryGroupData {

@@ -151,14 +151,14 @@ test('Laboratory classes', async () => {
         laboratoryGroup: laboratoryGroup2,
         startDate: new Date('2025-03-11T13:00:00'),
         endDate: new Date('2025-03-11T15:00:00'),
-        teacher: user1,
+        teacher: null,
     });
 
     expect(laboratoryClass2).toHaveProperty('exerciseId', exercise2.id);
     expect(laboratoryClass2).toHaveProperty('laboratoryGroupId', laboratoryGroup2.id);
     expect(laboratoryClass2).toHaveProperty('startDate', new Date('2025-03-11T13:00:00'));
     expect(laboratoryClass2).toHaveProperty('endDate', new Date('2025-03-11T15:00:00'));
-    expect(laboratoryClass2).toHaveProperty('teacherId', user1.id);
+    expect(laboratoryClass2).toHaveProperty('teacherId', null);
 
     expect(await LaboratoryClass.fetch(laboratoryClass2.id)).toStrictEqual(laboratoryClass2);
     expect(await LaboratoryClass.fetch(laboratoryClass1.id)).toStrictEqual(laboratoryClass1);
@@ -202,6 +202,47 @@ test('Laboratory classes', async () => {
         teacher: user1,
     });
 
+    await laboratoryClass3.edit({
+        teacher: null,
+    });
+
+    expect(laboratoryClass3).toHaveProperty('teacherId', null);
+
+    const laboratoryClassData3 = makeLaboratoryClassData(
+        laboratoryClass3,
+        exercise1,
+        classroom1,
+        user1,
+        laboratoryGroup1,
+        null,
+    );
+
+    expect(laboratoryClassData3).toStrictEqual({
+        endDate: '2024-10-30T13:00',
+        exercise: {
+            classroom: {
+                id: classroom1.id,
+                name: 'EA 142',
+            },
+            exerciseNumber: 1,
+            id: exercise1.id,
+            name: 'Diagnostyka sieci IP',
+            subjectId: subject1.id,
+            teacher: {
+                id: user1.id,
+                name: 'Jan Kowalski',
+                role: 'teacher',
+            },
+        },
+        id: laboratoryClass3.id,
+        laboratoryGroup: {
+            id: laboratoryGroup1.id,
+            name: '1A',
+        },
+        startDate: '2024-10-30T11:00',
+        teacher: null,
+    });
+
     expect(await LaboratoryClass.fetch(laboratoryClass2.id)).toStrictEqual(laboratoryClass2);
     expect(await LaboratoryClass.fetch(laboratoryClass1.id)).toStrictEqual(laboratoryClass1);
 
@@ -221,4 +262,18 @@ test('Laboratory classes', async () => {
 
     expect(await LaboratoryClass.fetchAllFromExercise(exercise1)).toStrictEqual([laboratoryClass1, laboratoryClass3]);
     expect(await LaboratoryClass.fetchAllFromExercise(exercise2)).toStrictEqual([laboratoryClass2]);
+
+    await laboratoryClass3.delete();
+
+    expect(await LaboratoryClass.fetchAll()).toStrictEqual([laboratoryClass1, laboratoryClass2]);
+
+    await exercise1.delete();
+
+    expect(await LaboratoryClass.fetchAll()).toStrictEqual([laboratoryClass2]);
+    expect(await Exercise.fetchAll()).toStrictEqual([exercise2]);
+
+    await laboratoryGroup2.delete();
+
+    expect(await LaboratoryClass.fetchAll()).toStrictEqual([]);
+    expect(await LaboratoryGroup.fetchAll()).toStrictEqual([laboratoryGroup1]);
 });
