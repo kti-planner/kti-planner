@@ -56,12 +56,7 @@ export const POST: APIRoute = async ({ locals, params }) => {
     const exercisesToBeCopied = await Exercise.fetchAllFromSubject(subjectToBeCopied);
     const exercisesCreateData: ExerciseCreateData[] = [];
     for (const exercise of exercisesToBeCopied) {
-        const classroom = await Classroom.fetch(exercise.classroomId);
-
-        if (!classroom) {
-            return Response.json(null, { status: 400 });
-        }
-
+        const classroom = exercise.classroomId === null ? null : await Classroom.fetch(exercise.classroomId);
         const teacher = await exercise.getTeacher();
 
         exercisesCreateData.push({
