@@ -105,16 +105,15 @@ test('Exercises', async () => {
         subject: subject2,
         exerciseNumber: 2,
         classroom: classroom2,
-        teacher: user1,
+        teacher: null,
     });
 
     expect(exercise2).toHaveProperty('name', 'Firewall');
     expect(exercise2).toHaveProperty('subjectId', subject2.id);
     expect(exercise2).toHaveProperty('exerciseNumber', 2);
     expect(exercise2).toHaveProperty('classroomId', classroom2.id);
-    expect(exercise2).toHaveProperty('teacherId', user1.id);
-
-    expect(await exercise2.getTeacher()).toStrictEqual(user1);
+    expect(exercise2).toHaveProperty('teacherId', null);
+    expect(await exercise2.getTeacher()).toStrictEqual(null);
 
     expect(await Exercise.fetch(exercise2.id)).toStrictEqual(exercise2);
     expect(await Exercise.fetch(exercise1.id)).toStrictEqual(exercise1);
@@ -150,7 +149,6 @@ test('Exercises', async () => {
     expect(exercise2).toHaveProperty('exerciseNumber', 4);
     expect(exercise2).toHaveProperty('classroomId', classroom1.id);
     expect(exercise2).toHaveProperty('teacherId', user2.id);
-
     expect(await exercise2.getTeacher()).toStrictEqual(user2);
 
     expect(exercise1).toHaveProperty('name', 'Diagnostyka sieci IP');
@@ -158,15 +156,33 @@ test('Exercises', async () => {
     expect(exercise1).toHaveProperty('exerciseNumber', 1);
     expect(exercise1).toHaveProperty('classroomId', classroom1.id);
     expect(exercise1).toHaveProperty('teacherId', user1.id);
-
     expect(await exercise1.getTeacher()).toStrictEqual(user1);
 
     const exercise3 = await Exercise.create({
         name: 'Firewall',
         subject: subject1,
         exerciseNumber: 2,
-        classroom: classroom2,
+        classroom: null,
         teacher: user1,
+    });
+
+    await exercise3.edit({
+        classroom: null,
+        teacher: null,
+    });
+
+    expect(exercise3).toHaveProperty('classroomId', null);
+    expect(exercise3).toHaveProperty('teacherId', null);
+
+    const exerciseData3 = makeExerciseData(exercise3, null, null);
+
+    expect(exerciseData3).toStrictEqual({
+        classroom: null,
+        exerciseNumber: 2,
+        id: exercise3.id,
+        name: 'Firewall',
+        subjectId: subject1.id,
+        teacher: null,
     });
 
     expect(await Exercise.fetch(exercise2.id)).toStrictEqual(exercise2);
