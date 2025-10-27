@@ -71,7 +71,7 @@ CREATE TABLE calendar_events (
     name         text NOT NULL,
     user_id      uuid REFERENCES users ON DELETE SET NULL,
     classroom_id uuid REFERENCES classrooms ON DELETE SET NULL,
-    semester_id  uuid REFERENCES semesters ON DELETE NO ACTION,
+    semester_id  uuid NOT NULL REFERENCES semesters ON DELETE NO ACTION,
     start_date   timestamptz NOT NULL,
     end_date     timestamptz NOT NULL
 );
