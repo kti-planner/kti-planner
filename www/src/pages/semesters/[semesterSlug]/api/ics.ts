@@ -48,14 +48,8 @@ export const ALL: APIRoute = async ({ params, url, request }) => {
             const group = groups.find(g => g.id === laboratoryClass.laboratoryGroupId);
             assert(group);
 
-            const classTeacher = users.find(u => u.id === laboratoryClass.teacherId);
-            assert(classTeacher);
-
-            const exerciseClassroom = classrooms.find(c => c.id === exercise.classroomId);
-            assert(exerciseClassroom);
-
-            const exerciseTeacher = users.find(u => u.id === exercise.teacherId);
-            assert(exerciseTeacher);
+            const classTeacher = users.find(u => u.id === laboratoryClass.teacherId) ?? null;
+            const exerciseClassroom = classrooms.find(c => c.id === exercise.classroomId) ?? null;
 
             const subject = subjects.find(s => s.id === exercise.subjectId);
             assert(subject);
@@ -64,19 +58,27 @@ export const ALL: APIRoute = async ({ params, url, request }) => {
                 return null;
             }
 
-            if (classroomFilter.length > 0 && !classroomFilter.includes(exercise.classroomId)) {
+            if (
+                classroomFilter.length > 0 &&
+                (exercise.classroomId === null || !classroomFilter.includes(exercise.classroomId))
+            ) {
                 return null;
             }
 
-            if (teacherFilter.length > 0 && !teacherFilter.includes(laboratoryClass.teacherId)) {
+            if (
+                teacherFilter.length > 0 &&
+                (laboratoryClass.teacherId === null || !teacherFilter.includes(laboratoryClass.teacherId))
+            ) {
                 return null;
             }
+
+            const description = `Grupa: ${group.name}${classTeacher ? `\nProwadzący: ${classTeacher.name}` : ''}${exerciseClassroom ? `\nSala: ${exerciseClassroom.name}` : ''}`;
 
             return {
                 uid: laboratoryClass.id,
                 title: `${subject.name} - ${exercise.name}`,
-                description: `Grupa: ${group.name}\nProwadzący: ${classTeacher.name}\nSala: ${exerciseClassroom.name}`,
-                location: exerciseClassroom.name,
+                description,
+                ...(exerciseClassroom ? { location: exerciseClassroom.name } : {}),
                 start: laboratoryClass.startDate.getTime(),
                 end: laboratoryClass.endDate.getTime(),
             };
