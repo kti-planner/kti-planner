@@ -6,9 +6,23 @@ import { Classroom } from '@backend/classroom';
 import { Exercise } from '@backend/exercise';
 import { LaboratoryClass } from '@backend/laboratory-class';
 import { LaboratoryGroup } from '@backend/laboratory-group';
+import { isLangId } from '@backend/lang';
 import { Semester } from '@backend/semester';
 import { Subject } from '@backend/subject';
 import { User } from '@backend/user';
+
+const translations = {
+    'en': {
+        'Group': 'Group',
+        'Teacher': 'Teacher',
+        'Classroom': 'Classroom',
+    },
+    'pl': {
+        'Group': 'Grupa',
+        'Teacher': 'Prowadzący',
+        'Classroom': 'Sala',
+    },
+};
 
 // Calendar applications use WebCal HTTP methods like PROPFIND or standard methods like GET
 export const ALL: APIRoute = async ({ params, url, request }) => {
@@ -27,7 +41,17 @@ export const ALL: APIRoute = async ({ params, url, request }) => {
         return new Response(null, { status: 404 });
     }
 
+    const langId = url.searchParams.get('lang');
+    if (langId === null) {
+        return new Response(null, { status: 400 });
+    }
+
+    if (!isLangId(langId)) {
+        return new Response(null, { status: 400 });
+    }
+
     const subjectFilter = url.searchParams.getAll('subject');
+
     const classroomFilter = url.searchParams.getAll('classroom');
     const teacherFilter = url.searchParams.getAll('teacher');
 
@@ -72,7 +96,15 @@ export const ALL: APIRoute = async ({ params, url, request }) => {
                 return null;
             }
 
-            const description = `Grupa: ${group.name}${classTeacher ? `\nProwadzący: ${classTeacher.name}` : ''}${exerciseClassroom ? `\nSala: ${exerciseClassroom.name}` : ''}`;
+            let description = `${translations[langId]['Group']}: ${group.name}`;
+
+            if (classTeacher) {
+                description += `\n${translations[langId]['Teacher']}: ${classTeacher.name}`;
+            }
+
+            if (exerciseClassroom) {
+                description += `\n${translations[langId]['Classroom']}: ${exerciseClassroom.name}`;
+            }
 
             return {
                 uid: laboratoryClass.id,
@@ -104,7 +136,7 @@ export const ALL: APIRoute = async ({ params, url, request }) => {
             return {
                 uid: calendarEvent.id,
                 title: calendarEvent.name,
-                description: `Prowadzący: ${user.name}\nSala: ${classroom.name}`,
+                description: `${translations[langId]['Teacher']}: ${user.name}\n${translations[langId]['Classroom']}: ${classroom.name}`,
                 location: classroom.name,
                 start: calendarEvent.startDate.getTime(),
                 end: calendarEvent.endDate.getTime(),
