@@ -117,13 +117,13 @@ test('Calendar events', async () => {
     await calendarEvent2.edit({
         startDate: new Date('2025-03-12T09:00:00'),
         endDate: new Date('2025-03-12T11:00:00'),
-        classroom: classroom1,
+        classroom: null,
         name: 'event2 v2',
     });
 
     expect(calendarEvent2).toHaveProperty('name', calendarEvent2.name);
     expect(calendarEvent2).toHaveProperty('userId', user2.id);
-    expect(calendarEvent2).toHaveProperty('classroomId', classroom1.id);
+    expect(calendarEvent2).toHaveProperty('classroomId', null);
     expect(calendarEvent2).toHaveProperty('semesterId', semester2.id);
     expect(calendarEvent2).toHaveProperty('startDate', new Date('2025-03-12T09:00:00'));
     expect(calendarEvent2).toHaveProperty('endDate', new Date('2025-03-12T11:00:00'));
@@ -138,10 +138,29 @@ test('Calendar events', async () => {
     const calendarEvent3 = await CalendarEvent.create({
         name: 'event3',
         semester: semester1,
-        classroom: classroom2,
-        user: user1,
+        classroom: null,
+        user: null,
         startDate: new Date('2024-10-30T11:00:00'),
         endDate: new Date('2024-10-30T13:00:00'),
+    });
+
+    const calendarEventData3 = makeCalendarEventData(calendarEvent3, null, null, semester1);
+
+    expect(calendarEventData3).toStrictEqual({
+        classroom: null,
+        endDate: '2024-10-30T13:00',
+        id: calendarEvent3.id,
+        name: 'event3',
+        semester: {
+            endDate: '2025-01-30',
+            id: semester1.id,
+            slug: '2024-winter',
+            startDate: '2024-10-01',
+            type: 'winter',
+            year: 2024,
+        },
+        startDate: '2024-10-30T11:00',
+        user: null,
     });
 
     expect(await CalendarEvent.fetch(calendarEvent1.id)).toStrictEqual(calendarEvent1);

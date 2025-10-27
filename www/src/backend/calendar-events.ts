@@ -18,8 +18,8 @@ interface DbCalendarEvent {
 
 export interface CalendarEventCreateData {
     name: string;
-    user: User;
-    classroom: Classroom;
+    user: User | null;
+    classroom: Classroom | null;
     semester: Semester;
     startDate: Date;
     endDate: Date;
@@ -27,7 +27,7 @@ export interface CalendarEventCreateData {
 
 export interface CalendarEventEditData {
     name?: string | undefined;
-    classroom?: Classroom | undefined;
+    classroom?: Classroom | null | undefined;
     startDate?: Date | undefined;
     endDate?: Date | undefined;
 }
@@ -82,8 +82,8 @@ export class CalendarEvent {
                 [
                     crypto.randomUUID(),
                     data.name,
-                    data.user.id,
-                    data.classroom.id,
+                    data.user?.id ?? null,
+                    data.classroom?.id ?? null,
                     data.semester.id,
                     data.startDate,
                     data.endDate,
@@ -102,7 +102,7 @@ export class CalendarEvent {
         }
 
         if (data.classroom !== undefined) {
-            this.classroomId = data.classroom.id;
+            this.classroomId = data.classroom?.id ?? null;
         }
 
         if (data.startDate !== undefined) {
