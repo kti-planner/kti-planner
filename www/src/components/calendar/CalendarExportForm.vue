@@ -67,6 +67,7 @@ const icsUrl = computed<string>(() => {
         ...selectedClassrooms.value.map(classroom => ['classroom', classroom.id]),
         ...selectedTeachers.value.map(teacher => ['teacher', teacher.id]),
         ...[...selectedGroupIds.value].map(id => ['laboratoryGroup', id]),
+        ['lang', langId],
     ]);
 
     const baseUrl = `${window.location.origin}${window.location.pathname}api/ics/`;
