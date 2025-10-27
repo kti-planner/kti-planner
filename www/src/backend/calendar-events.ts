@@ -9,8 +9,8 @@ import { formatDateLocalYyyyMmDdHhMm } from '@components/utils';
 interface DbCalendarEvent {
     id: string;
     name: string;
-    user_id: string;
-    classroom_id: string;
+    user_id: string | null;
+    classroom_id: string | null;
     semester_id: string;
     start_date: Date;
     end_date: Date;
@@ -18,8 +18,8 @@ interface DbCalendarEvent {
 
 export interface CalendarEventCreateData {
     name: string;
-    user: User;
-    classroom: Classroom;
+    user: User | null;
+    classroom: Classroom | null;
     semester: Semester;
     startDate: Date;
     endDate: Date;
@@ -27,7 +27,7 @@ export interface CalendarEventCreateData {
 
 export interface CalendarEventEditData {
     name?: string | undefined;
-    classroom?: Classroom | undefined;
+    classroom?: Classroom | null | undefined;
     startDate?: Date | undefined;
     endDate?: Date | undefined;
 }
@@ -35,8 +35,8 @@ export interface CalendarEventEditData {
 export class CalendarEvent {
     id: string;
     name: string;
-    userId: string;
-    classroomId: string;
+    userId: string | null;
+    classroomId: string | null;
     semesterId: string;
     startDate: Date;
     endDate: Date;
@@ -82,8 +82,8 @@ export class CalendarEvent {
                 [
                     crypto.randomUUID(),
                     data.name,
-                    data.user.id,
-                    data.classroom.id,
+                    data.user?.id ?? null,
+                    data.classroom?.id ?? null,
                     data.semester.id,
                     data.startDate,
                     data.endDate,
@@ -102,7 +102,7 @@ export class CalendarEvent {
         }
 
         if (data.classroom !== undefined) {
-            this.classroomId = data.classroom.id;
+            this.classroomId = data.classroom?.id ?? null;
         }
 
         if (data.startDate !== undefined) {
@@ -122,15 +122,15 @@ export class CalendarEvent {
 
 export function makeCalendarEventData(
     calendarEvent: CalendarEvent,
-    user: User,
-    classroom: Classroom,
+    user: User | null,
+    classroom: Classroom | null,
     semester: Semester,
 ): CalendarEventData {
     return {
         id: calendarEvent.id,
         name: calendarEvent.name,
-        user: makeUserPublicData(user),
-        classroom: makeClassroomData(classroom),
+        user: user ? makeUserPublicData(user) : null,
+        classroom: classroom ? makeClassroomData(classroom) : null,
         semester: makeSemesterData(semester),
         startDate: formatDateLocalYyyyMmDdHhMm(calendarEvent.startDate),
         endDate: formatDateLocalYyyyMmDdHhMm(calendarEvent.endDate),
