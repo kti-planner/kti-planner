@@ -202,6 +202,7 @@ function handleCalendarSelection(info: DateSelectArg) {
             <Modal ref="exportModal">
                 <template #header>{{ translate('Export calendar') }}</template>
                 <CalendarExportForm
+                    :semester
                     :subjects
                     :classrooms
                     :teachers
@@ -224,19 +225,19 @@ function handleCalendarSelection(info: DateSelectArg) {
                 <h2 class="text-center fs-5">
                     {{ translate('Subjects') }}
                 </h2>
-                <ToggleButtonPicker v-model="selectedSubjects" :options="subjectOptions" />
+                <ToggleButtonPicker v-model="selectedSubjects" center :options="subjectOptions" />
             </div>
             <div>
                 <h2 class="text-center fs-5">
                     {{ translate('Classrooms') }}
                 </h2>
-                <ToggleButtonPicker v-model="selectedClassrooms" :options="classroomOptions" />
+                <ToggleButtonPicker v-model="selectedClassrooms" center :options="classroomOptions" />
             </div>
             <div>
                 <h2 class="text-center fs-5">
                     {{ translate('Teachers') }}
                 </h2>
-                <ToggleButtonPicker v-model="selectedTeachers" :options="teacherOptions" />
+                <ToggleButtonPicker v-model="selectedTeachers" center :options="teacherOptions" />
             </div>
         </div>
     </div>
