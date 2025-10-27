@@ -11,7 +11,11 @@ import { Subject } from '@backend/subject';
 import { User } from '@backend/user';
 
 // Calendar applications use WebCal HTTP methods like PROPFIND or standard methods like GET
-export const ALL: APIRoute = async ({ params, url }) => {
+export const ALL: APIRoute = async ({ params, url, request }) => {
+    if (request.method !== 'GET') {
+        return new Response(null, { status: 405, headers: { Allow: 'GET' } });
+    }
+
     const { semesterSlug } = params;
 
     if (semesterSlug === undefined) {
