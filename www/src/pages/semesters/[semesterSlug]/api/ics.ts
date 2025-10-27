@@ -51,9 +51,9 @@ export const ALL: APIRoute = async ({ params, url, request }) => {
     }
 
     const subjectFilter = url.searchParams.getAll('subject');
-
     const classroomFilter = url.searchParams.getAll('classroom');
     const teacherFilter = url.searchParams.getAll('teacher');
+    const groupFilter = url.searchParams.getAll('laboratoryGroup');
 
     const subjects = await Subject.fetchAllFromSemester(semester);
     const groups = await LaboratoryGroup.fetchAllFromSubjects(subjects);
@@ -79,6 +79,10 @@ export const ALL: APIRoute = async ({ params, url, request }) => {
             assert(subject);
 
             if (subjectFilter.length > 0 && !subjectFilter.includes(exercise.subjectId)) {
+                return null;
+            }
+
+            if (groupFilter.length > 0 && !groupFilter.includes(group.id)) {
                 return null;
             }
 
