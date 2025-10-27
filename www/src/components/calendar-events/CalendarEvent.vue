@@ -7,10 +7,14 @@ const translations = {
     'en': {
         'Teacher': 'Teacher',
         'Classroom': 'Classroom',
+        'Unknown [teacher]': 'Unknown',
+        'Unknown [classroom]': 'Unknown',
     },
     'pl': {
         'Teacher': 'Nauczyciel',
         'Classroom': 'Sala',
+        'Unknown [teacher]': 'Nieznany',
+        'Unknown [classroom]': 'Nieznana',
     },
 };
 
@@ -26,8 +30,8 @@ const { calendarEvent } = defineProps<{
 const title = computed(
     () =>
         `${calendarEvent.name}\n` +
-        `${translate('Teacher')}: ${calendarEvent.user.name}\n` +
-        `${translate('Classroom')}: ${calendarEvent.classroom.name}`,
+        `${translate('Teacher')}: ${calendarEvent.user?.name ?? translate('Unknown [teacher]')}\n` +
+        `${translate('Classroom')}: ${calendarEvent.classroom?.name ?? translate('Unknown [classroom]')}`,
 );
 </script>
 
@@ -39,11 +43,11 @@ const title = computed(
         </p>
         <div class="text-truncate">
             <i class="bi bi-person-fill"></i>
-            <span class="ms-1">{{ calendarEvent.user.name }}</span>
+            <span class="ms-1">{{ calendarEvent.user?.name ?? translate('Unknown [teacher]') }}</span>
         </div>
         <div class="text-truncate">
             <i class="bi bi-building-fill"></i>
-            <span class="ms-1">{{ calendarEvent.classroom.name }}</span>
+            <span class="ms-1">{{ calendarEvent.classroom?.name ?? translate('Unknown [classroom]') }}</span>
         </div>
     </div>
 </template>
