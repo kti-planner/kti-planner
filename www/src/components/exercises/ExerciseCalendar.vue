@@ -3,7 +3,9 @@ import { computed, shallowRef, useTemplateRef } from 'vue';
 import type { EventClickArg, EventInput } from '@fullcalendar/core';
 import { langId } from '@components/frontend/lang';
 import { currentUser } from '@components/frontend/user';
+import { useApiFetch } from '@components/api';
 import { getInitialDate, getLaboratoryClassEvents, getScheduleChangeEvents } from '@components/calendar/events';
+import type { ExerciseData } from '@components/exercises/types';
 import type { LaboratoryClassData } from '@components/laboratory-classes/types';
 import type { ScheduleChangeData, SemesterData } from '@components/semesters/types';
 import type { SubjectData } from '@components/subjects/types';
@@ -13,12 +15,12 @@ import EditLaboratoryClassForm from '@components/laboratory-classes/EditLaborato
 import LaboratoryClassEvent from '@components/laboratory-classes/LaboratoryClassEvent.vue';
 import Modal from '@components/Modal.vue';
 
-const { scheduleChanges, laboratoryClasses } = defineProps<{
+const { exercise, semester, subject, scheduleChanges } = defineProps<{
+    exercise: ExerciseData;
     semester: SemesterData;
     subject: SubjectData;
     teachers: UserPublicData[];
     scheduleChanges: ScheduleChangeData[];
-    laboratoryClasses: LaboratoryClassData[];
 }>();
 
 const translations = {
@@ -36,12 +38,19 @@ function translate(text: keyof (typeof translations)[LangId]): string {
     return translations[langId][text];
 }
 
+const apiUrl = computed(() => `/semesters/${semester.slug}/subjects/${subject.slug}/api/laboratory-classes/`);
+
+const { data: laboratoryClasses, execute: refreshClasses } = useApiFetch<LaboratoryClassData[]>(
+    apiUrl,
+    () => new URLSearchParams({ exercise: exercise.id }),
+);
+
 const events = computed<EventInput[]>(() => [
-    ...getLaboratoryClassEvents(laboratoryClasses ?? []),
+    ...getLaboratoryClassEvents(laboratoryClasses.value ?? []),
     ...getScheduleChangeEvents(scheduleChanges),
 ]);
 
-const initialDate = computed(() => getInitialDate(laboratoryClasses ?? []));
+const initialDate = computed(() => getInitialDate(laboratoryClasses.value ?? []));
 
 const editModal = useTemplateRef('editModal');
 const editedLaboratoryClass = shallowRef<LaboratoryClassData | null>(null);
@@ -53,6 +62,11 @@ function handleEventClick(arg: EventClickArg) {
 
     editedLaboratoryClass.value = arg.event.extendedProps.laboratoryClass;
     editModal.value?.show();
+}
+
+function handleLaboratoryClassSubmit() {
+    editModal.value?.hide();
+    void refreshClasses();
 }
 </script>
 
@@ -77,6 +91,7 @@ function handleEventClick(arg: EventClickArg) {
             :api-url="`/semesters/${semester.slug}/subjects/${subject.slug}/api/laboratory-classes/`"
             :semester
             :subject
+            @submit="handleLaboratoryClassSubmit"
         />
     </Modal>
 </template>

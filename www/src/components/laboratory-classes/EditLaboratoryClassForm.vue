@@ -52,6 +52,10 @@ function translate(text: keyof (typeof translations)[LangId]): string {
     return translations[langId][text];
 }
 
+const emit = defineEmits<{
+    submit: [];
+}>();
+
 const date = ref<string>(formatDateLocalYyyyMmDd(new Date(laboratoryClass.startDate)));
 const startTime = ref<string>(formatDateLocalHhMm(new Date(laboratoryClass.startDate)));
 const endTime = ref<string>(formatDateLocalHhMm(new Date(laboratoryClass.endDate)));
@@ -74,7 +78,7 @@ async function saveLaboratoryClass() {
     }
 
     if (success) {
-        window.location.reload();
+        emit('submit');
     }
 }
 

@@ -1,8 +1,6 @@
 ---
 import { Classroom, makeClassroomData } from '@backend/classroom';
 import { Exercise, makeExerciseData } from '@backend/exercise';
-import { LaboratoryClass, makeLaboratoryClassData } from '@backend/laboratory-class';
-import { LaboratoryGroup } from '@backend/laboratory-group';
 import { makeScheduleChangeData, makeSemesterData, Semester } from '@backend/semester';
 import { makeSubjectData, Subject } from '@backend/subject';
 import { makeUserPublicData } from '@backend/user';
@@ -68,25 +66,9 @@ const exerciseData = makeExerciseData(exercise, classroom, await exercise.getTea
 
 const teachers = await subject.getTeachers();
 const teachersData = teachers.map(makeUserPublicData);
-const teacher = teachers.find(teacher => teacher.id === exercise.teacherId) ?? null;
 
 const scheduleChanges = await semester.getScheduleChanges();
 const scheduleChangesData = scheduleChanges.map(makeScheduleChangeData);
-
-const groups = await LaboratoryGroup.fetchAllFromSubject(subject);
-
-const laboratoryClasses = await LaboratoryClass.fetchAllFromExercise(exercise);
-
-const laboratoryClassesData = laboratoryClasses.map(laboratoryClass => {
-    const group = groups.find(g => g.id === laboratoryClass.laboratoryGroupId);
-    if (!group) {
-        throw new Error('Class group not found');
-    }
-
-    const classTeacher = teachers.find(teacher => teacher.id === laboratoryClass.teacherId) ?? null;
-
-    return makeLaboratoryClassData(laboratoryClass, exercise, classroom, teacher, group, classTeacher);
-});
 ---
 
 <Layout
@@ -125,11 +107,11 @@ const laboratoryClassesData = laboratoryClasses.map(laboratoryClass => {
     <div class="mt-4">
         <ExerciseCalendar
             client:only="vue"
+            exercise={exerciseData}
             semester={semesterData}
             subject={subjectData}
             teachers={teachersData}
             scheduleChanges={scheduleChangesData}
-            laboratoryClasses={laboratoryClassesData}
         />
     </div>
 </Layout>
