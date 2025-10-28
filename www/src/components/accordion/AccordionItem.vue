@@ -1,13 +1,10 @@
 <script setup lang="ts">
-import { computed, inject, ref } from 'vue';
-import { accordionIdKey } from '@components/accordion/Accordion.vue';
+import { computed, ref } from 'vue';
 
 const { id = crypto.randomUUID(), contentRendering = 'after-first-open' } = defineProps<{
     id?: string;
     contentRendering?: 'always' | 'after-first-open' | undefined;
 }>();
-
-const accordionId = inject(accordionIdKey, crypto.randomUUID());
 
 const contentVisible = ref<boolean>(false);
 const renderContent = computed(() => contentVisible.value || contentRendering === 'always');
@@ -24,17 +21,16 @@ function onShow() {
                 class="accordion-button collapsed"
                 type="button"
                 data-bs-toggle="collapse"
-                :data-bs-target="`#${accordionId}-${id}`"
+                :data-bs-target="`#${id}`"
                 aria-expanded="false"
-                :aria-controls="`${accordionId}-${id}`"
+                :aria-controls="id"
             >
                 <slot name="header"></slot>
             </button>
         </h2>
         <div
-            :id="`${accordionId}-${id}`"
+            :id
             class="accordion-collapse collapse"
-            :data-bs-parent="`#${accordionId}`"
             v-on="{
                 'show.bs.collapse': onShow,
             }"
