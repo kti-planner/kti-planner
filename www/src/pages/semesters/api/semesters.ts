@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro';
-import { Semester } from '@backend/semester';
+import { makeSemesterData, Semester } from '@backend/semester';
 import { semesterCreateApiSchema, semesterEditApiSchema } from '@components/semesters/types';
 
 export const POST: APIRoute = async ({ locals }) => {
@@ -52,4 +52,19 @@ export const PATCH: APIRoute = async ({ locals }) => {
     await semester.edit(data);
 
     return Response.json(true, { status: 200 });
+};
+
+export const GET: APIRoute = async ({ locals }) => {
+    const { user } = locals;
+
+    if (!user) {
+        return Response.json(null, { status: 404 });
+    }
+
+    const semesters = await Semester.fetchAll();
+
+    return Response.json(
+        semesters.map(semester => makeSemesterData(semester)),
+        { status: 200 },
+    );
 };

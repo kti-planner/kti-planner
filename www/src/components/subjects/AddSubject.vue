@@ -3,6 +3,7 @@ import { langId } from '@components/frontend/lang';
 import type { SemesterData } from '@components/semesters/types';
 import type { UserPublicData } from '@components/users/types';
 import Modal from '@components/Modal.vue';
+import CopySubject from '@components/subjects/CopySubject.vue';
 import SubjectForm from '@components/subjects/SubjectForm.vue';
 
 defineProps<{
@@ -31,10 +32,13 @@ const modalId = crypto.randomUUID();
         {{ translate('Add new subject') }}
     </button>
 
-    <Modal :id="modalId">
+    <Modal :id="modalId" content-rendering="always">
         <template #header>
             {{ translate('Add new subject') }}
         </template>
         <SubjectForm :semester :all-users />
+        <template #footer>
+            <CopySubject :semester />
+        </template>
     </Modal>
 </template>
