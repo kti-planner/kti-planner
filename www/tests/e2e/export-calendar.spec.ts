@@ -42,7 +42,7 @@ test('Can use subject and group filters when exporting calendar', async ({ page 
     const exportModal = page.locator('.modal');
     await exportModal.getByRole('button', { name: 'Sieci komputerowe - Informatyka sem. V' }).click();
     await exportModal.getByRole('switch', { name: 'Export this subject' }).check();
-    await exportModal.locator('label', { hasText: '1A' }).click();
+    await exportModal.locator('label', { hasText: '1A' }).first().click();
     await exportModal.getByRole('button', { name: 'Sieci komputerowe - Informatyka sem. V' }).click();
 
     await expect(page.getByRole('textbox', { name: 'iCalendar/WebCal link' })).toHaveValue(
@@ -53,7 +53,7 @@ test('Can use subject and group filters when exporting calendar', async ({ page 
 
     await exportModal.getByRole('button', { name: 'Sieci komputerowe - Informatyka sem. V' }).click();
     await exportModal.getByRole('switch', { name: 'Export this subject' }).uncheck();
-    await exportModal.locator('label', { hasText: '1A' }).click();
+    await exportModal.locator('label', { hasText: '1A' }).first().click();
     await exportModal.getByRole('button', { name: 'Sieci komputerowe - Informatyka sem. V' }).click();
 
     await expect(page.getByRole('textbox', { name: 'iCalendar/WebCal link' })).toHaveValue(
