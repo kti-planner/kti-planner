@@ -29,7 +29,7 @@ const { copy, copied } = useClipboard();
     <div class="input-group">
         <input :id type="text" :value readonly class="form-control" />
         <button
-            class="btn btn-light"
+            class="btn btn-light border"
             :class="{ 'text-success': copied }"
             type="button"
             :title="copied ? translate('Copied!') : translate('Copy to clipboard')"
