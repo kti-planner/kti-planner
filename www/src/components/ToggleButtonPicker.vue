@@ -3,11 +3,12 @@ import { ref, useId, watchEffect } from 'vue';
 
 const model = defineModel<T[]>({ required: true });
 
-const { options } = defineProps<{
+const { options, center = false } = defineProps<{
     options: Readonly<Record<string, T>>;
+    center?: boolean;
 }>();
 
-const selectedIds = ref(new Set<string>());
+const selectedIds = ref(new Set<string>(model.value.map(item => item.id)));
 
 watchEffect(() => {
     model.value = Object.entries(options)
@@ -19,7 +20,7 @@ const toggleBtnId = useId();
 </script>
 
 <template>
-    <div class="hstack flex-wrap justify-content-center gap-2">
+    <div class="hstack flex-wrap gap-2" :class="{ 'justify-content-center': center }">
         <div v-for="(value, label) in options" :key="value.id">
             <input
                 :id="`${toggleBtnId}-${value.id}`"

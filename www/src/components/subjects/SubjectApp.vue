@@ -94,7 +94,7 @@ const laboratoryGroupOptions = computed(() => Object.fromEntries(laboratoryGroup
                         :api-url="`${subjectUrl}/api/laboratory-groups/`"
                     />
                 </h2>
-                <ToggleButtonPicker v-model="selectedLaboratoryGroups" :options="laboratoryGroupOptions" />
+                <ToggleButtonPicker v-model="selectedLaboratoryGroups" center :options="laboratoryGroupOptions" />
                 <GenerateClasses
                     v-if="currentUser"
                     :initial-group="
