@@ -69,9 +69,9 @@ CREATE TABLE laboratory_classes (
 CREATE TABLE calendar_events (
     id           uuid PRIMARY KEY,
     name         text NOT NULL,
-    user_id      uuid REFERENCES users NOT NULL,
-    classroom_id uuid REFERENCES classrooms NOT NULL,
-    semester_id  uuid REFERENCES semesters NOT NULL,
+    user_id      uuid REFERENCES users ON DELETE SET NULL,
+    classroom_id uuid REFERENCES classrooms ON DELETE SET NULL,
+    semester_id  uuid NOT NULL REFERENCES semesters ON DELETE NO ACTION,
     start_date   timestamptz NOT NULL,
     end_date     timestamptz NOT NULL
 );

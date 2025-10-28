@@ -1,4 +1,3 @@
-import assert from 'node:assert';
 import type { APIRoute } from 'astro';
 import { CalendarEvent, makeCalendarEventData } from '@backend/calendar-events';
 import { Classroom } from '@backend/classroom';
@@ -31,17 +30,20 @@ export const GET: APIRoute = async ({ params, url }) => {
     return Response.json(
         calendarEvents
             .map<CalendarEventData | null>(calendarEvent => {
-                const user = users.find(u => u.id === calendarEvent.userId);
-                assert(user);
+                const user = users.find(u => u.id === calendarEvent.userId) ?? null;
+                const classroom = classrooms.find(c => c.id === calendarEvent.classroomId) ?? null;
 
-                const classroom = classrooms.find(c => c.id === calendarEvent.classroomId);
-                assert(classroom);
-
-                if (teacherFilter.length > 0 && !teacherFilter.includes(calendarEvent.userId)) {
+                if (
+                    teacherFilter.length > 0 &&
+                    (calendarEvent.userId === null || !teacherFilter.includes(calendarEvent.userId))
+                ) {
                     return null;
                 }
 
-                if (classroomFilter.length > 0 && !classroomFilter.includes(calendarEvent.classroomId)) {
+                if (
+                    classroomFilter.length > 0 &&
+                    (calendarEvent.classroomId === null || !classroomFilter.includes(calendarEvent.classroomId))
+                ) {
                     return null;
                 }
 
