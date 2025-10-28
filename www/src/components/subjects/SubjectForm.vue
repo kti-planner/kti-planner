@@ -77,7 +77,7 @@ const translations = {
         'Teachers': 'Nauczyciele',
         'Save': 'Zapisz',
         'Add': 'Dodaj',
-        'Subject with this name already exists.': 'Przedmiot o podanej nazwie już isnieje.',
+        'Subject with this name already exists.': 'Przedmiot o podanej nazwie już istnieje.',
         'Markdown is supported': 'Markdown jest wspierany',
     },
 };
