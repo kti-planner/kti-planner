@@ -19,6 +19,7 @@ export const GET: APIRoute = async ({ params, url }) => {
     }
 
     const groupsFilter = url.searchParams.getAll('laboratoryGroup');
+    const exerciseFilter = url.searchParams.getAll('exercise');
 
     const classes = await LaboratoryClass.fetchAllFromSubject(subject);
     const groups = await LaboratoryGroup.fetchAllFromSubject(subject);
@@ -30,6 +31,7 @@ export const GET: APIRoute = async ({ params, url }) => {
     return Response.json(
         classes
             .filter(c => filteredGroups.some(g => g.id === c.laboratoryGroupId))
+            .filter(c => exerciseFilter.length === 0 || exerciseFilter.includes(c.exerciseId))
             .map<LaboratoryClassData>(laboratoryClass => {
                 const exercise = exercises.find(e => e.id === laboratoryClass.exerciseId);
                 assert(exercise);

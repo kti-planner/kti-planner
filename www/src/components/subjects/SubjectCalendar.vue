@@ -66,6 +66,11 @@ function handleEventClick(arg: EventClickArg) {
     editedLaboratoryClass.value = arg.event.extendedProps.laboratoryClass;
     editModal.value?.show();
 }
+
+function handleLaboratoryClassSubmit() {
+    editModal.value?.hide();
+    void refreshClasses();
+}
 </script>
 
 <template>
@@ -88,6 +93,7 @@ function handleEventClick(arg: EventClickArg) {
             :api-url
             :semester
             :subject
+            @submit="handleLaboratoryClassSubmit"
         />
     </Modal>
 </template>

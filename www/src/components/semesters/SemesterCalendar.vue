@@ -72,7 +72,7 @@ const selectedSubjects = ref<SubjectData[]>([]);
 const selectedClassrooms = ref<ClassroomData[]>([]);
 const selectedTeachers = ref<UserPublicData[]>([]);
 
-const { data: laboratoryClasses } = useApiFetch<LaboratoryClassData[]>(
+const { data: laboratoryClasses, execute: refetchLaboratoryClasses } = useApiFetch<LaboratoryClassData[]>(
     `/semesters/${semester.slug}/api/laboratory-classes/`,
     () =>
         new URLSearchParams([
@@ -82,7 +82,7 @@ const { data: laboratoryClasses } = useApiFetch<LaboratoryClassData[]>(
         ]),
 );
 
-const { data: calendarEvents } = useApiFetch<CalendarEventData[]>(
+const { data: calendarEvents, execute: refetchCalendarEvents } = useApiFetch<CalendarEventData[]>(
     `/semesters/${semester.slug}/api/calendar-events/`,
     () =>
         new URLSearchParams([
@@ -90,6 +90,10 @@ const { data: calendarEvents } = useApiFetch<CalendarEventData[]>(
             ...selectedTeachers.value.map(teacher => ['teacher', teacher.id]),
         ]),
 );
+
+async function refetchAllEvents() {
+    await Promise.all([refetchLaboratoryClasses(), refetchCalendarEvents()]);
+}
 
 const events = computed<EventInput[]>(() => [
     ...getLaboratoryClassEvents(laboratoryClasses.value ?? []),
@@ -107,7 +111,7 @@ const classDetailsModal = useTemplateRef('classDetailsModal');
 const clickedLaboratoryClass = shallowRef<LaboratoryClassData | null>(null);
 const clickedClassSubject = shallowRef<SubjectData | null>(null);
 
-const calendarEventModal = useTemplateRef('addEventModal');
+const calendarEventModal = useTemplateRef('calendarEventModal');
 const clickedCalendarEvent = shallowRef<CalendarEventData | null>(null);
 const calendarSelectionStart = shallowRef(new Date());
 const calendarSelectionEnd = shallowRef(new Date());
@@ -136,6 +140,16 @@ function handleCalendarSelection(info: DateSelectArg) {
     clickedCalendarEvent.value = null;
 
     calendarEventModal.value?.show();
+}
+
+function handleCalendarEventSubmit() {
+    calendarEventModal.value?.hide();
+    void refetchAllEvents();
+}
+
+function handleLaboratoryClassSubmit() {
+    classDetailsModal.value?.hide();
+    void refetchAllEvents();
 }
 </script>
 
@@ -166,7 +180,7 @@ function handleCalendarSelection(info: DateSelectArg) {
                 </template>
             </Calendar>
 
-            <Modal ref="addEventModal">
+            <Modal ref="calendarEventModal">
                 <template #header>{{
                     clickedCalendarEvent === null
                         ? translate('Add event')
@@ -183,6 +197,7 @@ function handleCalendarSelection(info: DateSelectArg) {
                             endDate: formatDateLocalYyyyMmDdHhMm(calendarSelectionEnd),
                         }
                     "
+                    @submit="handleCalendarEventSubmit"
                 />
             </Modal>
 
@@ -196,6 +211,7 @@ function handleCalendarSelection(info: DateSelectArg) {
                     :teachers
                     :semester
                     show-subject
+                    @submit="handleLaboratoryClassSubmit"
                 />
             </Modal>
 

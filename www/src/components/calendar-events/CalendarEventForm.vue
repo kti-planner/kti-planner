@@ -19,6 +19,10 @@ const props = defineProps<{
     calendarEvent: Pick<CalendarEventData, 'startDate' | 'endDate'> & Partial<CalendarEventData>;
 }>();
 
+const emit = defineEmits<{
+    submit: [];
+}>();
+
 const isEditing = computed(() => props.calendarEvent?.id !== undefined);
 
 const name = ref<string>(props.calendarEvent.name ?? '');
@@ -55,7 +59,7 @@ async function submit() {
     }
 
     if (success) {
-        window.location.reload();
+        emit('submit');
     }
 }
 
