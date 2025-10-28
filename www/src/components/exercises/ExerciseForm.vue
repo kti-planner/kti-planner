@@ -88,7 +88,7 @@ const translations = {
         'Classroom': 'Sala',
         'Save': 'Zapisz',
         'Add': 'Dodaj',
-        'Exercise with this name or number already exists.': 'Ćwiczenie o podanej nazwie lub numerze już isnieje.',
+        'Exercise with this name or number already exists.': 'Ćwiczenie o podanej nazwie lub numerze już istnieje.',
         'Manage classrooms': 'Zarządzaj salami',
     },
 };
