@@ -7,8 +7,8 @@ import { dateTimeStringSchema } from '@components/utils';
 export interface CalendarEventData {
     id: string;
     name: string;
-    user: UserPublicData;
-    classroom: ClassroomData;
+    user: UserPublicData | null;
+    classroom: ClassroomData | null;
     semester: SemesterData;
     startDate: string;
     endDate: string;
