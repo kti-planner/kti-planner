@@ -1,17 +1,7 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
-
-const { id = crypto.randomUUID(), contentRendering = 'after-first-open' } = defineProps<{
+const { id = crypto.randomUUID() } = defineProps<{
     id?: string;
-    contentRendering?: 'always' | 'after-first-open' | undefined;
 }>();
-
-const contentVisible = ref<boolean>(false);
-const renderContent = computed(() => contentVisible.value || contentRendering === 'always');
-
-function onShow() {
-    contentVisible.value = true;
-}
 </script>
 
 <template>
@@ -28,15 +18,9 @@ function onShow() {
                 <slot name="header"></slot>
             </button>
         </h2>
-        <div
-            :id
-            class="accordion-collapse collapse"
-            v-on="{
-                'show.bs.collapse': onShow,
-            }"
-        >
+        <div :id class="accordion-collapse collapse">
             <div class="accordion-body">
-                <slot v-if="renderContent"></slot>
+                <slot></slot>
             </div>
         </div>
     </div>
