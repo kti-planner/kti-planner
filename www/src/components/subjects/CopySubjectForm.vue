@@ -5,7 +5,7 @@ import { apiGet, apiPost } from '@components/api';
 import type { SemesterData } from '@components/semesters/types';
 import type { SubjectCopyFromPreviousSemesterApiData, SubjectData } from '@components/subjects/types';
 
-const props = defineProps<{
+const { currentSemester } = defineProps<{
     currentSemester: SemesterData;
 }>();
 
@@ -22,7 +22,7 @@ async function submit() {
         return;
     }
 
-    const success = await apiPost<boolean>(`/semesters/${props.currentSemester.slug}/api/subject-copy/`, {
+    const success = await apiPost<boolean>(`/semesters/${currentSemester.slug}/api/subject-copy/`, {
         semesterId: selectedSemester.value.id,
         subjectId: selectedSubject.value.id,
     } satisfies SubjectCopyFromPreviousSemesterApiData);
@@ -41,12 +41,11 @@ async function submit() {
 onMounted(async () => {
     const data = await apiGet<SemesterData[]>('/semesters/api/semesters/');
     if (data !== undefined) {
-        semestersData.value = data.filter(semester => semester.slug !== props.currentSemester.slug);
+        semestersData.value = data.filter(semester => semester.slug !== currentSemester.slug);
 
-        selectedSemester.value =
-            semestersData.value.find(
-                s => s.year === props.currentSemester.year - 1 && s.type === props.currentSemester.type,
-            ) || undefined;
+        selectedSemester.value = semestersData.value.find(
+            s => s.year === currentSemester.year - 1 && s.type === currentSemester.type,
+        );
     }
 });
 
