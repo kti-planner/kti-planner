@@ -123,25 +123,41 @@ export const ALL: APIRoute = async ({ params, url, request }) => {
 
     const calendarEventIcsEvents: EventAttributes[] = calendarEvents
         .map<EventAttributes | null>(calendarEvent => {
-            const user = users.find(u => u.id === calendarEvent.userId);
-            assert(user);
+            const user = users.find(u => u.id === calendarEvent.userId) ?? null;
+            const classroom = classrooms.find(c => c.id === calendarEvent.classroomId) ?? null;
 
-            const classroom = classrooms.find(c => c.id === calendarEvent.classroomId);
-            assert(classroom);
-
-            if (teacherFilter.length > 0 && !teacherFilter.includes(calendarEvent.userId)) {
+            if (
+                teacherFilter.length > 0 &&
+                (calendarEvent.userId === null || !teacherFilter.includes(calendarEvent.userId))
+            ) {
                 return null;
             }
 
-            if (classroomFilter.length > 0 && !classroomFilter.includes(calendarEvent.classroomId)) {
+            if (
+                classroomFilter.length > 0 &&
+                (calendarEvent.classroomId === null || !classroomFilter.includes(calendarEvent.classroomId))
+            ) {
                 return null;
+            }
+
+            let description = '';
+            if (user) {
+                description += `${translations[langId]['Teacher']}: ${user.name}`;
+            }
+
+            if (classroom) {
+                if (description !== '') {
+                    description += '\n';
+                }
+
+                description += `${translations[langId]['Classroom']}: ${classroom.name}`;
             }
 
             return {
                 uid: calendarEvent.id,
                 title: calendarEvent.name,
-                description: `${translations[langId]['Teacher']}: ${user.name}\n${translations[langId]['Classroom']}: ${classroom.name}`,
-                location: classroom.name,
+                description,
+                ...(classroom ? { location: classroom.name } : {}),
                 start: calendarEvent.startDate.getTime(),
                 end: calendarEvent.endDate.getTime(),
             };
