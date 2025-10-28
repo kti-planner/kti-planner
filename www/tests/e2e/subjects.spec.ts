@@ -143,6 +143,82 @@ test('Can edit subject and prevent duplicate subject', async ({ page }) => {
     await expect(page.locator('body')).toContainText('Sieci Ethernet i IP');
 });
 
+test('Can copy subject from previous semester and prevent duplicate subject copy', async ({ page }) => {
+    await page.goto('/semesters/2025-winter/');
+    await loginAsAdmin(page);
+
+    await expect(page.locator('.breadcrumb')).toContainText('Winter semester 2025/2026');
+
+    await page.getByRole('button', { name: 'Add new subject' }).click();
+    await expect(page.getByRole('heading', { name: 'Add new subject' })).toBeVisible();
+
+    await page.getByRole('button', { name: 'Copy subject from previous semester' }).click();
+    await expect(page.getByRole('heading', { name: 'Copy subject from previous semester' })).toBeVisible();
+
+    await page.getByRole('combobox', { name: 'Semester to copy from' }).selectOption('Summer semester 2024/2025');
+
+    await page
+        .getByRole('combobox', { name: 'Subject to copy' })
+        .selectOption('Lokalne sieci bezprzewodowe - Informatyka sem. VI');
+
+    await page.getByRole('button', { name: 'Copy' }).click();
+
+    await expect(page.getByRole('link', { name: 'Lokalne sieci bezprzewodowe - Informatyka sem. VI' })).toBeVisible();
+
+    await page.getByRole('link', { name: 'Lokalne sieci bezprzewodowe - Informatyka sem. VI' }).click();
+
+    await expect(page.locator('.breadcrumb')).toContainText('Winter semester 2025/2026');
+    await expect(page.locator('.breadcrumb')).toContainText('Lokalne sieci bezprzewodowe - Informatyka sem. VI');
+
+    // Verify copied subject content
+    // Laboratory groups
+    await expect(page.locator('label').filter({ hasText: '5A' })).toBeVisible();
+    await expect(page.locator('label').filter({ hasText: '5B' })).toBeVisible();
+    await expect(page.locator('label').filter({ hasText: '6A' })).toBeVisible();
+    await expect(page.locator('label').filter({ hasText: '6B' })).toBeVisible();
+    await expect(page.locator('label').filter({ hasText: '7A' })).toBeVisible();
+    await expect(page.locator('label').filter({ hasText: '7B' })).toBeVisible();
+
+    // Exercises
+    await expect(page.locator('body')).toContainText('Tryby pracy punktów dostępowych');
+    await expect(page.locator('body')).toContainText('Wydajność sieci standardów IEEE 802.11');
+    await expect(page.locator('body')).toContainText('Podstawowe mechanizmy zabezpieczeń sieci standardu 802.11');
+
+    await expect(page.locator('body')).toContainText(
+        'Podstawowe mechanizmy zabezpieczeń sieci standardu 802.11 cz. II',
+    );
+
+    await expect(page.locator('body')).toContainText('Emulacja sieci bezprzewodowych');
+    await expect(page.locator('body')).toContainText('Radius');
+
+    // Teachers
+    await expect(page.locator('body')).toContainText('Jan Kowalski');
+    await expect(page.locator('body')).toContainText('Bogdan Nowak');
+
+    // Cannot copy duplicate subject
+    await page.goto('/semesters/2025-winter/');
+
+    await page.getByRole('button', { name: 'Add new subject' }).click();
+    await expect(page.getByRole('heading', { name: 'Add new subject' })).toBeVisible();
+
+    await page.getByRole('button', { name: 'Copy subject from previous semester' }).click();
+    await expect(page.getByRole('heading', { name: 'Copy subject from previous semester' })).toBeVisible();
+
+    await page.getByRole('combobox', { name: 'Semester to copy from' }).selectOption('Summer semester 2024/2025');
+
+    await page
+        .getByRole('combobox', { name: 'Subject to copy' })
+        .selectOption('Lokalne sieci bezprzewodowe - Informatyka sem. VI');
+
+    await page.getByRole('button', { name: 'Copy' }).click();
+
+    await expect(page.getByText('Subject with this name already exists.')).toBeVisible();
+
+    await page.getByRole('button', { name: 'Close' }).click();
+
+    await expect(page.getByRole('link', { name: 'Lokalne sieci bezprzewodowe - Informatyka sem. VI' })).toHaveCount(1);
+});
+
 test.describe('API fetch tests', () => {
     test('Logged-out user cannot create new subject', async ({ page }) => {
         await page.goto('/semesters/2024-summer/');
@@ -208,5 +284,32 @@ test.describe('API fetch tests', () => {
         });
 
         expect(response.status()).toBe(200);
+    });
+
+    test('Logged-out user cannot copy subject from previous semester', async ({ page }) => {
+        await page.goto('/semesters/2025-winter/');
+
+        const response = await page.request.post('/semesters/2025-winter/api/subject-copy/', {
+            data: {
+                semesterId: '094f8324-7c58-4566-b5d7-e4fe8ed03a18',
+                subjectId: '25108321-0391-4c7a-b4d8-5ea20388e813',
+            },
+        });
+
+        expect(response.status()).toBe(404);
+    });
+
+    test('Logged-in user can copy subject from previous semester', async ({ page }) => {
+        await page.goto('/semesters/2025-winter/');
+        await loginAsAdmin(page);
+
+        const response = await page.request.post('/semesters/2025-winter/api/subject-copy/', {
+            data: {
+                semesterId: '094f8324-7c58-4566-b5d7-e4fe8ed03a18',
+                subjectId: '25108321-0391-4c7a-b4d8-5ea20388e813',
+            },
+        });
+
+        expect(response.status()).toBe(201);
     });
 });
