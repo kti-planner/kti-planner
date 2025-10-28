@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 import { langId } from '@components/frontend/lang';
 import { currentUser } from '@components/frontend/user';
-import { apiPatch } from '@components/api';
+import { apiDelete, apiPatch } from '@components/api';
 import { formatClassroomName } from '@components/classrooms/types';
 import type { LaboratoryClassData, LaboratoryClassEditApiData } from '@components/laboratory-classes/types';
 import type { SemesterData } from '@components/semesters/types';
@@ -32,6 +32,7 @@ const translations = {
         'Teacher': 'Teacher',
         'Unknown [teacher]': 'Unknown',
         'Save': 'Save',
+        'Delete class': 'Delete class',
     },
     'pl': {
         'Subject': 'Przedmiot',
@@ -44,6 +45,7 @@ const translations = {
         'Teacher': 'Nauczyciel',
         'Unknown [teacher]': 'Nieznany',
         'Save': 'Zapisz',
+        'Delete class': 'Usuń zajęcia',
     },
 };
 
@@ -78,6 +80,14 @@ async function saveLaboratoryClass() {
 
     if (success) {
         emit('submit');
+    }
+}
+
+async function doDelete() {
+    const result = await apiDelete<boolean>(`${apiUrl}?${new URLSearchParams({ id: laboratoryClass.id })}`);
+
+    if (result) {
+        window.location.reload();
     }
 }
 
@@ -163,6 +173,12 @@ const teacherId = crypto.randomUUID();
         <div v-if="currentUser" class="text-center">
             <button type="submit" class="btn btn-success">
                 {{ translate('Save') }}
+            </button>
+        </div>
+
+        <div v-if="currentUser" class="text-center">
+            <button type="button" class="btn btn-danger" @click="doDelete()">
+                {{ translate('Delete class') }}
             </button>
         </div>
     </form>

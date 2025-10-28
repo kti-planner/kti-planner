@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import { langId } from '@components/frontend/lang';
-import { apiPatch, apiPost } from '@components/api';
+import { apiDelete, apiPatch, apiPost } from '@components/api';
 import type { SemesterData } from '@components/semesters/types';
 import type { SubjectCreateApiData, SubjectData, SubjectEditApiData } from '@components/subjects/types';
 import type { UserPublicData } from '@components/users/types';
@@ -59,6 +59,20 @@ async function submit() {
     }
 }
 
+async function doDelete() {
+    if (!props.subject) {
+        return;
+    }
+
+    const result = await apiDelete<boolean>(
+        `/semesters/api/subjects/?${new URLSearchParams({ id: props.subject.id })}`,
+    );
+
+    if (result) {
+        window.location.assign(`/semesters/${props.semester.slug}/`);
+    }
+}
+
 const translations = {
     'en': {
         'Subject name': 'Subject name',
@@ -69,6 +83,7 @@ const translations = {
         'Add': 'Add',
         'Subject with this name already exists.': 'Subject with this name already exists.',
         'Markdown is supported': 'Markdown is supported',
+        'Delete subject': 'Delete subject',
     },
     'pl': {
         'Subject name': 'Nazwa przedmiotu',
@@ -79,6 +94,7 @@ const translations = {
         'Add': 'Dodaj',
         'Subject with this name already exists.': 'Przedmiot o podanej nazwie już istnieje.',
         'Markdown is supported': 'Markdown jest wspierany',
+        'Delete subject': 'Usuń przedmiot',
     },
 };
 
@@ -121,6 +137,12 @@ const teachersId = crypto.randomUUID();
 
         <div class="text-center">
             <button type="submit" class="btn btn-success">{{ translate(isEditing ? 'Save' : 'Add') }}</button>
+        </div>
+
+        <div v-if="isEditing" class="text-center">
+            <button type="button" class="btn btn-danger" @click="doDelete()">
+                {{ translate('Delete subject') }}
+            </button>
         </div>
 
         <div v-if="submitFailed" class="text-center text-danger">

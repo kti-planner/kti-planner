@@ -85,3 +85,33 @@ export const PATCH: APIRoute = async ({ locals, params }) => {
 
     return Response.json(true, { status: 200 });
 };
+
+export const DELETE: APIRoute = async ({ locals, url, params }) => {
+    const { user } = locals;
+
+    if (!user) {
+        return Response.json(null, { status: 404 });
+    }
+
+    const subject = await getSubjectFromParams(params);
+
+    if (subject === null) {
+        return Response.json(null, { status: 400 });
+    }
+
+    const id = url.searchParams.get('id');
+
+    if (id === null) {
+        return Response.json(null, { status: 400 });
+    }
+
+    const laboratoryGroup = await LaboratoryGroup.fetch(id);
+
+    if (!laboratoryGroup || laboratoryGroup.subjectId !== subject.id) {
+        return Response.json(null, { status: 404 });
+    }
+
+    await laboratoryGroup.delete();
+
+    return Response.json(true, { status: 200 });
+};

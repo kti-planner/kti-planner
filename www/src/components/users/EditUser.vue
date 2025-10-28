@@ -4,6 +4,7 @@ import { currentUser } from '@components/frontend/user';
 import type { UserDetailsData } from '@components/users/types';
 import IconButton from '@components/IconButton.vue';
 import Modal from '@components/Modal.vue';
+import DeleteUser from '@components/users/DeleteUser.vue';
 import PasswordChange from '@components/users/passwords/PasswordChange.vue';
 import PasswordReset from '@components/users/passwords/PasswordReset.vue';
 import UserForm from '@components/users/UserForm.vue';
@@ -44,8 +45,11 @@ const modalId = crypto.randomUUID();
         <template #header> {{ translate('Edit user') }} {{ user.name }} </template>
         <UserForm :user />
         <template #footer>
-            <PasswordChange v-if="currentUser?.id === user.id" />
-            <PasswordReset v-else-if="currentUser?.role === 'admin'" :user />
+            <div class="mx-auto d-flex flex-column align-items-center gap-3">
+                <PasswordChange v-if="currentUser?.id === user.id" />
+                <PasswordReset v-else-if="currentUser?.role === 'admin'" :user />
+                <DeleteUser v-if="currentUser?.id !== user.id && currentUser?.role === 'admin'" :user />
+            </div>
         </template>
     </Modal>
 </template>

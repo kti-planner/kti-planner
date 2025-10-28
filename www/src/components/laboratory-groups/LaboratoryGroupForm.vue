@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import { langId } from '@components/frontend/lang';
-import { apiPatch, apiPost } from '@components/api';
+import { apiDelete, apiPatch, apiPost } from '@components/api';
 import type {
     LaboratoryGroupCreateApiData,
     LaboratoryGroupData,
@@ -12,6 +12,8 @@ const props = defineProps<{
     group?: LaboratoryGroupData;
     apiUrl: string;
 }>();
+
+const isEditing = computed(() => props.group !== undefined);
 
 const submitFailed = ref(false);
 
@@ -39,18 +41,32 @@ async function submit() {
     }
 }
 
+async function doDelete() {
+    if (!props.group) {
+        return;
+    }
+
+    const result = await apiDelete<boolean>(`${props.apiUrl}?${new URLSearchParams({ id: props.group.id })}`);
+
+    if (result) {
+        window.location.reload();
+    }
+}
+
 const translations = {
     'en': {
         'Group name': 'Group name',
         'Save': 'Save',
         'Add': 'Add',
         'A group with this name already exists': 'A group with this name already exists',
+        'Delete group': 'Delete group',
     },
     'pl': {
         'Group name': 'Nazwa grupy',
         'Save': 'Zapisz',
         'Add': 'Dodaj',
         'A group with this name already exists': 'Grupa z tą nazwą już istnieje',
+        'Delete group': 'Usuń grupę',
     },
 };
 
@@ -71,6 +87,12 @@ const nameId = crypto.randomUUID();
         <div class="text-center">
             <button type="submit" class="btn btn-success">
                 {{ translate(group ? 'Save' : 'Add') }}
+            </button>
+        </div>
+
+        <div v-if="isEditing" class="text-center">
+            <button type="button" class="btn btn-danger" @click="doDelete()">
+                {{ translate('Delete group') }}
             </button>
         </div>
 
