@@ -80,7 +80,8 @@ async function doDelete() {
     }
 
     const result = await apiDelete<boolean>(
-        `/semesters/api/exercises/?${new URLSearchParams({ id: props.exercise.id })}`,
+        '/semesters/api/exercises/',
+        new URLSearchParams({ id: props.exercise.id }),
     );
 
     if (result) {

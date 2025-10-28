@@ -46,7 +46,7 @@ async function doDelete() {
         return;
     }
 
-    const result = await apiDelete<boolean>(`${props.apiUrl}?${new URLSearchParams({ id: props.group.id })}`);
+    const result = await apiDelete<boolean>(props.apiUrl, new URLSearchParams({ id: props.group.id }));
 
     if (result) {
         window.location.reload();

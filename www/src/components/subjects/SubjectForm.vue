@@ -64,9 +64,7 @@ async function doDelete() {
         return;
     }
 
-    const result = await apiDelete<boolean>(
-        `/semesters/api/subjects/?${new URLSearchParams({ id: props.subject.id })}`,
-    );
+    const result = await apiDelete<boolean>('/semesters/api/subjects/', new URLSearchParams({ id: props.subject.id }));
 
     if (result) {
         window.location.assign(`/semesters/${props.semester.slug}/`);

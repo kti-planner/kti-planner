@@ -84,7 +84,7 @@ async function saveLaboratoryClass() {
 }
 
 async function doDelete() {
-    const result = await apiDelete<boolean>(`${apiUrl}?${new URLSearchParams({ id: laboratoryClass.id })}`);
+    const result = await apiDelete<boolean>(apiUrl, new URLSearchParams({ id: laboratoryClass.id }));
 
     if (result) {
         window.location.reload();
