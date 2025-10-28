@@ -18,6 +18,7 @@ import type { SubjectData } from '@components/subjects/types';
 import type { UserPublicData } from '@components/users/types';
 import { formatDateLocalYyyyMmDdHhMm } from '@components/utils';
 import Calendar from '@components/Calendar.vue';
+import CalendarExportForm from '@components/calendar/CalendarExportForm.vue';
 import CalendarEvent from '@components/calendar-events/CalendarEvent.vue';
 import CalendarEventForm from '@components/calendar-events/CalendarEventForm.vue';
 import EditLaboratoryClassForm from '@components/laboratory-classes/EditLaboratoryClassForm.vue';
@@ -35,6 +36,7 @@ const translations = {
         'Add event': 'Add event',
         'Edit event': 'Edit event',
         'Event details': 'Event details',
+        'Export calendar': 'Export calendar',
     },
     'pl': {
         'Subjects': 'Przedmioty',
@@ -45,6 +47,7 @@ const translations = {
         'Add event': 'Dodaj wydarzenie',
         'Edit event': 'Edytuj wydarzenie',
         'Event details': 'Szczegóły wydarzenia',
+        'Export calendar': 'Eksport kalendarza',
     },
 };
 
@@ -112,6 +115,8 @@ const calendarEventModal = useTemplateRef('calendarEventModal');
 const clickedCalendarEvent = shallowRef<CalendarEventData | null>(null);
 const calendarSelectionStart = shallowRef(new Date());
 const calendarSelectionEnd = shallowRef(new Date());
+
+const exportModal = useTemplateRef('exportModal');
 
 function handleEventClick(arg: EventClickArg) {
     if ('laboratoryClass' in arg.event.extendedProps) {
@@ -209,25 +214,46 @@ function handleLaboratoryClassSubmit() {
                     @submit="handleLaboratoryClassSubmit"
                 />
             </Modal>
+
+            <Modal ref="exportModal">
+                <template #header>{{ translate('Export calendar') }}</template>
+                <CalendarExportForm
+                    :semester
+                    :subjects
+                    :classrooms
+                    :teachers
+                    :initial-selected-subjects="selectedSubjects"
+                    :initial-selected-classrooms="selectedClassrooms"
+                    :initial-selected-teachers="selectedTeachers"
+                />
+            </Modal>
         </div>
         <div class="col-12 col-lg-3 order-1 order-lg-2 d-flex gap-3 flex-column-reverse flex-lg-column">
+            <button
+                type="button"
+                class="btn btn-success mx-auto"
+                style="width: fit-content"
+                @click="exportModal?.show()"
+            >
+                {{ translate('Export calendar') }}
+            </button>
             <div>
                 <h2 class="text-center fs-5">
                     {{ translate('Subjects') }}
                 </h2>
-                <ToggleButtonPicker v-model="selectedSubjects" :options="subjectOptions" />
+                <ToggleButtonPicker v-model="selectedSubjects" center :options="subjectOptions" />
             </div>
             <div>
                 <h2 class="text-center fs-5">
                     {{ translate('Classrooms') }}
                 </h2>
-                <ToggleButtonPicker v-model="selectedClassrooms" :options="classroomOptions" />
+                <ToggleButtonPicker v-model="selectedClassrooms" center :options="classroomOptions" />
             </div>
             <div>
                 <h2 class="text-center fs-5">
                     {{ translate('Teachers') }}
                 </h2>
-                <ToggleButtonPicker v-model="selectedTeachers" :options="teacherOptions" />
+                <ToggleButtonPicker v-model="selectedTeachers" center :options="teacherOptions" />
             </div>
         </div>
     </div>
