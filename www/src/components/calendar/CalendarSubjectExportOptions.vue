@@ -1,11 +1,9 @@
 <script setup lang="ts">
-import { computed } from 'vue';
 import { langId } from '@components/frontend/lang';
 import { useApiFetch } from '@components/api';
 import type { LaboratoryGroupData } from '@components/laboratory-groups/types';
 import type { SemesterData } from '@components/semesters/types';
 import type { SubjectData } from '@components/subjects/types';
-import ToggleButtonPicker from '@components/ToggleButtonPicker.vue';
 
 const translations = {
     'en': {
@@ -34,11 +32,8 @@ const { data: laboratoryGroups } = useApiFetch<LaboratoryGroupData[]>(
     `/semesters/${semester.slug}/subjects/${subject.slug}/api/laboratory-groups/`,
 );
 
-const groupOptions = computed(() =>
-    laboratoryGroups.value ? Object.fromEntries(laboratoryGroups.value.map(group => [group.name, group])) : null,
-);
-
 const switchId = crypto.randomUUID();
+const toggleBtnId = crypto.randomUUID();
 </script>
 
 <template>
@@ -59,5 +54,30 @@ const switchId = crypto.randomUUID();
     <h2 class="fs-6">
         {{ translate('Laboratory groups') }}
     </h2>
-    <ToggleButtonPicker v-if="groupOptions" v-model:id-set="selectedGroupIds" :options="groupOptions" />
+    <div v-if="laboratoryGroups" class="hstack flex-wrap gap-2">
+        <div v-for="group in laboratoryGroups" :key="group.id">
+            <input
+                :id="`${toggleBtnId}-${group.id}`"
+                v-model="selectedGroupIds"
+                :value="group.id"
+                type="checkbox"
+                class="btn-check"
+                autocomplete="off"
+            />
+            <label
+                :for="`${toggleBtnId}-${group.id}`"
+                class="btn toggle-btn"
+                :class="selectedGroupIds.has(group.id) ? 'btn-success' : 'btn-light'"
+                >{{ group.name }}</label
+            >
+        </div>
+    </div>
 </template>
+
+<style scoped lang="scss">
+.toggle-btn:hover {
+    color: var(--bs-btn-hover-color);
+    background-color: var(--bs-btn-hover-bg);
+    border-color: var(--bs-btn-hover-border-color);
+}
+</style>

@@ -1,20 +1,19 @@
 <script setup lang="ts" generic="T extends { id: string }">
 import { ref, useId, watchEffect } from 'vue';
 
-const model = defineModel<T[]>({ default: [] });
-const idSetModel = defineModel<Set<string>>('idSet', { default: new Set() });
+const model = defineModel<T[]>({ required: true });
 
 const { options, center = false } = defineProps<{
     options: Readonly<Record<string, T>>;
     center?: boolean;
 }>();
 
-const selectedIds = idSetModel.value ? idSetModel : ref(new Set<string>(model.value.map(item => item.id)));
+const selectedIds = ref(new Set<string>(model.value.map(item => item.id)));
 
 watchEffect(() => {
     model.value = Object.entries(options)
         .map(([_, option]) => option)
-        .filter(option => selectedIds.value?.has(option.id));
+        .filter(option => selectedIds.value.has(option.id));
 });
 
 const toggleBtnId = useId();
@@ -34,7 +33,7 @@ const toggleBtnId = useId();
             <label
                 :for="`${toggleBtnId}-${value.id}`"
                 class="btn"
-                :class="selectedIds?.has(value.id) ? 'btn-success' : 'btn-light'"
+                :class="selectedIds.has(value.id) ? 'btn-success' : 'btn-light'"
                 >{{ label }}</label
             >
         </div>
