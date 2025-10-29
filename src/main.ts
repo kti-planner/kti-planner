@@ -8,6 +8,7 @@ const config = {
 
 const app = express();
 
+app.set('trust proxy', process.env.TRUST_PROXY ?? false);
 app.enable('case sensitive routing');
 app.enable('strict routing');
 app.disable('x-powered-by');
