@@ -1,0 +1,33 @@
+name: kti-planner
+
+services:
+  web:
+    build:
+      context: .
+      args:
+        REDIS_URL: redis://redis
+    depends_on:
+      - postgres
+      - redis
+    ports:
+      - '8080:8080'
+    env_file:
+      - .env
+    environment:
+      POSTGRES_HOST: postgres
+      EMAIL_IMG_DIR: "/home/node/app/uploads/user-emails"
+      MOODLE_BASE_URL: "https://enauczanie.pg.edu.pl/2025/course/view.php?id="
+    stop_grace_period: 1s
+    restart: always
+  postgres:
+    build:
+      context: ./db
+      dockerfile: prod.Dockerfile
+    env_file:
+      - .env
+    volumes:
+      - /kti-planner-db:/var/lib/postgresql
+    restart: always
+  redis:
+    image: redis
+    restart: always
