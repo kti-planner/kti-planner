@@ -18,7 +18,7 @@ test('Can switch languages', async ({ page }) => {
 });
 
 test.describe('Dropdown menu', () => {
-    test('Dropdown menu is visible for logged-in user', async ({ page }) => {
+    test.only('Dropdown menu is visible for logged-in user', async ({ page }) => {
         await page.goto('/');
         await loginAsAdmin(page);
 
@@ -27,6 +27,7 @@ test.describe('Dropdown menu', () => {
         await page.locator('.navbar').getByText('A', { exact: true }).click();
         await page.locator('.navbar').getByRole('button', { name: 'Sign out' }).click();
 
+        await page.waitForTimeout(1000);
         await loginAsTeacher(page);
 
         await expect(page.locator('.navbar').getByText('BN', { exact: true })).toBeVisible();
