@@ -177,4 +177,12 @@ test('Calendar events', async () => {
 
     expect(await CalendarEvent.fetchAllFromSemester(semester1)).toStrictEqual([calendarEvent1, calendarEvent3]);
     expect(await CalendarEvent.fetchAllFromSemester(semester2)).toStrictEqual([calendarEvent2]);
+
+    await calendarEvent3.delete();
+
+    expect(await CalendarEvent.fetchAll()).toStrictEqual([calendarEvent1, calendarEvent2]);
+
+    await semester2.delete();
+
+    expect(await CalendarEvent.fetchAll()).toStrictEqual([calendarEvent1]);
 });
