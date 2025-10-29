@@ -243,7 +243,7 @@ export function useApiFetch<T>(
                 const isAbortError = ctx.error instanceof DOMException && ctx.error.name === 'AbortError';
 
                 if (!isAbortError) {
-                    console.error(`API: fetch failed with error:\n`, ctx.error);
+                    console.error(`API: useApiFetch failed with error:\n`, ctx.error);
                 }
 
                 if (options?.resetDataOnError === true) {
