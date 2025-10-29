@@ -18,7 +18,7 @@ test('Can switch languages', async ({ page }) => {
 });
 
 test.describe('Dropdown menu', () => {
-    test.only('Dropdown menu is visible for logged-in user', async ({ page }) => {
+    test('Dropdown menu is visible for logged-in user', async ({ page }) => {
         await page.goto('/');
         await loginAsAdmin(page);
 
