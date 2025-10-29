@@ -15,6 +15,8 @@ const translations = {
 function translate(text: keyof (typeof translations)[LangId]): string {
     return translations[langId][text];
 }
+
+Astro.response.status = 404;
 ---
 
 <Layout breadcrumbs={[]}>
