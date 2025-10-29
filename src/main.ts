@@ -25,6 +25,17 @@ app.use((req, res, next) => {
     ssrHandler(req, res, next, locals);
 });
 
+app.use((req, res, next) => {
+    const url = new URL(req.originalUrl, `${req.protocol}://${req.host}`);
+
+    if (req.method === 'GET' && !url.pathname.endsWith('/')) {
+        url.pathname += '/';
+        res.redirect(301, url.toString());
+    }
+
+    next();
+});
+
 app.use((err: unknown, req: express.Request, res: express.Response, next: express.NextFunction) => {
     console.error(`${new Date().toISOString().replace('T', ' ')}:`, err);
 
