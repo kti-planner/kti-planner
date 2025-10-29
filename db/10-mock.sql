@@ -1,11 +1,5 @@
 INSERT INTO users (id, name, email, password_hash, role)
 VALUES (
-  '9f4eacbf-9cfc-4a08-8c35-fb8eabcdd897',
-  'Admin',
-  'admin@admin.com',
-  '$2b$10$RRdybUw9Ypxd.HR38l8UGORzd36eE.KbVXMUq1ICwBXnoxjAw8g8S', -- bcrypt hash of word kti
-  'admin'
-), (
   'c393c524-453c-4b02-bfad-5114fe828200',
   'Jan Kowalski',
   'jan@kowalski.pl',
