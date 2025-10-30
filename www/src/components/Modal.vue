@@ -6,7 +6,6 @@ const { id = crypto.randomUUID(), contentRendering = 'when-open' } = defineProps
     contentRendering?: 'always' | 'when-open' | undefined;
     size?: 'sm' | null | 'lg' | 'xl' | undefined;
     centered?: boolean | undefined;
-    scrollable?: boolean | undefined;
     staticBackdrop?: boolean | undefined;
 }>();
 
@@ -94,7 +93,7 @@ function onShown() {
                 :class="{
                     'modal-dialog': true,
                     'modal-dialog-centered': centered,
-                    'modal-dialog-scrollable': scrollable,
+                    'modal-dialog-scrollable': true,
                     'modal-sm': size === 'sm',
                     'modal-lg': size === 'lg',
                     'modal-xl': size === 'xl',

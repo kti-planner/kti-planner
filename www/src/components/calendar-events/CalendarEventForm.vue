@@ -68,10 +68,17 @@ async function submit() {
 }
 
 async function doDelete() {
-    const result = await apiDelete<boolean>(`/semesters/${props.semester.slug}/api/calendar-events/`);
+    if (!props.calendarEvent.id) {
+        return;
+    }
+
+    const result = await apiDelete<boolean>(
+        `/semesters/${props.semester.slug}/api/calendar-events/`,
+        new URLSearchParams({ id: props.calendarEvent.id }),
+    );
 
     if (result) {
-        window.location.reload();
+        emit('submit');
     }
 }
 
@@ -276,7 +283,7 @@ const classroomInputId = crypto.randomUUID();
             <button type="submit" class="btn btn-success">{{ translate(isEditing ? 'Save' : 'Add') }}</button>
         </div>
 
-        <div v-if="currentUser" class="text-center mt-3">
+        <div v-if="currentUser && isEditing" class="text-center">
             <ButtonWithConfirmationPopover class="btn btn-danger" @click="doDelete()">
                 {{ translate('Delete event') }}
             </ButtonWithConfirmationPopover>
