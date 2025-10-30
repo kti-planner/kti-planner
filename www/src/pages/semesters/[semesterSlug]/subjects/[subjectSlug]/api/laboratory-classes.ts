@@ -7,6 +7,7 @@ import { Exercise } from '@backend/exercise';
 import { LaboratoryClass, type LaboratoryClassCreateData, makeLaboratoryClassData } from '@backend/laboratory-class';
 import { LaboratoryGroup } from '@backend/laboratory-group';
 import { Semester } from '@backend/semester';
+import { Subject } from '@backend/subject';
 import { User } from '@backend/user';
 import {
     laboratoryClassCreateApiSchema,
@@ -92,10 +93,11 @@ export const POST: APIRoute = async ({ locals, params }) => {
         return Response.json(null, { status: 400 });
     }
 
-    const exercises = await Exercise.fetchAllFromSubject(subject);
+    const subjects = await Subject.fetchAllFromSemester(semester);
+    const exercises = await Exercise.fetchAllFromSubjects(subjects);
     const teachers = await subject.getTeachers();
     const scheduleChanges = await semester.getScheduleChanges();
-    const laboratoryClasses = await LaboratoryClass.fetchAllFromSubject(subject);
+    const laboratoryClasses = await LaboratoryClass.fetchAllFromSubjects(subjects);
     const calendarEvents = await CalendarEvent.fetchAllFromSemester(semester);
 
     const slots = data.classes.map<EventSlot>(laboratoryClass => {
@@ -196,9 +198,10 @@ export const PATCH: APIRoute = async ({ locals, params }) => {
         return Response.json(null, { status: 400 });
     }
 
+    const subjects = await Subject.fetchAllFromSemester(semester);
     const scheduleChanges = await semester.getScheduleChanges();
-    const laboratoryClasses = await LaboratoryClass.fetchAllFromSubject(subject);
-    const exercises = await Exercise.fetchAllFromSubject(subject);
+    const laboratoryClasses = await LaboratoryClass.fetchAllFromSubjects(subjects);
+    const exercises = await Exercise.fetchAllFromSubjects(subjects);
     const calendarEvents = await CalendarEvent.fetchAllFromSemester(semester);
     const exercise = exercises.find(exercise => laboratoryClass.exerciseId === exercise.id);
     assert(exercise);
