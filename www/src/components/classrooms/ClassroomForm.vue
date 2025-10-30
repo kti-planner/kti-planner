@@ -1,12 +1,15 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import { langId } from '@components/frontend/lang';
-import { apiPatch, apiPost } from '@components/api';
+import { apiDelete, apiPatch, apiPost } from '@components/api';
 import type { ClassroomCreateApiData, ClassroomData, ClassroomEditApiData } from '@components/classrooms/types';
+import ButtonWithConfirmationPopover from '@components/ButtonWithConfirmationPopover.vue';
 
 const props = defineProps<{
     classroom?: ClassroomData;
 }>();
+
+const isEditing = computed(() => props.classroom !== undefined);
 
 const submitFailed = ref(false);
 
@@ -32,18 +35,32 @@ async function submit() {
     }
 }
 
+async function doDelete() {
+    if (!props.classroom) {
+        return;
+    }
+
+    const result = await apiDelete<boolean>('/classrooms/api/', new URLSearchParams({ id: props.classroom.id }));
+
+    if (result) {
+        window.location.assign(`/classrooms/`);
+    }
+}
+
 const translations = {
     'en': {
         'Classroom name': 'Classroom name',
         'Save': 'Save',
         'Add': 'Add',
         'Classroom with this name already exists': 'Classroom with this name already exists',
+        'Delete classroom': 'Delete classroom',
     },
     'pl': {
         'Classroom name': 'Nazwa sali',
         'Save': 'Zapisz',
         'Add': 'Dodaj',
         'Classroom with this name already exists': 'Sala z tą nazwą już istnieje',
+        'Delete classroom': 'Usuń salę',
     },
 };
 
@@ -62,7 +79,12 @@ const nameId = crypto.randomUUID();
         </div>
 
         <div class="text-center">
-            <button type="submit" class="btn btn-success">{{ translate(classroom ? 'Save' : 'Add') }}</button>
+            <button type="submit" class="btn btn-success">
+                {{ translate(classroom ? 'Save' : 'Add') }}
+            </button>
+            <ButtonWithConfirmationPopover v-if="isEditing" class="btn btn-danger ms-4" @click="doDelete()">
+                {{ translate('Delete classroom') }}
+            </ButtonWithConfirmationPopover>
         </div>
 
         <div v-if="submitFailed" class="text-center text-danger">

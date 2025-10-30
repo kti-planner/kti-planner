@@ -1,14 +1,18 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import { langId } from '@components/frontend/lang';
-import { apiPatch, apiPost } from '@components/api';
+import { apiDelete, apiPatch, apiPost } from '@components/api';
 import type { SemesterCreateApiData, SemesterData, SemesterEditApiData } from '@components/semesters/types';
+import ButtonWithConfirmationPopover from '@components/ButtonWithConfirmationPopover.vue';
 
 const props = defineProps<{
     semester?: SemesterData;
 }>();
 
+const isEditing = computed(() => props.semester !== undefined);
+
 const submitFailed = ref(false);
+const deleteFailed = ref(false);
 
 const type = ref<'summer' | 'winter' | undefined>(props.semester?.type);
 const year = ref<number | undefined>(props.semester?.year);
@@ -52,6 +56,27 @@ async function submit() {
     }
 }
 
+async function doDelete() {
+    if (!props.semester) {
+        return;
+    }
+
+    const result = await apiDelete<boolean>(
+        '/semesters/api/semesters/',
+        new URLSearchParams({ id: props.semester.id }),
+    );
+
+    if (result === undefined) {
+        return;
+    }
+
+    if (result) {
+        window.location.assign(`/semesters/`);
+    } else {
+        deleteFailed.value = true;
+    }
+}
+
 const translations = {
     'en': {
         'Semester type': 'Semester type',
@@ -64,6 +89,9 @@ const translations = {
         'Save': 'Save',
         'Add': 'Add',
         'Semester with this year and type already exists.': 'Semester with this year and type already exists.',
+        'Delete semester': 'Delete semester',
+        'The semester cannot be deleted because it contains subjects':
+            'The semester cannot be deleted because it contains subjects',
     },
     'pl': {
         'Semester type': 'Rodzaj semestru',
@@ -76,6 +104,9 @@ const translations = {
         'Save': 'Zapisz',
         'Add': 'Dodaj',
         'Semester with this year and type already exists.': 'Semestr o podanym roku i rodzaju już istnieje.',
+        'Delete semester': 'Usuń semestr',
+        'The semester cannot be deleted because it contains subjects':
+            'Semestr nie może zostać usunięty, ponieważ zawiera przedmioty',
     },
 };
 
@@ -121,11 +152,20 @@ const endId = crypto.randomUUID();
         </div>
 
         <div class="text-center">
-            <button type="submit" class="btn btn-success">{{ translate(semester ? 'Save' : 'Add') }}</button>
+            <button type="submit" class="btn btn-success">
+                {{ translate(semester ? 'Save' : 'Add') }}
+            </button>
+            <ButtonWithConfirmationPopover v-if="isEditing" class="btn btn-danger ms-4" @click="doDelete()">
+                {{ translate('Delete semester') }}
+            </ButtonWithConfirmationPopover>
         </div>
 
         <div v-if="submitFailed" class="text-center text-danger">
             {{ translate('Semester with this year and type already exists.') }}
+        </div>
+
+        <div v-if="deleteFailed" class="text-center text-danger">
+            {{ translate('The semester cannot be deleted because it contains subjects') }}
         </div>
     </form>
 </template>

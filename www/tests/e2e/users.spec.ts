@@ -256,6 +256,20 @@ test('Can edit user data and prevent duplicate user as teacher', async ({ page }
     await expect(page.locator('body')).toContainText('Role: Teacher');
 });
 
+test('Can delete user', async ({ page }) => {
+    await page.goto('/users/');
+    await loginAsAdmin(page);
+
+    await page.getByRole('link', { name: 'Jan Kowalski' }).click();
+    await page.getByRole('button', { name: 'Edit user' }).click();
+    await page.getByRole('button', { name: 'Delete user' }).click();
+    await page.getByRole('button', { name: 'Yes' }).click();
+
+    await page.waitForURL('/users/');
+
+    await expect(page.getByRole('link', { name: 'Jan Kowalski' })).not.toBeVisible();
+});
+
 test('Password reset button is hidden for non-admin user', async ({ page }) => {
     await page.goto('/profile/');
     await loginAsTeacher(page);
@@ -278,7 +292,7 @@ test('Password reset button is visible for admin user', async ({ page }) => {
     await expect(page.getByRole('button', { name: 'Reset password' })).toBeVisible();
 });
 
-test('Can generate random password when reseting user password', async ({ page }) => {
+test('Can generate random password when resetting user password', async ({ page }) => {
     await page.goto('/users/feeaa186-3d69-4801-a580-88be10d53553/');
     await loginAsAdmin(page);
 
@@ -576,11 +590,52 @@ test.describe('API fetch tests', () => {
         expect(response.headers()['content-type']).toBe('image/png');
     });
 
-    test('Cannot access non-existant user email image', async ({ page }) => {
+    test('Cannot access non-existent user email image', async ({ page }) => {
         await page.goto('/');
 
         const response = await page.request.get('/users/email/c393c524-453c-4b02-bfad-5114fe828333/');
 
         expect(response.status()).toBe(404);
+    });
+
+    test('Logged-out user cannot delete user', async ({ page }) => {
+        await page.goto('/users/');
+
+        const response = await page.request.delete('/users/api/users/', {
+            data: null,
+            params: {
+                id: 'c393c524-453c-4b02-bfad-5114fe828200',
+            },
+        });
+
+        expect(response.status()).toBe(404);
+    });
+
+    test('Teacher cannot delete user', async ({ page }) => {
+        await page.goto('/users/');
+        await loginAsTeacher(page);
+
+        const response = await page.request.delete('/users/api/users/', {
+            data: null,
+            params: {
+                id: 'c393c524-453c-4b02-bfad-5114fe828200',
+            },
+        });
+
+        expect(response.status()).toBe(404);
+    });
+
+    test('Admin can delete user', async ({ page }) => {
+        await page.goto('/users/');
+        await loginAsAdmin(page);
+
+        const response = await page.request.delete('/users/api/users/', {
+            data: null,
+            params: {
+                id: 'c393c524-453c-4b02-bfad-5114fe828200',
+            },
+        });
+
+        expect(response.status()).toBe(200);
     });
 });

@@ -51,7 +51,7 @@ function handleFormDone() {
         {{ translate('Plan classes') }}
     </button>
 
-    <Modal ref="modal" :id="modalId" scrollable>
+    <Modal ref="modal" :id="modalId">
         <template #header>
             {{ group ? `${translate('Plan classes for group')} ${group.name}` : translate('Plan classes') }}
         </template>

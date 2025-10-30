@@ -109,3 +109,27 @@ export const PATCH: APIRoute = async ({ locals }) => {
 
     return Response.json(true, { status: 200 });
 };
+
+export const DELETE: APIRoute = async ({ locals, url }) => {
+    const { user } = locals;
+
+    if (!user) {
+        return Response.json(null, { status: 404 });
+    }
+
+    const id = url.searchParams.get('id');
+
+    if (id === null) {
+        return Response.json(null, { status: 400 });
+    }
+
+    const exercise = await Exercise.fetch(id);
+
+    if (!exercise) {
+        return Response.json(null, { status: 404 });
+    }
+
+    await exercise.delete();
+
+    return Response.json(true, { status: 200 });
+};

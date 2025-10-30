@@ -1,5 +1,5 @@
 import { expect } from 'playwright/test';
-import { loginAsAdmin, test } from './fixtures';
+import { loginAsAdmin, loginAsTeacher, test } from './fixtures';
 
 test('Can access exercises list', async ({ page }) => {
     await page.goto('/semesters/2024-summer/subjects/lokalne-sieci-bezprzewodowe---informatyka-sem.-vi/');
@@ -185,6 +185,20 @@ test('Can edit exercise and prevent duplicate exercise', async ({ page }) => {
     await expect(page.locator('body')).toContainText('Wirtualne sieci lokalne (VLAN)');
 });
 
+test('Can delete exercise', async ({ page }) => {
+    await page.goto('/semesters/2024-winter/subjects/sieci-komputerowe---informatyka-sem.-v/');
+    await loginAsTeacher(page);
+
+    await page.getByRole('link', { name: 'IPv6 cz. II' }).click();
+    await page.getByRole('button', { name: 'Edit exercise' }).click();
+    await page.getByRole('button', { name: 'Delete exercise' }).click();
+    await page.getByRole('button', { name: 'Yes' }).click();
+
+    await page.waitForURL('/semesters/2024-winter/subjects/sieci-komputerowe---informatyka-sem.-v/');
+
+    await expect(page.getByRole('link', { name: 'IPv6 cz. II' })).not.toBeVisible();
+});
+
 test.describe('API fetch tests', () => {
     test('Logged-out user cannot create new exercise', async ({ page }) => {
         await page.goto('/semesters/2024-summer/subjects/lokalne-sieci-bezprzewodowe---informatyka-sem.-vi/');
@@ -246,6 +260,33 @@ test.describe('API fetch tests', () => {
                 exerciseNumber: 8,
                 classroomId: '8689d55d-508e-4f5d-aef8-d5052f220d20',
                 teacherId: 'c393c524-453c-4b02-bfad-5114fe828200',
+            },
+        });
+
+        expect(response.status()).toBe(200);
+    });
+
+    test('Logged-out user cannot delete exercise', async ({ page }) => {
+        await page.goto('/semesters/2024-summer/subjects/lokalne-sieci-bezprzewodowe---informatyka-sem.-vi/');
+
+        const response = await page.request.delete('/semesters/api/exercises/', {
+            data: null,
+            params: {
+                id: 'e4ffb869-8d1d-4396-89b5-f427af451e50',
+            },
+        });
+
+        expect(response.status()).toBe(404);
+    });
+
+    test('Logged-in user can delete exercise', async ({ page }) => {
+        await page.goto('/semesters/2024-summer/subjects/lokalne-sieci-bezprzewodowe---informatyka-sem.-vi/');
+        await loginAsAdmin(page);
+
+        const response = await page.request.delete('/semesters/api/exercises/', {
+            data: null,
+            params: {
+                id: 'e4ffb869-8d1d-4396-89b5-f427af451e50',
             },
         });
 

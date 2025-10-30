@@ -2,7 +2,7 @@
 import { computed, ref, watch } from 'vue';
 import { langId } from '@components/frontend/lang';
 import { currentUser } from '@components/frontend/user';
-import { apiPatch, apiPost } from '@components/api';
+import { apiDelete, apiPatch, apiPost } from '@components/api';
 import type { EventConflict } from '@components/calendar/types';
 import { CalendarEventRepeatState } from '@components/calendar-events/state';
 import type {
@@ -13,6 +13,7 @@ import type {
 import { type ClassroomData, formatClassroomName } from '@components/classrooms/types';
 import type { SemesterData } from '@components/semesters/types';
 import { formatDateLocalYyyyMmDd, parseDateLocalYyyyMmDd } from '@components/utils';
+import ButtonWithConfirmationPopover from '@components/ButtonWithConfirmationPopover.vue';
 
 const props = defineProps<{
     semester: SemesterData;
@@ -72,6 +73,21 @@ async function submit() {
     eventConflicts.value = conflicts;
 }
 
+async function doDelete() {
+    if (!props.calendarEvent.id) {
+        return;
+    }
+
+    const result = await apiDelete<boolean>(
+        `/semesters/${props.semester.slug}/api/calendar-events/`,
+        new URLSearchParams({ id: props.calendarEvent.id }),
+    );
+
+    if (result) {
+        emit('submit');
+    }
+}
+
 const translations = {
     'en': {
         'Name': 'Name',
@@ -96,6 +112,7 @@ const translations = {
         'The following issues were found': 'The following issues were found',
         'Holiday': 'Holiday',
         'Another class takes place in this classroom': 'Another class takes place in this classroom',
+        'Delete event': 'Delete event',
     },
     'pl': {
         'Name': 'Nazwa',
@@ -120,6 +137,7 @@ const translations = {
         'The following issues were found': 'Znaleziono następujące problemy',
         'Holiday': 'Dzień wolny',
         'Another class takes place in this classroom': 'W wybranej sali odbywają się inne zajęcia',
+        'Delete event': 'Usuń wydarzenie',
     },
 };
 
@@ -274,7 +292,12 @@ const classroomInputId = crypto.randomUUID();
         </div>
 
         <div v-if="currentUser" class="text-center">
-            <button type="submit" class="btn btn-success">{{ translate(isEditing ? 'Save' : 'Add') }}</button>
+            <button type="submit" class="btn btn-success">
+                {{ translate(isEditing ? 'Save' : 'Add') }}
+            </button>
+            <ButtonWithConfirmationPopover v-if="isEditing" class="btn btn-danger ms-4" @click="doDelete()">
+                {{ translate('Delete event') }}
+            </ButtonWithConfirmationPopover>
         </div>
 
         <ul v-if="eventConflicts.length > 0">

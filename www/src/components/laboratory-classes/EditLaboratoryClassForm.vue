@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 import { langId } from '@components/frontend/lang';
 import { currentUser } from '@components/frontend/user';
-import { apiPatch } from '@components/api';
+import { apiDelete, apiPatch } from '@components/api';
 import type { EventConflict } from '@components/calendar/types';
 import { formatClassroomName } from '@components/classrooms/types';
 import type { LaboratoryClassData, LaboratoryClassEditApiData } from '@components/laboratory-classes/types';
@@ -10,6 +10,7 @@ import type { SemesterData } from '@components/semesters/types';
 import type { SubjectData } from '@components/subjects/types';
 import type { UserPublicData } from '@components/users/types';
 import { formatDateLocalHhMm, formatDateLocalYyyyMmDd, parseDateLocalYyyyMmDd } from '@components/utils';
+import ButtonWithConfirmationPopover from '@components/ButtonWithConfirmationPopover.vue';
 import UserSelector from '@components/users/UserSelector.vue';
 
 const { laboratoryClass, semester, apiUrl } = defineProps<{
@@ -35,6 +36,7 @@ const translations = {
         'Save': 'Save',
         'The selected date is a holiday': 'The selected date is a holiday',
         'There is another class during this time': 'There is another class during this time',
+        'Delete class': 'Delete class',
     },
     'pl': {
         'Subject': 'Przedmiot',
@@ -49,6 +51,7 @@ const translations = {
         'Save': 'Zapisz',
         'The selected date is a holiday': 'Wybrana data jest dniem wolnym',
         'There is another class during this time': 'W tym czasie odbywają się inne zajęcia',
+        'Delete class': 'Usuń zajęcia',
     },
 };
 
@@ -90,6 +93,14 @@ async function saveLaboratoryClass() {
     }
 
     eventConflict.value = conflicts[0]!;
+}
+
+async function doDelete() {
+    const result = await apiDelete<boolean>(apiUrl, new URLSearchParams({ id: laboratoryClass.id }));
+
+    if (result) {
+        emit('submit');
+    }
 }
 
 const dateId = crypto.randomUUID();
@@ -175,6 +186,9 @@ const teacherId = crypto.randomUUID();
             <button type="submit" class="btn btn-success">
                 {{ translate('Save') }}
             </button>
+            <ButtonWithConfirmationPopover class="btn btn-danger ms-4" @click="doDelete()">
+                {{ translate('Delete class') }}
+            </ButtonWithConfirmationPopover>
         </div>
 
         <div v-if="eventConflict" class="text-center text-danger">

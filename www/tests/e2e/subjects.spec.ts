@@ -1,5 +1,5 @@
 import { expect } from 'playwright/test';
-import { loginAsAdmin, test } from './fixtures';
+import { loginAsAdmin, loginAsTeacher, test } from './fixtures';
 
 test('Can access subject list', async ({ page }) => {
     await page.goto('/semesters/2024-summer/');
@@ -143,6 +143,22 @@ test('Can edit subject and prevent duplicate subject', async ({ page }) => {
     await expect(page.locator('body')).toContainText('Sieci Ethernet i IP');
 });
 
+test('Can delete subject', async ({ page }) => {
+    await page.goto('/semesters/2024-summer/');
+    await loginAsTeacher(page);
+
+    await page.getByRole('link', { name: 'Lokalne sieci bezprzewodowe - Informatyka sem. VI' }).click();
+    await page.getByRole('button', { name: 'Edit subject' }).click();
+    await page.getByRole('button', { name: 'Delete subject' }).click();
+    await page.getByRole('button', { name: 'Yes' }).click();
+
+    await page.waitForURL('/semesters/2024-summer/');
+
+    await expect(
+        page.getByRole('link', { name: 'Lokalne sieci bezprzewodowe - Informatyka sem. VI' }),
+    ).not.toBeVisible();
+});
+
 test('Can copy subject from previous semester and prevent duplicate subject copy', async ({ page }) => {
     await page.goto('/semesters/2025-winter/');
     await loginAsAdmin(page);
@@ -280,6 +296,33 @@ test.describe('API fetch tests', () => {
                 teacherIds: ['feeaa186-3d69-4801-a580-88be10d53553'],
                 description: '',
                 moodleCourseId: '',
+            },
+        });
+
+        expect(response.status()).toBe(200);
+    });
+
+    test('Logged-out user cannot delete subject', async ({ page }) => {
+        await page.goto('/semesters/');
+
+        const response = await page.request.delete('/semesters/api/subjects/', {
+            data: null,
+            params: {
+                id: '3f58b671-5b38-43f8-bf0f-49d93048c52e',
+            },
+        });
+
+        expect(response.status()).toBe(404);
+    });
+
+    test('Logged-in user can delete subject', async ({ page }) => {
+        await page.goto('/semesters/');
+        await loginAsAdmin(page);
+
+        const response = await page.request.delete('/semesters/api/subjects/', {
+            data: null,
+            params: {
+                id: '3f58b671-5b38-43f8-bf0f-49d93048c52e',
             },
         });
 
