@@ -130,4 +130,31 @@ test.describe('API fetch tests', () => {
 
         expect(response.status()).toBe(200);
     });
+
+    test('Logged-out user cannot delete classroom', async ({ page }) => {
+        await page.goto('/classrooms/');
+
+        const response = await page.request.delete('/classrooms/api/', {
+            data: null,
+            params: {
+                id: '8689d55d-508e-4f5d-aef8-d5052f220d20',
+            },
+        });
+
+        expect(response.status()).toBe(404);
+    });
+
+    test('Logged-in user can delete classroom', async ({ page }) => {
+        await page.goto('/classrooms/');
+        await loginAsAdmin(page);
+
+        const response = await page.request.delete('/classrooms/api/', {
+            data: null,
+            params: {
+                id: '8689d55d-508e-4f5d-aef8-d5052f220d20',
+            },
+        });
+
+        expect(response.status()).toBe(200);
+    });
 });

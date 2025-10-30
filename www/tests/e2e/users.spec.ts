@@ -583,4 +583,45 @@ test.describe('API fetch tests', () => {
 
         expect(response.status()).toBe(404);
     });
+
+    test('Logged-out user cannot delete user', async ({ page }) => {
+        await page.goto('/users/');
+
+        const response = await page.request.delete('/users/api/users/', {
+            data: null,
+            params: {
+                id: 'c393c524-453c-4b02-bfad-5114fe828200',
+            },
+        });
+
+        expect(response.status()).toBe(404);
+    });
+
+    test('Teacher cannot delete user', async ({ page }) => {
+        await page.goto('/users/');
+        await loginAsTeacher(page);
+
+        const response = await page.request.delete('/users/api/users/', {
+            data: null,
+            params: {
+                id: 'c393c524-453c-4b02-bfad-5114fe828200',
+            },
+        });
+
+        expect(response.status()).toBe(404);
+    });
+
+    test('Admin can delete user', async ({ page }) => {
+        await page.goto('/users/');
+        await loginAsAdmin(page);
+
+        const response = await page.request.delete('/users/api/users/', {
+            data: null,
+            params: {
+                id: 'c393c524-453c-4b02-bfad-5114fe828200',
+            },
+        });
+
+        expect(response.status()).toBe(200);
+    });
 });

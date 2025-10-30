@@ -286,6 +286,33 @@ test.describe('API fetch tests', () => {
         expect(response.status()).toBe(200);
     });
 
+    test('Logged-out user cannot delete subject', async ({ page }) => {
+        await page.goto('/semesters/');
+
+        const response = await page.request.delete('/semesters/api/subjects/', {
+            data: null,
+            params: {
+                id: '3f58b671-5b38-43f8-bf0f-49d93048c52e',
+            },
+        });
+
+        expect(response.status()).toBe(404);
+    });
+
+    test('Logged-in user can delete subject', async ({ page }) => {
+        await page.goto('/semesters/');
+        await loginAsAdmin(page);
+
+        const response = await page.request.delete('/semesters/api/subjects/', {
+            data: null,
+            params: {
+                id: '3f58b671-5b38-43f8-bf0f-49d93048c52e',
+            },
+        });
+
+        expect(response.status()).toBe(200);
+    });
+
     test('Logged-out user cannot copy subject from previous semester', async ({ page }) => {
         await page.goto('/semesters/2025-winter/');
 

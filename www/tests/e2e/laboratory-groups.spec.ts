@@ -126,4 +126,37 @@ test.describe('API fetch tests', () => {
 
         expect(response.status()).toBe(200);
     });
+
+    test('Logged-out user cannot delete laboratory group', async ({ page }) => {
+        await page.goto('/semesters/2025-winter/subjects/sieci-komputerowe---informatyka-sem.-v/');
+
+        const response = await page.request.delete(
+            '/semesters/2025-winter/subjects/sieci-komputerowe---informatyka-sem.-v/api/laboratory-groups/',
+            {
+                data: null,
+                params: {
+                    id: 'bb9309c2-6a67-4f65-bcc9-fa9547d9ffe9',
+                },
+            },
+        );
+
+        expect(response.status()).toBe(404);
+    });
+
+    test('Logged-in user can delete laboratory group', async ({ page }) => {
+        await page.goto('/semesters/2025-winter/subjects/sieci-komputerowe---informatyka-sem.-v/');
+        await loginAsAdmin(page);
+
+        const response = await page.request.delete(
+            '/semesters/2025-winter/subjects/sieci-komputerowe---informatyka-sem.-v/api/laboratory-groups/',
+            {
+                data: null,
+                params: {
+                    id: 'bb9309c2-6a67-4f65-bcc9-fa9547d9ffe9',
+                },
+            },
+        );
+
+        expect(response.status()).toBe(200);
+    });
 });

@@ -251,4 +251,31 @@ test.describe('API fetch tests', () => {
 
         expect(response.status()).toBe(200);
     });
+
+    test('Logged-out user cannot delete exercise', async ({ page }) => {
+        await page.goto('/semesters/2024-summer/subjects/lokalne-sieci-bezprzewodowe---informatyka-sem.-vi/');
+
+        const response = await page.request.delete('/semesters/api/exercises/', {
+            data: null,
+            params: {
+                id: 'e4ffb869-8d1d-4396-89b5-f427af451e50',
+            },
+        });
+
+        expect(response.status()).toBe(404);
+    });
+
+    test('Logged-in user can delete exercise', async ({ page }) => {
+        await page.goto('/semesters/2024-summer/subjects/lokalne-sieci-bezprzewodowe---informatyka-sem.-vi/');
+        await loginAsAdmin(page);
+
+        const response = await page.request.delete('/semesters/api/exercises/', {
+            data: null,
+            params: {
+                id: 'e4ffb869-8d1d-4396-89b5-f427af451e50',
+            },
+        });
+
+        expect(response.status()).toBe(200);
+    });
 });
