@@ -5,6 +5,7 @@ import { apiPost } from '@components/api';
 import type { EventConflict } from '@components/calendar/types';
 import type { ExerciseData } from '@components/exercises/types';
 import { getNextDayOfTheWeekOccurrence } from '@components/laboratory-classes/dates';
+import type { LaboratoryClassCreateApiData } from '@components/laboratory-classes/types';
 import type { LaboratoryGroupData } from '@components/laboratory-groups/types';
 import type { ScheduleChangeData, SemesterData } from '@components/semesters/types';
 import { formatDateLocalYyyyMmDd, formatDateLocalYyyyMmDdHhMm, parseDateLocalYyyyMmDd } from '@components/utils';
@@ -118,7 +119,7 @@ async function generate() {
             startDate: formatDateLocalYyyyMmDdHhMm(plannedClass.start),
             endDate: formatDateLocalYyyyMmDdHhMm(plannedClass.end),
         })),
-    });
+    } satisfies LaboratoryClassCreateApiData);
 
     if (conflicts === undefined) {
         return;

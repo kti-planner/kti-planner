@@ -87,6 +87,10 @@ export class LaboratoryGroup {
     async delete(): Promise<void> {
         await db.query('DELETE FROM laboratory_groups WHERE id = $1', [this.id]);
     }
+
+    async deleteAllClasses(): Promise<void> {
+        await db.query('DELETE FROM laboratory_classes WHERE laboratory_group_id = $1', [this.id]);
+    }
 }
 
 export function makeLaboratoryGroupData(group: LaboratoryGroup): LaboratoryGroupData {

@@ -87,6 +87,7 @@ export const POST: APIRoute = async ({ locals, params }) => {
     }
 
     const group = await LaboratoryGroup.fetch(data.laboratoryGroupId);
+
     if (!group) {
         return Response.json(null, { status: 400 });
     }
@@ -109,7 +110,19 @@ export const POST: APIRoute = async ({ locals, params }) => {
         };
     });
 
-    const conflicts = checkForEventConflicts(slots, scheduleChanges, laboratoryClasses, exercises, calendarEvents);
+    const ignoreIds = laboratoryClasses
+        .filter(laboratoryClass => laboratoryClass.laboratoryGroupId === group.id)
+        .map(laboratoryClass => laboratoryClass.id);
+
+    const conflicts = checkForEventConflicts(
+        slots,
+        scheduleChanges,
+        laboratoryClasses,
+        exercises,
+        calendarEvents,
+        ignoreIds,
+    );
+
     if (conflicts.length > 0) {
         return Response.json(conflicts);
     }
@@ -135,6 +148,8 @@ export const POST: APIRoute = async ({ locals, params }) => {
             teacher,
         });
     }
+
+    await group.deleteAllClasses();
 
     await Promise.all(createData.map(createDatum => LaboratoryClass.create(createDatum)));
 

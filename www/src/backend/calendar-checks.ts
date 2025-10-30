@@ -20,6 +20,7 @@ export function checkForEventConflicts(
     laboratoryClasses: LaboratoryClass[],
     exercises: Exercise[],
     calendarEvents: CalendarEvent[],
+    ignoreIds: string[] = [],
 ): EventConflict[] {
     const holidayConflicts = slots
         .filter(slot =>
@@ -39,6 +40,7 @@ export function checkForEventConflicts(
 
                 return (
                     slot.id !== laboratoryClass.id &&
+                    !ignoreIds.includes(laboratoryClass.id) &&
                     slot.classroomId !== null &&
                     slot.classroomId === exercise.classroomId &&
                     slot.startDate.getTime() < laboratoryClass.endDate.getTime() &&
@@ -57,6 +59,7 @@ export function checkForEventConflicts(
             calendarEvents.some(
                 calendarEvent =>
                     slot.id !== calendarEvent.id &&
+                    !ignoreIds.includes(calendarEvent.id) &&
                     slot.classroomId !== null &&
                     slot.classroomId === calendarEvent.classroomId &&
                     slot.startDate.getTime() < calendarEvent.endDate.getTime() &&
