@@ -1,9 +1,13 @@
 import assert from 'node:assert';
 import type { APIRoute } from 'astro';
+import { checkForEventConflicts, type EventSlot } from '@backend/calendar-checks';
+import { CalendarEvent } from '@backend/calendar-events';
 import { Classroom } from '@backend/classroom';
 import { Exercise } from '@backend/exercise';
 import { LaboratoryClass, type LaboratoryClassCreateData, makeLaboratoryClassData } from '@backend/laboratory-class';
 import { LaboratoryGroup } from '@backend/laboratory-group';
+import { Semester } from '@backend/semester';
+import { Subject } from '@backend/subject';
 import { User } from '@backend/user';
 import {
     laboratoryClassCreateApiSchema,
@@ -56,15 +60,29 @@ export const GET: APIRoute = async ({ params, url }) => {
     );
 };
 
-export const POST: APIRoute = async ({ locals }) => {
+export const POST: APIRoute = async ({ locals, params }) => {
     const { jsonData, user } = locals;
+    const { semesterSlug } = params;
 
     if (!user) {
         return Response.json(null, { status: 404 });
     }
 
-    const data = laboratoryClassCreateApiSchema.nullable().catch(null).parse(jsonData);
+    if (semesterSlug === undefined) {
+        return new Response(null, { status: 404 });
+    }
 
+    const semester = await Semester.fetchBySlug(semesterSlug);
+    if (!semester) {
+        return new Response(null, { status: 404 });
+    }
+
+    const subject = await getSubjectFromParams(params);
+    if (!subject) {
+        return Response.json(null, { status: 404 });
+    }
+
+    const data = laboratoryClassCreateApiSchema.nullable().catch(null).parse(jsonData);
     if (!data) {
         return Response.json(null, { status: 400 });
     }
@@ -75,18 +93,52 @@ export const POST: APIRoute = async ({ locals }) => {
         return Response.json(null, { status: 400 });
     }
 
+    const subjects = await Subject.fetchAllFromSemester(semester);
+    const exercises = await Exercise.fetchAllFromSubjects(subjects);
+    const teachers = await subject.getTeachers();
+    const scheduleChanges = await semester.getScheduleChanges();
+    const laboratoryClasses = await LaboratoryClass.fetchAllFromSubjects(subjects);
+    const calendarEvents = await CalendarEvent.fetchAllFromSemester(semester);
+
+    const slots = data.classes.map<EventSlot>(laboratoryClass => {
+        const exercise = exercises.find(exercise => exercise.id === laboratoryClass.exerciseId);
+        assert(exercise);
+
+        return {
+            id: null,
+            classroomId: exercise.classroomId,
+            startDate: laboratoryClass.startDate,
+            endDate: laboratoryClass.endDate,
+        };
+    });
+
+    const ignoreIds = laboratoryClasses
+        .filter(laboratoryClass => laboratoryClass.laboratoryGroupId === group.id)
+        .map(laboratoryClass => laboratoryClass.id);
+
+    const conflicts = checkForEventConflicts(
+        slots,
+        scheduleChanges,
+        laboratoryClasses,
+        exercises,
+        calendarEvents,
+        ignoreIds,
+    );
+
+    if (conflicts.length > 0) {
+        return Response.json(conflicts);
+    }
+
     const createData: LaboratoryClassCreateData[] = [];
 
     for (const laboratoryClass of data.classes) {
-        const exercise = await Exercise.fetch(laboratoryClass.exerciseId);
-
+        const exercise = exercises.find(exercise => exercise.id === laboratoryClass.exerciseId);
         if (!exercise) {
             return Response.json(null, { status: 400 });
         }
 
-        const teacher = await exercise.getTeacher();
-
-        if (group.subjectId !== exercise.subjectId) {
+        const teacher = teachers.find(teacher => teacher.id === exercise.teacherId);
+        if (!teacher) {
             return Response.json(null, { status: 400 });
         }
 
@@ -103,13 +155,28 @@ export const POST: APIRoute = async ({ locals }) => {
 
     await Promise.all(createData.map(createDatum => LaboratoryClass.create(createDatum)));
 
-    return Response.json(true, { status: 201 });
+    return Response.json([]);
 };
 
-export const PATCH: APIRoute = async ({ locals }) => {
+export const PATCH: APIRoute = async ({ locals, params }) => {
     const { jsonData, user } = locals;
+    const { semesterSlug } = params;
 
     if (!user) {
+        return Response.json(null, { status: 404 });
+    }
+
+    if (semesterSlug === undefined) {
+        return new Response(null, { status: 404 });
+    }
+
+    const semester = await Semester.fetchBySlug(semesterSlug);
+    if (!semester) {
+        return new Response(null, { status: 404 });
+    }
+
+    const subject = await getSubjectFromParams(params);
+    if (!subject) {
         return Response.json(null, { status: 404 });
     }
 
@@ -131,13 +198,40 @@ export const PATCH: APIRoute = async ({ locals }) => {
         return Response.json(null, { status: 400 });
     }
 
+    const subjects = await Subject.fetchAllFromSemester(semester);
+    const scheduleChanges = await semester.getScheduleChanges();
+    const laboratoryClasses = await LaboratoryClass.fetchAllFromSubjects(subjects);
+    const exercises = await Exercise.fetchAllFromSubjects(subjects);
+    const calendarEvents = await CalendarEvent.fetchAllFromSemester(semester);
+    const exercise = exercises.find(exercise => laboratoryClass.exerciseId === exercise.id);
+    assert(exercise);
+
+    const conflicts = checkForEventConflicts(
+        [
+            {
+                id: laboratoryClass.id,
+                classroomId: exercise.classroomId,
+                startDate: data.startDate ?? laboratoryClass.startDate,
+                endDate: data.endDate ?? laboratoryClass.endDate,
+            },
+        ],
+        scheduleChanges,
+        laboratoryClasses,
+        exercises,
+        calendarEvents,
+    );
+
+    if (conflicts.length > 0) {
+        return Response.json(conflicts);
+    }
+
     await laboratoryClass.edit({
         startDate: data.startDate,
         endDate: data.endDate,
         teacher,
     });
 
-    return Response.json(true, { status: 200 });
+    return Response.json([]);
 };
 
 export const DELETE: APIRoute = async ({ locals, url, params }) => {

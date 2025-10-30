@@ -3,6 +3,7 @@ import { computed, ref, watch } from 'vue';
 import { langId } from '@components/frontend/lang';
 import { currentUser } from '@components/frontend/user';
 import { apiDelete, apiPatch, apiPost } from '@components/api';
+import type { EventConflict } from '@components/calendar/types';
 import { CalendarEventRepeatState } from '@components/calendar-events/state';
 import type {
     CalendarEventCreateApiData,
@@ -11,7 +12,7 @@ import type {
 } from '@components/calendar-events/types';
 import { type ClassroomData, formatClassroomName } from '@components/classrooms/types';
 import type { SemesterData } from '@components/semesters/types';
-import { parseDateLocalYyyyMmDd } from '@components/utils';
+import { formatDateLocalYyyyMmDd, parseDateLocalYyyyMmDd } from '@components/utils';
 import ButtonWithConfirmationPopover from '@components/ButtonWithConfirmationPopover.vue';
 
 const props = defineProps<{
@@ -38,19 +39,21 @@ const classroomId = ref<string | null | undefined>(
 const repeatOptions = ref(new CalendarEventRepeatState(props.semester, parseDateLocalYyyyMmDd(date.value)));
 watch(date, newDate => (repeatOptions.value.startDate = parseDateLocalYyyyMmDd(newDate)));
 
+const eventConflicts = ref<EventConflict[]>([]);
+
 async function submit() {
     if (name.value === '' || classroomId.value === undefined) {
         return;
     }
 
-    const success =
+    const conflicts =
         props.calendarEvent?.id === undefined
-            ? await apiPost<boolean>(`/semesters/${props.semester.slug}/api/calendar-events/`, {
+            ? await apiPost<EventConflict[]>(`/semesters/${props.semester.slug}/api/calendar-events/`, {
                   name: name.value,
                   classroomId: classroomId.value,
                   durations: repeatOptions.value.generateDurations(startTime.value, endTime.value),
               } satisfies CalendarEventCreateApiData)
-            : await apiPatch<boolean>(`/semesters/${props.semester.slug}/api/calendar-events/`, {
+            : await apiPatch<EventConflict[]>(`/semesters/${props.semester.slug}/api/calendar-events/`, {
                   id: props.calendarEvent.id,
                   name: name.value,
                   classroomId: classroomId.value,
@@ -58,13 +61,16 @@ async function submit() {
                   endDate: `${date.value}T${endTime.value}`,
               } satisfies CalendarEventEditApiData);
 
-    if (success === undefined) {
+    if (conflicts === undefined) {
         return;
     }
 
-    if (success) {
+    if (conflicts.length === 0) {
         emit('submit');
+        return;
     }
+
+    eventConflicts.value = conflicts;
 }
 
 async function doDelete() {
@@ -103,6 +109,9 @@ const translations = {
         'Last event': 'Last event',
         'Repeat amount': 'Repeat amount',
         'The events do not fit in the semester': 'The events do not fit in the semester',
+        'The following issues were found': 'The following issues were found',
+        'Holiday': 'Holiday',
+        'Another class takes place in this classroom': 'Another class takes place in this classroom',
         'Delete event': 'Delete event',
     },
     'pl': {
@@ -125,6 +134,9 @@ const translations = {
         'Last event': 'Ostatnie wydarzenie',
         'Repeat amount': 'Ilość powtórzeń',
         'The events do not fit in the semester': 'Wydarzenia nie mieszczą się w semestrze',
+        'The following issues were found': 'Znaleziono następujące problemy',
+        'Holiday': 'Dzień wolny',
+        'Another class takes place in this classroom': 'W wybranej sali odbywają się inne zajęcia',
         'Delete event': 'Usuń wydarzenie',
     },
 };
@@ -287,5 +299,18 @@ const classroomInputId = crypto.randomUUID();
                 {{ translate('Delete event') }}
             </ButtonWithConfirmationPopover>
         </div>
+
+        <ul v-if="eventConflicts.length > 0">
+            <li v-for="conflict in eventConflicts" :key="conflict.startDate">
+                {{ `${formatDateLocalYyyyMmDd(new Date(conflict.startDate))}: ` }}
+                <span class="text-danger">
+                    {{
+                        conflict.type === 'holiday'
+                            ? translate('Holiday')
+                            : translate('Another class takes place in this classroom')
+                    }}
+                </span>
+            </li>
+        </ul>
     </form>
 </template>

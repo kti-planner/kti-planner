@@ -2,8 +2,9 @@
 import { computed, ref } from 'vue';
 import { langId } from '@components/frontend/lang';
 import { apiPost } from '@components/api';
+import type { EventConflict } from '@components/calendar/types';
 import type { ExerciseData } from '@components/exercises/types';
-import { getNextDayOfTheWeekOccurrence, isSameDay } from '@components/laboratory-classes/dates';
+import { getNextDayOfTheWeekOccurrence } from '@components/laboratory-classes/dates';
 import type { LaboratoryClassCreateApiData } from '@components/laboratory-classes/types';
 import type { LaboratoryGroupData } from '@components/laboratory-groups/types';
 import type { ScheduleChangeData, SemesterData } from '@components/semesters/types';
@@ -21,8 +22,8 @@ const translations = {
         'Summary': 'Summary',
         'Generate classes': 'Generate classes',
         'You can edit the classes later from the calendar': 'You can edit the classes later from the calendar',
-        'The date you selected is a holiday': 'The date you selected is a holiday',
         'The classes do not fit in the semester': 'The classes do not fit in the semester',
+        'There are conflicts with holidays or other events': 'There are conflicts with holidays or other events',
     },
     'pl': {
         'Laboratory group': 'Grupa laboratoryjna',
@@ -33,8 +34,8 @@ const translations = {
         'Summary': 'Podsumowanie',
         'Generate classes': 'Wygeneruj zajęcia',
         'You can edit the classes later from the calendar': 'Możesz później edytować te zajęcia w kalendarzu',
-        'The date you selected is a holiday': 'Wybrana data jest dniem wolnym od zajęć',
         'The classes do not fit in the semester': 'Zajęcia nie mieszczą się w semestrze',
+        'There are conflicts with holidays or other events': 'Są konflikty z dniami wolnymi lub innymi zajęciami',
     },
 };
 
@@ -61,17 +62,6 @@ const classStartTime = ref<string>();
 const classEndTime = ref<string>();
 const repeatWeeks = ref(1);
 
-const firstClassDateHoliday = computed(() => {
-    if (firstClassDateStr.value === undefined) {
-        return false;
-    }
-
-    const firstClassDate = parseDateLocalYyyyMmDd(firstClassDateStr.value);
-    return scheduleChanges.some(
-        change => change.type === 'holiday' && isSameDay(firstClassDate, parseDateLocalYyyyMmDd(change.date)),
-    );
-});
-
 export interface PlannedClass {
     exercise: ExerciseData;
     start: Date;
@@ -81,7 +71,6 @@ export interface PlannedClass {
 const plannedClasses = computed<PlannedClass[]>(() => {
     if (
         firstClassDateStr.value === undefined ||
-        firstClassDateHoliday.value ||
         classStartTime.value === undefined ||
         classEndTime.value === undefined ||
         group.value === undefined
@@ -105,6 +94,8 @@ const plannedClasses = computed<PlannedClass[]>(() => {
     });
 });
 
+const eventConflicts = ref<EventConflict[]>([]);
+
 const plannedClassesNotContainedInSemester = computed<boolean>(() => {
     const lastClass = plannedClasses.value.at(-1);
     return lastClass !== undefined && lastClass.end.getTime() > parseDateLocalYyyyMmDd(semester.endDate).getTime();
@@ -119,10 +110,10 @@ async function generate() {
         return;
     }
 
-    const laboratoryGroupId = group.value.id;
+    eventConflicts.value = [];
 
-    const result = await apiPost<boolean>(apiUrl, {
-        laboratoryGroupId,
+    const conflicts = await apiPost<EventConflict[]>(apiUrl, {
+        laboratoryGroupId: group.value.id,
         classes: plannedClasses.value.map(plannedClass => ({
             exerciseId: plannedClass.exercise.id,
             startDate: formatDateLocalYyyyMmDdHhMm(plannedClass.start),
@@ -130,11 +121,16 @@ async function generate() {
         })),
     } satisfies LaboratoryClassCreateApiData);
 
-    if (result === undefined) {
+    if (conflicts === undefined) {
         return;
     }
 
-    emit('done');
+    if (conflicts.length === 0) {
+        emit('done');
+        return;
+    }
+
+    eventConflicts.value = conflicts;
 }
 
 const groupId = crypto.randomUUID();
@@ -142,7 +138,6 @@ const dateId = crypto.randomUUID();
 const startTimeId = crypto.randomUUID();
 const endTimeId = crypto.randomUUID();
 const repeatId = crypto.randomUUID();
-const dateFeedback = crypto.randomUUID();
 </script>
 
 <template>
@@ -161,15 +156,8 @@ const dateFeedback = crypto.randomUUID();
                 :max="semester.endDate"
                 type="date"
                 class="form-control"
-                :class="{
-                    'is-invalid': firstClassDateHoliday,
-                }"
-                :aria-describedby="firstClassDateHoliday ? dateFeedback : undefined"
                 required
             />
-            <div v-if="firstClassDateHoliday" :id="dateFeedback" class="invalid-feedback">
-                {{ translate('The date you selected is a holiday') }}
-            </div>
         </div>
 
         <div>
@@ -190,12 +178,17 @@ const dateFeedback = crypto.randomUUID();
         <div v-if="plannedClasses.length > 0">
             <h2 class="fs-6">{{ translate('Summary') }}</h2>
             <div class="vstack gap-2">
-                <PlannedClassCard v-for="(plannedClass, index) in plannedClasses" :key="index" :planned-class />
+                <PlannedClassCard
+                    v-for="(plannedClass, index) in plannedClasses"
+                    :key="index"
+                    :planned-class
+                    :conflicts="eventConflicts"
+                />
             </div>
             <p class="text-secondary mt-2 mb-0">
                 {{ translate('You can edit the classes later from the calendar') }}
             </p>
-            <p v-if="plannedClassesNotContainedInSemester" class="text-danger mt-2">
+            <p v-if="plannedClassesNotContainedInSemester" class="text-danger mt-2 mb-0">
                 {{ translate('The classes do not fit in the semester') }}
             </p>
         </div>
@@ -204,6 +197,10 @@ const dateFeedback = crypto.randomUUID();
             <button type="submit" class="btn btn-success" :disabled="cantGenerate">
                 {{ translate('Generate classes') }}
             </button>
+        </div>
+
+        <div v-if="eventConflicts.length > 0" class="text-center text-danger">
+            {{ translate('There are conflicts with holidays or other events') }}
         </div>
     </form>
 </template>

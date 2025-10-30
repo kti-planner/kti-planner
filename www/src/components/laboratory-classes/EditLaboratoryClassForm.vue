@@ -3,6 +3,7 @@ import { ref } from 'vue';
 import { langId } from '@components/frontend/lang';
 import { currentUser } from '@components/frontend/user';
 import { apiDelete, apiPatch } from '@components/api';
+import type { EventConflict } from '@components/calendar/types';
 import { formatClassroomName } from '@components/classrooms/types';
 import type { LaboratoryClassData, LaboratoryClassEditApiData } from '@components/laboratory-classes/types';
 import type { SemesterData } from '@components/semesters/types';
@@ -33,6 +34,8 @@ const translations = {
         'Teacher': 'Teacher',
         'Unknown [teacher]': 'Unknown',
         'Save': 'Save',
+        'The selected date is a holiday': 'The selected date is a holiday',
+        'There is another class during this time': 'There is another class during this time',
         'Delete class': 'Delete class',
     },
     'pl': {
@@ -46,6 +49,8 @@ const translations = {
         'Teacher': 'Nauczyciel',
         'Unknown [teacher]': 'Nieznany',
         'Save': 'Zapisz',
+        'The selected date is a holiday': 'Wybrana data jest dniem wolnym',
+        'There is another class during this time': 'W tym czasie odbywają się inne zajęcia',
         'Delete class': 'Usuń zajęcia',
     },
 };
@@ -62,26 +67,32 @@ const date = ref<string>(formatDateLocalYyyyMmDd(new Date(laboratoryClass.startD
 const startTime = ref<string>(formatDateLocalHhMm(new Date(laboratoryClass.startDate)));
 const endTime = ref<string>(formatDateLocalHhMm(new Date(laboratoryClass.endDate)));
 const teacher = ref<UserPublicData | null>(laboratoryClass.teacher);
+const eventConflict = ref<EventConflict | null>(null);
 
 async function saveLaboratoryClass() {
     if (!currentUser || !teacher.value) {
         return;
     }
 
-    const success = await apiPatch<boolean>(apiUrl, {
+    eventConflict.value = null;
+
+    const conflicts = await apiPatch<EventConflict[]>(apiUrl, {
         id: laboratoryClass.id,
         startDate: `${date.value}T${startTime.value}`,
         endDate: `${date.value}T${endTime.value}`,
         teacherId: teacher.value.id,
     } satisfies LaboratoryClassEditApiData);
 
-    if (success === undefined) {
+    if (conflicts === undefined) {
         return;
     }
 
-    if (success) {
+    if (conflicts.length === 0) {
         emit('submit');
+        return;
     }
+
+    eventConflict.value = conflicts[0]!;
 }
 
 async function doDelete() {
@@ -178,6 +189,14 @@ const teacherId = crypto.randomUUID();
             <ButtonWithConfirmationPopover class="btn btn-danger ms-4" @click="doDelete()">
                 {{ translate('Delete class') }}
             </ButtonWithConfirmationPopover>
+        </div>
+
+        <div v-if="eventConflict" class="text-center text-danger">
+            {{
+                eventConflict.type === 'holiday'
+                    ? translate('The selected date is a holiday')
+                    : translate('There is another class during this time')
+            }}
         </div>
     </form>
 </template>
