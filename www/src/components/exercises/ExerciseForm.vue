@@ -2,7 +2,7 @@
 import { computed, ref } from 'vue';
 import { langId } from '@components/frontend/lang';
 import { apiPatch, apiPost } from '@components/api';
-import type { ClassroomData } from '@components/classrooms/types';
+import { type ClassroomData, formatClassroomName } from '@components/classrooms/types';
 import type { ExerciseCreateApiData, ExerciseData, ExerciseEditApiData } from '@components/exercises/types';
 import type { SemesterData } from '@components/semesters/types';
 import type { SubjectData } from '@components/subjects/types';
@@ -22,7 +22,11 @@ const submitFailed = ref(false);
 
 const exerciseName = ref<string | undefined>(props.exercise?.name);
 const exerciseNumber = ref<number | undefined>(props.exercise?.exerciseNumber);
-const exerciseClassroomId = ref<string | undefined>(props.exercise?.classroom?.id);
+
+const exerciseClassroomId = ref<string | null | undefined>(
+    props.exercise?.classroom === null ? null : props.exercise?.classroom?.id,
+);
+
 const teacher = ref<UserPublicData | null>(props.exercise?.teacher ?? props.subject.teachers[0] ?? null);
 
 async function submit() {
@@ -126,6 +130,7 @@ const classroomId = crypto.randomUUID();
                 <option v-for="classroom in classrooms" :key="classroom.id" :value="classroom.id">
                     {{ classroom.name }}
                 </option>
+                <option :value="null">{{ formatClassroomName(null, langId) }}</option>
             </select>
             <a
                 href="/classrooms/"

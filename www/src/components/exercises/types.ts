@@ -15,7 +15,7 @@ export const exerciseCreateApiSchema = z.object({
     name: z.string().trim().nonempty(),
     exerciseNumber: z.number().int().min(0),
     subjectId: z.uuid(),
-    classroomId: z.uuid(),
+    classroomId: z.uuid().or(z.null()),
     teacherId: z.uuid(),
 });
 
@@ -25,7 +25,7 @@ export const exerciseEditApiSchema = z.object({
     id: z.uuid(),
     name: z.string().optional(),
     exerciseNumber: z.number().optional(),
-    classroomId: z.uuid().optional(),
+    classroomId: z.uuid().or(z.null()).optional(),
     teacherId: z.uuid().optional(),
 });
 

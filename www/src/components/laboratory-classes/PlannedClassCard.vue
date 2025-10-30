@@ -1,16 +1,15 @@
 <script setup lang="ts">
 import { langId } from '@components/frontend/lang';
+import { formatClassroomName } from '@components/classrooms/types';
 import { formatDateLocalHhMm, formatDateLocalYyyyMmDd } from '@components/utils';
 import type { PlannedClass } from '@components/laboratory-classes/GenerateClassesForm.vue';
 
 const translations = {
     'en': {
         'Unknown [teacher]': 'Unknown',
-        'Unknown [classroom]': 'Unknown',
     },
     'pl': {
         'Unknown [teacher]': 'Nieznany',
-        'Unknown [classroom]': 'Nieznana',
     },
 };
 
@@ -40,9 +39,7 @@ defineProps<{
             </div>
             <div>
                 <i class="bi bi-building-fill"></i>
-                <span class="ms-1">{{
-                    plannedClass.exercise.classroom?.name ?? translate('Unknown [classroom]')
-                }}</span>
+                <span class="ms-1">{{ formatClassroomName(plannedClass.exercise.classroom, langId) }}</span>
             </div>
         </div>
     </div>

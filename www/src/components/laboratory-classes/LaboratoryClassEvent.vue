@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { langId } from '@components/frontend/lang';
+import { formatClassroomName } from '@components/classrooms/types';
 import type { LaboratoryClassData } from '@components/laboratory-classes/types';
 import type { SubjectData } from '@components/subjects/types';
 
@@ -10,14 +11,12 @@ const translations = {
         'Teacher': 'Teacher',
         'Classroom': 'Classroom',
         'Unknown [teacher]': 'Unknown',
-        'Unknown [classroom]': 'Unknown',
     },
     'pl': {
         'Group': 'Grupa',
         'Teacher': 'Nauczyciel',
         'Classroom': 'Sala',
         'Unknown [teacher]': 'Nieznany',
-        'Unknown [classroom]': 'Nieznana',
     },
 };
 
@@ -38,7 +37,7 @@ const title = computed(
         `${laboratoryClass.exercise.name}\n` +
         `${translate('Group')}: ${laboratoryClass.laboratoryGroup.name}\n` +
         `${translate('Teacher')}: ${laboratoryClass.teacher?.name ?? translate('Unknown [teacher]')}\n` +
-        `${translate('Classroom')}: ${laboratoryClass.exercise.classroom?.name ?? translate('Unknown [classroom]')}`,
+        `${translate('Classroom')}: ${formatClassroomName(laboratoryClass.exercise.classroom, langId)}`,
 );
 </script>
 
@@ -61,7 +60,7 @@ const title = computed(
         </div>
         <div class="text-truncate">
             <i class="bi bi-building-fill"></i>
-            <span class="ms-1">{{ laboratoryClass.exercise.classroom?.name ?? translate('Unknown [classroom]') }}</span>
+            <span class="ms-1">{{ formatClassroomName(laboratoryClass.exercise.classroom, langId) }}</span>
         </div>
     </div>
 </template>

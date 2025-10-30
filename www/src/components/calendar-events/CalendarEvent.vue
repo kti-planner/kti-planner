@@ -2,19 +2,18 @@
 import { computed } from 'vue';
 import { langId } from '@components/frontend/lang';
 import type { CalendarEventData } from '@components/calendar-events/types';
+import { formatClassroomName } from '@components/classrooms/types';
 
 const translations = {
     'en': {
         'Teacher': 'Teacher',
         'Classroom': 'Classroom',
         'Unknown [teacher]': 'Unknown',
-        'Unknown [classroom]': 'Unknown',
     },
     'pl': {
         'Teacher': 'Nauczyciel',
         'Classroom': 'Sala',
         'Unknown [teacher]': 'Nieznany',
-        'Unknown [classroom]': 'Nieznana',
     },
 };
 
@@ -31,7 +30,7 @@ const title = computed(
     () =>
         `${calendarEvent.name}\n` +
         `${translate('Teacher')}: ${calendarEvent.user?.name ?? translate('Unknown [teacher]')}\n` +
-        `${translate('Classroom')}: ${calendarEvent.classroom?.name ?? translate('Unknown [classroom]')}`,
+        `${translate('Classroom')}: ${formatClassroomName(calendarEvent.classroom, langId)}`,
 );
 </script>
 
@@ -47,7 +46,7 @@ const title = computed(
         </div>
         <div class="text-truncate">
             <i class="bi bi-building-fill"></i>
-            <span class="ms-1">{{ calendarEvent.classroom?.name ?? translate('Unknown [classroom]') }}</span>
+            <span class="ms-1">{{ formatClassroomName(calendarEvent.classroom, langId) }}</span>
         </div>
     </div>
 </template>
