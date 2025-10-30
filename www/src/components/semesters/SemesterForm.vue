@@ -3,6 +3,7 @@ import { computed, ref } from 'vue';
 import { langId } from '@components/frontend/lang';
 import { apiDelete, apiPatch, apiPost } from '@components/api';
 import type { SemesterCreateApiData, SemesterData, SemesterEditApiData } from '@components/semesters/types';
+import ButtonWithConfirmationPopover from '@components/ButtonWithConfirmationPopover.vue';
 
 const props = defineProps<{
     semester?: SemesterData;
@@ -155,9 +156,9 @@ const endId = crypto.randomUUID();
         </div>
 
         <div v-if="isEditing" class="text-center">
-            <button type="button" class="btn btn-danger" @click="doDelete()">
+            <ButtonWithConfirmationPopover class="btn btn-danger" @click="doDelete()">
                 {{ translate('Delete semester') }}
-            </button>
+            </ButtonWithConfirmationPopover>
         </div>
 
         <div v-if="submitFailed" class="text-center text-danger">

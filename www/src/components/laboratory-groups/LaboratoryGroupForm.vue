@@ -7,6 +7,7 @@ import type {
     LaboratoryGroupData,
     LaboratoryGroupEditApiData,
 } from '@components/laboratory-groups/types';
+import ButtonWithConfirmationPopover from '@components/ButtonWithConfirmationPopover.vue';
 
 const props = defineProps<{
     group?: LaboratoryGroupData;
@@ -91,9 +92,9 @@ const nameId = crypto.randomUUID();
         </div>
 
         <div v-if="isEditing" class="text-center">
-            <button type="button" class="btn btn-danger" @click="doDelete()">
+            <ButtonWithConfirmationPopover class="btn btn-danger" @click="doDelete()">
                 {{ translate('Delete group') }}
-            </button>
+            </ButtonWithConfirmationPopover>
         </div>
 
         <div v-if="submitFailed" class="text-center text-danger">

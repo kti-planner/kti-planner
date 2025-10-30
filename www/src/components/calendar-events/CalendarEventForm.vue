@@ -12,6 +12,7 @@ import type {
 import { type ClassroomData, formatClassroomName } from '@components/classrooms/types';
 import type { SemesterData } from '@components/semesters/types';
 import { parseDateLocalYyyyMmDd } from '@components/utils';
+import ButtonWithConfirmationPopover from '@components/ButtonWithConfirmationPopover.vue';
 
 const props = defineProps<{
     semester: SemesterData;
@@ -276,9 +277,9 @@ const classroomInputId = crypto.randomUUID();
         </div>
 
         <div v-if="currentUser" class="text-center mt-3">
-            <button type="button" class="btn btn-danger" @click="doDelete()">
+            <ButtonWithConfirmationPopover class="btn btn-danger" @click="doDelete()">
                 {{ translate('Delete event') }}
-            </button>
+            </ButtonWithConfirmationPopover>
         </div>
     </form>
 </template>

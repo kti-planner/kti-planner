@@ -7,6 +7,7 @@ import type { ExerciseCreateApiData, ExerciseData, ExerciseEditApiData } from '@
 import type { SemesterData } from '@components/semesters/types';
 import type { SubjectData } from '@components/subjects/types';
 import type { UserPublicData } from '@components/users/types';
+import ButtonWithConfirmationPopover from '@components/ButtonWithConfirmationPopover.vue';
 import UserSelector from '@components/users/UserSelector.vue';
 
 const props = defineProps<{
@@ -161,9 +162,9 @@ const classroomId = crypto.randomUUID();
         </div>
 
         <div v-if="isEditing" class="text-center">
-            <button type="button" class="btn btn-danger" @click="doDelete()">
+            <ButtonWithConfirmationPopover class="btn btn-danger" @click="doDelete()">
                 {{ translate('Delete exercise') }}
-            </button>
+            </ButtonWithConfirmationPopover>
         </div>
 
         <div v-if="submitFailed" class="text-center text-danger">

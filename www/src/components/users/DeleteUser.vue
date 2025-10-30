@@ -2,6 +2,7 @@
 import { langId } from '@components/frontend/lang';
 import { apiDelete } from '@components/api';
 import type { UserDetailsData } from '@components/users/types';
+import ButtonWithConfirmationPopover from '@components/ButtonWithConfirmationPopover.vue';
 
 const { user } = defineProps<{
     user: UserDetailsData;
@@ -30,5 +31,7 @@ async function doDelete() {
 </script>
 
 <template>
-    <button type="button" class="btn btn-danger" @click="doDelete()">{{ translate('Delete user') }}</button>
+    <ButtonWithConfirmationPopover class="btn btn-danger" @click="doDelete()">
+        {{ translate('Delete user') }}
+    </ButtonWithConfirmationPopover>
 </template>

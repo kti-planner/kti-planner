@@ -9,6 +9,7 @@ import type { SemesterData } from '@components/semesters/types';
 import type { SubjectData } from '@components/subjects/types';
 import type { UserPublicData } from '@components/users/types';
 import { formatDateLocalHhMm, formatDateLocalYyyyMmDd, parseDateLocalYyyyMmDd } from '@components/utils';
+import ButtonWithConfirmationPopover from '@components/ButtonWithConfirmationPopover.vue';
 import UserSelector from '@components/users/UserSelector.vue';
 
 const { laboratoryClass, semester, apiUrl } = defineProps<{
@@ -177,9 +178,9 @@ const teacherId = crypto.randomUUID();
         </div>
 
         <div v-if="currentUser" class="text-center">
-            <button type="button" class="btn btn-danger" @click="doDelete()">
+            <ButtonWithConfirmationPopover class="btn btn-danger" @click="doDelete()">
                 {{ translate('Delete class') }}
-            </button>
+            </ButtonWithConfirmationPopover>
         </div>
     </form>
 </template>

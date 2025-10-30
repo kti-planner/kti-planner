@@ -6,6 +6,7 @@ import type { SemesterData } from '@components/semesters/types';
 import type { SubjectCreateApiData, SubjectData, SubjectEditApiData } from '@components/subjects/types';
 import type { UserPublicData } from '@components/users/types';
 import { toHyphenatedLowercase } from '@components/utils';
+import ButtonWithConfirmationPopover from '@components/ButtonWithConfirmationPopover.vue';
 import UserMultiSelector from '@components/users/UserMultiSelector.vue';
 
 const props = defineProps<{
@@ -138,9 +139,9 @@ const teachersId = crypto.randomUUID();
         </div>
 
         <div v-if="isEditing" class="text-center">
-            <button type="button" class="btn btn-danger" @click="doDelete()">
+            <ButtonWithConfirmationPopover class="btn btn-danger" @click="doDelete()">
                 {{ translate('Delete subject') }}
-            </button>
+            </ButtonWithConfirmationPopover>
         </div>
 
         <div v-if="submitFailed" class="text-center text-danger">
