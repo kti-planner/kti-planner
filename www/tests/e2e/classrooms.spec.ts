@@ -82,9 +82,9 @@ test.describe('API fetch tests', () => {
     test('Logged-out user cannot create new classroom', async ({ page }) => {
         await page.goto('/classrooms/');
 
-        const response = await page.request.post('/classroms/api/', {
+        const response = await page.request.post('/classrooms/api/', {
             data: {
-                name: 'Test classrom',
+                name: 'Test classroom',
             },
         });
 

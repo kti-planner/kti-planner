@@ -278,7 +278,7 @@ test('Password reset button is visible for admin user', async ({ page }) => {
     await expect(page.getByRole('button', { name: 'Reset password' })).toBeVisible();
 });
 
-test('Can generate random password when reseting user password', async ({ page }) => {
+test('Can generate random password when resetting user password', async ({ page }) => {
     await page.goto('/users/feeaa186-3d69-4801-a580-88be10d53553/');
     await loginAsAdmin(page);
 
@@ -576,7 +576,7 @@ test.describe('API fetch tests', () => {
         expect(response.headers()['content-type']).toBe('image/png');
     });
 
-    test('Cannot access non-existant user email image', async ({ page }) => {
+    test('Cannot access non-existent user email image', async ({ page }) => {
         await page.goto('/');
 
         const response = await page.request.get('/users/email/c393c524-453c-4b02-bfad-5114fe828333/');
