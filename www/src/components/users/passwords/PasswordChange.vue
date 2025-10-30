@@ -20,11 +20,9 @@ const modalId = crypto.randomUUID();
 </script>
 
 <template>
-    <div class="mx-auto">
-        <button type="button" class="btn btn-success" data-bs-toggle="modal" :data-bs-target="`#${modalId}`">
-            {{ translate('Change password') }}
-        </button>
-    </div>
+    <button type="button" class="btn btn-success" data-bs-toggle="modal" :data-bs-target="`#${modalId}`">
+        {{ translate('Change password') }}
+    </button>
 
     <Modal :id="modalId">
         <template #header>

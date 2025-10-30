@@ -1,5 +1,5 @@
-import { computed, isRef, type Ref, toValue } from 'vue';
-import { type MaybeRefOrGetter, useCloned, useFetch, type UseFetchOptions, type UseFetchReturn } from '@vueuse/core';
+import { computed, isRef, toValue } from 'vue';
+import { type MaybeRefOrGetter, useFetch, type UseFetchOptions, type UseFetchReturn } from '@vueuse/core';
 
 type NonUndefined = NonNullable<unknown> | null;
 
@@ -39,7 +39,7 @@ function prepareUrl(resource: string | URL, params?: URLSearchParams): URL {
     return url;
 }
 
-/** Makes a GET requrest to the API and returns `undefined` if there was en error. */
+/** Makes a GET request to the API and returns `undefined` if there was en error. */
 export async function apiGet<T extends NonUndefined = NonUndefined>(
     resource: string | URL,
     params?: URLSearchParams,
@@ -92,20 +92,20 @@ function parseApiArgs(resource: string | URL, arg1: NonUndefined, arg2: unknown)
     }
 }
 
-/** Makes a POST requrest to the API and returns `undefined` if there was en error. */
+/** Makes a POST request to the API and returns `undefined` if there was en error. */
 export async function apiPost<T extends NonUndefined = NonUndefined>(
     resource: string | URL,
     body: NonUndefined,
 ): Promise<NoInfer<T> | undefined>;
 
-/** Makes a POST requrest to the API and returns `undefined` if there was en error. */
+/** Makes a POST request to the API and returns `undefined` if there was en error. */
 export async function apiPost<T extends NonUndefined = NonUndefined>(
     resource: string | URL,
     params: URLSearchParams,
     body: NonUndefined,
 ): Promise<NoInfer<T> | undefined>;
 
-/** Makes a POST requrest to the API and returns `undefined` if there was en error. */
+/** Makes a POST request to the API and returns `undefined` if there was en error. */
 export async function apiPost<T extends NonUndefined = NonUndefined>(
     resource: string | URL,
     arg1: NonUndefined,
@@ -120,20 +120,20 @@ export async function apiPost<T extends NonUndefined = NonUndefined>(
     });
 }
 
-/** Makes a PATCH requrest to the API and returns `undefined` if there was en error. */
+/** Makes a PATCH request to the API and returns `undefined` if there was en error. */
 export async function apiPatch<T extends NonUndefined = NonUndefined>(
     resource: string | URL,
     body: NonUndefined,
 ): Promise<NoInfer<T> | undefined>;
 
-/** Makes a PATCH requrest to the API and returns `undefined` if there was en error. */
+/** Makes a PATCH request to the API and returns `undefined` if there was en error. */
 export async function apiPatch<T extends NonUndefined = NonUndefined>(
     resource: string | URL,
     params: URLSearchParams,
     body: NonUndefined,
 ): Promise<NoInfer<T> | undefined>;
 
-/** Makes a PATCH requrest to the API and returns `undefined` if there was en error. */
+/** Makes a PATCH request to the API and returns `undefined` if there was en error. */
 export async function apiPatch<T extends NonUndefined = NonUndefined>(
     resource: string | URL,
     arg1: NonUndefined,
@@ -148,20 +148,20 @@ export async function apiPatch<T extends NonUndefined = NonUndefined>(
     });
 }
 
-/** Makes a PUT requrest to the API and returns `undefined` if there was en error. */
+/** Makes a PUT request to the API and returns `undefined` if there was en error. */
 export async function apiPut<T extends NonUndefined = NonUndefined>(
     resource: string | URL,
     body: NonUndefined,
 ): Promise<NoInfer<T> | undefined>;
 
-/** Makes a PUT requrest to the API and returns `undefined` if there was en error. */
+/** Makes a PUT request to the API and returns `undefined` if there was en error. */
 export async function apiPut<T extends NonUndefined = NonUndefined>(
     resource: string | URL,
     params: URLSearchParams,
     body: NonUndefined,
 ): Promise<NoInfer<T> | undefined>;
 
-/** Makes a PUT requrest to the API and returns `undefined` if there was en error. */
+/** Makes a PUT request to the API and returns `undefined` if there was en error. */
 export async function apiPut<T extends NonUndefined = NonUndefined>(
     resource: string | URL,
     arg1: NonUndefined,
@@ -176,53 +176,32 @@ export async function apiPut<T extends NonUndefined = NonUndefined>(
     });
 }
 
-interface UseApiFetchCommonOptions extends UseFetchOptions {
-    resetDataOnError?: boolean;
+/** Makes a DELETE request to the API and returns `undefined` if there was en error. */
+export async function apiDelete<T extends NonUndefined = NonUndefined>(
+    resource: string | URL,
+    params?: URLSearchParams,
+): Promise<NoInfer<T> | undefined> {
+    const url = prepareUrl(resource, params);
+
+    return await apiFetch<T>(url, {
+        method: 'DELETE',
+    });
 }
 
-export interface UseApiFetchNotClonedOptions extends UseApiFetchCommonOptions {
-    /** Returns the data as a cloned `Ref` instead of a `ShallowRef`. Useful for optimistic updates. */
-    clone?: false;
-}
+type UseApiFetchOptions = UseFetchOptions;
 
-export interface UseApiFetchClonedOptions extends UseApiFetchCommonOptions {
-    /** Returns the data as a cloned `Ref` instead of a `ShallowRef`. Useful for optimistic updates. */
-    clone: true;
-}
-
-export type UseApiFetchOptions = UseApiFetchNotClonedOptions | UseApiFetchClonedOptions;
-
-export interface UseFetchReturnCloned<T> extends UseFetchReturn<T> {
-    data: Ref<T | null, T | null>;
-}
-
-export type UseApiFetchReturnNonCloned<T> = UseFetchReturn<T> & PromiseLike<UseFetchReturn<T>>;
-
-export type UseApiFetchReturnCloned<T> = UseFetchReturnCloned<T> & PromiseLike<UseFetchReturnCloned<T>>;
-
-export type UseApiFetchReturn<T> = UseApiFetchReturnNonCloned<T> | UseApiFetchReturnCloned<T>;
+export type UseApiFetchReturn<T> = UseFetchReturn<T>;
 
 export function useApiFetch<T>(
     url: MaybeRefOrGetter<string | URL>,
     params: MaybeRefOrGetter<URLSearchParams>,
-    useFetchOptions?: UseApiFetchNotClonedOptions,
-): UseApiFetchReturnNonCloned<T>;
+    useFetchOptions?: UseApiFetchOptions,
+): UseApiFetchReturn<T>;
 
 export function useApiFetch<T>(
     url: MaybeRefOrGetter<string | URL>,
-    params: MaybeRefOrGetter<URLSearchParams>,
-    useFetchOptions?: UseApiFetchClonedOptions,
-): UseApiFetchReturnCloned<T>;
-
-export function useApiFetch<T>(
-    url: MaybeRefOrGetter<string | URL>,
-    useFetchOptions?: UseApiFetchNotClonedOptions,
-): UseApiFetchReturnNonCloned<T>;
-
-export function useApiFetch<T>(
-    url: MaybeRefOrGetter<string | URL>,
-    useFetchOptions?: UseApiFetchClonedOptions,
-): UseApiFetchReturnCloned<T>;
+    useFetchOptions?: UseApiFetchOptions,
+): UseApiFetchReturn<T>;
 
 export function useApiFetch<T>(
     url: MaybeRefOrGetter<string | URL>,
@@ -238,7 +217,6 @@ export function useApiFetch<T>(
         computed(() => prepareUrl(toValue(url), toValue(params)).toString()),
         {
             refetch: true,
-            updateDataOnError: options?.resetDataOnError === true,
             onFetchError(ctx) {
                 const isAbortError = ctx.error instanceof DOMException && ctx.error.name === 'AbortError';
 
@@ -246,21 +224,11 @@ export function useApiFetch<T>(
                     console.error(`API: useApiFetch failed with error:\n`, ctx.error);
                 }
 
-                if (options?.resetDataOnError === true) {
-                    ctx.data = null;
-                }
-
                 return ctx;
             },
             ...options,
         },
     ).json<T>();
-
-    if (options?.clone === true) {
-        const { cloned } = useCloned(result.data);
-
-        result.data = cloned;
-    }
 
     return result;
 }

@@ -2,13 +2,14 @@
 import { ref } from 'vue';
 import { langId } from '@components/frontend/lang';
 import { currentUser } from '@components/frontend/user';
-import { apiPatch } from '@components/api';
+import { apiDelete, apiPatch } from '@components/api';
 import { formatClassroomName } from '@components/classrooms/types';
 import type { LaboratoryClassData, LaboratoryClassEditApiData } from '@components/laboratory-classes/types';
 import type { SemesterData } from '@components/semesters/types';
 import type { SubjectData } from '@components/subjects/types';
 import type { UserPublicData } from '@components/users/types';
 import { formatDateLocalHhMm, formatDateLocalYyyyMmDd, parseDateLocalYyyyMmDd } from '@components/utils';
+import ButtonWithConfirmationPopover from '@components/ButtonWithConfirmationPopover.vue';
 import UserSelector from '@components/users/UserSelector.vue';
 
 const { laboratoryClass, semester, apiUrl } = defineProps<{
@@ -32,6 +33,7 @@ const translations = {
         'Teacher': 'Teacher',
         'Unknown [teacher]': 'Unknown',
         'Save': 'Save',
+        'Delete class': 'Delete class',
     },
     'pl': {
         'Subject': 'Przedmiot',
@@ -44,6 +46,7 @@ const translations = {
         'Teacher': 'Nauczyciel',
         'Unknown [teacher]': 'Nieznany',
         'Save': 'Zapisz',
+        'Delete class': 'Usuń zajęcia',
     },
 };
 
@@ -77,6 +80,14 @@ async function saveLaboratoryClass() {
     }
 
     if (success) {
+        emit('submit');
+    }
+}
+
+async function doDelete() {
+    const result = await apiDelete<boolean>(apiUrl, new URLSearchParams({ id: laboratoryClass.id }));
+
+    if (result) {
         emit('submit');
     }
 }
@@ -164,6 +175,9 @@ const teacherId = crypto.randomUUID();
             <button type="submit" class="btn btn-success">
                 {{ translate('Save') }}
             </button>
+            <ButtonWithConfirmationPopover class="btn btn-danger ms-4" @click="doDelete()">
+                {{ translate('Delete class') }}
+            </ButtonWithConfirmationPopover>
         </div>
     </form>
 </template>

@@ -1,5 +1,5 @@
 import { expect } from 'playwright/test';
-import { loginAsAdmin, test } from './fixtures';
+import { loginAsAdmin, loginAsTeacher, test } from './fixtures';
 
 test('Can view and select groups', async ({ page }) => {
     await page.goto('/semesters/2025-winter/subjects/sieci-komputerowe---informatyka-sem.-v/');
@@ -62,6 +62,19 @@ test('Can edit groups and prevent duplicates', async ({ page }) => {
     await expect(page.getByText('A group with this name already exists')).toBeVisible();
 });
 
+test('Can delete laboratory group', async ({ page }) => {
+    await page.goto('/semesters/2025-winter/subjects/sieci-komputerowe---informatyka-sem.-v/');
+    await loginAsTeacher(page);
+
+    await page.getByRole('button', { name: 'Edit groups' }).click();
+    await page.locator('.list-group-item', { hasText: '1A' }).hover();
+    await page.locator('.list-group-item', { hasText: '1A' }).locator('button').click();
+    await page.getByRole('button', { name: 'Delete group' }).click();
+    await page.getByRole('button', { name: 'Yes' }).click();
+
+    await expect(page.locator('label', { hasText: '1A' })).not.toBeVisible();
+});
+
 test.describe('API fetch tests', () => {
     test('Logged-out user cannot create new laboratory group', async ({ page }) => {
         await page.goto('/semesters/2025-winter/subjects/sieci-komputerowe---informatyka-sem.-v/');
@@ -101,7 +114,7 @@ test.describe('API fetch tests', () => {
             '/semesters/2025-winter/subjects/sieci-komputerowe---informatyka-sem.-v/api/laboratory-groups/',
             {
                 data: {
-                    id: 'bb9309c2-6a67-4f65-bcc9-fa9547d9ffe9',
+                    id: 'c9854621-e713-4b3f-b442-8e8cbdb20b57',
                     name: 'Updated Group',
                 },
             },
@@ -118,8 +131,41 @@ test.describe('API fetch tests', () => {
             '/semesters/2025-winter/subjects/sieci-komputerowe---informatyka-sem.-v/api/laboratory-groups/',
             {
                 data: {
-                    id: 'bb9309c2-6a67-4f65-bcc9-fa9547d9ffe9',
+                    id: 'c9854621-e713-4b3f-b442-8e8cbdb20b57',
                     name: 'Updated Group',
+                },
+            },
+        );
+
+        expect(response.status()).toBe(200);
+    });
+
+    test('Logged-out user cannot delete laboratory group', async ({ page }) => {
+        await page.goto('/semesters/2025-winter/subjects/sieci-komputerowe---informatyka-sem.-v/');
+
+        const response = await page.request.delete(
+            '/semesters/2025-winter/subjects/sieci-komputerowe---informatyka-sem.-v/api/laboratory-groups/',
+            {
+                data: null,
+                params: {
+                    id: 'c9854621-e713-4b3f-b442-8e8cbdb20b57',
+                },
+            },
+        );
+
+        expect(response.status()).toBe(404);
+    });
+
+    test('Logged-in user can delete laboratory group', async ({ page }) => {
+        await page.goto('/semesters/2025-winter/subjects/sieci-komputerowe---informatyka-sem.-v/');
+        await loginAsAdmin(page);
+
+        const response = await page.request.delete(
+            '/semesters/2025-winter/subjects/sieci-komputerowe---informatyka-sem.-v/api/laboratory-groups/',
+            {
+                data: null,
+                params: {
+                    id: 'c9854621-e713-4b3f-b442-8e8cbdb20b57',
                 },
             },
         );

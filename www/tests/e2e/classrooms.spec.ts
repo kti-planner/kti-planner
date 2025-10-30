@@ -1,5 +1,5 @@
 import { expect } from 'playwright/test';
-import { loginAsAdmin, test } from './fixtures';
+import { loginAsAdmin, loginAsTeacher, test } from './fixtures';
 
 test('Cannot access classrooms list when logged-out', async ({ page }) => {
     await page.goto('/classrooms/');
@@ -78,13 +78,27 @@ test('Can edit classroom and prevent duplicate classroom', async ({ page }) => {
     await page.getByRole('button', { name: 'Close' }).click();
 });
 
+test('Can delete classroom', async ({ page }) => {
+    await page.goto('/classrooms/');
+    await loginAsTeacher(page);
+
+    await page.locator('.list-group-item', { hasText: 'EA 142' }).hover();
+    await page.locator('.list-group-item', { hasText: 'EA 142' }).locator('button').click();
+    await page.getByRole('button', { name: 'Delete classroom' }).click();
+    await page.getByRole('button', { name: 'Yes' }).click();
+
+    await page.waitForURL('/classrooms/');
+
+    await expect(page.locator('.list-group-item', { hasText: 'EA 142' })).not.toBeVisible();
+});
+
 test.describe('API fetch tests', () => {
     test('Logged-out user cannot create new classroom', async ({ page }) => {
         await page.goto('/classrooms/');
 
-        const response = await page.request.post('/classroms/api/', {
+        const response = await page.request.post('/classrooms/api/', {
             data: {
-                name: 'Test classrom',
+                name: 'Test classroom',
             },
         });
 
@@ -125,6 +139,33 @@ test.describe('API fetch tests', () => {
             data: {
                 id: '8689d55d-508e-4f5d-aef8-d5052f220d20',
                 name: 'Updated Classroom',
+            },
+        });
+
+        expect(response.status()).toBe(200);
+    });
+
+    test('Logged-out user cannot delete classroom', async ({ page }) => {
+        await page.goto('/classrooms/');
+
+        const response = await page.request.delete('/classrooms/api/', {
+            data: null,
+            params: {
+                id: '8689d55d-508e-4f5d-aef8-d5052f220d20',
+            },
+        });
+
+        expect(response.status()).toBe(404);
+    });
+
+    test('Logged-in user can delete classroom', async ({ page }) => {
+        await page.goto('/classrooms/');
+        await loginAsAdmin(page);
+
+        const response = await page.request.delete('/classrooms/api/', {
+            data: null,
+            params: {
+                id: '8689d55d-508e-4f5d-aef8-d5052f220d20',
             },
         });
 

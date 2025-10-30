@@ -128,3 +128,38 @@ export const PATCH: APIRoute = async ({ locals }) => {
 
     return Response.json(true);
 };
+
+export const DELETE: APIRoute = async ({ locals, url, params }) => {
+    const { user } = locals;
+    const { semesterSlug } = params;
+
+    if (!user) {
+        return Response.json(null, { status: 404 });
+    }
+
+    if (semesterSlug === undefined) {
+        return new Response(null, { status: 404 });
+    }
+
+    const semester = await Semester.fetchBySlug(semesterSlug);
+
+    if (!semester) {
+        return new Response(null, { status: 404 });
+    }
+
+    const id = url.searchParams.get('id');
+
+    if (id === null) {
+        return Response.json(null, { status: 400 });
+    }
+
+    const calendarEvent = await CalendarEvent.fetch(id);
+
+    if (!calendarEvent || calendarEvent.semesterId !== semester.id) {
+        return Response.json(null, { status: 404 });
+    }
+
+    await calendarEvent.delete();
+
+    return Response.json(true, { status: 200 });
+};

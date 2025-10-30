@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import { langId } from '@components/frontend/lang';
-import { apiPatch, apiPost } from '@components/api';
+import { apiDelete, apiPatch, apiPost } from '@components/api';
 import { type ClassroomData, formatClassroomName } from '@components/classrooms/types';
 import type { ExerciseCreateApiData, ExerciseData, ExerciseEditApiData } from '@components/exercises/types';
 import type { SemesterData } from '@components/semesters/types';
 import type { SubjectData } from '@components/subjects/types';
 import type { UserPublicData } from '@components/users/types';
+import ButtonWithConfirmationPopover from '@components/ButtonWithConfirmationPopover.vue';
 import UserSelector from '@components/users/UserSelector.vue';
 
 const props = defineProps<{
@@ -74,6 +75,21 @@ async function submit() {
     }
 }
 
+async function doDelete() {
+    if (!props.exercise?.id) {
+        return;
+    }
+
+    const result = await apiDelete<boolean>(
+        '/semesters/api/exercises/',
+        new URLSearchParams({ id: props.exercise.id }),
+    );
+
+    if (result) {
+        window.location.assign(`/semesters/${props.semester.slug}/subjects/${props.subject.slug}/`);
+    }
+}
+
 const translations = {
     'en': {
         'Exercise number': 'Exercise number',
@@ -84,6 +100,7 @@ const translations = {
         'Add': 'Add',
         'Exercise with this name or number already exists.': 'Exercise with this name or number already exists.',
         'Manage classrooms': 'Manage classrooms',
+        'Delete exercise': 'Delete exercise',
     },
     'pl': {
         'Exercise number': 'Numer ćwiczenia',
@@ -94,6 +111,7 @@ const translations = {
         'Add': 'Dodaj',
         'Exercise with this name or number already exists.': 'Ćwiczenie o podanej nazwie lub numerze już istnieje.',
         'Manage classrooms': 'Zarządzaj salami',
+        'Delete exercise': 'Usuń ćwiczenie',
     },
 };
 
@@ -140,7 +158,12 @@ const classroomId = crypto.randomUUID();
         </div>
 
         <div class="text-center">
-            <button type="submit" class="btn btn-success">{{ translate(isEditing ? 'Save' : 'Add') }}</button>
+            <button type="submit" class="btn btn-success">
+                {{ translate(isEditing ? 'Save' : 'Add') }}
+            </button>
+            <ButtonWithConfirmationPopover v-if="isEditing" class="btn btn-danger ms-4" @click="doDelete()">
+                {{ translate('Delete exercise') }}
+            </ButtonWithConfirmationPopover>
         </div>
 
         <div v-if="submitFailed" class="text-center text-danger">

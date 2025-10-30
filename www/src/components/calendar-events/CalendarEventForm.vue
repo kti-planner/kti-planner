@@ -2,7 +2,7 @@
 import { computed, ref, watch } from 'vue';
 import { langId } from '@components/frontend/lang';
 import { currentUser } from '@components/frontend/user';
-import { apiPatch, apiPost } from '@components/api';
+import { apiDelete, apiPatch, apiPost } from '@components/api';
 import { CalendarEventRepeatState } from '@components/calendar-events/state';
 import type {
     CalendarEventCreateApiData,
@@ -12,6 +12,7 @@ import type {
 import { type ClassroomData, formatClassroomName } from '@components/classrooms/types';
 import type { SemesterData } from '@components/semesters/types';
 import { parseDateLocalYyyyMmDd } from '@components/utils';
+import ButtonWithConfirmationPopover from '@components/ButtonWithConfirmationPopover.vue';
 
 const props = defineProps<{
     semester: SemesterData;
@@ -66,6 +67,21 @@ async function submit() {
     }
 }
 
+async function doDelete() {
+    if (!props.calendarEvent.id) {
+        return;
+    }
+
+    const result = await apiDelete<boolean>(
+        `/semesters/${props.semester.slug}/api/calendar-events/`,
+        new URLSearchParams({ id: props.calendarEvent.id }),
+    );
+
+    if (result) {
+        emit('submit');
+    }
+}
+
 const translations = {
     'en': {
         'Name': 'Name',
@@ -87,6 +103,7 @@ const translations = {
         'Last event': 'Last event',
         'Repeat amount': 'Repeat amount',
         'The events do not fit in the semester': 'The events do not fit in the semester',
+        'Delete event': 'Delete event',
     },
     'pl': {
         'Name': 'Nazwa',
@@ -108,6 +125,7 @@ const translations = {
         'Last event': 'Ostatnie wydarzenie',
         'Repeat amount': 'Ilość powtórzeń',
         'The events do not fit in the semester': 'Wydarzenia nie mieszczą się w semestrze',
+        'Delete event': 'Usuń wydarzenie',
     },
 };
 
@@ -262,7 +280,12 @@ const classroomInputId = crypto.randomUUID();
         </div>
 
         <div v-if="currentUser" class="text-center">
-            <button type="submit" class="btn btn-success">{{ translate(isEditing ? 'Save' : 'Add') }}</button>
+            <button type="submit" class="btn btn-success">
+                {{ translate(isEditing ? 'Save' : 'Add') }}
+            </button>
+            <ButtonWithConfirmationPopover v-if="isEditing" class="btn btn-danger ms-4" @click="doDelete()">
+                {{ translate('Delete event') }}
+            </ButtonWithConfirmationPopover>
         </div>
     </form>
 </template>

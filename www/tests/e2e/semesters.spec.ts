@@ -1,5 +1,5 @@
 import { expect } from 'playwright/test';
-import { loginAsAdmin, test } from './fixtures';
+import { loginAsAdmin, loginAsTeacher, test } from './fixtures';
 
 test('Can access semester list', async ({ page }) => {
     await page.goto('/semesters/');
@@ -141,6 +141,34 @@ test('Can edit semester and prevent duplicate semester', async ({ page }) => {
     await expect(page.locator('body')).toContainText('1.10.2069 - 15.02.2070');
 });
 
+test('Can delete empty semester', async ({ page }) => {
+    await page.goto('/semesters/');
+    await loginAsTeacher(page);
+
+    await page.getByRole('link', { name: 'Winter semester 2023/2024' }).click();
+    await page.getByRole('button', { name: 'Edit semester' }).click();
+    await page.getByRole('button', { name: 'Delete semester' }).click();
+    await page.getByRole('button', { name: 'Yes' }).click();
+
+    await page.waitForURL('/semesters/');
+    await expect(page.getByRole('link', { name: 'Winter semester 2023/2024' })).not.toBeVisible();
+});
+
+test("Can't delete non-empty semester", async ({ page }) => {
+    await page.goto('/semesters/');
+    await loginAsTeacher(page);
+
+    await page.getByRole('link', { name: 'Winter semester 2025/2026' }).click();
+    await page.getByRole('button', { name: 'Edit semester' }).click();
+    await page.getByRole('button', { name: 'Delete semester' }).click();
+    await page.getByRole('button', { name: 'Yes' }).click();
+
+    await expect(page.getByText('The semester cannot be deleted because it contains subjects')).toBeVisible();
+
+    await page.goto('/semesters/');
+    await expect(page.getByRole('link', { name: 'Winter semester 2025/2026' })).toBeVisible();
+});
+
 test.describe('API fetch tests', () => {
     test('Logged-out user cannot create new semester', async ({ page }) => {
         await page.goto('/semesters/');
@@ -200,6 +228,33 @@ test.describe('API fetch tests', () => {
                 type: 'summer',
                 startDate: '2069-06-01',
                 endDate: '2069-09-30',
+            },
+        });
+
+        expect(response.status()).toBe(200);
+    });
+
+    test('Logged-out user cannot delete semester', async ({ page }) => {
+        await page.goto('/semesters/');
+
+        const response = await page.request.delete('/semesters/api/semesters/', {
+            data: null,
+            params: {
+                id: 'b2805b48-3d24-4169-8f67-88561345ee99',
+            },
+        });
+
+        expect(response.status()).toBe(404);
+    });
+
+    test('Logged-in user can delete semester', async ({ page }) => {
+        await page.goto('/semesters/');
+        await loginAsAdmin(page);
+
+        const response = await page.request.delete('/semesters/api/semesters/', {
+            data: null,
+            params: {
+                id: 'b2805b48-3d24-4169-8f67-88561345ee99',
             },
         });
 
