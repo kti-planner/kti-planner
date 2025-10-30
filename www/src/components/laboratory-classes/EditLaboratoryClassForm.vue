@@ -3,6 +3,7 @@ import { ref } from 'vue';
 import { langId } from '@components/frontend/lang';
 import { currentUser } from '@components/frontend/user';
 import { apiPatch } from '@components/api';
+import type { EventConflict } from '@components/calendar/types';
 import { formatClassroomName } from '@components/classrooms/types';
 import type { LaboratoryClassData, LaboratoryClassEditApiData } from '@components/laboratory-classes/types';
 import type { SemesterData } from '@components/semesters/types';
@@ -65,19 +66,20 @@ async function saveLaboratoryClass() {
         return;
     }
 
-    const success = await apiPatch<boolean>(apiUrl, {
+    const conflicts = await apiPatch<EventConflict[]>(apiUrl, {
         id: laboratoryClass.id,
         startDate: `${date.value}T${startTime.value}`,
         endDate: `${date.value}T${endTime.value}`,
         teacherId: teacher.value.id,
     } satisfies LaboratoryClassEditApiData);
 
-    if (success === undefined) {
+    if (conflicts === undefined) {
         return;
     }
 
-    if (success) {
+    if (conflicts.length === 0) {
         emit('submit');
+        return;
     }
 }
 

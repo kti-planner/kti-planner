@@ -1,9 +1,12 @@
 import assert from 'node:assert';
 import type { APIRoute } from 'astro';
+import { checkForEventConflicts, type EventSlot } from '@backend/calendar-checks';
+import { CalendarEvent } from '@backend/calendar-events';
 import { Classroom } from '@backend/classroom';
 import { Exercise } from '@backend/exercise';
 import { LaboratoryClass, type LaboratoryClassCreateData, makeLaboratoryClassData } from '@backend/laboratory-class';
 import { LaboratoryGroup } from '@backend/laboratory-group';
+import { Semester } from '@backend/semester';
 import { User } from '@backend/user';
 import {
     laboratoryClassCreateApiSchema,
@@ -58,9 +61,19 @@ export const GET: APIRoute = async ({ params, url }) => {
 
 export const POST: APIRoute = async ({ locals, params }) => {
     const { jsonData, user } = locals;
+    const { semesterSlug } = params;
 
     if (!user) {
         return Response.json(null, { status: 404 });
+    }
+
+    if (semesterSlug === undefined) {
+        return new Response(null, { status: 404 });
+    }
+
+    const semester = await Semester.fetchBySlug(semesterSlug);
+    if (!semester) {
+        return new Response(null, { status: 404 });
     }
 
     const subject = await getSubjectFromParams(params);
@@ -80,6 +93,26 @@ export const POST: APIRoute = async ({ locals, params }) => {
 
     const exercises = await Exercise.fetchAllFromSubject(subject);
     const teachers = await subject.getTeachers();
+    const scheduleChanges = await semester.getScheduleChanges();
+    const laboratoryClasses = await LaboratoryClass.fetchAllFromSubject(subject);
+    const calendarEvents = await CalendarEvent.fetchAllFromSemester(semester);
+
+    const slots = data.classes.map<EventSlot>(laboratoryClass => {
+        const exercise = exercises.find(exercise => exercise.id === laboratoryClass.exerciseId);
+        assert(exercise);
+
+        return {
+            id: null,
+            classroomId: exercise.classroomId,
+            startDate: laboratoryClass.startDate,
+            endDate: laboratoryClass.endDate,
+        };
+    });
+
+    const conflicts = checkForEventConflicts(slots, scheduleChanges, laboratoryClasses, exercises, calendarEvents);
+    if (conflicts.length > 0) {
+        return Response.json(conflicts);
+    }
 
     const createData: LaboratoryClassCreateData[] = [];
 
@@ -105,13 +138,28 @@ export const POST: APIRoute = async ({ locals, params }) => {
 
     await Promise.all(createData.map(createDatum => LaboratoryClass.create(createDatum)));
 
-    return Response.json(true, { status: 201 });
+    return Response.json([]);
 };
 
-export const PATCH: APIRoute = async ({ locals }) => {
+export const PATCH: APIRoute = async ({ locals, params }) => {
     const { jsonData, user } = locals;
+    const { semesterSlug } = params;
 
     if (!user) {
+        return Response.json(null, { status: 404 });
+    }
+
+    if (semesterSlug === undefined) {
+        return new Response(null, { status: 404 });
+    }
+
+    const semester = await Semester.fetchBySlug(semesterSlug);
+    if (!semester) {
+        return new Response(null, { status: 404 });
+    }
+
+    const subject = await getSubjectFromParams(params);
+    if (!subject) {
         return Response.json(null, { status: 404 });
     }
 
@@ -133,11 +181,37 @@ export const PATCH: APIRoute = async ({ locals }) => {
         return Response.json(null, { status: 400 });
     }
 
+    const scheduleChanges = await semester.getScheduleChanges();
+    const laboratoryClasses = await LaboratoryClass.fetchAllFromSubject(subject);
+    const exercises = await Exercise.fetchAllFromSubject(subject);
+    const calendarEvents = await CalendarEvent.fetchAllFromSemester(semester);
+    const exercise = exercises.find(exercise => laboratoryClass.exerciseId === exercise.id);
+    assert(exercise);
+
+    const conflicts = checkForEventConflicts(
+        [
+            {
+                id: laboratoryClass.id,
+                classroomId: exercise.classroomId,
+                startDate: data.startDate ?? laboratoryClass.startDate,
+                endDate: data.endDate ?? laboratoryClass.endDate,
+            },
+        ],
+        scheduleChanges,
+        laboratoryClasses,
+        exercises,
+        calendarEvents,
+    );
+
+    if (conflicts.length > 0) {
+        return Response.json(conflicts);
+    }
+
     await laboratoryClass.edit({
         startDate: data.startDate,
         endDate: data.endDate,
         teacher,
     });
 
-    return Response.json(true, { status: 200 });
+    return Response.json([]);
 };

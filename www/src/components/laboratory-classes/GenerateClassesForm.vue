@@ -2,6 +2,7 @@
 import { computed, ref } from 'vue';
 import { langId } from '@components/frontend/lang';
 import { apiPost } from '@components/api';
+import type { EventConflict } from '@components/calendar/types';
 import type { ExerciseData } from '@components/exercises/types';
 import { getNextDayOfTheWeekOccurrence } from '@components/laboratory-classes/dates';
 import type { LaboratoryGroupData } from '@components/laboratory-groups/types';
@@ -106,7 +107,7 @@ async function generate() {
 
     const laboratoryGroupId = group.value.id;
 
-    const result = await apiPost<boolean>(apiUrl, {
+    const conflicts = await apiPost<EventConflict[]>(apiUrl, {
         laboratoryGroupId,
         classes: plannedClasses.value.map(plannedClass => ({
             exerciseId: plannedClass.exercise.id,
@@ -115,11 +116,14 @@ async function generate() {
         })),
     });
 
-    if (result === undefined) {
+    if (conflicts === undefined) {
         return;
     }
 
-    emit('done');
+    if (conflicts.length === 0) {
+        emit('done');
+        return;
+    }
 }
 
 const groupId = crypto.randomUUID();

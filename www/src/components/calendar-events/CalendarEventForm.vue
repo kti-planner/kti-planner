@@ -3,6 +3,7 @@ import { computed, ref, watch } from 'vue';
 import { langId } from '@components/frontend/lang';
 import { currentUser } from '@components/frontend/user';
 import { apiPatch, apiPost } from '@components/api';
+import type { EventConflict } from '@components/calendar/types';
 import { CalendarEventRepeatState } from '@components/calendar-events/state';
 import type {
     CalendarEventCreateApiData,
@@ -42,14 +43,14 @@ async function submit() {
         return;
     }
 
-    const success =
+    const conflicts =
         props.calendarEvent?.id === undefined
-            ? await apiPost<boolean>(`/semesters/${props.semester.slug}/api/calendar-events/`, {
+            ? await apiPost<EventConflict[]>(`/semesters/${props.semester.slug}/api/calendar-events/`, {
                   name: name.value,
                   classroomId: classroomId.value,
                   durations: repeatOptions.value.generateDurations(startTime.value, endTime.value),
               } satisfies CalendarEventCreateApiData)
-            : await apiPatch<boolean>(`/semesters/${props.semester.slug}/api/calendar-events/`, {
+            : await apiPatch<EventConflict[]>(`/semesters/${props.semester.slug}/api/calendar-events/`, {
                   id: props.calendarEvent.id,
                   name: name.value,
                   classroomId: classroomId.value,
@@ -57,12 +58,13 @@ async function submit() {
                   endDate: `${date.value}T${endTime.value}`,
               } satisfies CalendarEventEditApiData);
 
-    if (success === undefined) {
+    if (conflicts === undefined) {
         return;
     }
 
-    if (success) {
+    if (conflicts.length === 0) {
         emit('submit');
+        return;
     }
 }
 
