@@ -121,7 +121,7 @@ const endId = crypto.randomUUID();
 </script>
 
 <template>
-    <form class="vstack gap-3 mx-auto" style="max-width: 500px" @submit.prevent="submit">
+    <form class="vstack gap-2 mx-auto" style="max-width: 500px" @submit.prevent="submit">
         <div>
             <label :for="typeId" class="form-label">{{ translate('Semester type') }}</label>
             <select :id="typeId" v-model="type" class="form-select" required>
@@ -151,7 +151,7 @@ const endId = crypto.randomUUID();
             </a>
         </div>
 
-        <div class="text-center">
+        <div class="text-center mt-2">
             <button type="submit" class="btn btn-success">
                 {{ translate(semester ? 'Save' : 'Add') }}
             </button>

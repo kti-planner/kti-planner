@@ -235,7 +235,7 @@ function handleLaboratoryClassSubmit() {
                 />
             </Modal>
         </div>
-        <div class="col-12 col-lg-3 order-1 order-lg-2 d-flex gap-3 flex-column-reverse flex-lg-column">
+        <div class="col-12 col-lg-3 order-1 order-lg-2 d-flex gap-2 flex-column-reverse flex-lg-column">
             <button
                 type="button"
                 class="btn btn-success mx-auto"

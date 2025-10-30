@@ -72,13 +72,13 @@ const nameId = crypto.randomUUID();
 </script>
 
 <template>
-    <form class="vstack gap-3 mx-auto" style="max-width: 500px" @submit.prevent="submit">
+    <form class="vstack gap-2 mx-auto" style="max-width: 500px" @submit.prevent="submit">
         <div>
             <label :for="nameId" class="form-label">{{ translate('Classroom name') }}</label>
             <input :id="nameId" v-model="name" type="text" class="form-control" autofocus required />
         </div>
 
-        <div class="text-center">
+        <div class="text-center mt-2">
             <button type="submit" class="btn btn-success">
                 {{ translate(classroom ? 'Save' : 'Add') }}
             </button>

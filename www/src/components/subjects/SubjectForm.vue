@@ -108,7 +108,7 @@ const teachersId = crypto.randomUUID();
 </script>
 
 <template>
-    <form class="vstack gap-3 mx-auto" style="max-width: 500px" @submit.prevent="submit">
+    <form class="vstack gap-2 mx-auto" style="max-width: 500px" @submit.prevent="submit">
         <div>
             <label :for="nameId" class="form-label">{{ translate('Subject name') }}</label>
             <input :id="nameId" v-model="subjectName" type="text" class="form-control" required autofocus />
@@ -134,7 +134,7 @@ const teachersId = crypto.randomUUID();
             <UserMultiSelector :id="teachersId" v-model="teachers" :options="allUsers" required />
         </div>
 
-        <div class="text-center">
+        <div class="text-center mt-2">
             <button type="submit" class="btn btn-success">
                 {{ translate(isEditing ? 'Save' : 'Add') }}
             </button>

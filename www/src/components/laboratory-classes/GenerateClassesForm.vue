@@ -140,7 +140,7 @@ const repeatId = crypto.randomUUID();
 </script>
 
 <template>
-    <form class="vstack gap-3 mx-auto" style="max-width: 500px" @submit.prevent="generate">
+    <form class="vstack gap-2 mx-auto" style="max-width: 500px" @submit.prevent="generate">
         <div>
             <label :for="groupId">{{ translate('Laboratory group') }}</label>
             <LaboratoryGroupSelector :id="groupId" v-model="group" :options="laboratoryGroups" />
@@ -192,7 +192,7 @@ const repeatId = crypto.randomUUID();
             </p>
         </div>
 
-        <div class="text-center">
+        <div class="text-center mt-2">
             <button type="submit" class="btn btn-success" :disabled="cantGenerate">
                 {{ translate('Generate classes') }}
             </button>

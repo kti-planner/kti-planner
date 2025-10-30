@@ -45,7 +45,7 @@ const modalId = crypto.randomUUID();
         <template #header> {{ translate('Edit user') }} {{ user.name }} </template>
         <UserForm :user />
         <template #footer>
-            <div class="mx-auto d-flex flex-column align-items-center gap-3">
+            <div class="mx-auto d-flex flex-column align-items-center gap-2">
                 <PasswordChange v-if="currentUser?.id === user.id" />
                 <PasswordReset v-else-if="currentUser?.role === 'admin'" :user />
                 <DeleteUser v-if="currentUser?.id !== user.id && currentUser?.role === 'admin'" :user />

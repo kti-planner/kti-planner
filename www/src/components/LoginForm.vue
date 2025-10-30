@@ -53,7 +53,7 @@ const passwordId = crypto.randomUUID();
 </script>
 
 <template>
-    <form class="vstack gap-3 mx-auto" style="max-width: 500px" @submit.prevent="submit">
+    <form class="vstack gap-2 mx-auto" style="max-width: 500px" @submit.prevent="submit">
         <div>
             <label :for="emailId" class="form-label">Email</label>
             <input :id="emailId" v-model="email" type="email" class="form-control" placeholder="Email" required />
@@ -71,7 +71,7 @@ const passwordId = crypto.randomUUID();
             />
         </div>
 
-        <div class="text-center">
+        <div class="text-center mt-2">
             <button type="submit" class="btn btn-success">{{ translate('Sign in') }}</button>
         </div>
 

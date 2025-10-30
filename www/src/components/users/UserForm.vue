@@ -95,7 +95,7 @@ const roleId = crypto.randomUUID();
 </script>
 
 <template>
-    <form class="vstack gap-3 mx-auto" style="max-width: 500px" @submit.prevent="submit">
+    <form class="vstack gap-2 mx-auto" style="max-width: 500px" @submit.prevent="submit">
         <div>
             <label :for="nameId" class="form-label">{{ translate('Name') }}</label>
             <input
@@ -143,7 +143,7 @@ const roleId = crypto.randomUUID();
             </select>
         </div>
 
-        <div class="text-center">
+        <div class="text-center mt-2">
             <button type="submit" class="btn btn-success">{{ translate(isEditing ? 'Save' : 'Add') }}</button>
         </div>
 

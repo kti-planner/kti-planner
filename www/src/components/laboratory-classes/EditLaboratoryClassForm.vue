@@ -110,7 +110,7 @@ const teacherId = crypto.randomUUID();
 </script>
 
 <template>
-    <form class="vstack gap-3 mx-auto" @submit.prevent="saveLaboratoryClass">
+    <form class="vstack gap-2 mx-auto" @submit.prevent="saveLaboratoryClass">
         <div v-if="showSubject">
             {{ translate('Subject') }}:
             <br />
@@ -182,7 +182,7 @@ const teacherId = crypto.randomUUID();
             {{ teacher?.name ?? translate('Unknown [teacher]') }}
         </div>
 
-        <div v-if="currentUser" class="text-center">
+        <div v-if="currentUser" class="text-center mt-2">
             <button type="submit" class="btn btn-success">
                 {{ translate('Save') }}
             </button>
