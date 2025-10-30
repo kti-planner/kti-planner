@@ -121,15 +121,14 @@ async function generate() {
 
     const laboratoryGroupId = group.value.id;
 
-    const result = await apiPost<boolean>(
-        apiUrl,
-        plannedClasses.value.map(plannedClass => ({
+    const result = await apiPost<boolean>(apiUrl, {
+        laboratoryGroupId,
+        classes: plannedClasses.value.map(plannedClass => ({
             exerciseId: plannedClass.exercise.id,
-            laboratoryGroupId,
             startDate: formatDateLocalYyyyMmDdHhMm(plannedClass.start),
             endDate: formatDateLocalYyyyMmDdHhMm(plannedClass.end),
-        })) satisfies LaboratoryClassCreateApiData,
-    );
+        })),
+    } satisfies LaboratoryClassCreateApiData);
 
     if (result === undefined) {
         return;
