@@ -175,10 +175,7 @@ const teacherId = crypto.randomUUID();
             <button type="submit" class="btn btn-success">
                 {{ translate('Save') }}
             </button>
-        </div>
-
-        <div v-if="currentUser" class="text-center">
-            <ButtonWithConfirmationPopover class="btn btn-danger" @click="doDelete()">
+            <ButtonWithConfirmationPopover class="btn btn-danger ms-4" @click="doDelete()">
                 {{ translate('Delete class') }}
             </ButtonWithConfirmationPopover>
         </div>

@@ -89,10 +89,7 @@ const nameId = crypto.randomUUID();
             <button type="submit" class="btn btn-success">
                 {{ translate(group ? 'Save' : 'Add') }}
             </button>
-        </div>
-
-        <div v-if="isEditing" class="text-center">
-            <ButtonWithConfirmationPopover class="btn btn-danger" @click="doDelete()">
+            <ButtonWithConfirmationPopover v-if="isEditing" class="btn btn-danger ms-4" @click="doDelete()">
                 {{ translate('Delete group') }}
             </ButtonWithConfirmationPopover>
         </div>
