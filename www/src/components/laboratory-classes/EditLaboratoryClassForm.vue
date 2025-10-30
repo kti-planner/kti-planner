@@ -33,6 +33,8 @@ const translations = {
         'Teacher': 'Teacher',
         'Unknown [teacher]': 'Unknown',
         'Save': 'Save',
+        'The selected date is a holiday': 'The selected date is a holiday',
+        'There is another class during this time': 'There is another class during this time',
     },
     'pl': {
         'Subject': 'Przedmiot',
@@ -45,6 +47,8 @@ const translations = {
         'Teacher': 'Nauczyciel',
         'Unknown [teacher]': 'Nieznany',
         'Save': 'Zapisz',
+        'The selected date is a holiday': 'Wybrana data jest dniem wolnym',
+        'There is another class during this time': 'W tym czasie odbywają się inne zajęcia',
     },
 };
 
@@ -60,11 +64,14 @@ const date = ref<string>(formatDateLocalYyyyMmDd(new Date(laboratoryClass.startD
 const startTime = ref<string>(formatDateLocalHhMm(new Date(laboratoryClass.startDate)));
 const endTime = ref<string>(formatDateLocalHhMm(new Date(laboratoryClass.endDate)));
 const teacher = ref<UserPublicData | null>(laboratoryClass.teacher);
+const eventConflict = ref<EventConflict | null>(null);
 
 async function saveLaboratoryClass() {
     if (!currentUser || !teacher.value) {
         return;
     }
+
+    eventConflict.value = null;
 
     const conflicts = await apiPatch<EventConflict[]>(apiUrl, {
         id: laboratoryClass.id,
@@ -81,6 +88,8 @@ async function saveLaboratoryClass() {
         emit('submit');
         return;
     }
+
+    eventConflict.value = conflicts[0]!;
 }
 
 const dateId = crypto.randomUUID();
@@ -161,6 +170,14 @@ const teacherId = crypto.randomUUID();
             <br />
             {{ teacher?.name ?? translate('Unknown [teacher]') }}
         </div>
+
+        <p v-if="eventConflict" class="text-danger mt-2 mb-0">
+            {{
+                eventConflict.type === 'holiday'
+                    ? translate('The selected date is a holiday')
+                    : translate('There is another class during this time')
+            }}
+        </p>
 
         <div v-if="currentUser" class="text-center">
             <button type="submit" class="btn btn-success">

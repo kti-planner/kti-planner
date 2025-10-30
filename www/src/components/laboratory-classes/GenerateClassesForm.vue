@@ -22,6 +22,7 @@ const translations = {
         'Generate classes': 'Generate classes',
         'You can edit the classes later from the calendar': 'You can edit the classes later from the calendar',
         'The classes do not fit in the semester': 'The classes do not fit in the semester',
+        'There are conflicts with holidays or other events': 'There are conflicts with holidays or other events',
     },
     'pl': {
         'Laboratory group': 'Grupa laboratoryjna',
@@ -33,6 +34,7 @@ const translations = {
         'Generate classes': 'Wygeneruj zajęcia',
         'You can edit the classes later from the calendar': 'Możesz później edytować te zajęcia w kalendarzu',
         'The classes do not fit in the semester': 'Zajęcia nie mieszczą się w semestrze',
+        'There are conflicts with holidays or other events': 'Są konflikty z dniami wolnymi lub innymi zajęciami',
     },
 };
 
@@ -91,6 +93,8 @@ const plannedClasses = computed<PlannedClass[]>(() => {
     });
 });
 
+const eventConflicts = ref<EventConflict[]>([]);
+
 const plannedClassesNotContainedInSemester = computed<boolean>(() => {
     const lastClass = plannedClasses.value.at(-1);
     return lastClass !== undefined && lastClass.end.getTime() > parseDateLocalYyyyMmDd(semester.endDate).getTime();
@@ -105,10 +109,10 @@ async function generate() {
         return;
     }
 
-    const laboratoryGroupId = group.value.id;
+    eventConflicts.value = [];
 
     const conflicts = await apiPost<EventConflict[]>(apiUrl, {
-        laboratoryGroupId,
+        laboratoryGroupId: group.value.id,
         classes: plannedClasses.value.map(plannedClass => ({
             exerciseId: plannedClass.exercise.id,
             startDate: formatDateLocalYyyyMmDdHhMm(plannedClass.start),
@@ -124,6 +128,8 @@ async function generate() {
         emit('done');
         return;
     }
+
+    eventConflicts.value = conflicts;
 }
 
 const groupId = crypto.randomUUID();
@@ -171,13 +177,21 @@ const repeatId = crypto.randomUUID();
         <div v-if="plannedClasses.length > 0">
             <h2 class="fs-6">{{ translate('Summary') }}</h2>
             <div class="vstack gap-2">
-                <PlannedClassCard v-for="(plannedClass, index) in plannedClasses" :key="index" :planned-class />
+                <PlannedClassCard
+                    v-for="(plannedClass, index) in plannedClasses"
+                    :key="index"
+                    :planned-class
+                    :conflicts="eventConflicts"
+                />
             </div>
             <p class="text-secondary mt-2 mb-0">
                 {{ translate('You can edit the classes later from the calendar') }}
             </p>
-            <p v-if="plannedClassesNotContainedInSemester" class="text-danger mt-2">
+            <p v-if="plannedClassesNotContainedInSemester" class="text-danger mt-2 mb-0">
                 {{ translate('The classes do not fit in the semester') }}
+            </p>
+            <p v-if="eventConflicts.length > 0" class="text-danger mt-2 mb-0">
+                {{ translate('There are conflicts with holidays or other events') }}
             </p>
         </div>
 
