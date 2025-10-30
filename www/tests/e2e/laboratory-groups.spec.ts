@@ -1,5 +1,5 @@
 import { expect } from 'playwright/test';
-import { loginAsAdmin, test } from './fixtures';
+import { loginAsAdmin, loginAsTeacher, test } from './fixtures';
 
 test('Can view and select groups', async ({ page }) => {
     await page.goto('/semesters/2025-winter/subjects/sieci-komputerowe---informatyka-sem.-v/');
@@ -60,6 +60,19 @@ test('Can edit groups and prevent duplicates', async ({ page }) => {
     await page.getByRole('textbox', { name: 'Group name' }).fill('7A');
     await page.getByRole('button', { name: 'Save', exact: true }).click();
     await expect(page.getByText('A group with this name already exists')).toBeVisible();
+});
+
+test('Can delete laboratory group', async ({ page }) => {
+    await page.goto('/semesters/2025-winter/subjects/sieci-komputerowe---informatyka-sem.-v/');
+    await loginAsTeacher(page);
+
+    await page.getByRole('button', { name: 'Edit groups' }).click();
+    await page.locator('.list-group-item', { hasText: '1A' }).hover();
+    await page.locator('.list-group-item', { hasText: '1A' }).locator('button').click();
+    await page.getByRole('button', { name: 'Delete group' }).click();
+    await page.getByRole('button', { name: 'Yes' }).click();
+
+    await expect(page.locator('label', { hasText: '1A' })).not.toBeVisible();
 });
 
 test.describe('API fetch tests', () => {

@@ -1,5 +1,5 @@
 import { expect } from 'playwright/test';
-import { loginAsAdmin, test } from './fixtures';
+import { loginAsAdmin, loginAsTeacher, test } from './fixtures';
 
 test('Cannot access classrooms list when logged-out', async ({ page }) => {
     await page.goto('/classrooms/');
@@ -76,6 +76,22 @@ test('Can edit classroom and prevent duplicate classroom', async ({ page }) => {
     );
 
     await page.getByRole('button', { name: 'Close' }).click();
+});
+
+test('Can delete subject', async ({ page }) => {
+    await page.goto('/classrooms/');
+    await loginAsTeacher(page);
+
+    await page.locator('.list-group-item', { hasText: 'EA 142' }).hover();
+    await page.locator('.list-group-item', { hasText: 'EA 142' }).locator('button').click();
+    await page.getByRole('button', { name: 'Delete classroom' }).click();
+    await page.getByRole('button', { name: 'Yes' }).click();
+
+    await page.waitForURL('/semesters/2024-summer/');
+
+    await expect(
+        page.getByRole('link', { name: 'Lokalne sieci bezprzewodowe - Informatyka sem. VI' }),
+    ).not.toBeVisible();
 });
 
 test.describe('API fetch tests', () => {

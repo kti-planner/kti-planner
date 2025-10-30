@@ -256,6 +256,20 @@ test('Can edit user data and prevent duplicate user as teacher', async ({ page }
     await expect(page.locator('body')).toContainText('Role: Teacher');
 });
 
+test('Can delete user', async ({ page }) => {
+    await page.goto('/users/');
+    await loginAsAdmin(page);
+
+    await page.getByRole('link', { name: 'Jan Kowalski' }).click();
+    await page.getByRole('button', { name: 'Edit user' }).click();
+    await page.getByRole('button', { name: 'Delete user' }).click();
+    await page.getByRole('button', { name: 'Yes' }).click();
+
+    await page.waitForURL('/users/');
+
+    await expect(page.getByRole('link', { name: 'Jan Kowalski' })).not.toBeVisible();
+});
+
 test('Password reset button is hidden for non-admin user', async ({ page }) => {
     await page.goto('/profile/');
     await loginAsTeacher(page);

@@ -1,5 +1,5 @@
 import { expect } from 'playwright/test';
-import { loginAsAdmin, test } from './fixtures';
+import { loginAsAdmin, loginAsTeacher, test } from './fixtures';
 
 test('Can access exercises list', async ({ page }) => {
     await page.goto('/semesters/2024-summer/subjects/lokalne-sieci-bezprzewodowe---informatyka-sem.-vi/');
@@ -183,6 +183,20 @@ test('Can edit exercise and prevent duplicate exercise', async ({ page }) => {
 
     await expect(page.locator('.breadcrumb')).toContainText('Wirtualne sieci lokalne (VLAN)');
     await expect(page.locator('body')).toContainText('Wirtualne sieci lokalne (VLAN)');
+});
+
+test('Can delete exercise', async ({ page }) => {
+    await page.goto('/semesters/2024-winter/subjects/sieci-komputerowe---informatyka-sem.-v/');
+    await loginAsTeacher(page);
+
+    await page.getByRole('link', { name: 'IPv6 cz. II' }).click();
+    await page.getByRole('button', { name: 'Edit exercise' }).click();
+    await page.getByRole('button', { name: 'Delete exercise' }).click();
+    await page.getByRole('button', { name: 'Yes' }).click();
+
+    await page.waitForURL('/semesters/2024-winter/subjects/sieci-komputerowe---informatyka-sem.-v/');
+
+    await expect(page.getByRole('link', { name: 'IPv6 cz. II' })).not.toBeVisible();
 });
 
 test.describe('API fetch tests', () => {
