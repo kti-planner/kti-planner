@@ -1,0 +1,24 @@
+---
+import Layout from '@layouts/Layout.astro';
+
+const { langId } = Astro.locals;
+
+const translations = {
+    'en': {
+        'Page not found.': 'Page not found.',
+    },
+    'pl': {
+        'Page not found.': 'Strona nie została znaleziona.',
+    },
+};
+
+function translate(text: keyof (typeof translations)[LangId]): string {
+    return translations[langId][text];
+}
+
+Astro.response.status = 404;
+---
+
+<Layout breadcrumbs={[]}>
+    <h1 class="text-center fs-3">{translate('Page not found.')}</h1>
+</Layout>
