@@ -30,7 +30,8 @@ const loginParams = makeLoginNextParam(Astro.url);
 
 const initials = user.name
     .split(' ')
-    .map(word => word.charAt(0).toUpperCase())
+    .filter(word => word.startsWith(word.charAt(0).toUpperCase()))
+    .map(word => word.charAt(0))
     .join('');
 ---
 
