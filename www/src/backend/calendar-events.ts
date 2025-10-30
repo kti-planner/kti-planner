@@ -118,6 +118,10 @@ export class CalendarEvent {
             [this.id, this.name, this.classroomId, this.startDate, this.endDate],
         );
     }
+
+    async delete(): Promise<void> {
+        await db.query('DELETE FROM calendar_events WHERE id = $1', [this.id]);
+    }
 }
 
 export function makeCalendarEventData(
