@@ -171,18 +171,18 @@ const teacherId = crypto.randomUUID();
             {{ teacher?.name ?? translate('Unknown [teacher]') }}
         </div>
 
-        <p v-if="eventConflict" class="text-danger mt-2 mb-0">
+        <div v-if="currentUser" class="text-center">
+            <button type="submit" class="btn btn-success">
+                {{ translate('Save') }}
+            </button>
+        </div>
+
+        <div v-if="eventConflict" class="text-center text-danger">
             {{
                 eventConflict.type === 'holiday'
                     ? translate('The selected date is a holiday')
                     : translate('There is another class during this time')
             }}
-        </p>
-
-        <div v-if="currentUser" class="text-center">
-            <button type="submit" class="btn btn-success">
-                {{ translate('Save') }}
-            </button>
         </div>
     </form>
 </template>

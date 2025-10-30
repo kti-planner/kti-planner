@@ -190,15 +190,16 @@ const repeatId = crypto.randomUUID();
             <p v-if="plannedClassesNotContainedInSemester" class="text-danger mt-2 mb-0">
                 {{ translate('The classes do not fit in the semester') }}
             </p>
-            <p v-if="eventConflicts.length > 0" class="text-danger mt-2 mb-0">
-                {{ translate('There are conflicts with holidays or other events') }}
-            </p>
         </div>
 
         <div class="text-center">
             <button type="submit" class="btn btn-success" :disabled="cantGenerate">
                 {{ translate('Generate classes') }}
             </button>
+        </div>
+
+        <div v-if="eventConflicts.length > 0" class="text-center text-danger">
+            {{ translate('There are conflicts with holidays or other events') }}
         </div>
     </form>
 </template>
