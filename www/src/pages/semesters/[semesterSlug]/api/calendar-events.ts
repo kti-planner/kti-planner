@@ -40,10 +40,7 @@ export const GET: APIRoute = async ({ params, url }) => {
                     return null;
                 }
 
-                if (
-                    classroomFilter.length > 0 &&
-                    (calendarEvent.classroomId === null || !classroomFilter.includes(calendarEvent.classroomId))
-                ) {
+                if (classroomFilter.length > 0 && !classroomFilter.includes(String(calendarEvent.classroomId))) {
                     return null;
                 }
 
