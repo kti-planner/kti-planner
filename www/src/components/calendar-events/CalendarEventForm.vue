@@ -147,7 +147,7 @@ const classroomInputId = crypto.randomUUID();
 </script>
 
 <template>
-    <form class="vstack gap-3 mx-auto" style="max-width: 500px" @submit.prevent="submit">
+    <form class="vstack gap-2 mx-auto" style="max-width: 500px" @submit.prevent="submit">
         <template v-if="currentUser">
             <div>
                 <label :for="dateId" class="form-label">{{ translate('Date') }}</label>
@@ -279,7 +279,7 @@ const classroomInputId = crypto.randomUUID();
             {{ formatClassroomName(calendarEvent.classroom, langId) }}
         </div>
 
-        <div v-if="currentUser" class="text-center">
+        <div v-if="currentUser" class="text-center mt-2">
             <button type="submit" class="btn btn-success">
                 {{ translate(isEditing ? 'Save' : 'Add') }}
             </button>

@@ -98,7 +98,7 @@ const subjectId = crypto.randomUUID();
 </script>
 
 <template>
-    <form class="vstack gap-3 mx-auto" style="max-width: 500px" @submit.prevent="submit">
+    <form class="vstack gap-2 mx-auto" style="max-width: 500px" @submit.prevent="submit">
         <div>
             {{ translate('Subject will be copied along with all its:') }}
             <ul>
@@ -135,7 +135,7 @@ const subjectId = crypto.randomUUID();
             </p>
         </div>
 
-        <div class="text-center">
+        <div class="text-center mt-2">
             <button type="submit" class="btn btn-success">{{ translate('Copy') }}</button>
         </div>
 
