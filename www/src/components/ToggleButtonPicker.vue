@@ -1,5 +1,5 @@
 <script setup lang="ts" generic="T extends { id: string }">
-import { ref, useId, watchEffect } from 'vue';
+import { ref, watchEffect } from 'vue';
 
 const model = defineModel<T[]>({ required: true });
 
@@ -16,7 +16,7 @@ watchEffect(() => {
         .filter(option => selectedIds.value.has(option.id));
 });
 
-const toggleBtnId = useId();
+const toggleBtnId = crypto.randomUUID();
 </script>
 
 <template>
