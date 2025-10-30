@@ -56,7 +56,7 @@ const newRepeatedId = crypto.randomUUID();
 </script>
 
 <template>
-    <form class="vstack gap-3 mx-auto" style="max-width: 500px" @submit.prevent="submit">
+    <form class="vstack gap-2 mx-auto" style="max-width: 500px" @submit.prevent="submit">
         <div>
             <label :for="currentId" class="form-label">{{ translate('Current password') }}</label>
             <PasswordInputField
@@ -87,7 +87,7 @@ const newRepeatedId = crypto.randomUUID();
             />
         </div>
 
-        <div class="text-center">
+        <div class="text-center mt-2">
             <button type="submit" class="btn btn-success">{{ translate('Save') }}</button>
         </div>
 
