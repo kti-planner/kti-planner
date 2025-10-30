@@ -29,6 +29,47 @@ test('Can plan classes without selecting a group beforehand', async ({ page }) =
     await expect(page.locator('p', { hasText: '11:15 - 13:00' })).toBeVisible();
 });
 
+test('Cannot plan classes when there are conflicts', async ({ page }) => {
+    await page.goto('/semesters/2025-winter/subjects/sieci-komputerowe---informatyka-sem.-v//');
+    await loginAsTeacher(page);
+
+    await page.getByRole('button', { name: 'Plan classes' }).click();
+    await page.getByRole('combobox', { name: 'Laboratory group' }).selectOption('4A');
+    await page.getByRole('textbox', { name: 'First class date' }).fill('2025-10-01');
+    await page.getByRole('textbox', { name: 'Class start time' }).fill('11:15');
+    await page.getByRole('textbox', { name: 'Class end time' }).fill('13:00');
+
+    await expect(page.getByText('2025-10-01 11:15 - 13:00')).toBeVisible();
+    await expect(page.getByText('2025-10-08 11:15 - 13:00')).toBeVisible();
+    await expect(page.getByText('2025-10-15 11:15 - 13:00')).toBeVisible();
+    await expect(page.getByText('2025-10-22 11:15 - 13:00')).toBeVisible();
+
+    await page.getByRole('button', { name: 'Generate classes' }).click();
+
+    await expect(page.getByText('There are conflicts with holidays or other events')).toBeVisible();
+    await expect(page.getByText('This is a holiday')).toBeVisible();
+});
+
+test('Cannot plan classes when there are holidays', async ({ page }) => {
+    await page.goto('/semesters/2025-winter/subjects/sieci-komputerowe---informatyka-sem.-v//');
+    await loginAsTeacher(page);
+
+    await page.getByRole('button', { name: 'Plan classes' }).click();
+    await page.getByRole('combobox', { name: 'Laboratory group' }).selectOption('4A');
+    await page.getByRole('textbox', { name: 'First class date' }).fill('2025-10-31');
+    await page.getByRole('textbox', { name: 'Class start time' }).fill('11:15');
+    await page.getByRole('textbox', { name: 'Class end time' }).fill('13:00');
+
+    await expect(page.getByText('2025-10-31 11:15 - 13:00')).toBeVisible();
+    await expect(page.getByText('2025-11-07 11:15 - 13:00')).toBeVisible();
+    await expect(page.getByText('2025-11-14 11:15 - 13:00')).toBeVisible();
+    await expect(page.getByText('2025-11-21 11:15 - 13:00')).toBeVisible();
+
+    await page.getByRole('button', { name: 'Generate classes' }).click();
+
+    await expect(page.getByText('There are conflicts with holidays or other events')).toBeVisible();
+});
+
 test('Can plan classes with a group selected beforehand', async ({ page }) => {
     await page.goto('/semesters/2024-summer/subjects/lokalne-sieci-bezprzewodowe---informatyka-sem.-vi/');
     await loginAsTeacher(page);
@@ -52,16 +93,6 @@ test('Can plan classes with a group selected beforehand', async ({ page }) => {
 
     await expect(page.getByText('19 – 25 May 2025')).toBeVisible();
     await expect(page.locator('p', { hasText: '11:15 - 13:00' })).toBeVisible();
-});
-
-test('Cannot generate classes starting at a holiday', async ({ page }) => {
-    await page.goto('/semesters/2024-summer/subjects/lokalne-sieci-bezprzewodowe---informatyka-sem.-vi/');
-    await loginAsTeacher(page);
-
-    await page.getByRole('button', { name: 'Plan classes' }).click();
-    await page.getByRole('combobox', { name: 'Laboratory group' }).selectOption('5A');
-    await page.getByRole('textbox', { name: 'First class date' }).fill('2025-04-18');
-    await expect(page.getByText('The date you selected is a holiday')).toBeVisible();
 });
 
 test('Can plan classes with two weeks between each one', async ({ page }) => {
@@ -140,4 +171,29 @@ test('Can edit class time when logged in', async ({ page }) => {
 
     await expect(page.locator('.calendar-wrapper a').filter({ hasText: '11:15 - 13:00' })).not.toBeVisible();
     await expect(page.locator('.calendar-wrapper a').filter({ hasText: '13:15 - 15:00' })).toBeVisible();
+});
+
+test('Cannot edit class time to another class', async ({ page }) => {
+    await page.goto('/semesters/2025-winter/subjects/sieci-komputerowe---informatyka-sem.-v/');
+    await loginAsTeacher(page);
+
+    await page.locator('.calendar-wrapper a').filter({ hasText: '11:15 - 13:00' }).click();
+
+    await expect(page.getByRole('heading', { name: 'Edit class' })).toBeVisible();
+
+    await expect(page.getByRole('link', { name: 'Diagnostyka sieci IPv4', exact: true })).toBeVisible();
+    await expect(page.getByText('Laboratory group: 1A')).toBeVisible();
+    await expect(page.getByText('Classroom: EA 142')).toBeVisible();
+
+    await expect(page.getByRole('textbox', { name: 'Date' })).toHaveValue('2025-10-01');
+    await expect(page.getByRole('textbox', { name: 'Start time' })).toHaveValue('11:15');
+    await expect(page.getByRole('textbox', { name: 'End time' })).toHaveValue('13:00');
+    await expectSelectedOptionText(page.getByRole('combobox', { name: 'Teacher' }), 'Jan Kowalski');
+
+    await page.getByRole('textbox', { name: 'Date' }).fill('2025-10-03');
+    await page.getByRole('textbox', { name: 'Start time' }).fill('09:15');
+    await page.getByRole('textbox', { name: 'End time' }).fill('11:00');
+    await page.getByRole('button', { name: 'Save' }).click();
+
+    await expect(page.getByText('There is another class during this time')).toBeVisible();
 });

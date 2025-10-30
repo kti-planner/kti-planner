@@ -239,6 +239,29 @@ test('Can create repeating calendar event', async ({ page }) => {
     ).toBeVisible();
 });
 
+test('Cannot create event during another event', async ({ page }) => {
+    await page.goto('/semesters/2025-winter/');
+    await loginAsTeacher(page);
+
+    await page.locator('.fc-timegrid-slot-lane[data-time="14:00:00"]').click();
+
+    await expect(page.getByRole('heading', { name: 'Add event' })).toBeVisible();
+
+    await expect(page.getByRole('textbox', { name: 'Date' })).toHaveValue('2025-10-02');
+    await expect(page.getByRole('textbox', { name: 'Start time' })).toHaveValue('14:00');
+    await expect(page.getByRole('textbox', { name: 'End time' })).toHaveValue('15:00');
+
+    await page.getByRole('textbox', { name: 'Date' }).fill('2025-10-03');
+    await page.getByRole('textbox', { name: 'Start time' }).fill('09:15');
+    await page.getByRole('textbox', { name: 'End time' }).fill('11:00');
+    await page.getByRole('textbox', { name: 'Name' }).fill('Test event');
+    await page.getByRole('combobox', { name: 'Classroom' }).selectOption('EA 142');
+
+    await page.getByRole('button', { name: 'Add', exact: true }).click();
+
+    await expect(page.getByText('2025-10-03: Another class takes place in this classroom')).toBeVisible();
+});
+
 test('Can edit calendar event when logged in', async ({ page }) => {
     await page.goto('/semesters/2025-winter/');
     await loginAsTeacher(page);
@@ -271,4 +294,31 @@ test('Can edit calendar event when logged in', async ({ page }) => {
     await expect(
         page.locator('.calendar-wrapper a').filter({ hasText: '12:15 - 14:00' }).filter({ hasText: 'Koło naukowe 2' }),
     ).toBeVisible();
+});
+
+test('Cannot reschedule calendar event to another event', async ({ page }) => {
+    await page.goto('/semesters/2025-winter/');
+    await loginAsTeacher(page);
+
+    await page
+        .locator('.calendar-wrapper a')
+        .filter({ hasText: '11:15 - 13:00' })
+        .filter({ hasText: 'Koło naukowe' })
+        .click();
+
+    await expect(page.getByRole('heading', { name: 'Edit event' })).toBeVisible();
+
+    await expect(page.getByRole('textbox', { name: 'Date' })).toHaveValue('2025-10-02');
+    await expect(page.getByRole('textbox', { name: 'Start time' })).toHaveValue('11:15');
+    await expect(page.getByRole('textbox', { name: 'End time' })).toHaveValue('13:00');
+    await expect(page.getByRole('textbox', { name: 'Name' })).toHaveValue('Koło naukowe');
+    await expect(page.getByText('Teacher: Bogdan Nowak')).toBeVisible();
+    await expectSelectedOptionText(page.getByRole('combobox', { name: 'Classroom' }), 'EA 204');
+
+    await page.getByRole('textbox', { name: 'Date' }).fill('2025-10-01');
+    await page.getByRole('textbox', { name: 'Start time' }).fill('09:15');
+    await page.getByRole('textbox', { name: 'End time' }).fill('11:00');
+    await page.getByRole('button', { name: 'Save' }).click();
+
+    await expect(page.getByText('2025-10-01: Another class takes place in this classroom')).toBeVisible();
 });
