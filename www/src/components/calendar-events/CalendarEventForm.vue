@@ -12,7 +12,7 @@ import type {
 } from '@components/calendar-events/types';
 import { type ClassroomData, formatClassroomName } from '@components/classrooms/types';
 import type { SemesterData } from '@components/semesters/types';
-import { parseDateLocalYyyyMmDd } from '@components/utils';
+import { formatDateLocalYyyyMmDd, parseDateLocalYyyyMmDd } from '@components/utils';
 
 const props = defineProps<{
     semester: SemesterData;
@@ -37,6 +37,8 @@ const classroomId = ref<string | null | undefined>(
 
 const repeatOptions = ref(new CalendarEventRepeatState(props.semester, parseDateLocalYyyyMmDd(date.value)));
 watch(date, newDate => (repeatOptions.value.startDate = parseDateLocalYyyyMmDd(newDate)));
+
+const eventConflicts = ref<EventConflict[]>([]);
 
 async function submit() {
     if (name.value === '' || classroomId.value === undefined) {
@@ -66,6 +68,8 @@ async function submit() {
         emit('submit');
         return;
     }
+
+    eventConflicts.value = conflicts;
 }
 
 const translations = {
@@ -89,6 +93,9 @@ const translations = {
         'Last event': 'Last event',
         'Repeat amount': 'Repeat amount',
         'The events do not fit in the semester': 'The events do not fit in the semester',
+        'The following issues were found': 'The following issues were found',
+        'Holiday': 'Holiday',
+        'Another class takes place in this classroom': 'Another class takes place in this classroom',
     },
     'pl': {
         'Name': 'Nazwa',
@@ -110,6 +117,9 @@ const translations = {
         'Last event': 'Ostatnie wydarzenie',
         'Repeat amount': 'Ilość powtórzeń',
         'The events do not fit in the semester': 'Wydarzenia nie mieszczą się w semestrze',
+        'The following issues were found': 'Znaleziono następujące problemy',
+        'Holiday': 'Dzień wolny',
+        'Another class takes place in this classroom': 'W wybranej sali odbywają się inne zajęcia',
     },
 };
 
@@ -266,5 +276,18 @@ const classroomInputId = crypto.randomUUID();
         <div v-if="currentUser" class="text-center">
             <button type="submit" class="btn btn-success">{{ translate(isEditing ? 'Save' : 'Add') }}</button>
         </div>
+
+        <ul v-if="eventConflicts.length > 0">
+            <li v-for="conflict in eventConflicts" :key="conflict.startDate">
+                {{ `${formatDateLocalYyyyMmDd(new Date(conflict.startDate))}: ` }}
+                <span class="text-danger">
+                    {{
+                        conflict.type === 'holiday'
+                            ? translate('Holiday')
+                            : translate('Another class takes place in this classroom')
+                    }}
+                </span>
+            </li>
+        </ul>
     </form>
 </template>
