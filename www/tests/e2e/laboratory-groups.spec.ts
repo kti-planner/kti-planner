@@ -101,7 +101,7 @@ test.describe('API fetch tests', () => {
             '/semesters/2025-winter/subjects/sieci-komputerowe---informatyka-sem.-v/api/laboratory-groups/',
             {
                 data: {
-                    id: 'bb9309c2-6a67-4f65-bcc9-fa9547d9ffe9',
+                    id: 'c9854621-e713-4b3f-b442-8e8cbdb20b57',
                     name: 'Updated Group',
                 },
             },
@@ -118,7 +118,7 @@ test.describe('API fetch tests', () => {
             '/semesters/2025-winter/subjects/sieci-komputerowe---informatyka-sem.-v/api/laboratory-groups/',
             {
                 data: {
-                    id: 'bb9309c2-6a67-4f65-bcc9-fa9547d9ffe9',
+                    id: 'c9854621-e713-4b3f-b442-8e8cbdb20b57',
                     name: 'Updated Group',
                 },
             },
@@ -135,7 +135,7 @@ test.describe('API fetch tests', () => {
             {
                 data: null,
                 params: {
-                    id: 'bb9309c2-6a67-4f65-bcc9-fa9547d9ffe9',
+                    id: 'c9854621-e713-4b3f-b442-8e8cbdb20b57',
                 },
             },
         );
@@ -152,7 +152,7 @@ test.describe('API fetch tests', () => {
             {
                 data: null,
                 params: {
-                    id: 'bb9309c2-6a67-4f65-bcc9-fa9547d9ffe9',
+                    id: 'c9854621-e713-4b3f-b442-8e8cbdb20b57',
                 },
             },
         );
