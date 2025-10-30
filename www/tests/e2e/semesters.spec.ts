@@ -238,6 +238,7 @@ test.describe('API fetch tests', () => {
         await page.goto('/semesters/');
 
         const response = await page.request.delete('/semesters/api/semesters/', {
+            data: null,
             params: {
                 id: 'b2805b48-3d24-4169-8f67-88561345ee99',
             },
@@ -251,6 +252,7 @@ test.describe('API fetch tests', () => {
         await loginAsAdmin(page);
 
         const response = await page.request.delete('/semesters/api/semesters/', {
+            data: null,
             params: {
                 id: 'b2805b48-3d24-4169-8f67-88561345ee99',
             },
