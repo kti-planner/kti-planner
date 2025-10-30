@@ -56,33 +56,41 @@ export const GET: APIRoute = async ({ params, url }) => {
     );
 };
 
-export const POST: APIRoute = async ({ locals }) => {
+export const POST: APIRoute = async ({ locals, params }) => {
     const { jsonData, user } = locals;
 
     if (!user) {
         return Response.json(null, { status: 404 });
     }
 
-    const data = laboratoryClassCreateApiSchema.nullable().catch(null).parse(jsonData);
+    const subject = await getSubjectFromParams(params);
+    if (!subject) {
+        return Response.json(null, { status: 404 });
+    }
 
+    const data = laboratoryClassCreateApiSchema.nullable().catch(null).parse(jsonData);
     if (!data) {
         return Response.json(null, { status: 400 });
     }
 
+    const group = await LaboratoryGroup.fetch(data.laboratoryGroupId);
+    if (!group) {
+        return Response.json(null, { status: 400 });
+    }
+
+    const exercises = await Exercise.fetchAllFromSubject(subject);
+    const teachers = await subject.getTeachers();
+
     const createData: LaboratoryClassCreateData[] = [];
 
-    for (const laboratoryClass of data) {
-        const exercise = await Exercise.fetch(laboratoryClass.exerciseId);
-
+    for (const laboratoryClass of data.classes) {
+        const exercise = exercises.find(exercise => exercise.id === laboratoryClass.exerciseId);
         if (!exercise) {
             return Response.json(null, { status: 400 });
         }
 
-        const teacher = await exercise.getTeacher();
-
-        const group = await LaboratoryGroup.fetch(laboratoryClass.laboratoryGroupId);
-
-        if (!group || group.subjectId !== exercise.subjectId) {
+        const teacher = teachers.find(teacher => teacher.id === exercise.teacherId);
+        if (!teacher) {
             return Response.json(null, { status: 400 });
         }
 

@@ -4,7 +4,6 @@ import { langId } from '@components/frontend/lang';
 import { apiPost } from '@components/api';
 import type { ExerciseData } from '@components/exercises/types';
 import { getNextDayOfTheWeekOccurrence } from '@components/laboratory-classes/dates';
-import type { LaboratoryClassCreateApiData } from '@components/laboratory-classes/types';
 import type { LaboratoryGroupData } from '@components/laboratory-groups/types';
 import type { ScheduleChangeData, SemesterData } from '@components/semesters/types';
 import { formatDateLocalYyyyMmDd, formatDateLocalYyyyMmDdHhMm, parseDateLocalYyyyMmDd } from '@components/utils';
@@ -107,15 +106,14 @@ async function generate() {
 
     const laboratoryGroupId = group.value.id;
 
-    const result = await apiPost<boolean>(
-        apiUrl,
-        plannedClasses.value.map(plannedClass => ({
+    const result = await apiPost<boolean>(apiUrl, {
+        laboratoryGroupId,
+        classes: plannedClasses.value.map(plannedClass => ({
             exerciseId: plannedClass.exercise.id,
-            laboratoryGroupId,
             startDate: formatDateLocalYyyyMmDdHhMm(plannedClass.start),
             endDate: formatDateLocalYyyyMmDdHhMm(plannedClass.end),
-        })) satisfies LaboratoryClassCreateApiData,
-    );
+        })),
+    });
 
     if (result === undefined) {
         return;
