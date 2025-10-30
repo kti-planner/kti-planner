@@ -3,6 +3,7 @@ import { ref } from 'vue';
 import { langId } from '@components/frontend/lang';
 import { currentUser } from '@components/frontend/user';
 import { apiPatch } from '@components/api';
+import { formatClassroomName } from '@components/classrooms/types';
 import type { LaboratoryClassData, LaboratoryClassEditApiData } from '@components/laboratory-classes/types';
 import type { SemesterData } from '@components/semesters/types';
 import type { SubjectData } from '@components/subjects/types';
@@ -25,7 +26,6 @@ const translations = {
         'Exercise': 'Exercise',
         'Laboratory group': 'Laboratory group',
         'Classroom': 'Classroom',
-        'Unknown [classroom]': 'Unknown',
         'Date': 'Date',
         'Start time': 'Start time',
         'End time': 'End time',
@@ -38,7 +38,6 @@ const translations = {
         'Exercise': 'Ćwiczenie',
         'Laboratory group': 'Grupa laboratoryjna',
         'Classroom': 'Sala',
-        'Unknown [classroom]': 'Nieznana',
         'Date': 'Data',
         'Start time': 'Czas rozpoczęcia',
         'End time': 'Czas zakończenia',
@@ -118,7 +117,7 @@ const teacherId = crypto.randomUUID();
         <div>
             {{ translate('Classroom') }}:
             <br />
-            {{ laboratoryClass.exercise.classroom?.name ?? translate('Unknown [classroom]') }}
+            {{ formatClassroomName(laboratoryClass.exercise.classroom, langId) }}
         </div>
 
         <template v-if="currentUser">

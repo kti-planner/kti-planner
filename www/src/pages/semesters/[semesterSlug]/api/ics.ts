@@ -86,10 +86,7 @@ export const ALL: APIRoute = async ({ params, url, request }) => {
                 return null;
             }
 
-            if (
-                classroomFilter.length > 0 &&
-                (exercise.classroomId === null || !classroomFilter.includes(exercise.classroomId))
-            ) {
+            if (classroomFilter.length > 0 && !classroomFilter.includes(String(exercise.classroomId))) {
                 return null;
             }
 
@@ -133,10 +130,7 @@ export const ALL: APIRoute = async ({ params, url, request }) => {
                 return null;
             }
 
-            if (
-                classroomFilter.length > 0 &&
-                (calendarEvent.classroomId === null || !classroomFilter.includes(calendarEvent.classroomId))
-            ) {
+            if (classroomFilter.length > 0 && !classroomFilter.includes(String(calendarEvent.classroomId))) {
                 return null;
             }
 

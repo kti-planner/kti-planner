@@ -2,7 +2,7 @@
 import { computed, ref, watchEffect } from 'vue';
 import { useCloned } from '@vueuse/core';
 import { langId } from '@components/frontend/lang';
-import type { ClassroomData } from '@components/classrooms/types';
+import { type ClassroomData, formatClassroomName } from '@components/classrooms/types';
 import type { SemesterData } from '@components/semesters/types';
 import type { SubjectData } from '@components/subjects/types';
 import type { UserPublicData } from '@components/users/types';
@@ -50,7 +50,13 @@ const { cloned: selectedSubjects } = useCloned(computed(() => initialSelectedSub
 const { cloned: selectedClassrooms } = useCloned(computed(() => initialSelectedClassrooms));
 const { cloned: selectedTeachers } = useCloned(computed(() => initialSelectedTeachers));
 
-const classroomOptions = computed(() => Object.fromEntries(classrooms.map(classroom => [classroom.name, classroom])));
+const classroomOptions = computed(() =>
+    Object.fromEntries([
+        ...classrooms.map(classroom => [classroom.name, classroom]),
+        [formatClassroomName(null, langId), { id: 'null', name: formatClassroomName(null, langId) }],
+    ]),
+);
+
 const teacherOptions = computed(() => Object.fromEntries(teachers.map(teacher => [teacher.name, teacher])));
 
 const selectedSubjectIds = ref(new Set<string>(selectedSubjects.value.map(subject => subject.id)));

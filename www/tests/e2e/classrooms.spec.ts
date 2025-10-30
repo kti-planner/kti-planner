@@ -15,7 +15,6 @@ test('Can access classrooms list when logged-in', async ({ page }) => {
 
     await expect(page.locator('body')).toContainText('EA 142');
     await expect(page.locator('body')).toContainText('EA 204');
-    await expect(page.locator('body')).toContainText('Zdalnie');
 });
 
 test('Can add new classroom and prevent duplicate classroom creation', async ({ page }) => {
@@ -50,7 +49,6 @@ test('Can add new classroom and prevent duplicate classroom creation', async ({ 
     await expect(page.locator('body')).toContainText('EA 142');
     await expect(page.locator('body')).toContainText('EA 204');
     await expect(page.locator('body')).toContainText('EA 250');
-    await expect(page.locator('body')).toContainText('Zdalnie');
 });
 
 test('Can edit classroom and prevent duplicate classroom', async ({ page }) => {

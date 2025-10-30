@@ -49,10 +49,7 @@ export const GET: APIRoute = async ({ params, url }) => {
                     return null;
                 }
 
-                if (
-                    classroomFilter.length > 0 &&
-                    (exercise.classroomId === null || !classroomFilter.includes(exercise.classroomId))
-                ) {
+                if (classroomFilter.length > 0 && !classroomFilter.includes(String(exercise.classroomId))) {
                     return null;
                 }
 

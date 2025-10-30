@@ -40,10 +40,7 @@ export const GET: APIRoute = async ({ params, url }) => {
                     return null;
                 }
 
-                if (
-                    classroomFilter.length > 0 &&
-                    (calendarEvent.classroomId === null || !classroomFilter.includes(calendarEvent.classroomId))
-                ) {
+                if (classroomFilter.length > 0 && !classroomFilter.includes(String(calendarEvent.classroomId))) {
                     return null;
                 }
 
@@ -75,8 +72,8 @@ export const POST: APIRoute = async ({ locals, params }) => {
         return Response.json(null, { status: 400 });
     }
 
-    const classroom = await Classroom.fetch(data.classroomId);
-    if (!classroom) {
+    const classroom = data.classroomId !== null ? await Classroom.fetch(data.classroomId) : null;
+    if (data.classroomId !== null && !classroom) {
         return new Response(null, { status: 400 });
     }
 
@@ -113,8 +110,12 @@ export const PATCH: APIRoute = async ({ locals }) => {
         return Response.json(null, { status: 404 });
     }
 
-    const classroom = data.classroomId !== undefined ? await Classroom.fetch(data.classroomId) : undefined;
-    if (classroom === null) {
+    const classroom =
+        data.classroomId !== undefined && data.classroomId !== null
+            ? await Classroom.fetch(data.classroomId)
+            : data.classroomId;
+
+    if (data.classroomId !== null && classroom === null) {
         return Response.json(null, { status: 400 });
     }
 

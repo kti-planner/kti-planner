@@ -5,6 +5,10 @@ export interface ClassroomData {
     name: string;
 }
 
+export function formatClassroomName(classroom: ClassroomData | null | undefined, langId: LangId): string {
+    return classroom ? classroom.name : langId === 'en' ? 'Remote' : 'Zdalnie';
+}
+
 export const classroomCreateApiSchema = z.object({
     name: z.string().trim().nonempty(),
 });

@@ -11,7 +11,7 @@ import {
     getScheduleChangeEvents,
 } from '@components/calendar/events';
 import type { CalendarEventData } from '@components/calendar-events/types';
-import type { ClassroomData } from '@components/classrooms/types';
+import { type ClassroomData, formatClassroomName } from '@components/classrooms/types';
 import type { LaboratoryClassData } from '@components/laboratory-classes/types';
 import type { ScheduleChangeData, SemesterData } from '@components/semesters/types';
 import type { SubjectData } from '@components/subjects/types';
@@ -104,7 +104,14 @@ const events = computed<EventInput[]>(() => [
 const initialDate = computed(() => getInitialDate(laboratoryClasses.value ?? []));
 
 const subjectOptions = computed(() => Object.fromEntries(subjects.map(subject => [subject.name, subject])));
-const classroomOptions = computed(() => Object.fromEntries(classrooms.map(classroom => [classroom.name, classroom])));
+
+const classroomOptions = computed(() =>
+    Object.fromEntries([
+        ...classrooms.map(classroom => [classroom.name, classroom]),
+        [formatClassroomName(null, langId), { id: 'null', name: formatClassroomName(null, langId) }],
+    ]),
+);
+
 const teacherOptions = computed(() => Object.fromEntries(teachers.value.map(teacher => [teacher.name, teacher])));
 
 const classDetailsModal = useTemplateRef('classDetailsModal');

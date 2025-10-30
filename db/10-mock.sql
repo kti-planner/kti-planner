@@ -90,8 +90,7 @@ VALUES
 INSERT INTO classrooms (id, name)
 VALUES
   ( '2affdc99-7dd6-47f0-b26c-3c413bf063dd', 'EA 142' ),
-  ( '8689d55d-508e-4f5d-aef8-d5052f220d20', 'EA 204' ),
-  ( '556e5246-040e-4ad9-8cf8-5b30c34c76bd', 'Zdalnie' );
+  ( '8689d55d-508e-4f5d-aef8-d5052f220d20', 'EA 204' );
 
 INSERT INTO subjects (id, name, semester_id, teacher_ids, description, moodle_course_id)
 VALUES
@@ -122,7 +121,7 @@ VALUES
   ( 'f2cde405-c91f-417e-be0c-34217ed694e2', 'VLAN 2', '3f58b671-5b38-43f8-bf0f-49d93048c52e', 1, '8689d55d-508e-4f5d-aef8-d5052f220d20', 'feeaa186-3d69-4801-a580-88be10d53553' ),
   ( '24adefb8-c2a4-4320-b64d-d9b9d2d59656', 'Firewall', '3f58b671-5b38-43f8-bf0f-49d93048c52e', 2, '8689d55d-508e-4f5d-aef8-d5052f220d20', 'c393c524-453c-4b02-bfad-5114fe828200' ),
   ( '686b3992-b468-42b5-bf78-c6247d96e910', 'Skanowanie sieci', '3f58b671-5b38-43f8-bf0f-49d93048c52e', 3, '8689d55d-508e-4f5d-aef8-d5052f220d20', 'c393c524-453c-4b02-bfad-5114fe828200' ),
-  ( '89a84652-0f57-4955-b320-eb04fe31bf51', 'Tunele IPv6 i IPSec', '3f58b671-5b38-43f8-bf0f-49d93048c52e', 4, '556e5246-040e-4ad9-8cf8-5b30c34c76bd', 'feeaa186-3d69-4801-a580-88be10d53553' ),
+  ( '89a84652-0f57-4955-b320-eb04fe31bf51', 'Tunele IPv6 i IPSec', '3f58b671-5b38-43f8-bf0f-49d93048c52e', 4, NULL, 'feeaa186-3d69-4801-a580-88be10d53553' ),
 
   -- Sieci komputerowe 2024
   ( 'ca7b29d6-3920-4566-8836-6045f6191b54', 'Diagnostyka sieci IPv4', 'cfaa8255-992f-405e-9064-dd8baf9dfde3', 1, '2affdc99-7dd6-47f0-b26c-3c413bf063dd', 'c393c524-453c-4b02-bfad-5114fe828200' ),

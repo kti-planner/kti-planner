@@ -9,7 +9,7 @@ import type {
     CalendarEventData,
     CalendarEventEditApiData,
 } from '@components/calendar-events/types';
-import type { ClassroomData } from '@components/classrooms/types';
+import { type ClassroomData, formatClassroomName } from '@components/classrooms/types';
 import type { SemesterData } from '@components/semesters/types';
 import { parseDateLocalYyyyMmDd } from '@components/utils';
 
@@ -29,7 +29,10 @@ const name = ref<string>(props.calendarEvent.name ?? '');
 const date = ref<string>(props.calendarEvent.startDate.split('T')[0] ?? '');
 const startTime = ref<string>(props.calendarEvent.startDate.split('T')[1] ?? '');
 const endTime = ref<string>(props.calendarEvent.endDate.split('T')[1] ?? '');
-const classroomId = ref<string | undefined>(props.calendarEvent?.classroom?.id);
+
+const classroomId = ref<string | null | undefined>(
+    props.calendarEvent?.classroom === null ? null : props.calendarEvent?.classroom?.id,
+);
 
 const repeatOptions = ref(new CalendarEventRepeatState(props.semester, parseDateLocalYyyyMmDd(date.value)));
 watch(date, newDate => (repeatOptions.value.startDate = parseDateLocalYyyyMmDd(newDate)));
@@ -244,6 +247,7 @@ const classroomInputId = crypto.randomUUID();
                 <option v-for="classroom in classrooms" :key="classroom.id" :value="classroom.id">
                     {{ classroom.name }}
                 </option>
+                <option :value="null">{{ formatClassroomName(null, langId) }}</option>
             </select>
             <a
                 href="/classrooms/"
@@ -254,7 +258,7 @@ const classroomInputId = crypto.randomUUID();
         <div v-else>
             {{ translate('Classroom') }}:
             <br />
-            {{ calendarEvent?.classroom?.name }}
+            {{ formatClassroomName(calendarEvent.classroom, langId) }}
         </div>
 
         <div v-if="currentUser" class="text-center">
