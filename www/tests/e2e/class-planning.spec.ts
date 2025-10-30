@@ -47,7 +47,6 @@ test('Cannot plan classes when there are conflicts', async ({ page }) => {
     await page.getByRole('button', { name: 'Generate classes' }).click();
 
     await expect(page.getByText('There are conflicts with holidays or other events')).toBeVisible();
-    await expect(page.getByText('This is a holiday')).toBeVisible();
 });
 
 test('Cannot plan classes when there are holidays', async ({ page }) => {
@@ -68,6 +67,7 @@ test('Cannot plan classes when there are holidays', async ({ page }) => {
     await page.getByRole('button', { name: 'Generate classes' }).click();
 
     await expect(page.getByText('There are conflicts with holidays or other events')).toBeVisible();
+    await expect(page.getByText('This is a holiday')).toBeVisible();
 });
 
 test('Can plan classes with a group selected beforehand', async ({ page }) => {
