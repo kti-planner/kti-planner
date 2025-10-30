@@ -3,7 +3,7 @@ import { computed, ref } from 'vue';
 import { langId } from '@components/frontend/lang';
 import { apiPost } from '@components/api';
 import type { ExerciseData } from '@components/exercises/types';
-import { getNextDayOfTheWeekOccurrence, isSameDay } from '@components/laboratory-classes/dates';
+import { getNextDayOfTheWeekOccurrence } from '@components/laboratory-classes/dates';
 import type { LaboratoryClassCreateApiData } from '@components/laboratory-classes/types';
 import type { LaboratoryGroupData } from '@components/laboratory-groups/types';
 import type { ScheduleChangeData, SemesterData } from '@components/semesters/types';
@@ -21,7 +21,6 @@ const translations = {
         'Summary': 'Summary',
         'Generate classes': 'Generate classes',
         'You can edit the classes later from the calendar': 'You can edit the classes later from the calendar',
-        'The date you selected is a holiday': 'The date you selected is a holiday',
         'The classes do not fit in the semester': 'The classes do not fit in the semester',
     },
     'pl': {
@@ -33,7 +32,6 @@ const translations = {
         'Summary': 'Podsumowanie',
         'Generate classes': 'Wygeneruj zajęcia',
         'You can edit the classes later from the calendar': 'Możesz później edytować te zajęcia w kalendarzu',
-        'The date you selected is a holiday': 'Wybrana data jest dniem wolnym od zajęć',
         'The classes do not fit in the semester': 'Zajęcia nie mieszczą się w semestrze',
     },
 };
@@ -61,17 +59,6 @@ const classStartTime = ref<string>();
 const classEndTime = ref<string>();
 const repeatWeeks = ref(1);
 
-const firstClassDateHoliday = computed(() => {
-    if (firstClassDateStr.value === undefined) {
-        return false;
-    }
-
-    const firstClassDate = parseDateLocalYyyyMmDd(firstClassDateStr.value);
-    return scheduleChanges.some(
-        change => change.type === 'holiday' && isSameDay(firstClassDate, parseDateLocalYyyyMmDd(change.date)),
-    );
-});
-
 export interface PlannedClass {
     exercise: ExerciseData;
     start: Date;
@@ -81,7 +68,6 @@ export interface PlannedClass {
 const plannedClasses = computed<PlannedClass[]>(() => {
     if (
         firstClassDateStr.value === undefined ||
-        firstClassDateHoliday.value ||
         classStartTime.value === undefined ||
         classEndTime.value === undefined ||
         group.value === undefined
@@ -143,7 +129,6 @@ const dateId = crypto.randomUUID();
 const startTimeId = crypto.randomUUID();
 const endTimeId = crypto.randomUUID();
 const repeatId = crypto.randomUUID();
-const dateFeedback = crypto.randomUUID();
 </script>
 
 <template>
@@ -162,15 +147,8 @@ const dateFeedback = crypto.randomUUID();
                 :max="semester.endDate"
                 type="date"
                 class="form-control"
-                :class="{
-                    'is-invalid': firstClassDateHoliday,
-                }"
-                :aria-describedby="firstClassDateHoliday ? dateFeedback : undefined"
                 required
             />
-            <div v-if="firstClassDateHoliday" :id="dateFeedback" class="invalid-feedback">
-                {{ translate('The date you selected is a holiday') }}
-            </div>
         </div>
 
         <div>
