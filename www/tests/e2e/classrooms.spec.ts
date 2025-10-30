@@ -78,7 +78,7 @@ test('Can edit classroom and prevent duplicate classroom', async ({ page }) => {
     await page.getByRole('button', { name: 'Close' }).click();
 });
 
-test('Can delete subject', async ({ page }) => {
+test('Can delete classroom', async ({ page }) => {
     await page.goto('/classrooms/');
     await loginAsTeacher(page);
 
@@ -87,11 +87,9 @@ test('Can delete subject', async ({ page }) => {
     await page.getByRole('button', { name: 'Delete classroom' }).click();
     await page.getByRole('button', { name: 'Yes' }).click();
 
-    await page.waitForURL('/semesters/2024-summer/');
+    await page.waitForURL('/classrooms/');
 
-    await expect(
-        page.getByRole('link', { name: 'Lokalne sieci bezprzewodowe - Informatyka sem. VI' }),
-    ).not.toBeVisible();
+    await expect(page.locator('.list-group-item', { hasText: 'EA 142' })).not.toBeVisible();
 });
 
 test.describe('API fetch tests', () => {
