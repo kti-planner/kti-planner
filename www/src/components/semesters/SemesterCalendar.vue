@@ -21,7 +21,7 @@ import Calendar from '@components/Calendar.vue';
 import CalendarExportForm from '@components/calendar/CalendarExportForm.vue';
 import CalendarEvent from '@components/calendar-events/CalendarEvent.vue';
 import CalendarEventForm from '@components/calendar-events/CalendarEventForm.vue';
-import EditLaboratoryClassForm from '@components/laboratory-classes/EditLaboratoryClassForm.vue';
+import LaboratoryClassEditModals from '@components/laboratory-classes/LaboratoryClassEditModals.vue';
 import LaboratoryClassEvent from '@components/laboratory-classes/LaboratoryClassEvent.vue';
 import Modal from '@components/Modal.vue';
 import ToggleButtonPicker from '@components/ToggleButtonPicker.vue';
@@ -114,7 +114,7 @@ const classroomOptions = computed(() =>
 
 const teacherOptions = computed(() => Object.fromEntries(teachers.value.map(teacher => [teacher.name, teacher])));
 
-const classDetailsModal = useTemplateRef('classDetailsModal');
+const classEditModals = useTemplateRef('classEditModals');
 const clickedLaboratoryClass = shallowRef<LaboratoryClassData | null>(null);
 const clickedClassSubject = shallowRef<SubjectData | null>(null);
 
@@ -132,7 +132,7 @@ function handleEventClick(arg: EventClickArg) {
         clickedClassSubject.value =
             subjects.find(s => s.id === clickedLaboratoryClass.value!.exercise.subjectId) ?? null;
 
-        classDetailsModal.value?.show();
+        classEditModals.value?.classDetailsModal?.show();
     }
 
     if ('calendarEvent' in arg.event.extendedProps) {
@@ -151,11 +151,6 @@ function handleCalendarSelection(info: DateSelectArg) {
 
 function handleCalendarEventSubmit() {
     calendarEventModal.value?.hide();
-    void refetchAllEvents();
-}
-
-function handleLaboratoryClassSubmit() {
-    classDetailsModal.value?.hide();
     void refetchAllEvents();
 }
 </script>
@@ -208,19 +203,15 @@ function handleLaboratoryClassSubmit() {
                 />
             </Modal>
 
-            <Modal ref="classDetailsModal">
-                <template #header>{{ currentUser ? translate('Edit class') : translate('Class details') }}</template>
-                <EditLaboratoryClassForm
-                    v-if="clickedLaboratoryClass && clickedClassSubject"
-                    :laboratory-class="clickedLaboratoryClass"
-                    :subject="clickedClassSubject"
-                    :api-url="`/semesters/${semester.slug}/subjects/${clickedClassSubject.slug}/api/laboratory-classes/`"
-                    :teachers
-                    :semester
-                    show-subject
-                    @submit="handleLaboratoryClassSubmit"
-                />
-            </Modal>
+            <LaboratoryClassEditModals
+                ref="classEditModals"
+                :laboratory-class="clickedLaboratoryClass"
+                :subject="clickedClassSubject"
+                :teachers
+                :semester
+                show-subject
+                @submit="refetchAllEvents"
+            />
 
             <Modal ref="exportModal">
                 <template #header>{{ translate('Export calendar') }}</template>

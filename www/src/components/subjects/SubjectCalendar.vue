@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { computed, shallowRef, useTemplateRef } from 'vue';
 import type { EventClickArg, EventInput } from '@fullcalendar/core';
-import { langId } from '@components/frontend/lang';
-import { currentUser } from '@components/frontend/user';
 import { useApiFetch } from '@components/api';
 import { getInitialDate, getLaboratoryClassEvents, getScheduleChangeEvents } from '@components/calendar/events';
 import type { LaboratoryClassData } from '@components/laboratory-classes/types';
@@ -11,9 +9,8 @@ import type { ScheduleChangeData, SemesterData } from '@components/semesters/typ
 import type { SubjectData } from '@components/subjects/types';
 import type { UserPublicData } from '@components/users/types';
 import Calendar from '@components/Calendar.vue';
-import EditLaboratoryClassForm from '@components/laboratory-classes/EditLaboratoryClassForm.vue';
+import LaboratoryClassEditModals from '@components/laboratory-classes/LaboratoryClassEditModals.vue';
 import LaboratoryClassEvent from '@components/laboratory-classes/LaboratoryClassEvent.vue';
-import Modal from '@components/Modal.vue';
 
 const { apiUrl, selectedLaboratoryGroups, scheduleChanges } = defineProps<{
     apiUrl: string;
@@ -23,21 +20,6 @@ const { apiUrl, selectedLaboratoryGroups, scheduleChanges } = defineProps<{
     subject: SubjectData;
     teachers: UserPublicData[];
 }>();
-
-const translations = {
-    'en': {
-        'Edit class': 'Edit class',
-        'Class details': 'Class details',
-    },
-    'pl': {
-        'Edit class': 'Edytuj zajęcia',
-        'Class details': 'Szczegóły zajęć',
-    },
-};
-
-function translate(text: keyof (typeof translations)[LangId]): string {
-    return translations[langId][text];
-}
 
 const { data: laboratoryClasses, execute: refreshClasses } = useApiFetch<LaboratoryClassData[]>(
     apiUrl,
@@ -55,7 +37,7 @@ const events = computed<EventInput[]>(() => [
 
 const initialDate = computed(() => getInitialDate(laboratoryClasses.value ?? []));
 
-const editModal = useTemplateRef('editModal');
+const modal = useTemplateRef('modal');
 const editedLaboratoryClass = shallowRef<LaboratoryClassData | null>(null);
 
 function handleEventClick(arg: EventClickArg) {
@@ -64,12 +46,7 @@ function handleEventClick(arg: EventClickArg) {
     }
 
     editedLaboratoryClass.value = arg.event.extendedProps.laboratoryClass;
-    editModal.value?.show();
-}
-
-function handleLaboratoryClassSubmit() {
-    editModal.value?.hide();
-    void refreshClasses();
+    modal.value?.classDetailsModal?.show();
 }
 </script>
 
@@ -84,16 +61,13 @@ function handleLaboratoryClassSubmit() {
         </template>
     </Calendar>
 
-    <Modal ref="editModal">
-        <template #header>{{ currentUser ? translate('Edit class') : translate('Class details') }}</template>
-        <EditLaboratoryClassForm
-            v-if="editedLaboratoryClass"
-            :laboratory-class="editedLaboratoryClass"
-            :teachers
-            :api-url
-            :semester
-            :subject
-            @submit="handleLaboratoryClassSubmit"
-        />
-    </Modal>
+    <LaboratoryClassEditModals
+        ref="modal"
+        :laboratory-class="editedLaboratoryClass"
+        :subject
+        :teachers
+        :semester
+        show-subject
+        @submit="refreshClasses"
+    />
 </template>
