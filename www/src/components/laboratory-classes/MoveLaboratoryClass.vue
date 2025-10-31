@@ -23,6 +23,7 @@ const translations = {
         'Move': 'Move',
         'Holiday': 'Holiday',
         'Another class takes place in this classroom': 'Another class takes place in this classroom',
+        'Outside of semester': 'Outside of semester',
     },
     'pl': {
         'This will move this class and the next ones for this laboratory group.':
@@ -35,6 +36,7 @@ const translations = {
         'Move': 'Przesuń',
         'Holiday': 'Dzień wolny',
         'Another class takes place in this classroom': 'W wybranej sali odbywają się inne zajęcia',
+        'Outside of semester': 'Poza semestrem',
     },
 };
 
@@ -112,7 +114,9 @@ const weekId = crypto.randomUUID();
                     {{
                         conflict.type === 'holiday'
                             ? translate('Holiday')
-                            : translate('Another class takes place in this classroom')
+                            : conflict.type === 'other-event'
+                              ? translate('Another class takes place in this classroom')
+                              : translate('Outside of semester')
                     }}
                 </span>
             </li>

@@ -113,6 +113,7 @@ const translations = {
         'Holiday': 'Holiday',
         'Another class takes place in this classroom': 'Another class takes place in this classroom',
         'Delete event': 'Delete event',
+        'Outside of semester': 'Outside of semester',
     },
     'pl': {
         'Name': 'Nazwa',
@@ -138,6 +139,7 @@ const translations = {
         'Holiday': 'Dzień wolny',
         'Another class takes place in this classroom': 'W wybranej sali odbywają się inne zajęcia',
         'Delete event': 'Usuń wydarzenie',
+        'Outside of semester': 'Poza semestrem',
     },
 };
 
@@ -307,7 +309,9 @@ const classroomInputId = crypto.randomUUID();
                     {{
                         conflict.type === 'holiday'
                             ? translate('Holiday')
-                            : translate('Another class takes place in this classroom')
+                            : conflict.type === 'other-event'
+                              ? translate('Another class takes place in this classroom')
+                              : translate('Outside of semester')
                     }}
                 </span>
             </li>

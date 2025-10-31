@@ -82,6 +82,7 @@ export const PATCH: APIRoute = async ({ locals, params }) => {
 
     const conflicts = checkForEventConflicts(
         slots,
+        semester,
         scheduleChanges,
         laboratoryClasses,
         exercises,
