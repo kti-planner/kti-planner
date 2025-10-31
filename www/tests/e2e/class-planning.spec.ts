@@ -101,21 +101,21 @@ test('Can plan classes with two weeks between each one', async ({ page }) => {
 
     await page.getByRole('button', { name: 'Plan classes' }).click();
     await page.getByRole('combobox', { name: 'Laboratory group' }).selectOption('5A');
-    await page.getByRole('textbox', { name: 'First class date' }).fill('2025-04-08');
+    await page.getByRole('textbox', { name: 'First class date' }).fill('2025-03-25');
     await page.getByRole('textbox', { name: 'Class start time' }).fill('11:15');
     await page.getByRole('textbox', { name: 'Class end time' }).fill('13:00');
     await page.getByRole('spinbutton', { name: 'How many weeks are between classes?' }).fill('2');
 
+    await expect(page.getByText('2025-03-25 11:15 - 13:00')).toBeVisible();
     await expect(page.getByText('2025-04-08 11:15 - 13:00')).toBeVisible();
     await expect(page.getByText('2025-04-29 11:15 - 13:00')).toBeVisible();
     await expect(page.getByText('2025-05-13 11:15 - 13:00')).toBeVisible();
     await expect(page.getByText('2025-05-27 11:15 - 13:00')).toBeVisible();
     await expect(page.getByText('2025-06-10 11:15 - 13:00')).toBeVisible();
-    await expect(page.getByText('2025-06-24 11:15 - 13:00')).toBeVisible();
 
     await page.getByRole('button', { name: 'Generate classes' }).click();
 
-    await expect(page.getByText('23 – 29 Jun 2025')).toBeVisible();
+    await expect(page.getByText('9 – 15 Jun 2025')).toBeVisible();
     await expect(page.locator('p', { hasText: '11:15 - 13:00' })).toBeVisible();
 });
 
