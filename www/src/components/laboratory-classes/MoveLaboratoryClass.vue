@@ -24,6 +24,8 @@ const translations = {
         'Holiday': 'Holiday',
         'Another class takes place in this classroom': 'Another class takes place in this classroom',
         'Outside of semester': 'Outside of semester',
+        'Move by weeks': 'Move by weeks',
+        'Move by direction': 'Move by direction',
     },
     'pl': {
         'This will move this class and the next ones for this laboratory group.':
@@ -37,6 +39,8 @@ const translations = {
         'Holiday': 'Dzień wolny',
         'Another class takes place in this classroom': 'W wybranej sali odbywają się inne zajęcia',
         'Outside of semester': 'Poza semestrem',
+        'Move by weeks': 'Tygodnie do przesunięcia',
+        'Move by direction': 'Kierunek przesuwania',
     },
 };
 
@@ -90,12 +94,13 @@ const weekId = crypto.randomUUID();
                 type="number"
                 :min="1"
                 class="form-control"
+                :aria-label="translate('Move by weeks')"
                 :aria-describedby="`${moveById} ${weekId}`"
             />
             <span :id="weekId" class="input-group-text text-center d-inline-block" :style="{ minWidth: '94px' }">{{
                 weeks === 1 ? translate('week') : translate('weeks')
             }}</span>
-            <select v-model="direction" class="form-select" required>
+            <select v-model="direction" class="form-select" required :aria-label="translate('Move by direction')">
                 <option value="forwards">{{ translate('forwards') }}</option>
                 <option value="backwards">{{ translate('backwards') }}</option>
             </select>

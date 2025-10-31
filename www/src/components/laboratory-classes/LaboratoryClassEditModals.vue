@@ -72,8 +72,8 @@ const moveClassModalId = crypto.randomUUID();
             show-subject
             @submit="handleClassDetailsSubmit"
         />
-        <template #footer>
-            <div v-if="currentUser" class="mx-auto">
+        <template v-if="currentUser" #footer>
+            <div class="mx-auto">
                 <button
                     type="button"
                     class="btn btn-success"
