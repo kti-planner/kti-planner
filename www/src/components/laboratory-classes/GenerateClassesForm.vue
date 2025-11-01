@@ -140,7 +140,7 @@ async function generate() {
     eventConflicts.value = conflicts;
 }
 
-watch(classStartTime, () => {
+watch([classStartTime, firstClassDateStr], () => {
     if (subject.duration === null || classStartTime.value === undefined || firstClassDateStr.value === undefined) {
         return;
     }
