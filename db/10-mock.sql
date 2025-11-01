@@ -92,7 +92,7 @@ VALUES
   ( '2affdc99-7dd6-47f0-b26c-3c413bf063dd', 'EA 142' ),
   ( '8689d55d-508e-4f5d-aef8-d5052f220d20', 'EA 204' );
 
-INSERT INTO subjects (id, name, semester_id, teacher_ids, description, moodle_course_id, duration, class_repeat)
+INSERT INTO subjects (id, name, semester_id, teacher_ids, description, moodle_course_id, duration_minutes, class_repeat_weeks)
 VALUES
   ( '60bd04c7-b83c-4b4d-8668-7bad4ea0a800', 'Lokalne sieci bezprzewodowe - Informatyka sem. VI', 'a4560e99-9aa0-4c3e-9a6d-73c63b847d2e', '{c393c524-453c-4b02-bfad-5114fe828200,feeaa186-3d69-4801-a580-88be10d53553}', '', '', 105, 1 ),
   ( 'cfaa8255-992f-405e-9064-dd8baf9dfde3', 'Sieci komputerowe - Informatyka sem. V', '50138012-1f54-43a6-b5fd-8efea42020a9', '{c393c524-453c-4b02-bfad-5114fe828200}', '[Wyniki](http://wyniki.kti.gda.pl/?nazwa=2024Z-SK-I)', '', 105, 1 ),

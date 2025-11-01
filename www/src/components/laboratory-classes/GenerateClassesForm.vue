@@ -67,7 +67,7 @@ const emit = defineEmits<{
 const firstClassDateStr = ref<string>();
 const classStartTime = ref<string>();
 const classEndTime = ref<string>();
-const repeatWeeks = ref(subject.classRepeat ?? 1);
+const repeatWeeks = ref(subject.classRepeatWeeks ?? 1);
 
 export interface PlannedClass {
     exercise: ExerciseData;
@@ -141,12 +141,16 @@ async function generate() {
 }
 
 watch([classStartTime, firstClassDateStr], () => {
-    if (subject.duration === null || classStartTime.value === undefined || firstClassDateStr.value === undefined) {
+    if (
+        subject.durationMinutes === null ||
+        classStartTime.value === undefined ||
+        firstClassDateStr.value === undefined
+    ) {
         return;
     }
 
     const endDate = new Date(`${firstClassDateStr.value}T${classStartTime.value}`);
-    endDate.setMinutes(endDate.getMinutes() + subject.duration);
+    endDate.setMinutes(endDate.getMinutes() + subject.durationMinutes);
     classEndTime.value = formatDateLocalHhMm(endDate);
 });
 

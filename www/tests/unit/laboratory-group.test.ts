@@ -42,8 +42,8 @@ test('Laboratory groups', async () => {
         teachers: [user1],
         description: '',
         moodleCourseId: '',
-        duration: 105,
-        classRepeat: 1,
+        durationMinutes: 105,
+        classRepeatWeeks: 1,
     });
 
     const subject2 = await Subject.create({
@@ -52,8 +52,8 @@ test('Laboratory groups', async () => {
         teachers: [user1, user2],
         description: '',
         moodleCourseId: '',
-        duration: 165,
-        classRepeat: 2,
+        durationMinutes: 165,
+        classRepeatWeeks: 2,
     });
 
     const laboratoryGroup1 = await LaboratoryGroup.create({

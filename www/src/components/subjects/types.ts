@@ -10,8 +10,8 @@ export interface SubjectData {
     description: string;
     moodleCourseId: string;
     moodleCourseUrl: string;
-    duration: number | null;
-    classRepeat: number | null;
+    durationMinutes: number | null;
+    classRepeatWeeks: number | null;
 }
 
 export const subjectCreateApiSchema = z.object({
@@ -20,8 +20,8 @@ export const subjectCreateApiSchema = z.object({
     teacherIds: z.uuid().array(),
     description: z.string(),
     moodleCourseId: z.string(),
-    duration: z.int().nonnegative().nullable(),
-    classRepeat: z.int().nonnegative().nullable(),
+    durationMinutes: z.int().nonnegative().nullable(),
+    classRepeatWeeks: z.int().nonnegative().nullable(),
 });
 
 export type SubjectCreateApiData = z.input<typeof subjectCreateApiSchema>;
@@ -32,8 +32,8 @@ export const subjectEditApiSchema = z.object({
     teacherIds: z.uuid().array().optional(),
     description: z.string().optional(),
     moodleCourseId: z.string().optional(),
-    duration: z.int().nonnegative().nullable().optional(),
-    classRepeat: z.int().nonnegative().nullable().optional(),
+    durationMinutes: z.int().nonnegative().nullable().optional(),
+    classRepeatWeeks: z.int().nonnegative().nullable().optional(),
 });
 
 export type SubjectEditApiData = z.input<typeof subjectEditApiSchema>;
