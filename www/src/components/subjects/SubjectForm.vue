@@ -29,19 +29,19 @@ const initDuration = computed(() => {
         return props.subject?.duration;
     }
 
-    if (props.subject?.duration !== undefined) {
+    if (props.subject?.duration !== null && props.subject?.duration !== undefined) {
         return 'custom';
     }
 
-    return undefined;
+    return null;
 });
 
-const duration = ref<number | 'custom' | undefined>(initDuration.value);
-const customDuration = ref<number | undefined>(props.subject?.duration);
+const duration = ref<number | 'custom' | null>(initDuration.value);
+const customDuration = ref<number | null>(props.subject?.duration ?? null);
 
 async function submit() {
-    if (duration.value === undefined || (duration.value === 'custom' && customDuration.value === undefined)) {
-        return;
+    if (duration.value === 'custom' && customDuration.value?.toString() === '') {
+        customDuration.value = null;
     }
 
     const success =
@@ -52,7 +52,7 @@ async function submit() {
                   teacherIds: teachers.value.map(user => user.id),
                   description: description.value,
                   moodleCourseId: moodleCourseId.value,
-                  duration: duration.value === 'custom' ? customDuration.value! : duration.value,
+                  duration: duration.value === 'custom' ? customDuration.value : duration.value,
               } satisfies SubjectCreateApiData)
             : await apiPatch<boolean>('/semesters/api/subjects/', {
                   id: props.subject.id,
@@ -162,19 +162,12 @@ const durationId = crypto.randomUUID();
 
         <div>
             <label :for="durationId" class="form-label">{{ translate('Duration (minutes)') }}</label>
-            <select :id="durationId" v-model="duration" class="form-select" required>
+            <select :id="durationId" v-model="duration" class="form-select">
                 <option :value="105">105</option>
                 <option :value="165">165</option>
                 <option value="custom">{{ translate('Custom') }}</option>
             </select>
-            <input
-                v-if="duration === 'custom'"
-                v-model="customDuration"
-                type="number"
-                class="form-control"
-                min="0"
-                required
-            />
+            <input v-if="duration === 'custom'" v-model="customDuration" type="number" class="form-control" min="0" />
         </div>
 
         <div class="text-center mt-2">

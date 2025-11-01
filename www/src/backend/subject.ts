@@ -16,7 +16,7 @@ interface DbSubject {
     teacher_ids: string[];
     description: string;
     moodle_course_id: string;
-    duration: number;
+    duration: number | null;
 }
 
 export interface SubjectCreateData {
@@ -25,7 +25,7 @@ export interface SubjectCreateData {
     teachers: User[];
     description: string;
     moodleCourseId: string;
-    duration: number;
+    duration: number | null;
 }
 
 export interface SubjectEditData {
@@ -34,7 +34,7 @@ export interface SubjectEditData {
     teachers?: User[] | undefined;
     description?: string | undefined;
     moodleCourseId?: string | undefined;
-    duration?: number | undefined;
+    duration?: number | null | undefined;
 }
 
 export class Subject {
@@ -44,7 +44,7 @@ export class Subject {
     teacherIds: string[];
     description: string;
     moodleCourseId: string;
-    duration: number;
+    duration: number | null;
 
     constructor(data: DbSubject) {
         this.id = data.id;

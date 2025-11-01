@@ -141,7 +141,7 @@ async function generate() {
 }
 
 watch(classStartTime, () => {
-    if (classStartTime.value === undefined || firstClassDateStr.value === undefined) {
+    if (subject.duration === null || classStartTime.value === undefined || firstClassDateStr.value === undefined) {
         return;
     }
 

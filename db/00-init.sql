@@ -38,7 +38,7 @@ CREATE TABLE subjects (
     teacher_ids      uuid[] NOT NULL,
     description      text NOT NULL,
     moodle_course_id text NOT NULL,
-    duration         integer NOT NULL
+    duration         integer
 );
 
 CREATE TABLE exercises (
