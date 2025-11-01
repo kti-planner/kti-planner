@@ -92,14 +92,14 @@ VALUES
   ( '2affdc99-7dd6-47f0-b26c-3c413bf063dd', 'EA 142' ),
   ( '8689d55d-508e-4f5d-aef8-d5052f220d20', 'EA 204' );
 
-INSERT INTO subjects (id, name, semester_id, teacher_ids, description, moodle_course_id)
+INSERT INTO subjects (id, name, semester_id, teacher_ids, description, moodle_course_id, duration_minutes, class_repeat_weeks)
 VALUES
-  ( '60bd04c7-b83c-4b4d-8668-7bad4ea0a800', 'Lokalne sieci bezprzewodowe - Informatyka sem. VI', 'a4560e99-9aa0-4c3e-9a6d-73c63b847d2e', '{c393c524-453c-4b02-bfad-5114fe828200,feeaa186-3d69-4801-a580-88be10d53553}', '', '' ),
-  ( 'cfaa8255-992f-405e-9064-dd8baf9dfde3', 'Sieci komputerowe - Informatyka sem. V', '50138012-1f54-43a6-b5fd-8efea42020a9', '{c393c524-453c-4b02-bfad-5114fe828200}', '[Wyniki](http://wyniki.kti.gda.pl/?nazwa=2024Z-SK-I)', '' ),
-  ( '25108321-0391-4c7a-b4d8-5ea20388e813', 'Lokalne sieci bezprzewodowe - Informatyka sem. VI', '094f8324-7c58-4566-b5d7-e4fe8ed03a18', '{c393c524-453c-4b02-bfad-5114fe828200,feeaa186-3d69-4801-a580-88be10d53553}', '', '' ),
-  ( '3f58b671-5b38-43f8-bf0f-49d93048c52e', 'Zarządzanie bezpieczeństwem sieci - Informatyka sem. VI', '094f8324-7c58-4566-b5d7-e4fe8ed03a18', '{c393c524-453c-4b02-bfad-5114fe828200,feeaa186-3d69-4801-a580-88be10d53553}', '', '' ),
-  ( '981c68ba-3f6a-459e-83af-f9fc578adc85', 'Sieci komputerowe - Informatyka sem. V', 'b2805b48-3d24-4169-8f67-88561345ee99', '{c393c524-453c-4b02-bfad-5114fe828200}', '', '' ),
-  ( '9068cb5a-fe4b-4b93-af91-7050e61eceeb', 'Wstęp do sieci komputerowych - Automatyka i Robotyka, Inżynieria biomedyczna sem. V', 'b2805b48-3d24-4169-8f67-88561345ee99', '{c393c524-453c-4b02-bfad-5114fe828200,feeaa186-3d69-4801-a580-88be10d53553}', '', '' );
+  ( '60bd04c7-b83c-4b4d-8668-7bad4ea0a800', 'Lokalne sieci bezprzewodowe - Informatyka sem. VI', 'a4560e99-9aa0-4c3e-9a6d-73c63b847d2e', '{c393c524-453c-4b02-bfad-5114fe828200,feeaa186-3d69-4801-a580-88be10d53553}', '', '', 105, 1 ),
+  ( 'cfaa8255-992f-405e-9064-dd8baf9dfde3', 'Sieci komputerowe - Informatyka sem. V', '50138012-1f54-43a6-b5fd-8efea42020a9', '{c393c524-453c-4b02-bfad-5114fe828200}', '[Wyniki](http://wyniki.kti.gda.pl/?nazwa=2024Z-SK-I)', '', 105, 2 ),
+  ( '25108321-0391-4c7a-b4d8-5ea20388e813', 'Lokalne sieci bezprzewodowe - Informatyka sem. VI', '094f8324-7c58-4566-b5d7-e4fe8ed03a18', '{c393c524-453c-4b02-bfad-5114fe828200,feeaa186-3d69-4801-a580-88be10d53553}', '', '', 105, 1 ),
+  ( '3f58b671-5b38-43f8-bf0f-49d93048c52e', 'Zarządzanie bezpieczeństwem sieci - Informatyka sem. VI', '094f8324-7c58-4566-b5d7-e4fe8ed03a18', '{c393c524-453c-4b02-bfad-5114fe828200,feeaa186-3d69-4801-a580-88be10d53553}', '', '', 165, 2 ),
+  ( '981c68ba-3f6a-459e-83af-f9fc578adc85', 'Sieci komputerowe - Informatyka sem. V', 'b2805b48-3d24-4169-8f67-88561345ee99', '{c393c524-453c-4b02-bfad-5114fe828200}', '', '', 105, 2 ),
+  ( '9068cb5a-fe4b-4b93-af91-7050e61eceeb', 'Wstęp do sieci komputerowych - Automatyka i Robotyka, Inżynieria biomedyczna sem. V', 'b2805b48-3d24-4169-8f67-88561345ee99', '{c393c524-453c-4b02-bfad-5114fe828200,feeaa186-3d69-4801-a580-88be10d53553}', '', '', 105, 1 );
 
 INSERT INTO exercises (id, name, subject_id, exercise_number, classroom_id, teacher_id)
 VALUES
@@ -206,15 +206,21 @@ INSERT INTO laboratory_classes (id, exercise_id, laboratory_group_id, start_date
 VALUES
   -- Sieci komputerowe 2025, Group 1A
   ('05c03885-dca8-481e-a635-511024503acd', '79d83df1-1fc1-4cc5-afe6-6cc9e0387221', 'c9854621-e713-4b3f-b442-8e8cbdb20b57', '2025-10-01 11:15 Europe/Warsaw', '2025-10-01 13:00 Europe/Warsaw', 'c393c524-453c-4b02-bfad-5114fe828200'),
-  ('bab85007-4fdc-4171-8de7-9700a9a8f775', '2a31cf55-f926-42e2-a985-50849bafe939', 'c9854621-e713-4b3f-b442-8e8cbdb20b57', '2025-10-08 11:15 Europe/Warsaw', '2025-10-08 13:00 Europe/Warsaw', 'c393c524-453c-4b02-bfad-5114fe828200'),
-  ('c37a7353-42e9-4049-a372-41aa54ff25e6', 'a263264d-1d2d-42de-939e-ee9553961b17', 'c9854621-e713-4b3f-b442-8e8cbdb20b57', '2025-10-15 11:15 Europe/Warsaw', '2025-10-15 13:00 Europe/Warsaw', 'c393c524-453c-4b02-bfad-5114fe828200'),
-  ('c083bfab-f681-431e-a863-1298fb97bc67', '805124e6-2595-4fe6-ad91-93f2a6c5762e', 'c9854621-e713-4b3f-b442-8e8cbdb20b57', '2025-10-22 11:15 Europe/Warsaw', '2025-10-22 13:00 Europe/Warsaw', 'c393c524-453c-4b02-bfad-5114fe828200'),
+  ('bab85007-4fdc-4171-8de7-9700a9a8f775', '2a31cf55-f926-42e2-a985-50849bafe939', 'c9854621-e713-4b3f-b442-8e8cbdb20b57', '2025-10-15 11:15 Europe/Warsaw', '2025-10-15 13:00 Europe/Warsaw', 'c393c524-453c-4b02-bfad-5114fe828200'),
+  ('c37a7353-42e9-4049-a372-41aa54ff25e6', 'a263264d-1d2d-42de-939e-ee9553961b17', 'c9854621-e713-4b3f-b442-8e8cbdb20b57', '2025-10-29 11:15 Europe/Warsaw', '2025-10-29 13:00 Europe/Warsaw', 'c393c524-453c-4b02-bfad-5114fe828200'),
+  ('c083bfab-f681-431e-a863-1298fb97bc67', '805124e6-2595-4fe6-ad91-93f2a6c5762e', 'c9854621-e713-4b3f-b442-8e8cbdb20b57', '2025-11-19 11:15 Europe/Warsaw', '2025-11-19 13:00 Europe/Warsaw', 'c393c524-453c-4b02-bfad-5114fe828200'),
 
   -- Sieci komputerowe 2025, Group 1B
-  ('60e5b9be-5f25-4ec8-aee6-e3eee103e4b8', '79d83df1-1fc1-4cc5-afe6-6cc9e0387221', '81f35756-28be-4942-bddf-d245d4deaab3', '2025-10-03 09:15 Europe/Warsaw', '2025-10-03 11:00 Europe/Warsaw', 'c393c524-453c-4b02-bfad-5114fe828200'),
-  ('ba17115d-c7c5-4ebe-b1b2-5a2ed8823582', '2a31cf55-f926-42e2-a985-50849bafe939', '81f35756-28be-4942-bddf-d245d4deaab3', '2025-10-10 09:15 Europe/Warsaw', '2025-10-10 11:00 Europe/Warsaw', 'c393c524-453c-4b02-bfad-5114fe828200'),
-  ('e972e1db-19c1-4dad-868f-6374d42656eb', 'a263264d-1d2d-42de-939e-ee9553961b17', '81f35756-28be-4942-bddf-d245d4deaab3', '2025-10-17 09:15 Europe/Warsaw', '2025-10-17 11:00 Europe/Warsaw', 'c393c524-453c-4b02-bfad-5114fe828200'),
-  ('c9fdec5d-f716-4d24-bd1b-04b54b38363a', '805124e6-2595-4fe6-ad91-93f2a6c5762e', '81f35756-28be-4942-bddf-d245d4deaab3', '2025-10-24 09:15 Europe/Warsaw', '2025-10-24 11:00 Europe/Warsaw', 'c393c524-453c-4b02-bfad-5114fe828200'),
+  ('8ee0e641-26a4-44f0-80f9-52487404a47b', '79d83df1-1fc1-4cc5-afe6-6cc9e0387221', '81f35756-28be-4942-bddf-d245d4deaab3', '2025-10-08 11:15 Europe/Warsaw', '2025-10-08 13:00 Europe/Warsaw', 'c393c524-453c-4b02-bfad-5114fe828200'),
+  ('3828ec25-8b8e-44f1-9dc8-4c2202d02400', '2a31cf55-f926-42e2-a985-50849bafe939', '81f35756-28be-4942-bddf-d245d4deaab3', '2025-10-22 11:15 Europe/Warsaw', '2025-10-22 13:00 Europe/Warsaw', 'c393c524-453c-4b02-bfad-5114fe828200'),
+  ('c89b19f5-93ff-4f9d-b6c3-843ccd6b7a9f', 'a263264d-1d2d-42de-939e-ee9553961b17', '81f35756-28be-4942-bddf-d245d4deaab3', '2025-11-05 11:15 Europe/Warsaw', '2025-11-05 13:00 Europe/Warsaw', 'c393c524-453c-4b02-bfad-5114fe828200'),
+  ('f85a9aa0-e7df-4e0b-a420-468a2d6b4c94', '805124e6-2595-4fe6-ad91-93f2a6c5762e', '81f35756-28be-4942-bddf-d245d4deaab3', '2025-11-26 11:15 Europe/Warsaw', '2025-11-26 13:00 Europe/Warsaw', 'c393c524-453c-4b02-bfad-5114fe828200'),
+
+  -- Sieci komputerowe 2025, Group 2A
+  ('60e5b9be-5f25-4ec8-aee6-e3eee103e4b8', '79d83df1-1fc1-4cc5-afe6-6cc9e0387221', '1e4f7873-0d68-48bc-bf3e-86f0073a0ee2', '2025-10-03 09:15 Europe/Warsaw', '2025-10-03 11:00 Europe/Warsaw', 'c393c524-453c-4b02-bfad-5114fe828200'),
+  ('ba17115d-c7c5-4ebe-b1b2-5a2ed8823582', '2a31cf55-f926-42e2-a985-50849bafe939', '1e4f7873-0d68-48bc-bf3e-86f0073a0ee2', '2025-10-17 09:15 Europe/Warsaw', '2025-10-17 11:00 Europe/Warsaw', 'c393c524-453c-4b02-bfad-5114fe828200'),
+  ('e972e1db-19c1-4dad-868f-6374d42656eb', 'a263264d-1d2d-42de-939e-ee9553961b17', '1e4f7873-0d68-48bc-bf3e-86f0073a0ee2', '2025-10-31 09:15 Europe/Warsaw', '2025-10-31 11:00 Europe/Warsaw', 'c393c524-453c-4b02-bfad-5114fe828200'),
+  ('c9fdec5d-f716-4d24-bd1b-04b54b38363a', '805124e6-2595-4fe6-ad91-93f2a6c5762e', '1e4f7873-0d68-48bc-bf3e-86f0073a0ee2', '2025-11-14 09:15 Europe/Warsaw', '2025-11-14 11:00 Europe/Warsaw', 'c393c524-453c-4b02-bfad-5114fe828200'),
 
   -- Wstęp do sieci komputerowych 2025, Group air2A
   ('a3394a83-72db-485c-92b6-3fcb7c8cfaba', '042c7d5c-ba9c-4a01-bbd8-79e743829f4d', '5dfe45ea-7a6a-4192-a58b-7541494856eb', '2025-10-07 13:15 Europe/Warsaw', '2025-10-07 15:00 Europe/Warsaw', 'feeaa186-3d69-4801-a580-88be10d53553'),

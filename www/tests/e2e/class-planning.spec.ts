@@ -40,9 +40,9 @@ test('Cannot plan classes when there are conflicts', async ({ page }) => {
     await page.getByRole('textbox', { name: 'Class end time' }).fill('13:00');
 
     await expect(page.getByText('2025-10-01 11:15 - 13:00')).toBeVisible();
-    await expect(page.getByText('2025-10-08 11:15 - 13:00')).toBeVisible();
     await expect(page.getByText('2025-10-15 11:15 - 13:00')).toBeVisible();
-    await expect(page.getByText('2025-10-22 11:15 - 13:00')).toBeVisible();
+    await expect(page.getByText('2025-10-29 11:15 - 13:00')).toBeVisible();
+    await expect(page.getByText('2025-11-19 11:15 - 13:00')).toBeVisible();
 
     await page.getByRole('button', { name: 'Generate classes' }).click();
 
@@ -60,9 +60,9 @@ test('Cannot plan classes when there are holidays', async ({ page }) => {
     await page.getByRole('textbox', { name: 'Class end time' }).fill('13:00');
 
     await expect(page.getByText('2025-10-31 11:15 - 13:00')).toBeVisible();
-    await expect(page.getByText('2025-11-07 11:15 - 13:00')).toBeVisible();
     await expect(page.getByText('2025-11-14 11:15 - 13:00')).toBeVisible();
-    await expect(page.getByText('2025-11-21 11:15 - 13:00')).toBeVisible();
+    await expect(page.getByText('2025-11-28 11:15 - 13:00')).toBeVisible();
+    await expect(page.getByText('2025-12-12 11:15 - 13:00')).toBeVisible();
 
     await page.getByRole('button', { name: 'Generate classes' }).click();
 
