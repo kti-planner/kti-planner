@@ -34,3 +34,10 @@ export const laboratoryClassEditApiSchema = z.object({
 });
 
 export type LaboratoryClassEditApiData = z.input<typeof laboratoryClassEditApiSchema>;
+
+export const laboratoryClassMoveApiSchema = z.object({
+    id: z.uuid(),
+    moveByWeeks: z.int(),
+});
+
+export type LaboratoryClassMoveApiData = z.input<typeof laboratoryClassMoveApiSchema>;

@@ -94,7 +94,15 @@ export const POST: APIRoute = async ({ locals, params }) => {
     const exercises = await Exercise.fetchAllFromSubjects(subjects);
     const calendarEvents = await CalendarEvent.fetchAllFromSemester(semester);
 
-    const conflicts = checkForEventConflicts(slots, scheduleChanges, laboratoryClasses, exercises, calendarEvents);
+    const conflicts = checkForEventConflicts(
+        slots,
+        semester,
+        scheduleChanges,
+        laboratoryClasses,
+        exercises,
+        calendarEvents,
+    );
+
     if (conflicts.length > 0) {
         return Response.json(conflicts);
     }
@@ -166,6 +174,7 @@ export const PATCH: APIRoute = async ({ locals, params }) => {
                 endDate: data.endDate ?? calendarEvent.endDate,
             },
         ],
+        semester,
         scheduleChanges,
         laboratoryClasses,
         exercises,
