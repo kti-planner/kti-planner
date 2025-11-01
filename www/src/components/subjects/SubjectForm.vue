@@ -162,14 +162,14 @@ const durationId = crypto.randomUUID();
 
         <div>
             <label :for="durationId" class="form-label">{{ translate('Duration (minutes)') }}</label>
-            <select :id="durationId" v-model.number="duration" class="form-select" required>
+            <select :id="durationId" v-model="duration" class="form-select" required>
                 <option :value="105">105</option>
                 <option :value="165">165</option>
                 <option value="custom">{{ translate('Custom') }}</option>
             </select>
             <input
                 v-if="duration === 'custom'"
-                v-model.number="customDuration"
+                v-model="customDuration"
                 type="number"
                 class="form-control"
                 min="0"
