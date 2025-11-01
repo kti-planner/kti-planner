@@ -249,6 +249,7 @@ test.describe('API fetch tests', () => {
                 teacherIds: ['c393c524-453c-4b02-bfad-5114fe828200'],
                 description: '',
                 moodleCourseId: '',
+                duration: 105,
             },
         });
 
@@ -266,6 +267,7 @@ test.describe('API fetch tests', () => {
                 teacherIds: ['c393c524-453c-4b02-bfad-5114fe828200'],
                 description: '',
                 moodleCourseId: '',
+                duration: 105,
             },
         });
 
@@ -282,6 +284,7 @@ test.describe('API fetch tests', () => {
                 teacherIds: ['feeaa186-3d69-4801-a580-88be10d53553'],
                 description: '',
                 moodleCourseId: '',
+                duration: 165,
             },
         });
 
@@ -299,6 +302,7 @@ test.describe('API fetch tests', () => {
                 teacherIds: ['feeaa186-3d69-4801-a580-88be10d53553'],
                 description: '',
                 moodleCourseId: '',
+                duration: 165,
             },
         });
 
