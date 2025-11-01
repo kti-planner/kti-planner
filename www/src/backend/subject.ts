@@ -17,6 +17,7 @@ interface DbSubject {
     description: string;
     moodle_course_id: string;
     duration: number | null;
+    class_repeat: number | null;
 }
 
 export interface SubjectCreateData {
@@ -26,6 +27,7 @@ export interface SubjectCreateData {
     description: string;
     moodleCourseId: string;
     duration: number | null;
+    classRepeat: number | null;
 }
 
 export interface SubjectEditData {
@@ -35,6 +37,7 @@ export interface SubjectEditData {
     description?: string | undefined;
     moodleCourseId?: string | undefined;
     duration?: number | null | undefined;
+    classRepeat?: number | null | undefined;
 }
 
 export class Subject {
@@ -45,6 +48,7 @@ export class Subject {
     description: string;
     moodleCourseId: string;
     duration: number | null;
+    classRepeat: number | null;
 
     constructor(data: DbSubject) {
         this.id = data.id;
@@ -54,6 +58,7 @@ export class Subject {
         this.description = data.description;
         this.moodleCourseId = data.moodle_course_id;
         this.duration = data.duration;
+        this.classRepeat = data.class_repeat;
     }
 
     get slug(): string {
@@ -97,7 +102,7 @@ export class Subject {
 
         const result = (
             await db.query<DbSubject>(
-                'INSERT INTO subjects (id, name, semester_id, teacher_ids, description, moodle_course_id, duration) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
+                'INSERT INTO subjects (id, name, semester_id, teacher_ids, description, moodle_course_id, duration, class_repeat) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *',
                 [
                     crypto.randomUUID(),
                     data.name,
@@ -106,6 +111,7 @@ export class Subject {
                     data.description,
                     data.moodleCourseId,
                     data.duration,
+                    data.classRepeat,
                 ],
             )
         ).rows[0];
@@ -140,8 +146,12 @@ export class Subject {
             this.duration = data.duration;
         }
 
+        if (data.classRepeat !== undefined) {
+            this.classRepeat = data.classRepeat;
+        }
+
         await db.query(
-            'UPDATE subjects SET name = $2, semester_id = $3, teacher_ids = $4, description = $5, moodle_course_id = $6, duration = $7 WHERE id = $1',
+            'UPDATE subjects SET name = $2, semester_id = $3, teacher_ids = $4, description = $5, moodle_course_id = $6, duration = $7, class_repeat = $8 WHERE id = $1',
             [
                 this.id,
                 this.name,
@@ -150,6 +160,7 @@ export class Subject {
                 this.description,
                 this.moodleCourseId,
                 this.duration,
+                this.classRepeat,
             ],
         );
     }
@@ -172,5 +183,6 @@ export function makeSubjectData(subject: Subject, allUsers: User[]): SubjectData
         moodleCourseId: subject.moodleCourseId,
         moodleCourseUrl: subject.moodleCourseId !== '' ? moodleBaseUrl + subject.moodleCourseId : '',
         duration: subject.duration,
+        classRepeat: subject.classRepeat,
     };
 }

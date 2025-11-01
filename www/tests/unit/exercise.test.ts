@@ -52,6 +52,7 @@ test('Exercises', async () => {
         description: '',
         moodleCourseId: '',
         duration: 105,
+        classRepeat: 1,
     });
 
     const subject2 = await Subject.create({
@@ -61,6 +62,7 @@ test('Exercises', async () => {
         description: '',
         moodleCourseId: '',
         duration: 165,
+        classRepeat: 2,
     });
 
     const exercise1 = await Exercise.create({

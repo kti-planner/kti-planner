@@ -42,6 +42,7 @@ test('Subjects', async () => {
         description: 'Opis',
         moodleCourseId: '1472',
         duration: 105,
+        classRepeat: 1,
     });
 
     expect(subject1).toHaveProperty('name', 'Sieci komputerowe - Informatyka sem. V');
@@ -51,6 +52,7 @@ test('Subjects', async () => {
     expect(subject1).toHaveProperty('description', subject1.description);
     expect(subject1).toHaveProperty('moodleCourseId', subject1.moodleCourseId);
     expect(subject1).toHaveProperty('duration', subject1.duration);
+    expect(subject1).toHaveProperty('classRepeat', subject1.classRepeat);
 
     const subjectData1 = makeSubjectData(subject1, [user1]);
 
@@ -70,6 +72,7 @@ test('Subjects', async () => {
             },
         ],
         duration: 105,
+        classRepeat: 1,
     });
 
     expect(await subject1.getTeachers()).toStrictEqual([user1]);
@@ -93,6 +96,7 @@ test('Subjects', async () => {
             description: 'Opis',
             moodleCourseId: '1472',
             duration: 105,
+            classRepeat: 1,
         }),
     ).rejects.toThrow(Error);
 
@@ -103,6 +107,7 @@ test('Subjects', async () => {
         description: '',
         moodleCourseId: '',
         duration: 165,
+        classRepeat: 2,
     });
 
     expect(subject2).toHaveProperty('name', 'Zarządzanie bezpieczeństwem sieci - Informatyka sem. VI');
@@ -112,6 +117,7 @@ test('Subjects', async () => {
     expect(subject2).toHaveProperty('description', subject2.description);
     expect(subject2).toHaveProperty('moodleCourseId', subject2.moodleCourseId);
     expect(subject2).toHaveProperty('duration', subject2.duration);
+    expect(subject2).toHaveProperty('classRepeat', subject2.classRepeat);
 
     const subjectData2 = makeSubjectData(subject2, [user1, user2]);
 
@@ -136,6 +142,7 @@ test('Subjects', async () => {
             },
         ],
         duration: 165,
+        classRepeat: 2,
     });
 
     expect(await subject2.getTeachers()).toStrictEqual([user1, user2]);
@@ -164,6 +171,7 @@ test('Subjects', async () => {
         description: 'foo',
         moodleCourseId: '230',
         duration: 120,
+        classRepeat: 1,
     });
 
     expect(subject2).toHaveProperty('name', 'Lokalne sieci bezprzewodowe - Informatyka sem. VI');
@@ -173,6 +181,7 @@ test('Subjects', async () => {
     expect(subject2).toHaveProperty('description', subject2.description);
     expect(subject2).toHaveProperty('moodleCourseId', subject2.moodleCourseId);
     expect(subject2).toHaveProperty('duration', subject2.duration);
+    expect(subject2).toHaveProperty('classRepeat', subject2.classRepeat);
 
     expect(await subject2.getTeachers()).toStrictEqual([user2]);
 
@@ -183,6 +192,7 @@ test('Subjects', async () => {
     expect(subject1).toHaveProperty('description', subject1.description);
     expect(subject1).toHaveProperty('moodleCourseId', subject1.moodleCourseId);
     expect(subject1).toHaveProperty('duration', subject1.duration);
+    expect(subject1).toHaveProperty('classRepeat', subject1.classRepeat);
 
     expect(await subject1.getTeachers()).toStrictEqual([user1]);
 

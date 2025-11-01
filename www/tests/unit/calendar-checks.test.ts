@@ -40,6 +40,7 @@ test('Detects event conflicts', async () => {
         description: 'Opis',
         moodleCourseId: '1472',
         duration: 105,
+        classRepeat: 1,
     });
 
     const classroom1 = await Classroom.create({

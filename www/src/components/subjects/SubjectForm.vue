@@ -38,10 +38,15 @@ const initDuration = computed(() => {
 
 const duration = ref<number | 'custom' | null>(initDuration.value);
 const customDuration = ref<number | null>(props.subject?.duration ?? null);
+const classRepeat = ref<number | null>(props.subject?.classRepeat ?? null);
 
 async function submit() {
     if (duration.value === 'custom' && customDuration.value?.toString() === '') {
         customDuration.value = null;
+    }
+
+    if (classRepeat.value?.toString() === '') {
+        classRepeat.value = null;
     }
 
     const success =
@@ -53,6 +58,7 @@ async function submit() {
                   description: description.value,
                   moodleCourseId: moodleCourseId.value,
                   duration: duration.value === 'custom' ? customDuration.value : duration.value,
+                  classRepeat: classRepeat.value,
               } satisfies SubjectCreateApiData)
             : await apiPatch<boolean>('/semesters/api/subjects/', {
                   id: props.subject.id,
@@ -61,6 +67,7 @@ async function submit() {
                   description: description.value,
                   moodleCourseId: moodleCourseId.value,
                   duration: duration.value === 'custom' ? customDuration.value : duration.value,
+                  classRepeat: classRepeat.value,
               } satisfies SubjectEditApiData);
 
     if (success === undefined) {
@@ -106,6 +113,7 @@ const translations = {
         'Delete subject': 'Delete subject',
         'Duration (minutes)': 'Duration (minutes)',
         'Custom': 'Custom',
+        'How many weeks are between classes?': 'How many weeks are between classes?',
     },
     'pl': {
         'Subject name': 'Nazwa przedmiotu',
@@ -119,6 +127,7 @@ const translations = {
         'Delete subject': 'Usuń przedmiot',
         'Duration (minutes)': 'Czas trwania (minuty)',
         'Custom': 'Niestandardowy',
+        'How many weeks are between classes?': 'Co ile tygodni zajęcia się powtarzają?',
     },
 };
 
@@ -131,12 +140,15 @@ const moodleCourseInputId = crypto.randomUUID();
 const descriptionId = crypto.randomUUID();
 const teachersId = crypto.randomUUID();
 const durationId = crypto.randomUUID();
+const classRepeatId = crypto.randomUUID();
 </script>
 
 <template>
     <form class="vstack gap-2 mx-auto" style="max-width: 500px" @submit.prevent="submit">
         <div>
-            <label :for="nameId" class="form-label">{{ translate('Subject name') }}</label>
+            <label :for="nameId" class="form-label"
+                >{{ translate('Subject name') }} <span class="text-danger">*</span></label
+            >
             <input :id="nameId" v-model="subjectName" type="text" class="form-control" required autofocus />
         </div>
 
@@ -156,7 +168,9 @@ const durationId = crypto.randomUUID();
         </div>
 
         <div>
-            <label :for="teachersId" class="form-label">{{ translate('Teachers') }}</label>
+            <label :for="teachersId" class="form-label"
+                >{{ translate('Teachers') }} <span class="text-danger">*</span></label
+            >
             <UserMultiSelector :id="teachersId" v-model="teachers" :options="allUsers" required />
         </div>
 
@@ -168,6 +182,13 @@ const durationId = crypto.randomUUID();
                 <option value="custom">{{ translate('Custom') }}</option>
             </select>
             <input v-if="duration === 'custom'" v-model="customDuration" type="number" class="form-control" min="0" />
+        </div>
+
+        <div>
+            <label :for="classRepeatId" class="form-label">{{
+                translate('How many weeks are between classes?')
+            }}</label>
+            <input :id="classRepeatId" v-model="classRepeat" type="number" min="1" class="form-control" />
         </div>
 
         <div class="text-center mt-2">

@@ -67,7 +67,7 @@ const emit = defineEmits<{
 const firstClassDateStr = ref<string>();
 const classStartTime = ref<string>();
 const classEndTime = ref<string>();
-const repeatWeeks = ref(1);
+const repeatWeeks = ref(subject.classRepeat ?? 1);
 
 export interface PlannedClass {
     exercise: ExerciseData;
