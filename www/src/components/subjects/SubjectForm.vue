@@ -113,7 +113,7 @@ const translations = {
         'Subject with this name already exists.': 'Subject with this name already exists.',
         'Markdown is supported': 'Markdown is supported',
         'Delete subject': 'Delete subject',
-        'Duration (minutes)': 'Duration (minutes)',
+        'Class duration': 'Class duration',
         'Custom': 'Custom',
         'How many weeks are between classes?': 'How many weeks are between classes?',
     },
@@ -127,7 +127,7 @@ const translations = {
         'Subject with this name already exists.': 'Przedmiot o podanej nazwie już istnieje.',
         'Markdown is supported': 'Markdown jest wspierany',
         'Delete subject': 'Usuń przedmiot',
-        'Duration (minutes)': 'Czas trwania (minuty)',
+        'Class duration': 'Czas trwania zajęć',
         'Custom': 'Niestandardowy',
         'How many weeks are between classes?': 'Co ile tygodni zajęcia się powtarzają?',
     },
@@ -177,19 +177,31 @@ const classRepeatId = crypto.randomUUID();
         </div>
 
         <div>
-            <label :for="durationId" class="form-label">{{ translate('Duration (minutes)') }}</label>
-            <select :id="durationId" v-model="durationMinutes" class="form-select">
-                <option :value="105">105</option>
-                <option :value="165">165</option>
-                <option value="custom">{{ translate('Custom') }}</option>
-            </select>
-            <input
-                v-if="durationMinutes === 'custom'"
-                v-model="customDurationMinutes"
-                type="number"
-                class="form-control"
-                min="0"
-            />
+            <label :for="durationId" class="form-label">{{ translate('Class duration') }}</label>
+            <div class="input-group">
+                <select
+                    :id="durationId"
+                    v-model="durationMinutes"
+                    class="form-select"
+                    :aria-label="translate('Class duration')"
+                >
+                    <option :value="105">105</option>
+                    <option :value="165">165</option>
+                    <option value="custom">{{ translate('Custom') }}</option>
+                </select>
+                <span v-if="durationMinutes !== 'custom'" class="input-group-text">min</span>
+            </div>
+
+            <div v-if="durationMinutes === 'custom'" class="input-group">
+                <input
+                    v-model="customDurationMinutes"
+                    type="number"
+                    class="form-control"
+                    :aria-label="translate('Class duration')"
+                    min="0"
+                />
+                <span class="input-group-text">min</span>
+            </div>
         </div>
 
         <div>
