@@ -24,7 +24,26 @@ const moodleCourseId = ref<string>(props.subject?.moodleCourseId ?? '');
 const description = ref<string>(props.subject?.description ?? '');
 const teachers = ref<UserPublicData[]>(props.subject?.teachers ?? []);
 
+const initDuration = computed(() => {
+    if (props.subject?.duration === 105 || props.subject?.duration === 165) {
+        return props.subject?.duration;
+    }
+
+    if (props.subject?.duration !== undefined) {
+        return 'custom';
+    }
+
+    return undefined;
+});
+
+const duration = ref<number | 'custom' | undefined>(initDuration.value);
+const customDuration = ref<number | undefined>(props.subject?.duration);
+
 async function submit() {
+    if (duration.value === undefined || (duration.value === 'custom' && customDuration.value === undefined)) {
+        return;
+    }
+
     const success =
         props.subject === undefined
             ? await apiPost<boolean>('/semesters/api/subjects/', {
@@ -33,6 +52,7 @@ async function submit() {
                   teacherIds: teachers.value.map(user => user.id),
                   description: description.value,
                   moodleCourseId: moodleCourseId.value,
+                  duration: duration.value === 'custom' ? customDuration.value! : duration.value,
               } satisfies SubjectCreateApiData)
             : await apiPatch<boolean>('/semesters/api/subjects/', {
                   id: props.subject.id,
@@ -40,6 +60,7 @@ async function submit() {
                   teacherIds: teachers.value.map(user => user.id),
                   description: description.value,
                   moodleCourseId: moodleCourseId.value,
+                  duration: duration.value === 'custom' ? customDuration.value : duration.value,
               } satisfies SubjectEditApiData);
 
     if (success === undefined) {
@@ -83,6 +104,8 @@ const translations = {
         'Subject with this name already exists.': 'Subject with this name already exists.',
         'Markdown is supported': 'Markdown is supported',
         'Delete subject': 'Delete subject',
+        'Duration (minutes)': 'Duration (minutes)',
+        'Custom': 'Custom',
     },
     'pl': {
         'Subject name': 'Nazwa przedmiotu',
@@ -94,6 +117,8 @@ const translations = {
         'Subject with this name already exists.': 'Przedmiot o podanej nazwie już istnieje.',
         'Markdown is supported': 'Markdown jest wspierany',
         'Delete subject': 'Usuń przedmiot',
+        'Duration (minutes)': 'Czas trwania (minuty)',
+        'Custom': 'Niestandardowy',
     },
 };
 
@@ -105,6 +130,7 @@ const nameId = crypto.randomUUID();
 const moodleCourseInputId = crypto.randomUUID();
 const descriptionId = crypto.randomUUID();
 const teachersId = crypto.randomUUID();
+const durationId = crypto.randomUUID();
 </script>
 
 <template>
@@ -132,6 +158,23 @@ const teachersId = crypto.randomUUID();
         <div>
             <label :for="teachersId" class="form-label">{{ translate('Teachers') }}</label>
             <UserMultiSelector :id="teachersId" v-model="teachers" :options="allUsers" required />
+        </div>
+
+        <div>
+            <label :for="durationId" class="form-label">{{ translate('Duration (minutes)') }}</label>
+            <select :id="durationId" v-model.number="duration" class="form-select" required>
+                <option :value="105">105</option>
+                <option :value="165">165</option>
+                <option value="custom">{{ translate('Custom') }}</option>
+            </select>
+            <input
+                v-if="duration === 'custom'"
+                v-model.number="customDuration"
+                type="number"
+                class="form-control"
+                min="0"
+                required
+            />
         </div>
 
         <div class="text-center mt-2">

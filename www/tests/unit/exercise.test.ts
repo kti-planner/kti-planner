@@ -51,6 +51,7 @@ test('Exercises', async () => {
         teachers: [user1],
         description: '',
         moodleCourseId: '',
+        duration: 105,
     });
 
     const subject2 = await Subject.create({
@@ -59,6 +60,7 @@ test('Exercises', async () => {
         teachers: [user1, user2],
         description: '',
         moodleCourseId: '',
+        duration: 165,
     });
 
     const exercise1 = await Exercise.create({

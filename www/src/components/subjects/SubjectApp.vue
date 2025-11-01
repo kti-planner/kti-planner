@@ -102,6 +102,7 @@ const laboratoryGroupOptions = computed(() => Object.fromEntries(laboratoryGroup
                     "
                     :exercises
                     :semester
+                    :subject
                     :laboratory-groups
                     :schedule-changes
                     :api-url="`${subjectUrl}/api/laboratory-classes/`"

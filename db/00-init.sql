@@ -37,7 +37,8 @@ CREATE TABLE subjects (
     semester_id      uuid NOT NULL REFERENCES semesters ON DELETE NO ACTION,
     teacher_ids      uuid[] NOT NULL,
     description      text NOT NULL,
-    moodle_course_id text NOT NULL
+    moodle_course_id text NOT NULL,
+    duration         integer NOT NULL
 );
 
 CREATE TABLE exercises (

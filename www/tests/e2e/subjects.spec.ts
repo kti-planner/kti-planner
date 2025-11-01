@@ -46,6 +46,7 @@ test('Can add new subject and prevent duplicate subject creation', async ({ page
     await page.getByRole('textbox', { name: 'Moodle course ID' }).fill('1472');
     await page.getByRole('textbox', { name: 'Description' }).fill('Subject test description <script>alert(0)</script>');
     await page.getByRole('combobox', { name: 'Teachers' }).selectOption('Jan Kowalski');
+    await page.getByRole('combobox', { name: 'Duration' }).selectOption('105');
 
     await page.getByRole('button', { name: 'Add', exact: true }).click();
 
@@ -64,6 +65,7 @@ test('Can add new subject and prevent duplicate subject creation', async ({ page
 
     await page.getByRole('textbox', { name: 'Subject name' }).fill('Sieci komputerowe - Informatyka sem. V');
     await page.getByRole('combobox', { name: 'Teachers' }).selectOption('Jan Kowalski');
+    await page.getByRole('combobox', { name: 'Duration' }).selectOption('105');
 
     await page.getByRole('button', { name: 'Add', exact: true }).click();
 
@@ -116,6 +118,7 @@ test('Can edit subject and prevent duplicate subject', async ({ page }) => {
     await page.getByRole('textbox', { name: 'Moodle course ID' }).fill('15');
     await page.getByRole('textbox', { name: 'Description' }).fill('Test description');
     await page.getByRole('combobox', { name: 'Teachers' }).selectOption('Admin');
+    await page.getByRole('combobox', { name: 'Duration' }).selectOption('165');
 
     await page.getByRole('button', { name: 'Save' }).click();
 

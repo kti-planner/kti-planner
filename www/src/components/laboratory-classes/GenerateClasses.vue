@@ -5,6 +5,7 @@ import { langId } from '@components/frontend/lang';
 import type { ExerciseData } from '@components/exercises/types';
 import type { LaboratoryGroupData } from '@components/laboratory-groups/types';
 import type { ScheduleChangeData, SemesterData } from '@components/semesters/types';
+import type { SubjectData } from '@components/subjects/types';
 import GenerateClassesForm from '@components/laboratory-classes/GenerateClassesForm.vue';
 import Modal from '@components/Modal.vue';
 
@@ -26,6 +27,7 @@ function translate(text: keyof (typeof translations)[LangId]): string {
 const { initialGroup } = defineProps<{
     initialGroup: LaboratoryGroupData | null;
     exercises: ExerciseData[];
+    subject: SubjectData;
     semester: SemesterData;
     apiUrl: string;
     laboratoryGroups: LaboratoryGroupData[];
@@ -58,6 +60,7 @@ function handleFormDone() {
         <GenerateClassesForm
             v-model:group="group"
             :semester
+            :subject
             :exercises
             :api-url
             :laboratory-groups

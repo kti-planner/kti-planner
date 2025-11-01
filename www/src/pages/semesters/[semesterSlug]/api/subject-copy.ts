@@ -50,6 +50,7 @@ export const POST: APIRoute = async ({ locals, params }) => {
         teachers: await subjectToBeCopied.getTeachers(),
         description: subjectToBeCopied.description,
         moodleCourseId: '', // Course id is not copied
+        duration: subjectToBeCopied.duration,
     });
 
     // Copy exercises
