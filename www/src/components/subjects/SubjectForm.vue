@@ -148,19 +148,23 @@ const classRepeatId = crypto.randomUUID();
 <template>
     <form class="vstack gap-2 mx-auto" style="max-width: 500px" @submit.prevent="submit">
         <div>
-            <label :for="nameId" class="form-label"
-                >{{ translate('Subject name') }} <span class="text-danger">*</span></label
-            >
+            <label :for="nameId" class="form-label">
+                {{ translate('Subject name') }} <span class="text-danger">*</span>
+            </label>
             <input :id="nameId" v-model="subjectName" type="text" class="form-control" required autofocus />
         </div>
 
         <div>
-            <label :for="moodleCourseInputId" class="form-label">{{ translate('Moodle course ID') }}</label>
+            <label :for="moodleCourseInputId" class="form-label">
+                {{ translate('Moodle course ID') }}
+            </label>
             <input :id="moodleCourseInputId" v-model="moodleCourseId" type="text" class="form-control" />
         </div>
 
         <div>
-            <label :for="descriptionId" class="form-label">{{ translate('Description') }}</label>
+            <label :for="descriptionId" class="form-label">
+                {{ translate('Description') }}
+            </label>
             <textarea
                 :id="descriptionId"
                 v-model="description"
@@ -170,29 +174,28 @@ const classRepeatId = crypto.randomUUID();
         </div>
 
         <div>
-            <label :for="teachersId" class="form-label"
-                >{{ translate('Teachers') }} <span class="text-danger">*</span></label
-            >
+            <label :for="teachersId" class="form-label">
+                {{ translate('Teachers') }} <span class="text-danger">*</span>
+            </label>
             <UserMultiSelector :id="teachersId" v-model="teachers" :options="allUsers" required />
         </div>
 
         <div>
-            <label :for="durationId" class="form-label">{{ translate('Class duration') }}</label>
-            <div class="input-group">
-                <select
-                    :id="durationId"
-                    v-model="durationMinutes"
-                    class="form-select"
-                    :aria-label="translate('Class duration')"
-                >
-                    <option :value="105">105</option>
-                    <option :value="165">165</option>
-                    <option value="custom">{{ translate('Custom') }}</option>
-                </select>
-                <span v-if="durationMinutes !== 'custom'" class="input-group-text">min</span>
-            </div>
+            <label :for="durationId" class="form-label">
+                {{ translate('Class duration') }}
+            </label>
+            <select
+                :id="durationId"
+                v-model="durationMinutes"
+                class="form-select"
+                :aria-label="translate('Class duration')"
+            >
+                <option :value="105">105 min</option>
+                <option :value="165">165 min</option>
+                <option value="custom">{{ translate('Custom') }}</option>
+            </select>
 
-            <div v-if="durationMinutes === 'custom'" class="input-group">
+            <div v-if="durationMinutes === 'custom'" class="input-group mt-2">
                 <input
                     v-model="customDurationMinutes"
                     type="number"
@@ -205,9 +208,9 @@ const classRepeatId = crypto.randomUUID();
         </div>
 
         <div>
-            <label :for="classRepeatId" class="form-label">{{
-                translate('How many weeks are between classes?')
-            }}</label>
+            <label :for="classRepeatId" class="form-label">
+                {{ translate('How many weeks are between classes?') }}
+            </label>
             <input :id="classRepeatId" v-model="classRepeatWeeks" type="number" min="1" class="form-control" />
         </div>
 
