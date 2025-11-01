@@ -96,11 +96,18 @@ const weekId = crypto.randomUUID();
                 class="form-control"
                 :aria-label="translate('Move by weeks')"
                 :aria-describedby="`${moveById} ${weekId}`"
+                :style="{ minWidth: '60px' }"
             />
             <span :id="weekId" class="input-group-text text-center d-inline-block" :style="{ minWidth: '94px' }">{{
                 weeks === 1 ? translate('week') : translate('weeks')
             }}</span>
-            <select v-model="direction" class="form-select" required :aria-label="translate('Move by direction')">
+            <select
+                v-model="direction"
+                class="form-select"
+                required
+                :aria-label="translate('Move by direction')"
+                :style="{ minWidth: '135px' }"
+            >
                 <option value="forwards">{{ translate('forwards') }}</option>
                 <option value="backwards">{{ translate('backwards') }}</option>
             </select>
