@@ -9,36 +9,31 @@ import { toHyphenatedLowercase } from '@components/utils';
 import ButtonWithConfirmationPopover from '@components/ButtonWithConfirmationPopover.vue';
 import UserMultiSelector from '@components/users/UserMultiSelector.vue';
 
-const props = defineProps<{
+const { semester, subject } = defineProps<{
     semester: SemesterData;
     subject?: SubjectData;
     allUsers: UserPublicData[];
 }>();
 
-const isEditing = computed(() => props.subject !== undefined);
+const isEditing = computed(() => subject !== undefined);
 
 const submitFailed = ref(false);
 
-const subjectName = ref<string>(props.subject?.name ?? '');
-const moodleCourseId = ref<string>(props.subject?.moodleCourseId ?? '');
-const description = ref<string>(props.subject?.description ?? '');
-const teachers = ref<UserPublicData[]>(props.subject?.teachers ?? []);
+const subjectName = ref<string>(subject?.name ?? '');
+const moodleCourseId = ref<string>(subject?.moodleCourseId ?? '');
+const description = ref<string>(subject?.description ?? '');
+const teachers = ref<UserPublicData[]>(subject?.teachers ?? []);
 
-const initDuration = computed(() => {
-    if (props.subject?.durationMinutes === 105 || props.subject?.durationMinutes === 165) {
-        return props.subject?.durationMinutes;
-    }
+const durationMinutes = ref<105 | 165 | 'custom' | null>(
+    !subject || subject.durationMinutes === null
+        ? null
+        : subject.durationMinutes === 105 || subject.durationMinutes === 165
+          ? subject.durationMinutes
+          : 'custom',
+);
 
-    if (props.subject?.durationMinutes !== null && props.subject?.durationMinutes !== undefined) {
-        return 'custom';
-    }
-
-    return null;
-});
-
-const durationMinutes = ref<number | 'custom' | null>(initDuration.value);
-const customDurationMinutes = ref<number | null>(props.subject?.durationMinutes ?? null);
-const classRepeatWeeks = ref<number | null>(props.subject?.classRepeatWeeks ?? null);
+const customDurationMinutes = ref<number | null>(subject?.durationMinutes ?? null);
+const classRepeatWeeks = ref<number | null>(subject?.classRepeatWeeks ?? null);
 
 async function submit() {
     if (durationMinutes.value === 'custom' && customDurationMinutes.value?.toString() === '') {
@@ -50,10 +45,10 @@ async function submit() {
     }
 
     const success =
-        props.subject === undefined
+        subject === undefined
             ? await apiPost<boolean>('/semesters/api/subjects/', {
                   name: subjectName.value,
-                  semesterId: props.semester.id,
+                  semesterId: semester.id,
                   teacherIds: teachers.value.map(user => user.id),
                   description: description.value,
                   moodleCourseId: moodleCourseId.value,
@@ -62,7 +57,7 @@ async function submit() {
                   classRepeatWeeks: classRepeatWeeks.value,
               } satisfies SubjectCreateApiData)
             : await apiPatch<boolean>('/semesters/api/subjects/', {
-                  id: props.subject.id,
+                  id: subject.id,
                   name: subjectName.value,
                   teacherIds: teachers.value.map(user => user.id),
                   description: description.value,
@@ -79,7 +74,7 @@ async function submit() {
     submitFailed.value = !success;
 
     if (success) {
-        const newUrl = `/semesters/${props.semester.slug}/subjects/${toHyphenatedLowercase(subjectName.value ?? '')}/`;
+        const newUrl = `/semesters/${semester.slug}/subjects/${toHyphenatedLowercase(subjectName.value ?? '')}/`;
 
         if (isEditing.value) {
             window.history.replaceState({}, '', newUrl);
@@ -91,14 +86,14 @@ async function submit() {
 }
 
 async function doDelete() {
-    if (!props.subject) {
+    if (!subject) {
         return;
     }
 
-    const result = await apiDelete<boolean>('/semesters/api/subjects/', new URLSearchParams({ id: props.subject.id }));
+    const result = await apiDelete<boolean>('/semesters/api/subjects/', new URLSearchParams({ id: subject.id }));
 
     if (result) {
-        window.location.assign(`/semesters/${props.semester.slug}/`);
+        window.location.assign(`/semesters/${semester.slug}/`);
     }
 }
 
