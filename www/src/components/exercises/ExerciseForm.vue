@@ -22,7 +22,7 @@ const isEditing = computed(() => props.exercise?.id !== undefined);
 const submitFailed = ref(false);
 
 const exerciseName = ref<string | undefined>(props.exercise?.name);
-const exerciseNumber = ref<number | undefined>(props.exercise?.exerciseNumber);
+const exerciseNumber = ref<number | string | undefined>(props.exercise?.exerciseNumber);
 
 const exerciseClassroomId = ref<string | null | undefined>(
     props.exercise?.classroom === null ? null : props.exercise?.classroom?.id,
@@ -34,6 +34,7 @@ async function submit() {
     if (
         exerciseName.value === undefined ||
         exerciseNumber.value === undefined ||
+        typeof exerciseNumber.value === 'string' ||
         exerciseClassroomId.value === undefined ||
         teacher.value?.id === undefined
     ) {
