@@ -67,7 +67,7 @@ const emit = defineEmits<{
 const firstClassDateStr = ref<string>();
 const classStartTime = ref<string>();
 const classEndTime = ref<string>();
-const repeatWeeks = ref(subject.classRepeatWeeks ?? 1);
+const repeatWeeks = ref<number | string>(subject.classRepeatWeeks ?? 1);
 
 export interface PlannedClass {
     exercise: ExerciseData;
@@ -80,15 +80,18 @@ const plannedClasses = computed<PlannedClass[]>(() => {
         firstClassDateStr.value === undefined ||
         classStartTime.value === undefined ||
         classEndTime.value === undefined ||
-        group.value === undefined
+        group.value === undefined ||
+        typeof repeatWeeks.value === 'string'
     ) {
         return [];
     }
 
+    const repeatWeeksNumber = repeatWeeks.value;
+
     let last: Date | undefined;
     return exercises.map<PlannedClass>(exercise => {
         const date = last
-            ? getNextDayOfTheWeekOccurrence(new Date(last), scheduleChanges, repeatWeeks.value - 1)
+            ? getNextDayOfTheWeekOccurrence(new Date(last), scheduleChanges, repeatWeeksNumber - 1)
             : parseDateLocalYyyyMmDd(firstClassDateStr.value!);
 
         last = date;
