@@ -128,7 +128,7 @@ const teacherId = crypto.randomUUID();
                 :href="`/semesters/${semester.slug}/subjects/${subject.slug}/${laboratoryClass.exercise.exerciseNumber}/`"
                 class="link-success"
             >
-                {{ laboratoryClass.exercise.name }}
+                {{ `${laboratoryClass.exercise.exerciseNumber}. ${laboratoryClass.exercise.name}` }}
             </a>
         </div>
 
