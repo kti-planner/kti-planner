@@ -3,7 +3,7 @@ import type { CalendarEventData } from '@components/calendar-events/types';
 import type { LaboratoryClassData } from '@components/laboratory-classes/types';
 import type { ScheduleChangeData } from '@components/semesters/types';
 
-export type LaboraoryClassEventInput = EventInput & {
+export type LaboratoryClassEventInput = EventInput & {
     extendedProps: {
         laboratoryClass: LaboratoryClassData;
     };
@@ -15,8 +15,8 @@ export type CalendarEventInput = EventInput & {
     };
 };
 
-export function getLaboratoryClassEvents(laboratoryClasses: LaboratoryClassData[]): LaboraoryClassEventInput[] {
-    return laboratoryClasses.map<LaboraoryClassEventInput>(laboratoryClass => ({
+export function getLaboratoryClassEvents(laboratoryClasses: LaboratoryClassData[]): LaboratoryClassEventInput[] {
+    return laboratoryClasses.map<LaboratoryClassEventInput>(laboratoryClass => ({
         title: `${laboratoryClass.laboratoryGroup.name} - ${laboratoryClass.exercise.name}`,
         start: laboratoryClass.startDate,
         end: laboratoryClass.endDate,
