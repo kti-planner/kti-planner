@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, watch, watchEffect } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { langId } from '@components/frontend/lang';
 import { currentUser } from '@components/frontend/user';
 import { apiDelete, apiPatch, apiPost } from '@components/api';
@@ -45,8 +45,6 @@ const user = ref<UserPublicData | null>(
               }
             : null),
 );
-
-watchEffect(() => console.log(user.value?.name));
 
 const classroomId = ref<string | null | undefined>(
     props.calendarEvent?.classroom === null ? null : props.calendarEvent?.classroom?.id,
