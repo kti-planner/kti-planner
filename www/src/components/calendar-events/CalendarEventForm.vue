@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue';
+import { computed, ref, watch, watchEffect } from 'vue';
 import { langId } from '@components/frontend/lang';
 import { currentUser } from '@components/frontend/user';
 import { apiDelete, apiPatch, apiPost } from '@components/api';
@@ -12,13 +12,16 @@ import type {
 } from '@components/calendar-events/types';
 import { type ClassroomData, formatClassroomName } from '@components/classrooms/types';
 import type { SemesterData } from '@components/semesters/types';
+import type { UserPublicData } from '@components/users/types';
 import { formatDateLocalYyyyMmDd, parseDateLocalYyyyMmDd } from '@components/utils';
 import ButtonWithConfirmationPopover from '@components/ButtonWithConfirmationPopover.vue';
+import UserSelector from '@components/users/UserSelector.vue';
 
 const props = defineProps<{
     semester: SemesterData;
     classrooms: ClassroomData[];
     calendarEvent: Pick<CalendarEventData, 'startDate' | 'endDate'> & Partial<CalendarEventData>;
+    users: UserPublicData[];
 }>();
 
 const emit = defineEmits<{
@@ -32,6 +35,19 @@ const date = ref<string>(props.calendarEvent.startDate.split('T')[0] ?? '');
 const startTime = ref<string>(props.calendarEvent.startDate.split('T')[1] ?? '');
 const endTime = ref<string>(props.calendarEvent.endDate.split('T')[1] ?? '');
 
+const user = ref<UserPublicData | null>(
+    props.calendarEvent?.user ??
+        (currentUser
+            ? {
+                  id: currentUser.id,
+                  name: currentUser.name,
+                  role: currentUser.role,
+              }
+            : null),
+);
+
+watchEffect(() => console.log(user.value?.name));
+
 const classroomId = ref<string | null | undefined>(
     props.calendarEvent?.classroom === null ? null : props.calendarEvent?.classroom?.id,
 );
@@ -42,7 +58,7 @@ watch(date, newDate => (repeatOptions.value.startDate = parseDateLocalYyyyMmDd(n
 const eventConflicts = ref<EventConflict[]>([]);
 
 async function submit() {
-    if (name.value === '' || classroomId.value === undefined) {
+    if (name.value === '' || classroomId.value === undefined || !user.value) {
         return;
     }
 
@@ -50,12 +66,14 @@ async function submit() {
         props.calendarEvent?.id === undefined
             ? await apiPost<EventConflict[]>(`/semesters/${props.semester.slug}/api/calendar-events/`, {
                   name: name.value,
+                  userId: user.value.id,
                   classroomId: classroomId.value,
                   durations: repeatOptions.value.generateDurations(startTime.value, endTime.value),
               } satisfies CalendarEventCreateApiData)
             : await apiPatch<EventConflict[]>(`/semesters/${props.semester.slug}/api/calendar-events/`, {
                   id: props.calendarEvent.id,
                   name: name.value,
+                  userId: user.value.id,
                   classroomId: classroomId.value,
                   startDate: `${date.value}T${startTime.value}`,
                   endDate: `${date.value}T${endTime.value}`,
@@ -157,6 +175,7 @@ const repeatEndId = crypto.randomUUID();
 const repeatEndDateId = crypto.randomUUID();
 const repeatCountId = crypto.randomUUID();
 const nameId = crypto.randomUUID();
+const userId = crypto.randomUUID();
 const classroomInputId = crypto.randomUUID();
 </script>
 
@@ -267,10 +286,14 @@ const classroomInputId = crypto.randomUUID();
             {{ name }}
         </div>
 
-        <div v-if="calendarEvent?.user">
+        <div v-if="currentUser">
+            <label :for="userId" class="form-label">{{ translate('Teacher') }}</label>
+            <UserSelector :id="userId" v-model="user" :options="users" required />
+        </div>
+        <div v-else>
             {{ translate('Teacher') }}:
             <br />
-            {{ calendarEvent.user.name }}
+            {{ user?.name }}
         </div>
 
         <div v-if="currentUser">
