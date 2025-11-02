@@ -8,6 +8,7 @@ import { makeScheduleChangeData, Semester } from '@backend/semester';
 import { Subject } from '@backend/subject';
 import { getDayOfTheWeekOccurrence } from '@components/laboratory-classes/dates';
 import { laboratoryClassMoveApiSchema } from '@components/laboratory-classes/types';
+import type { ScheduleChangeData } from '@components/semesters/types';
 import { getSubjectFromParams } from '@pages/semesters/[semesterSlug]/subjects/[subjectSlug]/api/_subject-utils';
 
 export const PATCH: APIRoute = async ({ locals, params }) => {
@@ -51,7 +52,13 @@ export const PATCH: APIRoute = async ({ locals, params }) => {
     const baseExercise = exercises.find(exercise => exercise.id === baseLaboratoryClass.exerciseId);
     assert(baseExercise);
 
-    const classes = (await LaboratoryClass.fetchAllFromSubject(subject)).filter(laboratoryClass => {
+    const subjectLaboratoryClasses = laboratoryClasses.filter(laboratoryClass => {
+        const exercise = exercises.find(exercise => exercise.id === laboratoryClass.exerciseId);
+        assert(exercise);
+        return exercise.subjectId === subject.id;
+    });
+
+    let classes = subjectLaboratoryClasses.filter(laboratoryClass => {
         const exercise = exercises.find(exercise => exercise.id === laboratoryClass.exerciseId);
         assert(exercise);
 
@@ -64,31 +71,23 @@ export const PATCH: APIRoute = async ({ locals, params }) => {
 
     const scheduleChangeData = scheduleChanges.map(makeScheduleChangeData);
 
-    const slots = classes.map<EventSlot>(laboratoryClass => {
-        const exercise = exercises.find(exercise => exercise.id === laboratoryClass.exerciseId);
-        assert(exercise);
+    let slots = makeSlots(classes, exercises, scheduleChangeData, data.moveByWeeks);
 
-        const startDate = getDayOfTheWeekOccurrence(
-            laboratoryClass.startDate,
-            scheduleChangeData,
-            Math.sign(data.moveByWeeks),
-            Math.abs(data.moveByWeeks) - 1,
-        );
+    // Conflicting classes of the same subject but for other laboratory groups
+    const otherGroupClasses = subjectLaboratoryClasses.filter(
+        laboratoryClass =>
+            laboratoryClass.laboratoryGroupId !== baseLaboratoryClass.laboratoryGroupId &&
+            slots.some(
+                slot =>
+                    laboratoryClass.startDate.getTime() < slot.endDate.getTime() &&
+                    laboratoryClass.endDate.getTime() > slot.startDate.getTime(),
+            ),
+    );
 
-        const endDate = getDayOfTheWeekOccurrence(
-            laboratoryClass.endDate,
-            scheduleChangeData,
-            Math.sign(data.moveByWeeks),
-            Math.abs(data.moveByWeeks) - 1,
-        );
+    const otherGroupSlots = makeSlots(otherGroupClasses, exercises, scheduleChangeData, data.moveByWeeks);
 
-        return {
-            id: laboratoryClass.id,
-            classroomId: exercise.classroomId,
-            startDate,
-            endDate,
-        };
-    });
+    classes = [...classes, ...otherGroupClasses];
+    slots = [...slots, ...otherGroupSlots];
 
     const ignoreIds = classes.map(laboratoryClass => laboratoryClass.id);
 
@@ -123,3 +122,36 @@ export const PATCH: APIRoute = async ({ locals, params }) => {
 
     return Response.json([]);
 };
+
+function makeSlots(
+    classes: LaboratoryClass[],
+    exercises: Exercise[],
+    scheduleChangeData: ScheduleChangeData[],
+    moveByWeeks: number,
+): EventSlot[] {
+    return classes.map<EventSlot>(laboratoryClass => {
+        const exercise = exercises.find(exercise => exercise.id === laboratoryClass.exerciseId);
+        assert(exercise);
+
+        const startDate = getDayOfTheWeekOccurrence(
+            laboratoryClass.startDate,
+            scheduleChangeData,
+            Math.sign(moveByWeeks),
+            Math.abs(moveByWeeks) - 1,
+        );
+
+        const endDate = getDayOfTheWeekOccurrence(
+            laboratoryClass.endDate,
+            scheduleChangeData,
+            Math.sign(moveByWeeks),
+            Math.abs(moveByWeeks) - 1,
+        );
+
+        return {
+            id: laboratoryClass.id,
+            classroomId: exercise.classroomId,
+            startDate,
+            endDate,
+        };
+    });
+}

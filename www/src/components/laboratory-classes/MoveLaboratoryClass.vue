@@ -13,8 +13,8 @@ const { laboratoryClass, apiUrl } = defineProps<{
 
 const translations = {
     'en': {
-        'This will move this class and the next ones for this laboratory group.':
-            'This will move this class and the next ones for this laboratory group.',
+        'This will move this class and the next ones for this laboratory group. If conflicts with other laboratory groups are found, those classes will be moved as well.':
+            'This will move this class and the next ones for this laboratory group. If conflicts with other laboratory groups are found, those classes will be moved as well.',
         'Move by': 'Move by',
         'week': 'week',
         'weeks': 'weeks',
@@ -28,8 +28,8 @@ const translations = {
         'Move by direction': 'Move by direction',
     },
     'pl': {
-        'This will move this class and the next ones for this laboratory group.':
-            'Te i kolejne zajęcia tej grupy laboratoryjnej zostaną przesunięte.',
+        'This will move this class and the next ones for this laboratory group. If conflicts with other laboratory groups are found, those classes will be moved as well.':
+            'Te i kolejne zajęcia tej grupy laboratoryjnej zostaną przesunięte. Jeżeli zostaną wykryte kolizje z zajęciami innych grup, te zajęcia też zostaną przesunięte.',
         'Move by': 'Przesuń o',
         'week': 'tydzień',
         'weeks': 'tygodnie',
@@ -85,7 +85,13 @@ const weekId = crypto.randomUUID();
 
 <template>
     <form class="vstack gap-2" @submit.prevent="moveLaboratoryClasses">
-        <p class="mb-0">{{ translate('This will move this class and the next ones for this laboratory group.') }}</p>
+        <p class="mb-0">
+            {{
+                translate(
+                    'This will move this class and the next ones for this laboratory group. If conflicts with other laboratory groups are found, those classes will be moved as well.',
+                )
+            }}
+        </p>
 
         <div class="input-group">
             <span :id="moveById" class="input-group-text">{{ translate('Move by') }}:</span>
