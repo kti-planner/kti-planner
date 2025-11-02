@@ -32,16 +32,12 @@ const durationMinutes = ref<105 | 165 | 'custom' | null>(
           : 'custom',
 );
 
-const customDurationMinutes = ref<number | null>(subject?.durationMinutes ?? null);
-const classRepeatWeeks = ref<number | null>(subject?.classRepeatWeeks ?? null);
+const customDurationMinutes = ref<number | string>(subject?.durationMinutes ?? 105);
+const classRepeatWeeks = ref<number | string>(subject?.classRepeatWeeks ?? 1);
 
 async function submit() {
-    if (durationMinutes.value === 'custom' && customDurationMinutes.value?.toString() === '') {
-        customDurationMinutes.value = null;
-    }
-
-    if (classRepeatWeeks.value?.toString() === '') {
-        classRepeatWeeks.value = null;
+    if (typeof customDurationMinutes.value === 'string' || typeof classRepeatWeeks.value === 'string') {
+        return;
     }
 
     const success =
@@ -110,6 +106,7 @@ const translations = {
         'Delete subject': 'Delete subject',
         'Class duration': 'Class duration',
         'Custom': 'Custom',
+        'Variable': 'Variable',
         'How many weeks are between classes?': 'How many weeks are between classes?',
     },
     'pl': {
@@ -124,6 +121,7 @@ const translations = {
         'Delete subject': 'Usuń przedmiot',
         'Class duration': 'Czas trwania zajęć',
         'Custom': 'Niestandardowy',
+        'Variable': 'Zmienny',
         'How many weeks are between classes?': 'Co ile tygodni zajęcia się powtarzają?',
     },
 };
@@ -188,6 +186,7 @@ const classRepeatId = crypto.randomUUID();
                 <option :value="105">105 min</option>
                 <option :value="165">165 min</option>
                 <option value="custom">{{ translate('Custom') }}</option>
+                <option :value="null">{{ translate('Variable') }}</option>
             </select>
 
             <div v-if="durationMinutes === 'custom'" class="input-group mt-2">
@@ -197,6 +196,7 @@ const classRepeatId = crypto.randomUUID();
                     class="form-control"
                     :aria-label="translate('Class duration')"
                     min="0"
+                    required
                 />
                 <span class="input-group-text">min</span>
             </div>
@@ -206,7 +206,7 @@ const classRepeatId = crypto.randomUUID();
             <label :for="classRepeatId" class="form-label">
                 {{ translate('How many weeks are between classes?') }}
             </label>
-            <input :id="classRepeatId" v-model="classRepeatWeeks" type="number" min="1" class="form-control" />
+            <input :id="classRepeatId" v-model="classRepeatWeeks" type="number" min="1" class="form-control" required />
         </div>
 
         <div class="text-center mt-2">

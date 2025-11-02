@@ -39,7 +39,7 @@ CREATE TABLE subjects (
     description        text NOT NULL,
     moodle_course_id   text NOT NULL,
     duration_minutes   integer,
-    class_repeat_weeks integer
+    class_repeat_weeks integer NOT NULL
 );
 
 CREATE TABLE exercises (

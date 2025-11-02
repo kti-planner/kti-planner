@@ -17,7 +17,7 @@ interface DbSubject {
     description: string;
     moodle_course_id: string;
     duration_minutes: number | null;
-    class_repeat_weeks: number | null;
+    class_repeat_weeks: number;
 }
 
 export interface SubjectCreateData {
@@ -27,7 +27,7 @@ export interface SubjectCreateData {
     description: string;
     moodleCourseId: string;
     durationMinutes: number | null;
-    classRepeatWeeks: number | null;
+    classRepeatWeeks: number;
 }
 
 export interface SubjectEditData {
@@ -37,7 +37,7 @@ export interface SubjectEditData {
     description?: string | undefined;
     moodleCourseId?: string | undefined;
     durationMinutes?: number | null | undefined;
-    classRepeatWeeks?: number | null | undefined;
+    classRepeatWeeks?: number | undefined;
 }
 
 export class Subject {
@@ -48,7 +48,7 @@ export class Subject {
     description: string;
     moodleCourseId: string;
     durationMinutes: number | null;
-    classRepeatWeeks: number | null;
+    classRepeatWeeks: number;
 
     constructor(data: DbSubject) {
         this.id = data.id;
