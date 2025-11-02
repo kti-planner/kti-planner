@@ -52,7 +52,7 @@ const emit = defineEmits<{
     submit: [];
 }>();
 
-const weeks = ref(1);
+const weeks = ref<number | string>(1);
 
 type Direction = 'forwards' | 'backwards';
 const direction = ref<Direction>('forwards');
@@ -60,6 +60,10 @@ const direction = ref<Direction>('forwards');
 const eventConflicts = ref<EventConflict[]>([]);
 
 async function moveLaboratoryClasses() {
+    if (typeof weeks.value === 'string') {
+        return;
+    }
+
     eventConflicts.value = [];
 
     const conflicts = await apiPatch<EventConflict[]>(apiUrl, {
@@ -104,9 +108,9 @@ const weekId = crypto.randomUUID();
                 :aria-describedby="`${moveById} ${weekId}`"
                 :style="{ minWidth: '60px' }"
             />
-            <span :id="weekId" class="input-group-text text-center d-inline-block" :style="{ minWidth: '94px' }">{{
-                weeks === 1 ? translate('week') : translate('weeks')
-            }}</span>
+            <span :id="weekId" class="input-group-text text-center d-inline-block" :style="{ minWidth: '94px' }">
+                {{ weeks === 1 ? translate('week') : translate('weeks') }}
+            </span>
             <select
                 v-model="direction"
                 class="form-select"
