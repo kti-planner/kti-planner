@@ -136,14 +136,14 @@ function makeSlots(
         const startDate = getDayOfTheWeekOccurrence(
             laboratoryClass.startDate,
             scheduleChangeData,
-            Math.sign(moveByWeeks),
+            moveByWeeks > 0 ? 1 : -1,
             Math.abs(moveByWeeks) - 1,
         );
 
         const endDate = getDayOfTheWeekOccurrence(
             laboratoryClass.endDate,
             scheduleChangeData,
-            Math.sign(moveByWeeks),
+            moveByWeeks > 0 ? 1 : -1,
             Math.abs(moveByWeeks) - 1,
         );
 
