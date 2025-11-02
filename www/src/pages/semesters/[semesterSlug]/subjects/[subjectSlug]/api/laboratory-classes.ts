@@ -118,6 +118,7 @@ export const POST: APIRoute = async ({ locals, params }) => {
 
     const conflicts = checkForEventConflicts(
         slots,
+        semester,
         scheduleChanges,
         laboratoryClasses,
         exercises,
@@ -215,6 +216,7 @@ export const PATCH: APIRoute = async ({ locals, params }) => {
                 endDate: data.endDate ?? laboratoryClass.endDate,
             },
         ],
+        semester,
         scheduleChanges,
         laboratoryClasses,
         exercises,

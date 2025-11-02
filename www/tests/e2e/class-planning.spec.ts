@@ -101,21 +101,21 @@ test('Can plan classes with two weeks between each one', async ({ page }) => {
 
     await page.getByRole('button', { name: 'Plan classes' }).click();
     await page.getByRole('combobox', { name: 'Laboratory group' }).selectOption('5A');
-    await page.getByRole('textbox', { name: 'First class date' }).fill('2025-04-08');
+    await page.getByRole('textbox', { name: 'First class date' }).fill('2025-03-25');
     await page.getByRole('textbox', { name: 'Class start time' }).fill('11:15');
     await page.getByRole('textbox', { name: 'Class end time' }).fill('13:00');
     await page.getByRole('spinbutton', { name: 'How many weeks are between classes?' }).fill('2');
 
+    await expect(page.getByText('2025-03-25 11:15 - 13:00')).toBeVisible();
     await expect(page.getByText('2025-04-08 11:15 - 13:00')).toBeVisible();
     await expect(page.getByText('2025-04-29 11:15 - 13:00')).toBeVisible();
     await expect(page.getByText('2025-05-13 11:15 - 13:00')).toBeVisible();
     await expect(page.getByText('2025-05-27 11:15 - 13:00')).toBeVisible();
     await expect(page.getByText('2025-06-10 11:15 - 13:00')).toBeVisible();
-    await expect(page.getByText('2025-06-24 11:15 - 13:00')).toBeVisible();
 
     await page.getByRole('button', { name: 'Generate classes' }).click();
 
-    await expect(page.getByText('23 – 29 Jun 2025')).toBeVisible();
+    await expect(page.getByText('9 – 15 Jun 2025')).toBeVisible();
     await expect(page.locator('p', { hasText: '11:15 - 13:00' })).toBeVisible();
 });
 
@@ -196,4 +196,56 @@ test('Cannot edit class time to another class', async ({ page }) => {
     await page.getByRole('button', { name: 'Save' }).click();
 
     await expect(page.getByText('There is another class during this time')).toBeVisible();
+});
+
+test('Can move classes forwards', async ({ page }) => {
+    await page.goto('/semesters/2025-winter/subjects/sieci-komputerowe---informatyka-sem.-v/');
+    await loginAsTeacher(page);
+
+    await page.locator('.calendar-wrapper a').filter({ hasText: '11:15 - 13:00' }).click();
+
+    await expect(page.getByRole('heading', { name: 'Edit class' })).toBeVisible();
+
+    await expect(page.getByRole('link', { name: 'Diagnostyka sieci IPv4', exact: true })).toBeVisible();
+    await expect(page.getByText('Laboratory group: 1A')).toBeVisible();
+    await expect(page.getByText('Classroom: EA 142')).toBeVisible();
+
+    await expect(page.getByRole('textbox', { name: 'Date' })).toHaveValue('2025-10-01');
+    await expect(page.getByRole('textbox', { name: 'Start time' })).toHaveValue('11:15');
+    await expect(page.getByRole('textbox', { name: 'End time' })).toHaveValue('13:00');
+    await expectSelectedOptionText(page.getByRole('combobox', { name: 'Teacher' }), 'Jan Kowalski');
+
+    await page.getByRole('button', { name: 'Moving classes' }).click();
+    await page.getByRole('button', { name: 'Move' }).click();
+
+    await expect(page.locator('.calendar-wrapper a').filter({ hasText: '11:15 - 13:00' })).not.toBeVisible();
+
+    const nextWeekBtn = page.getByRole('button', { name: 'Next week' });
+    await nextWeekBtn.click();
+
+    await expect(page.locator('.calendar-wrapper a').filter({ hasText: '11:15 - 13:00' })).toBeVisible();
+});
+
+test('Cannot move classes outside of semester', async ({ page }) => {
+    await page.goto('/semesters/2025-winter/subjects/sieci-komputerowe---informatyka-sem.-v/');
+    await loginAsTeacher(page);
+
+    await page.locator('.calendar-wrapper a').filter({ hasText: '11:15 - 13:00' }).click();
+
+    await expect(page.getByRole('heading', { name: 'Edit class' })).toBeVisible();
+
+    await expect(page.getByRole('link', { name: 'Diagnostyka sieci IPv4', exact: true })).toBeVisible();
+    await expect(page.getByText('Laboratory group: 1A')).toBeVisible();
+    await expect(page.getByText('Classroom: EA 142')).toBeVisible();
+
+    await expect(page.getByRole('textbox', { name: 'Date' })).toHaveValue('2025-10-01');
+    await expect(page.getByRole('textbox', { name: 'Start time' })).toHaveValue('11:15');
+    await expect(page.getByRole('textbox', { name: 'End time' })).toHaveValue('13:00');
+    await expectSelectedOptionText(page.getByRole('combobox', { name: 'Teacher' }), 'Jan Kowalski');
+
+    await page.getByRole('button', { name: 'Moving classes' }).click();
+    await page.getByRole('combobox', { name: 'Move by direction' }).selectOption('backwards');
+    await page.getByRole('button', { name: 'Move' }).click();
+
+    await expect(page.getByText('2025-09-24: Outside of semester')).toBeVisible();
 });

@@ -37,6 +37,7 @@ const translations = {
         'The selected date is a holiday': 'The selected date is a holiday',
         'There is another class during this time': 'There is another class during this time',
         'Delete class': 'Delete class',
+        'The selected date is outside of the semester': 'The selected date is outside of the semester',
     },
     'pl': {
         'Subject': 'Przedmiot',
@@ -52,6 +53,7 @@ const translations = {
         'The selected date is a holiday': 'Wybrana data jest dniem wolnym',
         'There is another class during this time': 'W tym czasie odbywają się inne zajęcia',
         'Delete class': 'Usuń zajęcia',
+        'The selected date is outside of the semester': 'Wybrana data jest poza semestrem',
     },
 };
 
@@ -195,7 +197,9 @@ const teacherId = crypto.randomUUID();
             {{
                 eventConflict.type === 'holiday'
                     ? translate('The selected date is a holiday')
-                    : translate('There is another class during this time')
+                    : eventConflict.type === 'other-event'
+                      ? translate('There is another class during this time')
+                      : translate('The selected date is outside of the semester')
             }}
         </div>
     </form>

@@ -2,9 +2,9 @@ import assert from 'node:assert';
 import type { CalendarEvent } from '@backend/calendar-events';
 import type { Exercise } from '@backend/exercise';
 import type { LaboratoryClass } from '@backend/laboratory-class';
-import type { ScheduleChange } from '@backend/semester';
+import type { ScheduleChange, Semester } from '@backend/semester';
 import type { EventConflict } from '@components/calendar/types';
-import { isSameDay } from '@components/laboratory-classes/dates';
+import { isSameDay, truncateDate } from '@components/laboratory-classes/dates';
 import { formatDateLocalYyyyMmDdHhMm } from '@components/utils';
 
 export interface EventSlot {
@@ -16,12 +16,25 @@ export interface EventSlot {
 
 export function checkForEventConflicts(
     slots: EventSlot[],
+    semester: Semester,
     scheduleChanges: ScheduleChange[],
     laboratoryClasses: LaboratoryClass[],
     exercises: Exercise[],
     calendarEvents: CalendarEvent[],
     ignoreIds: string[] = [],
 ): EventConflict[] {
+    const outsideOfSemesterConflicts = slots
+        .filter(
+            slot =>
+                truncateDate(slot.startDate).getTime() < semester.startDate.getTime() ||
+                truncateDate(slot.endDate).getTime() > semester.endDate.getTime(),
+        )
+        .map<EventConflict>(slot => ({
+            type: 'outside-of-semester',
+            startDate: formatDateLocalYyyyMmDdHhMm(slot.startDate),
+            endDate: formatDateLocalYyyyMmDdHhMm(slot.endDate),
+        }));
+
     const holidayConflicts = slots
         .filter(slot =>
             scheduleChanges.some(change => change.type === 'holiday' && isSameDay(slot.startDate, change.date)),
@@ -72,5 +85,5 @@ export function checkForEventConflicts(
             endDate: formatDateLocalYyyyMmDdHhMm(slot.endDate),
         }));
 
-    return [...holidayConflicts, ...laboratoryClassConflicts, ...calendarEventConflicts];
+    return [...outsideOfSemesterConflicts, ...holidayConflicts, ...laboratoryClassConflicts, ...calendarEventConflicts];
 }

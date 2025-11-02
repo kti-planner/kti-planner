@@ -2,7 +2,11 @@ import type { ScheduleChangeType } from '@backend/semester';
 import type { ScheduleChangeData } from '@components/semesters/types';
 import { formatDateLocalYyyyMmDd, parseDateLocalYyyyMmDd } from '@components/utils';
 
-export function isSameDay(date1: Date, date2: Date) {
+export function truncateDate(date: Date): Date {
+    return parseDateLocalYyyyMmDd(formatDateLocalYyyyMmDd(date));
+}
+
+export function isSameDay(date1: Date, date2: Date): boolean {
     return (
         date1.getFullYear() === date2.getFullYear() &&
         date1.getMonth() === date2.getMonth() &&
@@ -14,7 +18,12 @@ function weekdayName(date: Date): ScheduleChangeType {
     return (['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'] as const)[date.getDay()]!;
 }
 
-export function getNextDayOfTheWeekOccurrence(date: Date, changes: ScheduleChangeData[], skip = 0): Date {
+export function getDayOfTheWeekOccurrence(
+    date: Date,
+    changes: ScheduleChangeData[],
+    direction: 1 | -1 = 1,
+    skip = 0,
+): Date {
     const changeMap = new Map<string, ScheduleChangeType>();
     for (const change of changes) {
         const date = parseDateLocalYyyyMmDd(change.date);
@@ -39,7 +48,7 @@ export function getNextDayOfTheWeekOccurrence(date: Date, changes: ScheduleChang
     const next = new Date(date);
 
     while (true) {
-        next.setDate(next.getDate() + 1);
+        next.setDate(next.getDate() + direction);
 
         const effectiveDay = getEffectiveDay(next);
 

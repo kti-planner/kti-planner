@@ -85,8 +85,8 @@ test('Detects event conflicts', async () => {
         semester: semester,
         classroom: classroom1,
         user: user,
-        startDate: new Date('2024-11-05T11:15'),
-        endDate: new Date('2024-11-05T13:00'),
+        startDate: new Date('2025-11-05T11:15'),
+        endDate: new Date('2025-11-05T13:00'),
     });
 
     expect(
@@ -99,6 +99,7 @@ test('Detects event conflicts', async () => {
                     endDate: new Date('2025-10-31T15:00'),
                 },
             ],
+            semester,
             changes,
             [laboratoryClass1],
             [exercise1, exercise2],
@@ -124,10 +125,11 @@ test('Detects event conflicts', async () => {
                 {
                     id: null,
                     classroomId: classroom1.id,
-                    startDate: new Date('2024-11-05T11:15'),
-                    endDate: new Date('2024-11-05T13:00'),
+                    startDate: new Date('2025-11-05T11:15'),
+                    endDate: new Date('2025-11-05T13:00'),
                 },
             ],
+            semester,
             changes,
             [laboratoryClass1],
             [exercise1, exercise2],
@@ -141,8 +143,8 @@ test('Detects event conflicts', async () => {
         },
         {
             type: 'other-event',
-            startDate: '2024-11-05T11:15',
-            endDate: '2024-11-05T13:00',
+            startDate: '2025-11-05T11:15',
+            endDate: '2025-11-05T13:00',
         },
     ]);
 
@@ -158,10 +160,11 @@ test('Detects event conflicts', async () => {
                 {
                     id: null,
                     classroomId: classroom2.id,
-                    startDate: new Date('2024-11-05T11:15'),
-                    endDate: new Date('2024-11-05T13:00'),
+                    startDate: new Date('2025-11-05T11:15'),
+                    endDate: new Date('2025-11-05T13:00'),
                 },
             ],
+            semester,
             changes,
             [laboratoryClass1],
             [exercise1, exercise2],
@@ -181,10 +184,11 @@ test('Detects event conflicts', async () => {
                 {
                     id: null,
                     classroomId: classroom1.id,
-                    startDate: new Date('2024-11-05T11:15'),
-                    endDate: new Date('2024-11-05T13:00'),
+                    startDate: new Date('2025-11-05T11:15'),
+                    endDate: new Date('2025-11-05T13:00'),
                 },
             ],
+            semester,
             changes,
             [laboratoryClass1],
             [exercise1, exercise2],
@@ -193,8 +197,8 @@ test('Detects event conflicts', async () => {
     ).toStrictEqual([
         {
             type: 'other-event',
-            startDate: '2024-11-05T11:15',
-            endDate: '2024-11-05T13:00',
+            startDate: '2025-11-05T11:15',
+            endDate: '2025-11-05T13:00',
         },
     ]);
 
@@ -210,14 +214,41 @@ test('Detects event conflicts', async () => {
                 {
                     id: calendarEvent1.id,
                     classroomId: classroom1.id,
-                    startDate: new Date('2024-11-05T11:15'),
-                    endDate: new Date('2024-11-05T13:00'),
+                    startDate: new Date('2025-11-05T11:15'),
+                    endDate: new Date('2025-11-05T13:00'),
                 },
             ],
+            semester,
             changes,
             [laboratoryClass1],
             [exercise1, exercise2],
             [calendarEvent1],
         ),
     ).toStrictEqual([]);
+
+    expect(
+        checkForEventConflicts(
+            [
+                {
+                    id: laboratoryClass1.id,
+                    classroomId: classroom1.id,
+                    startDate: new Date('2026-02-02T09:15'),
+                    endDate: new Date('2026-02-02T11:00'),
+                },
+            ],
+            semester,
+            changes,
+            [laboratoryClass1],
+            [exercise1, exercise2],
+            [calendarEvent1],
+        ),
+    ).toMatchInlineSnapshot(`
+      [
+        {
+          "endDate": "2026-02-02T11:00",
+          "startDate": "2026-02-02T09:15",
+          "type": "outside-of-semester",
+        },
+      ]
+    `);
 });
