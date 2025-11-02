@@ -4,7 +4,7 @@ import { langId } from '@components/frontend/lang';
 import { apiPost } from '@components/api';
 import type { EventConflict } from '@components/calendar/types';
 import type { ExerciseData } from '@components/exercises/types';
-import { getDayOfTheWeekOccurrence } from '@components/laboratory-classes/dates';
+import { getDayOfTheWeekOccurrence, truncateDate } from '@components/laboratory-classes/dates';
 import type { LaboratoryClassCreateApiData } from '@components/laboratory-classes/types';
 import type { LaboratoryGroupData } from '@components/laboratory-groups/types';
 import type { ScheduleChangeData, SemesterData } from '@components/semesters/types';
@@ -108,7 +108,10 @@ const eventConflicts = ref<EventConflict[]>([]);
 
 const plannedClassesNotContainedInSemester = computed<boolean>(() => {
     const lastClass = plannedClasses.value.at(-1);
-    return lastClass !== undefined && lastClass.end.getTime() > parseDateLocalYyyyMmDd(semester.endDate).getTime();
+    return (
+        lastClass !== undefined &&
+        truncateDate(lastClass.end).getTime() > parseDateLocalYyyyMmDd(semester.endDate).getTime()
+    );
 });
 
 const cantGenerate = computed(() => {

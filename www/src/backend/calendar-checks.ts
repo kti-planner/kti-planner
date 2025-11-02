@@ -4,7 +4,7 @@ import type { Exercise } from '@backend/exercise';
 import type { LaboratoryClass } from '@backend/laboratory-class';
 import type { ScheduleChange, Semester } from '@backend/semester';
 import type { EventConflict } from '@components/calendar/types';
-import { isSameDay } from '@components/laboratory-classes/dates';
+import { isSameDay, truncateDate } from '@components/laboratory-classes/dates';
 import { formatDateLocalYyyyMmDdHhMm } from '@components/utils';
 
 export interface EventSlot {
@@ -26,8 +26,8 @@ export function checkForEventConflicts(
     const outsideOfSemesterConflicts = slots
         .filter(
             slot =>
-                slot.startDate.getTime() < semester.startDate.getTime() ||
-                slot.endDate.getTime() > semester.endDate.getTime(),
+                truncateDate(slot.startDate).getTime() < semester.startDate.getTime() ||
+                truncateDate(slot.endDate).getTime() > semester.endDate.getTime(),
         )
         .map<EventConflict>(slot => ({
             type: 'outside-of-semester',

@@ -2,7 +2,11 @@ import type { ScheduleChangeType } from '@backend/semester';
 import type { ScheduleChangeData } from '@components/semesters/types';
 import { formatDateLocalYyyyMmDd, parseDateLocalYyyyMmDd } from '@components/utils';
 
-export function isSameDay(date1: Date, date2: Date) {
+export function truncateDate(date: Date): Date {
+    return parseDateLocalYyyyMmDd(formatDateLocalYyyyMmDd(date));
+}
+
+export function isSameDay(date1: Date, date2: Date): boolean {
     return (
         date1.getFullYear() === date2.getFullYear() &&
         date1.getMonth() === date2.getMonth() &&
