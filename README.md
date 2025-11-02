@@ -38,7 +38,7 @@ In production we use Express.js as the server handling the website.
 You can run the entire app with Docker Compose:
 
 ```bash
-docker compose up --build -d
+docker compose -f compose.prod.yaml up --build -d
 ```
 
 ## Run unit tests

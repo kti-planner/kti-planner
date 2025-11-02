@@ -41,6 +41,8 @@ export const POST: APIRoute = async ({ locals }) => {
         teachers: teachers,
         description: data.description,
         moodleCourseId: data.moodleCourseId,
+        durationMinutes: data.durationMinutes,
+        classRepeatWeeks: data.classRepeatWeeks,
     });
 
     return Response.json(true, { status: 201 });
@@ -90,6 +92,8 @@ export const PATCH: APIRoute = async ({ locals }) => {
         teachers: teachers,
         description: data.description,
         moodleCourseId: data.moodleCourseId,
+        durationMinutes: data.durationMinutes,
+        classRepeatWeeks: data.classRepeatWeeks,
     });
 
     return Response.json(true, { status: 200 });

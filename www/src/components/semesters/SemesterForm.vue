@@ -15,7 +15,7 @@ const submitFailed = ref(false);
 const deleteFailed = ref(false);
 
 const type = ref<'summer' | 'winter' | undefined>(props.semester?.type);
-const year = ref<number | undefined>(props.semester?.year);
+const year = ref<number | string | undefined>(props.semester?.year);
 const startDate = ref<string | undefined>(props.semester?.startDate);
 const endDate = ref<string | undefined>(props.semester?.endDate);
 
@@ -23,6 +23,7 @@ async function submit() {
     if (
         type.value === undefined ||
         year.value === undefined ||
+        typeof year.value === 'string' ||
         startDate.value === undefined ||
         endDate.value === undefined
     ) {

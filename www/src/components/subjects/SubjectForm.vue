@@ -9,37 +9,58 @@ import { toHyphenatedLowercase } from '@components/utils';
 import ButtonWithConfirmationPopover from '@components/ButtonWithConfirmationPopover.vue';
 import UserMultiSelector from '@components/users/UserMultiSelector.vue';
 
-const props = defineProps<{
+const { semester, subject } = defineProps<{
     semester: SemesterData;
     subject?: SubjectData;
     allUsers: UserPublicData[];
 }>();
 
-const isEditing = computed(() => props.subject !== undefined);
+const isEditing = computed(() => subject !== undefined);
 
 const submitFailed = ref(false);
 
-const subjectName = ref<string>(props.subject?.name ?? '');
-const moodleCourseId = ref<string>(props.subject?.moodleCourseId ?? '');
-const description = ref<string>(props.subject?.description ?? '');
-const teachers = ref<UserPublicData[]>(props.subject?.teachers ?? []);
+const subjectName = ref<string>(subject?.name ?? '');
+const moodleCourseId = ref<string>(subject?.moodleCourseId ?? '');
+const description = ref<string>(subject?.description ?? '');
+const teachers = ref<UserPublicData[]>(subject?.teachers ?? []);
+
+const durationMinutes = ref<105 | 165 | 'custom' | null>(
+    !subject || subject.durationMinutes === null
+        ? null
+        : subject.durationMinutes === 105 || subject.durationMinutes === 165
+          ? subject.durationMinutes
+          : 'custom',
+);
+
+const customDurationMinutes = ref<number | string>(subject?.durationMinutes ?? 105);
+const classRepeatWeeks = ref<number | string>(subject?.classRepeatWeeks ?? 1);
 
 async function submit() {
+    if (typeof customDurationMinutes.value === 'string' || typeof classRepeatWeeks.value === 'string') {
+        return;
+    }
+
     const success =
-        props.subject === undefined
+        subject === undefined
             ? await apiPost<boolean>('/semesters/api/subjects/', {
                   name: subjectName.value,
-                  semesterId: props.semester.id,
+                  semesterId: semester.id,
                   teacherIds: teachers.value.map(user => user.id),
                   description: description.value,
                   moodleCourseId: moodleCourseId.value,
+                  durationMinutes:
+                      durationMinutes.value === 'custom' ? customDurationMinutes.value : durationMinutes.value,
+                  classRepeatWeeks: classRepeatWeeks.value,
               } satisfies SubjectCreateApiData)
             : await apiPatch<boolean>('/semesters/api/subjects/', {
-                  id: props.subject.id,
+                  id: subject.id,
                   name: subjectName.value,
                   teacherIds: teachers.value.map(user => user.id),
                   description: description.value,
                   moodleCourseId: moodleCourseId.value,
+                  durationMinutes:
+                      durationMinutes.value === 'custom' ? customDurationMinutes.value : durationMinutes.value,
+                  classRepeatWeeks: classRepeatWeeks.value,
               } satisfies SubjectEditApiData);
 
     if (success === undefined) {
@@ -49,7 +70,7 @@ async function submit() {
     submitFailed.value = !success;
 
     if (success) {
-        const newUrl = `/semesters/${props.semester.slug}/subjects/${toHyphenatedLowercase(subjectName.value ?? '')}/`;
+        const newUrl = `/semesters/${semester.slug}/subjects/${toHyphenatedLowercase(subjectName.value ?? '')}/`;
 
         if (isEditing.value) {
             window.history.replaceState({}, '', newUrl);
@@ -61,14 +82,14 @@ async function submit() {
 }
 
 async function doDelete() {
-    if (!props.subject) {
+    if (!subject) {
         return;
     }
 
-    const result = await apiDelete<boolean>('/semesters/api/subjects/', new URLSearchParams({ id: props.subject.id }));
+    const result = await apiDelete<boolean>('/semesters/api/subjects/', new URLSearchParams({ id: subject.id }));
 
     if (result) {
-        window.location.assign(`/semesters/${props.semester.slug}/`);
+        window.location.assign(`/semesters/${semester.slug}/`);
     }
 }
 
@@ -83,6 +104,10 @@ const translations = {
         'Subject with this name already exists.': 'Subject with this name already exists.',
         'Markdown is supported': 'Markdown is supported',
         'Delete subject': 'Delete subject',
+        'Class duration': 'Class duration',
+        'Custom': 'Custom',
+        'Variable': 'Variable',
+        'How many weeks are between classes?': 'How many weeks are between classes?',
     },
     'pl': {
         'Subject name': 'Nazwa przedmiotu',
@@ -94,6 +119,10 @@ const translations = {
         'Subject with this name already exists.': 'Przedmiot o podanej nazwie już istnieje.',
         'Markdown is supported': 'Markdown jest wspierany',
         'Delete subject': 'Usuń przedmiot',
+        'Class duration': 'Czas trwania zajęć',
+        'Custom': 'Niestandardowy',
+        'Variable': 'Zmienny',
+        'How many weeks are between classes?': 'Co ile tygodni zajęcia się powtarzają?',
     },
 };
 
@@ -105,22 +134,30 @@ const nameId = crypto.randomUUID();
 const moodleCourseInputId = crypto.randomUUID();
 const descriptionId = crypto.randomUUID();
 const teachersId = crypto.randomUUID();
+const durationId = crypto.randomUUID();
+const classRepeatId = crypto.randomUUID();
 </script>
 
 <template>
     <form class="vstack gap-2 mx-auto" style="max-width: 500px" @submit.prevent="submit">
         <div>
-            <label :for="nameId" class="form-label">{{ translate('Subject name') }}</label>
+            <label :for="nameId" class="form-label">
+                {{ translate('Subject name') }} <span class="text-danger">*</span>
+            </label>
             <input :id="nameId" v-model="subjectName" type="text" class="form-control" required autofocus />
         </div>
 
         <div>
-            <label :for="moodleCourseInputId" class="form-label">{{ translate('Moodle course ID') }}</label>
+            <label :for="moodleCourseInputId" class="form-label">
+                {{ translate('Moodle course ID') }}
+            </label>
             <input :id="moodleCourseInputId" v-model="moodleCourseId" type="text" class="form-control" />
         </div>
 
         <div>
-            <label :for="descriptionId" class="form-label">{{ translate('Description') }}</label>
+            <label :for="descriptionId" class="form-label">
+                {{ translate('Description') }}
+            </label>
             <textarea
                 :id="descriptionId"
                 v-model="description"
@@ -130,8 +167,46 @@ const teachersId = crypto.randomUUID();
         </div>
 
         <div>
-            <label :for="teachersId" class="form-label">{{ translate('Teachers') }}</label>
+            <label :for="teachersId" class="form-label">
+                {{ translate('Teachers') }} <span class="text-danger">*</span>
+            </label>
             <UserMultiSelector :id="teachersId" v-model="teachers" :options="allUsers" required />
+        </div>
+
+        <div>
+            <label :for="durationId" class="form-label">
+                {{ translate('Class duration') }}
+            </label>
+            <select
+                :id="durationId"
+                v-model="durationMinutes"
+                class="form-select"
+                :aria-label="translate('Class duration')"
+            >
+                <option :value="105">105 min</option>
+                <option :value="165">165 min</option>
+                <option value="custom">{{ translate('Custom') }}</option>
+                <option :value="null">{{ translate('Variable') }}</option>
+            </select>
+
+            <div v-if="durationMinutes === 'custom'" class="input-group mt-2">
+                <input
+                    v-model="customDurationMinutes"
+                    type="number"
+                    class="form-control"
+                    :aria-label="translate('Class duration')"
+                    min="0"
+                    required
+                />
+                <span class="input-group-text">min</span>
+            </div>
+        </div>
+
+        <div>
+            <label :for="classRepeatId" class="form-label">
+                {{ translate('How many weeks are between classes?') }}
+            </label>
+            <input :id="classRepeatId" v-model="classRepeatWeeks" type="number" min="1" class="form-control" required />
         </div>
 
         <div class="text-center mt-2">
