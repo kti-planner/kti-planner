@@ -2,7 +2,7 @@
 import { Classroom, makeClassroomData } from '@backend/classroom';
 import { makeScheduleChangeData, makeSemesterData, Semester } from '@backend/semester';
 import { makeSubjectData, Subject } from '@backend/subject';
-import { User } from '@backend/user';
+import { makeUserPublicData, User } from '@backend/user';
 import Layout from '@layouts/Layout.astro';
 import EditSemester from '@components/semesters/EditSemester.vue';
 import SemesterCalendar from '@components/semesters/SemesterCalendar.vue';
@@ -45,6 +45,7 @@ const semesterData = makeSemesterData(semester);
 
 const subjects = await Subject.fetchAllFromSemester(semester);
 const allUsers = await User.fetchAll();
+const allUsersData = allUsers.map(user => makeUserPublicData(user));
 const subjectsData = subjects.map(subject => makeSubjectData(subject, allUsers));
 
 const scheduleChanges = await semester.getScheduleChanges();
@@ -105,6 +106,7 @@ const classroomsData = classrooms.map(makeClassroomData);
             scheduleChanges={scheduleChangesData}
             subjects={subjectsData}
             classrooms={classroomsData}
+            allUsers={allUsersData}
         />
     </div>
 </Layout>

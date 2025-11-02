@@ -27,6 +27,7 @@ export interface CalendarEventCreateData {
 
 export interface CalendarEventEditData {
     name?: string | undefined;
+    user?: User | undefined;
     classroom?: Classroom | null | undefined;
     startDate?: Date | undefined;
     endDate?: Date | undefined;
@@ -101,6 +102,10 @@ export class CalendarEvent {
             this.name = data.name;
         }
 
+        if (data.user !== undefined) {
+            this.userId = data.user.id;
+        }
+
         if (data.classroom !== undefined) {
             this.classroomId = data.classroom?.id ?? null;
         }
@@ -114,8 +119,8 @@ export class CalendarEvent {
         }
 
         await db.query(
-            'UPDATE calendar_events SET name = $2, classroom_id = $3, start_date = $4, end_date = $5 WHERE id = $1',
-            [this.id, this.name, this.classroomId, this.startDate, this.endDate],
+            'UPDATE calendar_events SET name = $2, user_id = $3, classroom_id = $4, start_date = $5, end_date = $6 WHERE id = $1',
+            [this.id, this.name, this.userId, this.classroomId, this.startDate, this.endDate],
         );
     }
 

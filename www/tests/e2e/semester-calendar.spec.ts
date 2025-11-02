@@ -278,13 +278,14 @@ test('Can edit calendar event when logged in', async ({ page }) => {
     await expect(page.getByRole('textbox', { name: 'Start time' })).toHaveValue('11:15');
     await expect(page.getByRole('textbox', { name: 'End time' })).toHaveValue('13:00');
     await expect(page.getByRole('textbox', { name: 'Name' })).toHaveValue('Koło naukowe');
-    await expect(page.getByText('Teacher: Bogdan Nowak')).toBeVisible();
+    await expectSelectedOptionText(page.getByRole('combobox', { name: 'Teacher' }), 'Bogdan Nowak');
     await expectSelectedOptionText(page.getByRole('combobox', { name: 'Classroom' }), 'EA 204');
 
     await page.getByRole('textbox', { name: 'Date' }).fill('2025-10-03');
     await page.getByRole('textbox', { name: 'Start time' }).fill('12:15');
     await page.getByRole('textbox', { name: 'End time' }).fill('14:00');
     await page.getByRole('textbox', { name: 'Name' }).fill('Koło naukowe 2');
+    await page.getByRole('combobox', { name: 'Teacher' }).selectOption('Admin');
     await page.getByRole('button', { name: 'Save' }).click();
 
     await expect(
@@ -312,7 +313,7 @@ test('Cannot reschedule calendar event to another event', async ({ page }) => {
     await expect(page.getByRole('textbox', { name: 'Start time' })).toHaveValue('11:15');
     await expect(page.getByRole('textbox', { name: 'End time' })).toHaveValue('13:00');
     await expect(page.getByRole('textbox', { name: 'Name' })).toHaveValue('Koło naukowe');
-    await expect(page.getByText('Teacher: Bogdan Nowak')).toBeVisible();
+    await expectSelectedOptionText(page.getByRole('combobox', { name: 'Teacher' }), 'Bogdan Nowak');
     await expectSelectedOptionText(page.getByRole('combobox', { name: 'Classroom' }), 'EA 204');
 
     await page.getByRole('textbox', { name: 'Date' }).fill('2025-10-01');

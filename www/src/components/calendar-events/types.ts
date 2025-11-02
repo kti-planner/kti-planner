@@ -16,6 +16,7 @@ export interface CalendarEventData {
 
 export const calendarEventCreateApiSchema = z.object({
     name: z.string(),
+    userId: z.uuid(),
     classroomId: z.uuid().nullable(),
     durations: z
         .object({
@@ -30,6 +31,7 @@ export type CalendarEventCreateApiData = z.input<typeof calendarEventCreateApiSc
 export const calendarEventEditApiSchema = z.object({
     id: z.uuid(),
     name: z.string().optional(),
+    userId: z.uuid().optional(),
     classroomId: z.uuid().nullable().optional(),
     startDate: dateTimeStringSchema.optional(),
     endDate: dateTimeStringSchema.optional(),

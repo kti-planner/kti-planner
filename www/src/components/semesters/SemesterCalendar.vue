@@ -60,6 +60,7 @@ const { semester, scheduleChanges, subjects, classrooms } = defineProps<{
     scheduleChanges: ScheduleChangeData[];
     subjects: SubjectData[];
     classrooms: ClassroomData[];
+    allUsers: UserPublicData[];
 }>();
 
 const teachers = computed<UserPublicData[]>(() => {
@@ -199,6 +200,7 @@ function handleCalendarEventSubmit() {
                             endDate: formatDateLocalYyyyMmDdHhMm(calendarSelectionEnd),
                         }
                     "
+                    :users="allUsers"
                     @submit="handleCalendarEventSubmit"
                 />
             </Modal>

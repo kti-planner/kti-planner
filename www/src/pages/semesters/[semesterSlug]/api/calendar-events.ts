@@ -81,6 +81,11 @@ export const POST: APIRoute = async ({ locals, params }) => {
         return new Response(null, { status: 400 });
     }
 
+    const eventUser = await User.fetch(data.userId);
+    if (!eventUser) {
+        return new Response(null, { status: 400 });
+    }
+
     const slots = data.durations.map<EventSlot>(({ startDate, endDate }) => ({
         id: null,
         classroomId: classroom?.id ?? null,
@@ -111,7 +116,7 @@ export const POST: APIRoute = async ({ locals, params }) => {
         data.durations.map(({ startDate, endDate }) =>
             CalendarEvent.create({
                 name: data.name,
-                user,
+                user: eventUser,
                 classroom,
                 semester,
                 startDate,
@@ -159,6 +164,11 @@ export const PATCH: APIRoute = async ({ locals, params }) => {
         return Response.json(null, { status: 400 });
     }
 
+    const eventUser = data.userId !== undefined ? await User.fetch(data.userId) : undefined;
+    if (eventUser === null) {
+        return Response.json(null, { status: 400 });
+    }
+
     const scheduleChanges = await semester.getScheduleChanges();
     const subjects = await Subject.fetchAllFromSemester(semester);
     const laboratoryClasses = await LaboratoryClass.fetchAllFromSubjects(subjects);
@@ -187,6 +197,7 @@ export const PATCH: APIRoute = async ({ locals, params }) => {
 
     await calendarEvent.edit({
         name: data.name,
+        user: eventUser,
         classroom: classroom,
         startDate: data.startDate,
         endDate: data.endDate,
