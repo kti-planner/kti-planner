@@ -83,10 +83,10 @@ const options = computed((): CalendarOptions => {
         businessHours: {
             daysOfWeek: [1, 2, 3, 4, 5],
             startTime: '7:00',
-            endTime: '21:00',
+            endTime: '22:00',
         },
         slotMinTime: '07:00:00',
-        slotMaxTime: '21:00:00',
+        slotMaxTime: '22:00:00',
         eventClick: event => emit('eventClick', event),
         selectable,
         select: event => emit('select', event),
