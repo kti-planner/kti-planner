@@ -71,7 +71,7 @@ async function submit() {
             window.history.replaceState({}, '', newUrl);
             window.location.reload();
         } else {
-            window.location.assign(newUrl);
+            window.location.reload();
         }
     }
 }

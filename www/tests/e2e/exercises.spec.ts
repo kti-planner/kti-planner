@@ -68,9 +68,6 @@ test('Can add new exercise and prevent duplicate exercise creation', async ({ pa
 
     await page.getByRole('button', { name: 'Add', exact: true }).click();
 
-    await expect(page.locator('.breadcrumb')).toContainText('Wirtualne sieci lokalne (VLAN)');
-
-    await page.goto('/semesters/2024-winter/subjects/sieci-komputerowe---informatyka-sem.-v/');
     await expect(page.getByRole('link', { name: 'Wirtualne sieci lokalne (VLAN)' })).toBeVisible();
 
     // Cannot add duplicate exercise
