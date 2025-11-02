@@ -14,7 +14,7 @@ function weekdayName(date: Date): ScheduleChangeType {
     return (['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'] as const)[date.getDay()]!;
 }
 
-export function getNextDayOfTheWeekOccurrence(date: Date, changes: ScheduleChangeData[], skip = 0): Date {
+export function getDayOfTheWeekOccurrence(date: Date, changes: ScheduleChangeData[], direction = 1, skip = 0): Date {
     const changeMap = new Map<string, ScheduleChangeType>();
     for (const change of changes) {
         const date = parseDateLocalYyyyMmDd(change.date);
@@ -39,7 +39,7 @@ export function getNextDayOfTheWeekOccurrence(date: Date, changes: ScheduleChang
     const next = new Date(date);
 
     while (true) {
-        next.setDate(next.getDate() + 1);
+        next.setDate(next.getDate() + direction);
 
         const effectiveDay = getEffectiveDay(next);
 

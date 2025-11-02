@@ -4,7 +4,7 @@ import { langId } from '@components/frontend/lang';
 import { apiPost } from '@components/api';
 import type { EventConflict } from '@components/calendar/types';
 import type { ExerciseData } from '@components/exercises/types';
-import { getNextDayOfTheWeekOccurrence } from '@components/laboratory-classes/dates';
+import { getDayOfTheWeekOccurrence } from '@components/laboratory-classes/dates';
 import type { LaboratoryClassCreateApiData } from '@components/laboratory-classes/types';
 import type { LaboratoryGroupData } from '@components/laboratory-groups/types';
 import type { ScheduleChangeData, SemesterData } from '@components/semesters/types';
@@ -81,7 +81,7 @@ const plannedClasses = computed<PlannedClass[]>(() => {
     let last: Date | undefined;
     return exercises.map<PlannedClass>(exercise => {
         const date = last
-            ? getNextDayOfTheWeekOccurrence(new Date(last), scheduleChanges, repeatWeeks.value - 1)
+            ? getDayOfTheWeekOccurrence(new Date(last), scheduleChanges, 1, repeatWeeks.value - 1)
             : parseDateLocalYyyyMmDd(firstClassDateStr.value!);
 
         last = date;

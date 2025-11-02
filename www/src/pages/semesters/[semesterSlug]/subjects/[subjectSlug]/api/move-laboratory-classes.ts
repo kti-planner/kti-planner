@@ -4,8 +4,9 @@ import { checkForEventConflicts, type EventSlot } from '@backend/calendar-checks
 import { CalendarEvent } from '@backend/calendar-events';
 import { Exercise } from '@backend/exercise';
 import { LaboratoryClass } from '@backend/laboratory-class';
-import { Semester } from '@backend/semester';
+import { makeScheduleChangeData, Semester } from '@backend/semester';
 import { Subject } from '@backend/subject';
+import { getDayOfTheWeekOccurrence } from '@components/laboratory-classes/dates';
 import { laboratoryClassMoveApiSchema } from '@components/laboratory-classes/types';
 import { getSubjectFromParams } from '@pages/semesters/[semesterSlug]/subjects/[subjectSlug]/api/_subject-utils';
 
@@ -61,14 +62,25 @@ export const PATCH: APIRoute = async ({ locals, params }) => {
         );
     });
 
+    const scheduleChangeData = scheduleChanges.map(makeScheduleChangeData);
+
     const slots = classes.map<EventSlot>(laboratoryClass => {
         const exercise = exercises.find(exercise => exercise.id === laboratoryClass.exerciseId);
         assert(exercise);
 
-        const startDate = new Date(laboratoryClass.startDate);
-        startDate.setDate(startDate.getDate() + 7 * data.moveByWeeks);
-        const endDate = new Date(laboratoryClass.endDate);
-        endDate.setDate(endDate.getDate() + 7 * data.moveByWeeks);
+        const startDate = getDayOfTheWeekOccurrence(
+            laboratoryClass.startDate,
+            scheduleChangeData,
+            Math.sign(data.moveByWeeks),
+            Math.abs(data.moveByWeeks) - 1,
+        );
+
+        const endDate = getDayOfTheWeekOccurrence(
+            laboratoryClass.endDate,
+            scheduleChangeData,
+            Math.sign(data.moveByWeeks),
+            Math.abs(data.moveByWeeks) - 1,
+        );
 
         return {
             id: laboratoryClass.id,
