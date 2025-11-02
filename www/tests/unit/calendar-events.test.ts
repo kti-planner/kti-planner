@@ -117,12 +117,13 @@ test('Calendar events', async () => {
     await calendarEvent2.edit({
         startDate: new Date('2025-03-12T09:00:00'),
         endDate: new Date('2025-03-12T11:00:00'),
+        user: user1,
         classroom: classroom1,
         name: 'event2 v2',
     });
 
     expect(calendarEvent2).toHaveProperty('name', calendarEvent2.name);
-    expect(calendarEvent2).toHaveProperty('userId', user2.id);
+    expect(calendarEvent2).toHaveProperty('userId', user1.id);
     expect(calendarEvent2).toHaveProperty('classroomId', classroom1.id);
     expect(calendarEvent2).toHaveProperty('semesterId', semester2.id);
     expect(calendarEvent2).toHaveProperty('startDate', new Date('2025-03-12T09:00:00'));
