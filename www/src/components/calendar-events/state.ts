@@ -73,8 +73,8 @@ export class CalendarEventRepeatState {
         return this._repeatWeeks;
     }
 
-    set repeatWeeks(value: number) {
-        if (value < 1) {
+    set repeatWeeks(value: number | string) {
+        if (typeof value === 'string' || value < 1) {
             return;
         }
 
@@ -109,8 +109,8 @@ export class CalendarEventRepeatState {
         return this._repeatCount;
     }
 
-    set repeatCount(value: number) {
-        if (value < 1) {
+    set repeatCount(value: number | string) {
+        if (typeof value === 'string' || value < 1) {
             return;
         }
 
