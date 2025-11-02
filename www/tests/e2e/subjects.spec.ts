@@ -46,6 +46,8 @@ test('Can add new subject and prevent duplicate subject creation', async ({ page
     await page.getByRole('textbox', { name: 'Moodle course ID' }).fill('1472');
     await page.getByRole('textbox', { name: 'Description' }).fill('Subject test description <script>alert(0)</script>');
     await page.getByRole('combobox', { name: 'Teachers' }).selectOption('Jan Kowalski');
+    await page.getByRole('combobox', { name: 'Duration' }).selectOption('105 min');
+    await page.getByRole('spinbutton', { name: 'How many weeks are between classes?' }).fill('1');
 
     await page.getByRole('button', { name: 'Add', exact: true }).click();
 
@@ -116,6 +118,8 @@ test('Can edit subject and prevent duplicate subject', async ({ page }) => {
     await page.getByRole('textbox', { name: 'Moodle course ID' }).fill('15');
     await page.getByRole('textbox', { name: 'Description' }).fill('Test description');
     await page.getByRole('combobox', { name: 'Teachers' }).selectOption('Admin');
+    await page.getByRole('combobox', { name: 'Duration' }).selectOption('165 min');
+    await page.getByRole('spinbutton', { name: 'How many weeks are between classes?' }).fill('2');
 
     await page.getByRole('button', { name: 'Save' }).click();
 
@@ -246,6 +250,8 @@ test.describe('API fetch tests', () => {
                 teacherIds: ['c393c524-453c-4b02-bfad-5114fe828200'],
                 description: '',
                 moodleCourseId: '',
+                durationMinutes: 105,
+                classRepeatWeeks: 1,
             },
         });
 
@@ -263,6 +269,8 @@ test.describe('API fetch tests', () => {
                 teacherIds: ['c393c524-453c-4b02-bfad-5114fe828200'],
                 description: '',
                 moodleCourseId: '',
+                durationMinutes: 105,
+                classRepeatWeeks: 1,
             },
         });
 
@@ -279,6 +287,8 @@ test.describe('API fetch tests', () => {
                 teacherIds: ['feeaa186-3d69-4801-a580-88be10d53553'],
                 description: '',
                 moodleCourseId: '',
+                durationMinutes: 165,
+                classRepeatWeeks: 2,
             },
         });
 
@@ -296,6 +306,8 @@ test.describe('API fetch tests', () => {
                 teacherIds: ['feeaa186-3d69-4801-a580-88be10d53553'],
                 description: '',
                 moodleCourseId: '',
+                durationMinutes: 165,
+                classRepeatWeeks: 2,
             },
         });
 

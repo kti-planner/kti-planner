@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { langId } from '@components/frontend/lang';
 import { apiPost } from '@components/api';
 import type { EventConflict } from '@components/calendar/types';
@@ -8,7 +8,13 @@ import { getNextDayOfTheWeekOccurrence } from '@components/laboratory-classes/da
 import type { LaboratoryClassCreateApiData } from '@components/laboratory-classes/types';
 import type { LaboratoryGroupData } from '@components/laboratory-groups/types';
 import type { ScheduleChangeData, SemesterData } from '@components/semesters/types';
-import { formatDateLocalYyyyMmDd, formatDateLocalYyyyMmDdHhMm, parseDateLocalYyyyMmDd } from '@components/utils';
+import type { SubjectData } from '@components/subjects/types';
+import {
+    formatDateLocalHhMm,
+    formatDateLocalYyyyMmDd,
+    formatDateLocalYyyyMmDdHhMm,
+    parseDateLocalYyyyMmDd,
+} from '@components/utils';
 import PlannedClassCard from '@components/laboratory-classes/PlannedClassCard.vue';
 import LaboratoryGroupSelector from '@components/laboratory-groups/LaboratoryGroupSelector.vue';
 
@@ -45,8 +51,9 @@ function translate(text: keyof (typeof translations)[LangId]): string {
 
 const group = defineModel<LaboratoryGroupData | null>('group', { default: null });
 
-const { exercises, semester, apiUrl, scheduleChanges } = defineProps<{
+const { exercises, subject, semester, apiUrl, scheduleChanges } = defineProps<{
     exercises: ExerciseData[];
+    subject: SubjectData;
     semester: SemesterData;
     apiUrl: string;
     laboratoryGroups: LaboratoryGroupData[];
@@ -60,7 +67,7 @@ const emit = defineEmits<{
 const firstClassDateStr = ref<string>();
 const classStartTime = ref<string>();
 const classEndTime = ref<string>();
-const repeatWeeks = ref<number | string>(1);
+const repeatWeeks = ref<number | string>(subject.classRepeatWeeks ?? 1);
 
 export interface PlannedClass {
     exercise: ExerciseData;
@@ -135,6 +142,20 @@ async function generate() {
 
     eventConflicts.value = conflicts;
 }
+
+watch([classStartTime, firstClassDateStr], () => {
+    if (
+        subject.durationMinutes === null ||
+        classStartTime.value === undefined ||
+        firstClassDateStr.value === undefined
+    ) {
+        return;
+    }
+
+    const endDate = new Date(`${firstClassDateStr.value}T${classStartTime.value}`);
+    endDate.setMinutes(endDate.getMinutes() + subject.durationMinutes);
+    classEndTime.value = formatDateLocalHhMm(endDate);
+});
 
 const groupId = crypto.randomUUID();
 const dateId = crypto.randomUUID();
