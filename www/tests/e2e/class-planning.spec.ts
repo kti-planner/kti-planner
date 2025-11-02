@@ -138,7 +138,8 @@ test('Cannot edit classes when not logged in', async ({ page }) => {
 
     await expect(page.getByRole('heading', { name: 'Class details' })).toBeVisible();
 
-    await expect(page.getByRole('link', { name: '1. Diagnostyka sieci IPv4', exact: true })).toBeVisible();
+    await expect(page.locator('.modal').getByRole('link', { name: '1. Diagnostyka sieci IPv4' })).toBeVisible();
+
     await expect(page.getByText('Laboratory group: 1A')).toBeVisible();
     await expect(page.getByText('Classroom: EA 142')).toBeVisible();
     await expect(page.getByText('Date: 1.10.2025 11:15 - 13:00')).toBeVisible();
@@ -155,7 +156,7 @@ test('Can edit class time when logged in', async ({ page }) => {
 
     await expect(page.getByRole('heading', { name: 'Edit class' })).toBeVisible();
 
-    await expect(page.getByRole('link', { name: '1. Diagnostyka sieci IPv4', exact: true })).toBeVisible();
+    await expect(page.locator('.modal').getByRole('link', { name: '1. Diagnostyka sieci IPv4' })).toBeVisible();
     await expect(page.getByText('Laboratory group: 1A')).toBeVisible();
     await expect(page.getByText('Classroom: EA 142')).toBeVisible();
 
@@ -181,7 +182,7 @@ test('Cannot edit class time to another class', async ({ page }) => {
 
     await expect(page.getByRole('heading', { name: 'Edit class' })).toBeVisible();
 
-    await expect(page.getByRole('link', { name: '1. Diagnostyka sieci IPv4', exact: true })).toBeVisible();
+    await expect(page.locator('.modal').getByRole('link', { name: '1. Diagnostyka sieci IPv4' })).toBeVisible();
     await expect(page.getByText('Laboratory group: 1A')).toBeVisible();
     await expect(page.getByText('Classroom: EA 142')).toBeVisible();
 
@@ -206,7 +207,7 @@ test('Can move classes forwards', async ({ page }) => {
 
     await expect(page.getByRole('heading', { name: 'Edit class' })).toBeVisible();
 
-    await expect(page.getByRole('link', { name: '1. Diagnostyka sieci IPv4', exact: true })).toBeVisible();
+    await expect(page.locator('.modal').getByRole('link', { name: '1. Diagnostyka sieci IPv4' })).toBeVisible();
     await expect(page.getByText('Laboratory group: 1A')).toBeVisible();
     await expect(page.getByText('Classroom: EA 142')).toBeVisible();
 
@@ -234,7 +235,7 @@ test('Cannot move classes outside of semester', async ({ page }) => {
 
     await expect(page.getByRole('heading', { name: 'Edit class' })).toBeVisible();
 
-    await expect(page.getByRole('link', { name: '1. Diagnostyka sieci IPv4', exact: true })).toBeVisible();
+    await expect(page.locator('.modal').getByRole('link', { name: '1. Diagnostyka sieci IPv4' })).toBeVisible();
     await expect(page.getByText('Laboratory group: 1A')).toBeVisible();
     await expect(page.getByText('Classroom: EA 142')).toBeVisible();
 
