@@ -13,8 +13,8 @@ const { laboratoryClass, apiUrl } = defineProps<{
 
 const translations = {
     'en': {
-        'This will move this class and the next ones for this laboratory group. If conflicts with other laboratory groups are found, those classes will be moved as well.':
-            'This will move this class and the next ones for this laboratory group. If conflicts with other laboratory groups are found, those classes will be moved as well.',
+        'This will recursively move this class and the class occupying the slot this class will be moved to.':
+            'This will recursively move this class and the class occupying the slot this class will be moved to.',
         'Move by': 'Move by',
         'week': 'week',
         'weeks': 'weeks',
@@ -28,8 +28,8 @@ const translations = {
         'Move by direction': 'Move by direction',
     },
     'pl': {
-        'This will move this class and the next ones for this laboratory group. If conflicts with other laboratory groups are found, those classes will be moved as well.':
-            'Te i kolejne zajęcia tej grupy laboratoryjnej zostaną przesunięte. Jeżeli zostaną wykryte kolizje z zajęciami innych grup, te zajęcia też zostaną przesunięte.',
+        'This will recursively move this class and the class occupying the slot this class will be moved to.':
+            'Spowoduje to rekurencyjne przeniesienie tych zajęć i zajęć zajmujących miejsce, do którego zostaną przeniesione ta zajęcia.',
         'Move by': 'Przesuń o',
         'week': 'tydzień',
         'weeks': 'tygodnie',
@@ -92,7 +92,7 @@ const weekId = crypto.randomUUID();
         <p class="mb-0">
             {{
                 translate(
-                    'This will move this class and the next ones for this laboratory group. If conflicts with other laboratory groups are found, those classes will be moved as well.',
+                    'This will recursively move this class and the class occupying the slot this class will be moved to.',
                 )
             }}
         </p>

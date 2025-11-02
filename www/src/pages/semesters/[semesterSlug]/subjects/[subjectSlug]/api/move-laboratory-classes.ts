@@ -58,36 +58,39 @@ export const PATCH: APIRoute = async ({ locals, params }) => {
         return exercise.subjectId === subject.id;
     });
 
-    let classes = subjectLaboratoryClasses.filter(laboratoryClass => {
-        const exercise = exercises.find(exercise => exercise.id === laboratoryClass.exerciseId);
-        assert(exercise);
-
-        return (
-            laboratoryClass.laboratoryGroupId === baseLaboratoryClass.laboratoryGroupId &&
-            ((exercise.exerciseNumber >= baseExercise.exerciseNumber && data.moveByWeeks > 0) ||
-                (exercise.exerciseNumber <= baseExercise.exerciseNumber && data.moveByWeeks < 0))
-        );
-    });
+    const classes = [baseLaboratoryClass];
 
     const scheduleChangeData = scheduleChanges.map(makeScheduleChangeData);
 
-    let slots = makeSlots(classes, exercises, scheduleChangeData, data.moveByWeeks);
+    const slots = makeSlots(classes, exercises, scheduleChangeData, data.moveByWeeks);
 
-    // Conflicting classes of the same subject but for other laboratory groups
-    const otherGroupClasses = subjectLaboratoryClasses.filter(
-        laboratoryClass =>
-            laboratoryClass.laboratoryGroupId !== baseLaboratoryClass.laboratoryGroupId &&
-            slots.some(
-                slot =>
-                    laboratoryClass.startDate.getTime() < slot.endDate.getTime() &&
-                    laboratoryClass.endDate.getTime() > slot.startDate.getTime(),
-            ),
-    );
+    let iteration = 0;
+    while (true) {
+        iteration++;
 
-    const otherGroupSlots = makeSlots(otherGroupClasses, exercises, scheduleChangeData, data.moveByWeeks);
+        if (iteration > 1000) {
+            throw Error('Moving laboratory classes likely caused infinite loop');
+        }
 
-    classes = [...classes, ...otherGroupClasses];
-    slots = [...slots, ...otherGroupSlots];
+        const conflictingClasses = subjectLaboratoryClasses.filter(
+            laboratoryClass =>
+                !classes.find(laboratoryClass2 => laboratoryClass2.id === laboratoryClass.id) &&
+                slots.some(
+                    slot =>
+                        laboratoryClass.startDate.getTime() < slot.endDate.getTime() &&
+                        laboratoryClass.endDate.getTime() > slot.startDate.getTime(),
+                ),
+        );
+
+        if (conflictingClasses.length === 0) {
+            break;
+        }
+
+        const conflictingSlots = makeSlots(conflictingClasses, exercises, scheduleChangeData, data.moveByWeeks);
+
+        classes.push(...conflictingClasses);
+        slots.push(...conflictingSlots);
+    }
 
     const ignoreIds = classes.map(laboratoryClass => laboratoryClass.id);
 
@@ -105,20 +108,17 @@ export const PATCH: APIRoute = async ({ locals, params }) => {
         return Response.json(conflicts);
     }
 
-    const editOperations: Promise<void>[] = [];
-    for (const laboratoryClass of classes) {
-        const slot = slots.find(slot => slot.id === laboratoryClass.id);
-        assert(slot);
+    await Promise.all(
+        classes.map(laboratoryClass => {
+            const slot = slots.find(slot => slot.id === laboratoryClass.id);
+            assert(slot);
 
-        editOperations.push(
-            laboratoryClass.edit({
+            return laboratoryClass.edit({
                 startDate: slot.startDate,
                 endDate: slot.endDate,
-            }),
-        );
-    }
-
-    await Promise.all(editOperations);
+            });
+        }),
+    );
 
     return Response.json([]);
 };
