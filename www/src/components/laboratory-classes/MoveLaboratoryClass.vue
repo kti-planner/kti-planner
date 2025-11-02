@@ -29,7 +29,7 @@ const translations = {
     },
     'pl': {
         'This will recursively move this class and the class occupying the slot this class will be moved to.':
-            'Spowoduje to rekurencyjne przeniesienie tych zajęć i zajęć zajmujących miejsce, do którego zostaną przeniesione ta zajęcia.',
+            'Spowoduje to rekurencyjne przeniesienie tych zajęć i zajęć zajmujących miejsce, do którego zostaną przeniesione te zajęcia.',
         'Move by': 'Przesuń o',
         'week': 'tydzień',
         'weeks': 'tygodnie',
