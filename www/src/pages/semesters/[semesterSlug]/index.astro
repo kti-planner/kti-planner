@@ -17,13 +17,19 @@ const translations = {
         'Semesters': 'Semesters',
         'Winter semester': 'Winter semester',
         'Summer semester': 'Summer semester',
-        'Subjects': 'Subjects',
+        'Full-time first-cycle studies': 'Full-time first-cycle studies',
+        'Full-time second-cycle studies': 'Full-time second-cycle studies',
+        'Part-time first-cycle studies': 'Part-time first-cycle studies',
+        'Part-time second-cycle studies': 'Part-time second-cycle studies',
     },
     'pl': {
         'Semesters': 'Semestry',
         'Winter semester': 'Semestr zimowy',
         'Summer semester': 'Semestr letni',
-        'Subjects': 'Przedmioty',
+        'Full-time first-cycle studies': 'Studia stacjonarne I stopnia (Inżynierskie)',
+        'Full-time second-cycle studies': 'Studia stacjonarne II stopnia (Magisterskie)',
+        'Part-time first-cycle studies': 'Studia niestacjonarne I stopnia (Inżynierskie)',
+        'Part-time second-cycle studies': 'Studia niestacjonarne II stopnia (MSU)',
     },
 };
 
@@ -53,6 +59,29 @@ const scheduleChangesData = scheduleChanges.map(makeScheduleChangeData);
 
 const classrooms = await Classroom.fetchAll();
 const classroomsData = classrooms.map(makeClassroomData);
+
+const subjectGroups = [
+    {
+        subjects: subjects.filter(subject => subject.studyCycle === 'first-cycle' && subject.studyMode === 'full-time'),
+        title: translate('Full-time first-cycle studies'),
+    },
+    {
+        subjects: subjects.filter(
+            subject => subject.studyCycle === 'second-cycle' && subject.studyMode === 'full-time',
+        ),
+        title: translate('Full-time second-cycle studies'),
+    },
+    {
+        subjects: subjects.filter(subject => subject.studyCycle === 'first-cycle' && subject.studyMode === 'part-time'),
+        title: translate('Part-time first-cycle studies'),
+    },
+    {
+        subjects: subjects.filter(
+            subject => subject.studyCycle === 'second-cycle' && subject.studyMode === 'part-time',
+        ),
+        title: translate('Part-time second-cycle studies'),
+    },
+];
 ---
 
 <Layout
@@ -76,26 +105,23 @@ const classroomsData = classrooms.map(makeClassroomData);
     <div class="text-center">
         {semester.startDate.toLocaleDateString('pl-PL')} - {semester.endDate.toLocaleDateString('pl-PL')}
     </div>
-    <h2 class="text-center fs-5 mt-3">
-        {translate('Subjects')}
-    </h2>
-    <Show when={subjects.length > 0}>
-        <div class="subjects-list list-group mx-auto">
-            {
-                subjects.map(
-                    subject =>
-                        (
-                            <a
-                                href={`/semesters/${semesterSlug}/subjects/${subject.slug}/`}
-                                class="list-group-item list-group-item-action"
-                            >
-                                {subject.name}
-                            </a>
-                        ) as unknown,
-                )
-            }
-        </div>
-    </Show>
+    {
+        subjectGroups.map(({ subjects, title }) => (
+            <Show when={subjects.length > 0}>
+                <h2 class="text-center fs-6 mt-3">{title}</h2>
+                <div class="subjects-list list-group mx-auto">
+                    {subjects.map(subject => (
+                        <a
+                            href={`/semesters/${semesterSlug}/subjects/${subject.slug}/`}
+                            class="list-group-item list-group-item-action"
+                        >
+                            {subject.name}
+                        </a>
+                    ))}
+                </div>
+            </Show>
+        ))
+    }
     <Show when={user !== null}>
         <AddSubject client:only="vue" semester={semesterData} allUsers={allUsers} class:list="d-block mx-auto mt-3" />
     </Show>

@@ -92,14 +92,17 @@ VALUES
   ( '2affdc99-7dd6-47f0-b26c-3c413bf063dd', 'EA 142' ),
   ( '8689d55d-508e-4f5d-aef8-d5052f220d20', 'EA 204' );
 
-INSERT INTO subjects (id, name, semester_id, teacher_ids, description, moodle_course_id, duration_minutes, class_repeat_weeks)
+INSERT INTO subjects (id, name, semester_id, teacher_ids, description, moodle_course_id, duration_minutes, class_repeat_weeks, study_mode, study_cycle)
 VALUES
-  ( '60bd04c7-b83c-4b4d-8668-7bad4ea0a800', 'Lokalne sieci bezprzewodowe - Informatyka sem. VI', 'a4560e99-9aa0-4c3e-9a6d-73c63b847d2e', '{c393c524-453c-4b02-bfad-5114fe828200,feeaa186-3d69-4801-a580-88be10d53553}', '', '', 105, 1 ),
-  ( 'cfaa8255-992f-405e-9064-dd8baf9dfde3', 'Sieci komputerowe - Informatyka sem. V', '50138012-1f54-43a6-b5fd-8efea42020a9', '{c393c524-453c-4b02-bfad-5114fe828200}', '[Wyniki](http://wyniki.kti.gda.pl/?nazwa=2024Z-SK-I)', '', 105, 2 ),
-  ( '25108321-0391-4c7a-b4d8-5ea20388e813', 'Lokalne sieci bezprzewodowe - Informatyka sem. VI', '094f8324-7c58-4566-b5d7-e4fe8ed03a18', '{c393c524-453c-4b02-bfad-5114fe828200,feeaa186-3d69-4801-a580-88be10d53553}', '', '', 105, 1 ),
-  ( '3f58b671-5b38-43f8-bf0f-49d93048c52e', 'Zarządzanie bezpieczeństwem sieci - Informatyka sem. VI', '094f8324-7c58-4566-b5d7-e4fe8ed03a18', '{c393c524-453c-4b02-bfad-5114fe828200,feeaa186-3d69-4801-a580-88be10d53553}', '', '', 165, 2 ),
-  ( '981c68ba-3f6a-459e-83af-f9fc578adc85', 'Sieci komputerowe - Informatyka sem. V', 'b2805b48-3d24-4169-8f67-88561345ee99', '{c393c524-453c-4b02-bfad-5114fe828200}', '', '', 105, 2 ),
-  ( '9068cb5a-fe4b-4b93-af91-7050e61eceeb', 'Wstęp do sieci komputerowych - Automatyka i Robotyka, Inżynieria biomedyczna sem. V', 'b2805b48-3d24-4169-8f67-88561345ee99', '{c393c524-453c-4b02-bfad-5114fe828200,feeaa186-3d69-4801-a580-88be10d53553}', '', '', 105, 1 );
+  ( '60bd04c7-b83c-4b4d-8668-7bad4ea0a800', 'Lokalne sieci bezprzewodowe - Informatyka sem. VI', 'a4560e99-9aa0-4c3e-9a6d-73c63b847d2e', '{c393c524-453c-4b02-bfad-5114fe828200,feeaa186-3d69-4801-a580-88be10d53553}', '', '', 105, 1, 'full-time', 'first-cycle'),
+  ( 'cfaa8255-992f-405e-9064-dd8baf9dfde3', 'Sieci komputerowe - Informatyka sem. V', '50138012-1f54-43a6-b5fd-8efea42020a9', '{c393c524-453c-4b02-bfad-5114fe828200}', '[Wyniki](http://wyniki.kti.gda.pl/?nazwa=2024Z-SK-I)', '', 105, 2, 'full-time', 'first-cycle'),
+  ( '25108321-0391-4c7a-b4d8-5ea20388e813', 'Lokalne sieci bezprzewodowe - Informatyka sem. VI', '094f8324-7c58-4566-b5d7-e4fe8ed03a18', '{c393c524-453c-4b02-bfad-5114fe828200,feeaa186-3d69-4801-a580-88be10d53553}', '', '', 105, 1, 'full-time', 'first-cycle'),
+  ( '3f58b671-5b38-43f8-bf0f-49d93048c52e', 'Zarządzanie bezpieczeństwem sieci - Informatyka sem. VI', '094f8324-7c58-4566-b5d7-e4fe8ed03a18', '{c393c524-453c-4b02-bfad-5114fe828200,feeaa186-3d69-4801-a580-88be10d53553}', '', '', 165, 2, 'full-time', 'first-cycle'),
+  ( '30ba7e6a-f3f8-46dc-bf2e-5defaf5f8277', 'Sieci komputerowe - Informatyka sem. IV', '094f8324-7c58-4566-b5d7-e4fe8ed03a18', '{c393c524-453c-4b02-bfad-5114fe828200,feeaa186-3d69-4801-a580-88be10d53553}', '', '', 105, 2, 'part-time', 'first-cycle'),
+  ( '981c68ba-3f6a-459e-83af-f9fc578adc85', 'Sieci komputerowe - Informatyka sem. V', 'b2805b48-3d24-4169-8f67-88561345ee99', '{c393c524-453c-4b02-bfad-5114fe828200}', '', '', 105, 2, 'full-time', 'first-cycle'),
+  ( '9068cb5a-fe4b-4b93-af91-7050e61eceeb', 'Wstęp do sieci komputerowych - Automatyka i Robotyka, Inżynieria biomedyczna sem. V', 'b2805b48-3d24-4169-8f67-88561345ee99', '{c393c524-453c-4b02-bfad-5114fe828200,feeaa186-3d69-4801-a580-88be10d53553}', '', '', 105, 1, 'full-time', 'first-cycle'),
+  ( 'c8ce5ed0-4087-403e-a029-6c3d7c8ad731', 'Oprogramowanie komunikacyjne dla internetu rzeczy - Sieci komputerowe sem. II', 'b2805b48-3d24-4169-8f67-88561345ee99', '{c393c524-453c-4b02-bfad-5114fe828200,feeaa186-3d69-4801-a580-88be10d53553}', '', '', 165, 1, 'full-time', 'second-cycle'),
+  ( '75d33784-be0f-411f-90b6-ddbdf8412ee1', 'Sieciowe Systemy Operacyjne - Informatyka sem. III', 'b2805b48-3d24-4169-8f67-88561345ee99', '{c393c524-453c-4b02-bfad-5114fe828200,feeaa186-3d69-4801-a580-88be10d53553}', '', '', 165, 1, 'part-time', 'second-cycle');
 
 INSERT INTO exercises (id, name, subject_id, exercise_number, classroom_id, teacher_id)
 VALUES
