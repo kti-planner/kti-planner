@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
+import type { StudyCycleType, StudyModeType } from '@backend/subject';
 import { langId } from '@components/frontend/lang';
 import { apiDelete, apiPatch, apiPost } from '@components/api';
 import type { SemesterData } from '@components/semesters/types';
@@ -34,6 +35,8 @@ const durationMinutes = ref<105 | 165 | 'custom' | null>(
 
 const customDurationMinutes = ref<number | string>(subject?.durationMinutes ?? 105);
 const classRepeatWeeks = ref<number | string>(subject?.classRepeatWeeks ?? 1);
+const studyMode = ref<StudyModeType>(subject?.studyMode ?? 'full-time');
+const studyCycle = ref<StudyCycleType>(subject?.studyCycle ?? 'first-cycle');
 
 async function submit() {
     if (typeof customDurationMinutes.value === 'string' || typeof classRepeatWeeks.value === 'string') {
@@ -51,6 +54,8 @@ async function submit() {
                   durationMinutes:
                       durationMinutes.value === 'custom' ? customDurationMinutes.value : durationMinutes.value,
                   classRepeatWeeks: classRepeatWeeks.value,
+                  studyMode: studyMode.value,
+                  studyCycle: studyCycle.value,
               } satisfies SubjectCreateApiData)
             : await apiPatch<boolean>('/semesters/api/subjects/', {
                   id: subject.id,
@@ -61,6 +66,8 @@ async function submit() {
                   durationMinutes:
                       durationMinutes.value === 'custom' ? customDurationMinutes.value : durationMinutes.value,
                   classRepeatWeeks: classRepeatWeeks.value,
+                  studyMode: studyMode.value,
+                  studyCycle: studyCycle.value,
               } satisfies SubjectEditApiData);
 
     if (success === undefined) {
@@ -108,6 +115,12 @@ const translations = {
         'Custom': 'Custom',
         'Variable': 'Variable',
         'How many weeks are between classes?': 'How many weeks are between classes?',
+        'Study mode': 'Study mode',
+        'Full-time': 'Full-time',
+        'Part-time': 'Part-time',
+        'Study cycle': 'Study cycle',
+        'First-cycle': 'First-cycle',
+        'Second-cycle': 'Second-cycle',
     },
     'pl': {
         'Subject name': 'Nazwa przedmiotu',
@@ -123,6 +136,12 @@ const translations = {
         'Custom': 'Niestandardowy',
         'Variable': 'Zmienny',
         'How many weeks are between classes?': 'Co ile tygodni zajęcia się powtarzają?',
+        'Study mode': 'Tryb studiów',
+        'Full-time': 'Stacjonarny',
+        'Part-time': 'Niestacjonarny',
+        'Study cycle': 'Stopień studiów',
+        'First-cycle': 'Pierwszy stopień',
+        'Second-cycle': 'Drugi stopień',
     },
 };
 
@@ -136,6 +155,8 @@ const descriptionId = crypto.randomUUID();
 const teachersId = crypto.randomUUID();
 const durationId = crypto.randomUUID();
 const classRepeatId = crypto.randomUUID();
+const studyModeId = crypto.randomUUID();
+const studyCycleId = crypto.randomUUID();
 </script>
 
 <template>
@@ -145,6 +166,38 @@ const classRepeatId = crypto.randomUUID();
                 {{ translate('Subject name') }} <span class="text-danger">*</span>
             </label>
             <input :id="nameId" v-model="subjectName" type="text" class="form-control" required autofocus />
+        </div>
+
+        <div>
+            <label :for="studyModeId" class="form-label">
+                {{ translate('Study mode') }} <span class="text-danger">*</span>
+            </label>
+            <select
+                :id="studyModeId"
+                v-model="studyMode"
+                class="form-select"
+                :aria-label="translate('Study mode')"
+                required
+            >
+                <option value="full-time">{{ translate('Full-time') }}</option>
+                <option value="part-time">{{ translate('Part-time') }}</option>
+            </select>
+        </div>
+
+        <div>
+            <label :for="studyCycleId" class="form-label">
+                {{ translate('Study cycle') }} <span class="text-danger">*</span>
+            </label>
+            <select
+                :id="studyCycleId"
+                v-model="studyCycle"
+                class="form-select"
+                :aria-label="translate('Study cycle')"
+                required
+            >
+                <option value="first-cycle">{{ translate('First-cycle') }}</option>
+                <option value="second-cycle">{{ translate('Second-cycle') }}</option>
+            </select>
         </div>
 
         <div>
