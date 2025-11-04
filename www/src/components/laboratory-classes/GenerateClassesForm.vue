@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue';
+import { computed, ref, watch, watchEffect } from 'vue';
 import { langId } from '@components/frontend/lang';
-import { apiPost } from '@components/api';
+import { apiPost, useApiFetch } from '@components/api';
 import type { EventConflict } from '@components/calendar/types';
 import type { ExerciseData } from '@components/exercises/types';
 import { getDayOfTheWeekOccurrence, truncateDate } from '@components/laboratory-classes/dates';
-import type { LaboratoryClassCreateApiData } from '@components/laboratory-classes/types';
+import type { LaboratoryClassCreateApiData, LaboratoryClassData } from '@components/laboratory-classes/types';
 import type { LaboratoryGroupData } from '@components/laboratory-groups/types';
 import type { ScheduleChangeData, SemesterData } from '@components/semesters/types';
 import type { SubjectData } from '@components/subjects/types';
@@ -164,6 +164,22 @@ watch([classStartTime, firstClassDateStr], () => {
     classEndTime.value = formatDateLocalHhMm(endDate);
 });
 
+const { data: laboratoryClasses } = useApiFetch<LaboratoryClassData[]>(
+    apiUrl,
+    () => new URLSearchParams(group.value ? [['laboratoryGroup', group.value.name]] : []),
+);
+
+const showAlert = ref(true);
+
+watch(laboratoryClasses, () => {
+    if (!group.value) {
+        showAlert.value = true;
+        return;
+    }
+
+    showAlert.value = laboratoryClasses.value !== null && laboratoryClasses.value.length > 0;
+});
+
 const groupId = crypto.randomUUID();
 const dateId = crypto.randomUUID();
 const startTimeId = crypto.randomUUID();
@@ -206,7 +222,7 @@ const repeatId = crypto.randomUUID();
             <input :id="repeatId" v-model="repeatWeeks" type="number" min="1" class="form-control" required />
         </div>
 
-        <p class="text-danger">
+        <p v-if="showAlert" class="text-danger">
             {{
                 translate(
                     'Attention! In case the laboratory group already has scheduled classes, they will be deleted and replaced with newly generated ones.',
