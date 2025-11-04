@@ -30,6 +30,8 @@ const translations = {
         'You can edit the classes later from the calendar': 'You can edit the classes later from the calendar',
         'The classes do not fit in the semester': 'The classes do not fit in the semester',
         'There are conflicts with holidays or other events': 'There are conflicts with holidays or other events',
+        'Attention! In case the laboratory group already has scheduled classes, they will be deleted and replaced with newly generated ones.':
+            'Attention! In case the laboratory group already has scheduled classes, they will be deleted and replaced with newly generated ones.',
     },
     'pl': {
         'Laboratory group': 'Grupa laboratoryjna',
@@ -42,6 +44,8 @@ const translations = {
         'You can edit the classes later from the calendar': 'Możesz później edytować te zajęcia w kalendarzu',
         'The classes do not fit in the semester': 'Zajęcia nie mieszczą się w semestrze',
         'There are conflicts with holidays or other events': 'Są konflikty z dniami wolnymi lub innymi zajęciami',
+        'Attention! In case the laboratory group already has scheduled classes, they will be deleted and replaced with newly generated ones.':
+            'Uwaga! W przypadku gdy grupa laboratoryjna posiada już zaplanowane zajęcia, to zostaną one usunięte i zastąpione nowo wygenerowanymi.',
     },
 };
 
@@ -201,6 +205,14 @@ const repeatId = crypto.randomUUID();
             <label :for="repeatId" class="form-label">{{ translate('How many weeks are between classes?') }}</label>
             <input :id="repeatId" v-model="repeatWeeks" type="number" min="1" class="form-control" required />
         </div>
+
+        <p class="text-danger">
+            {{
+                translate(
+                    'Attention! In case the laboratory group already has scheduled classes, they will be deleted and replaced with newly generated ones.',
+                )
+            }}
+        </p>
 
         <div v-if="plannedClasses.length > 0">
             <h2 class="fs-6">{{ translate('Summary') }}</h2>
