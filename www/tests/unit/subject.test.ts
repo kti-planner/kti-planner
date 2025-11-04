@@ -57,7 +57,10 @@ test('Subjects', async () => {
     const subjectData1 = makeSubjectData(subject1, [user1]);
 
     expect(subjectData1).toStrictEqual({
+        classRepeatWeeks: 1,
+        color: 'hsl(154 30 40)',
         description: 'Opis',
+        durationMinutes: 105,
         id: subject1.id,
         moodleCourseId: '1472',
         moodleCourseUrl: 'https://enauczanie.pg.edu.pl/2025/course/view.php?id=1472',
@@ -71,8 +74,6 @@ test('Subjects', async () => {
                 role: 'teacher',
             },
         ],
-        durationMinutes: 105,
-        classRepeatWeeks: 1,
     });
 
     expect(await subject1.getTeachers()).toStrictEqual([user1]);
@@ -122,7 +123,10 @@ test('Subjects', async () => {
     const subjectData2 = makeSubjectData(subject2, [user1, user2]);
 
     expect(subjectData2).toStrictEqual({
+        classRepeatWeeks: 2,
+        color: 'hsl(17 30 40)',
         description: '',
+        durationMinutes: 165,
         id: subject2.id,
         moodleCourseId: '',
         moodleCourseUrl: '',
@@ -141,8 +145,6 @@ test('Subjects', async () => {
                 role: 'teacher',
             },
         ],
-        durationMinutes: 165,
-        classRepeatWeeks: 2,
     });
 
     expect(await subject2.getTeachers()).toStrictEqual([user1, user2]);

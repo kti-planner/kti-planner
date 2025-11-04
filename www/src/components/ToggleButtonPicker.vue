@@ -1,17 +1,16 @@
 <script setup lang="ts" generic="T extends { id: string }">
 import { ref, watchEffect } from 'vue';
-import { stringToHslColor } from '@components/utils';
 
 const model = defineModel<T[]>({ required: true });
 
 const {
     options,
     center = false,
-    useStringToHslColor = false,
+    colors = {},
 } = defineProps<{
     options: Readonly<Record<string, T>>;
     center?: boolean;
-    useStringToHslColor?: boolean;
+    colors?: Record<string, string>;
 }>();
 
 const selectedIds = ref(new Set<string>(model.value.map(item => item.id)));
@@ -40,12 +39,12 @@ const toggleBtnId = crypto.randomUUID();
                 :for="`${toggleBtnId}-${value.id}`"
                 class="btn"
                 :class="{
-                    'btn-success': selectedIds.has(value.id) && !useStringToHslColor,
+                    'btn-success': selectedIds.has(value.id) && !(value.id in colors),
                     'btn-light': !selectedIds.has(value.id),
-                    'btn-colored': selectedIds.has(value.id) && useStringToHslColor,
+                    'btn-colored': selectedIds.has(value.id) && value.id in colors,
                 }"
                 :style="{
-                    '--str-color': useStringToHslColor ? stringToHslColor(label) : undefined,
+                    '--str-color': colors[value.id],
                 }"
                 >{{ label }}</label
             >

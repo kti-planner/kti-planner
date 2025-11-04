@@ -73,6 +73,8 @@ const selectedSubjects = ref<SubjectData[]>([]);
 const selectedClassrooms = ref<ClassroomData[]>([]);
 const selectedTeachers = ref<UserPublicData[]>([]);
 
+const subjectColors = computed(() => Object.fromEntries(subjects.map(subject => [subject.id, subject.color])));
+
 const { data: laboratoryClasses, execute: refetchLaboratoryClasses } = useApiFetch<LaboratoryClassData[]>(
     `/semesters/${semester.slug}/api/laboratory-classes/`,
     () =>
@@ -245,7 +247,7 @@ function handleCalendarEventSubmit() {
                     v-model="selectedSubjects"
                     center
                     :options="subjectOptions"
-                    use-string-to-hsl-color
+                    :colors="subjectColors"
                 />
             </div>
             <div>

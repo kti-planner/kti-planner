@@ -3,7 +3,6 @@ import type { CalendarEventData } from '@components/calendar-events/types';
 import type { LaboratoryClassData } from '@components/laboratory-classes/types';
 import type { ScheduleChangeData } from '@components/semesters/types';
 import type { SubjectData } from '@components/subjects/types';
-import { stringToHslColor } from '@components/utils';
 
 export type LaboratoryClassEventInput = EventInput & {
     extendedProps: {
@@ -28,7 +27,7 @@ export function getLaboratoryClassEvents(
             title: `${laboratoryClass.laboratoryGroup.name} - ${laboratoryClass.exercise.name}`,
             start: laboratoryClass.startDate,
             end: laboratoryClass.endDate,
-            color: stringToHslColor(subject?.name ?? ''),
+            ...(subject ? { color: subject.color } : {}),
             extendedProps: { laboratoryClass },
         };
     });

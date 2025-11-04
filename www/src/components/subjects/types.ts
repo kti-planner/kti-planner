@@ -12,6 +12,7 @@ export interface SubjectData {
     moodleCourseUrl: string;
     durationMinutes: number | null;
     classRepeatWeeks: number;
+    color: string;
 }
 
 export const subjectCreateApiSchema = z.object({
