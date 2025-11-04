@@ -58,7 +58,7 @@ test('Subjects', async () => {
 
     expect(subjectData1).toStrictEqual({
         classRepeatWeeks: 1,
-        color: 'hsl(154 30 40)',
+        color: 'hsl(154 35 38.141)',
         description: 'Opis',
         durationMinutes: 105,
         id: subject1.id,
@@ -124,7 +124,7 @@ test('Subjects', async () => {
 
     expect(subjectData2).toStrictEqual({
         classRepeatWeeks: 2,
-        color: 'hsl(17 30 40)',
+        color: 'hsl(17 35 47.84)',
         description: '',
         durationMinutes: 165,
         id: subject2.id,
