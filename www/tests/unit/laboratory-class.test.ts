@@ -55,6 +55,8 @@ test('Laboratory classes', async () => {
         moodleCourseId: '',
         durationMinutes: 105,
         classRepeatWeeks: 1,
+        studyMode: 'full-time',
+        studyCycle: 'first-cycle',
     });
 
     const subject2 = await Subject.create({
@@ -65,6 +67,8 @@ test('Laboratory classes', async () => {
         moodleCourseId: '',
         durationMinutes: 165,
         classRepeatWeeks: 2,
+        studyMode: 'full-time',
+        studyCycle: 'first-cycle',
     });
 
     const exercise1 = await Exercise.create({

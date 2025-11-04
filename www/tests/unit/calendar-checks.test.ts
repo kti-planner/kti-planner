@@ -41,6 +41,8 @@ test('Detects event conflicts', async () => {
         moodleCourseId: '1472',
         durationMinutes: 105,
         classRepeatWeeks: 1,
+        studyMode: 'full-time',
+        studyCycle: 'first-cycle',
     });
 
     const classroom1 = await Classroom.create({
