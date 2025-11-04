@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
+import type { StudyCycleType, StudyModeType } from '@backend/subject';
 import { langId } from '@components/frontend/lang';
 import { apiDelete, apiPatch, apiPost } from '@components/api';
 import type { SemesterData } from '@components/semesters/types';
@@ -34,8 +35,8 @@ const durationMinutes = ref<105 | 165 | 'custom' | null>(
 
 const customDurationMinutes = ref<number | string>(subject?.durationMinutes ?? 105);
 const classRepeatWeeks = ref<number | string>(subject?.classRepeatWeeks ?? 1);
-const studyMode = ref<'full-time' | 'part-time'>(subject?.studyMode ?? 'full-time');
-const studyCycle = ref<'first-cycle' | 'second-cycle'>(subject?.studyCycle ?? 'first-cycle');
+const studyMode = ref<StudyModeType>(subject?.studyMode ?? 'full-time');
+const studyCycle = ref<StudyCycleType>(subject?.studyCycle ?? 'first-cycle');
 
 async function submit() {
     if (typeof customDurationMinutes.value === 'string' || typeof classRepeatWeeks.value === 'string') {

@@ -17,6 +17,10 @@ export interface SubjectData {
     studyCycle: StudyCycleType;
 }
 
+const studyModeSchema = z.enum(['full-time', 'part-time']);
+
+const studyCycleSchema = z.enum(['first-cycle', 'second-cycle']);
+
 export const subjectCreateApiSchema = z.object({
     name: z.string().trim().nonempty(),
     semesterId: z.uuid(),
@@ -25,8 +29,8 @@ export const subjectCreateApiSchema = z.object({
     moodleCourseId: z.string(),
     durationMinutes: z.int().nonnegative().nullable(),
     classRepeatWeeks: z.int().nonnegative(),
-    studyMode: z.enum(['full-time', 'part-time']),
-    studyCycle: z.enum(['first-cycle', 'second-cycle']),
+    studyMode: studyModeSchema,
+    studyCycle: studyCycleSchema,
 });
 
 export type SubjectCreateApiData = z.input<typeof subjectCreateApiSchema>;
@@ -39,8 +43,8 @@ export const subjectEditApiSchema = z.object({
     moodleCourseId: z.string().optional(),
     durationMinutes: z.int().nonnegative().nullable().optional(),
     classRepeatWeeks: z.int().nonnegative().optional(),
-    studyMode: z.enum(['full-time', 'part-time']).optional(),
-    studyCycle: z.enum(['first-cycle', 'second-cycle']).optional(),
+    studyMode: studyModeSchema.optional(),
+    studyCycle: studyCycleSchema.optional(),
 });
 
 export type SubjectEditApiData = z.input<typeof subjectEditApiSchema>;
