@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { langId } from '@components/frontend/lang';
 import { currentUser } from '@components/frontend/user';
 import { apiDelete, apiPatch } from '@components/api';
@@ -13,7 +13,7 @@ import { formatDateLocalHhMm, formatDateLocalYyyyMmDd, parseDateLocalYyyyMmDd } 
 import ButtonWithConfirmationPopover from '@components/ButtonWithConfirmationPopover.vue';
 import UserSelector from '@components/users/UserSelector.vue';
 
-const { laboratoryClass, semester, apiUrl } = defineProps<{
+const { laboratoryClass, semester, apiUrl, subject } = defineProps<{
     laboratoryClass: LaboratoryClassData;
     teachers: UserPublicData[];
     semester: SemesterData;
@@ -104,6 +104,16 @@ async function doDelete() {
         emit('submit');
     }
 }
+
+watch(startTime, () => {
+    if (subject.durationMinutes === null) {
+        return;
+    }
+
+    const endDate = new Date(`${date.value}T${startTime.value}`);
+    endDate.setMinutes(endDate.getMinutes() + subject.durationMinutes);
+    endTime.value = formatDateLocalHhMm(endDate);
+});
 
 const dateId = crypto.randomUUID();
 const startTimeId = crypto.randomUUID();
