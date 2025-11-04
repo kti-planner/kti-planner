@@ -97,7 +97,7 @@ const options = computed((): CalendarOptions => {
             meridiem: false,
         },
         expandRows: true,
-        eventBackgroundColor: 'var(--bs-success)',
+        eventColor: 'var(--bs-success)',
         events,
         initialDate: initialDate ?? new Date(),
     };
@@ -125,12 +125,21 @@ const options = computed((): CalendarOptions => {
         }
 
         .fc-event {
-            cursor: pointer;
             overflow: hidden;
         }
 
-        .fc-timegrid-event:hover {
-            background-color: #157347 !important;
+        .fc-timegrid-event,
+        .fc-daygrid-event,
+        .fc-list-event {
+            cursor: pointer;
+        }
+
+        .fc-timegrid-event:hover::after {
+            background: var(--fc-event-selected-overlay-color);
+            inset: -1px;
+            content: '';
+            position: absolute;
+            z-index: 1;
         }
     }
 
