@@ -1,11 +1,17 @@
 <script setup lang="ts" generic="T extends { id: string }">
 import { ref, watchEffect } from 'vue';
+import { stringToHslColor } from '@components/utils';
 
 const model = defineModel<T[]>({ required: true });
 
-const { options, center = false } = defineProps<{
+const {
+    options,
+    center = false,
+    useStringToHslColor = false,
+} = defineProps<{
     options: Readonly<Record<string, T>>;
     center?: boolean;
+    useStringToHslColor?: boolean;
 }>();
 
 const selectedIds = ref(new Set<string>(model.value.map(item => item.id)));
@@ -33,7 +39,14 @@ const toggleBtnId = crypto.randomUUID();
             <label
                 :for="`${toggleBtnId}-${value.id}`"
                 class="btn"
-                :class="selectedIds.has(value.id) ? 'btn-success' : 'btn-light'"
+                :class="{
+                    'btn-success': selectedIds.has(value.id) && !useStringToHslColor,
+                    'btn-light': !selectedIds.has(value.id),
+                    'btn-colored': selectedIds.has(value.id) && useStringToHslColor,
+                }"
+                :style="{
+                    '--str-color': useStringToHslColor ? stringToHslColor(label) : undefined,
+                }"
                 >{{ label }}</label
             >
         </div>
@@ -41,9 +54,14 @@ const toggleBtnId = crypto.randomUUID();
 </template>
 
 <style scoped lang="scss">
-.btn:hover {
+.btn-light:hover {
     color: var(--bs-btn-hover-color);
     background-color: var(--bs-btn-hover-bg);
     border-color: var(--bs-btn-hover-border-color);
+}
+
+.btn-colored {
+    color: white !important;
+    background-color: var(--str-color) !important;
 }
 </style>

@@ -12,7 +12,7 @@ import Calendar from '@components/Calendar.vue';
 import LaboratoryClassEditModals from '@components/laboratory-classes/LaboratoryClassEditModals.vue';
 import LaboratoryClassEvent from '@components/laboratory-classes/LaboratoryClassEvent.vue';
 
-const { apiUrl, selectedLaboratoryGroups, scheduleChanges } = defineProps<{
+const { apiUrl, selectedLaboratoryGroups, scheduleChanges, subject } = defineProps<{
     apiUrl: string;
     selectedLaboratoryGroups: LaboratoryGroupData[];
     scheduleChanges: ScheduleChangeData[];
@@ -31,7 +31,7 @@ defineExpose({
 });
 
 const events = computed<EventInput[]>(() => [
-    ...getLaboratoryClassEvents(laboratoryClasses.value ?? []),
+    ...getLaboratoryClassEvents(laboratoryClasses.value ?? [], [subject]),
     ...getScheduleChangeEvents(scheduleChanges),
 ]);
 

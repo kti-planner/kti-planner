@@ -97,7 +97,7 @@ async function refetchAllEvents() {
 }
 
 const events = computed<EventInput[]>(() => [
-    ...getLaboratoryClassEvents(laboratoryClasses.value ?? []),
+    ...getLaboratoryClassEvents(laboratoryClasses.value ?? [], subjects),
     ...getScheduleChangeEvents(scheduleChanges),
     ...getCalendarEvents(calendarEvents.value ?? []),
 ]);
@@ -241,7 +241,12 @@ function handleCalendarEventSubmit() {
                 <h2 class="text-center fs-5">
                     {{ translate('Subjects') }}
                 </h2>
-                <ToggleButtonPicker v-model="selectedSubjects" center :options="subjectOptions" />
+                <ToggleButtonPicker
+                    v-model="selectedSubjects"
+                    center
+                    :options="subjectOptions"
+                    use-string-to-hsl-color
+                />
             </div>
             <div>
                 <h2 class="text-center fs-5">
