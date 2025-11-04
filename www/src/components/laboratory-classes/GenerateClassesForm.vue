@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, watch, watchEffect } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { langId } from '@components/frontend/lang';
 import { apiPost, useApiFetch } from '@components/api';
 import type { EventConflict } from '@components/calendar/types';
@@ -32,6 +32,8 @@ const translations = {
         'There are conflicts with holidays or other events': 'There are conflicts with holidays or other events',
         'Attention! In case the laboratory group already has scheduled classes, they will be deleted and replaced with newly generated ones.':
             'Attention! In case the laboratory group already has scheduled classes, they will be deleted and replaced with newly generated ones.',
+        'Attention! This laboratory group already has scheduled classes, they will be deleted and replaced with newly generated ones.':
+            'Attention! This laboratory group already has scheduled classes, they will be deleted and replaced with newly generated ones.',
     },
     'pl': {
         'Laboratory group': 'Grupa laboratoryjna',
@@ -46,6 +48,8 @@ const translations = {
         'There are conflicts with holidays or other events': 'Są konflikty z dniami wolnymi lub innymi zajęciami',
         'Attention! In case the laboratory group already has scheduled classes, they will be deleted and replaced with newly generated ones.':
             'Uwaga! W przypadku gdy grupa laboratoryjna posiada już zaplanowane zajęcia, to zostaną one usunięte i zastąpione nowo wygenerowanymi.',
+        'Attention! This laboratory group already has scheduled classes, they will be deleted and replaced with newly generated ones.':
+            'Uwaga! Ta grupa laboratoryjna posiada już zaplanowane zajęcia, zostaną one usunięte i zastąpione nowo wygenerowanymi.',
     },
 };
 
@@ -222,10 +226,17 @@ const repeatId = crypto.randomUUID();
             <input :id="repeatId" v-model="repeatWeeks" type="number" min="1" class="form-control" required />
         </div>
 
-        <p v-if="showAlert" class="text-danger">
+        <p v-if="showAlert && !group" class="text-danger">
             {{
                 translate(
                     'Attention! In case the laboratory group already has scheduled classes, they will be deleted and replaced with newly generated ones.',
+                )
+            }}
+        </p>
+        <p v-if="showAlert && group" class="text-danger">
+            {{
+                translate(
+                    'Attention! This laboratory group already has scheduled classes, they will be deleted and replaced with newly generated ones.',
                 )
             }}
         </p>
