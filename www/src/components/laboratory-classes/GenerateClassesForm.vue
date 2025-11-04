@@ -176,11 +176,6 @@ const { data: laboratoryClasses } = useApiFetch<LaboratoryClassData[]>(
 const showAlert = ref(true);
 
 watch(laboratoryClasses, () => {
-    if (!group.value) {
-        showAlert.value = true;
-        return;
-    }
-
     showAlert.value = laboratoryClasses.value !== null && laboratoryClasses.value.length > 0;
 });
 
