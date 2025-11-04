@@ -105,8 +105,8 @@ async function doDelete() {
     }
 }
 
-watch(startTime, () => {
-    if (subject.durationMinutes === null) {
+watch([startTime, date], () => {
+    if (subject.durationMinutes === null || date.value === '' || startTime.value === '') {
         return;
     }
 
