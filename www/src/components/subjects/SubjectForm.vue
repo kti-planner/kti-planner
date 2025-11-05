@@ -6,7 +6,7 @@ import { apiDelete, apiPatch, apiPost } from '@components/api';
 import type { SemesterData } from '@components/semesters/types';
 import type { SubjectCreateApiData, SubjectData, SubjectEditApiData } from '@components/subjects/types';
 import type { UserPublicData } from '@components/users/types';
-import { toHyphenatedLowercase } from '@components/utils';
+import { numberToRoman, toHyphenatedLowercase } from '@components/utils';
 import ButtonWithConfirmationPopover from '@components/ButtonWithConfirmationPopover.vue';
 import UserMultiSelector from '@components/users/UserMultiSelector.vue';
 
@@ -80,7 +80,7 @@ async function submit() {
     submitFailed.value = !success;
 
     if (success) {
-        const newUrl = `/semesters/${semester.slug}/subjects/${toHyphenatedLowercase(subjectName.value ?? '')}/`;
+        const newUrl = `/semesters/${semester.slug}/subjects/${toHyphenatedLowercase(`${subjectName.value} sem. ${numberToRoman(semesterNumber.value)}`)}/`;
 
         if (isEditing.value) {
             window.history.replaceState({}, '', newUrl);
