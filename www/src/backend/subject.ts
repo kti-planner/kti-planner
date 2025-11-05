@@ -21,9 +21,9 @@ interface DbSubject {
     moodle_course_id: string;
     duration_minutes: number | null;
     class_repeat_weeks: number;
-    semester_number: number;
     study_mode: StudyModeType;
     study_cycle: StudyCycleType;
+    semester_number: number;
 }
 
 export interface SubjectCreateData {
@@ -34,9 +34,9 @@ export interface SubjectCreateData {
     moodleCourseId: string;
     durationMinutes: number | null;
     classRepeatWeeks: number;
-    semesterNumber: number;
     studyMode: StudyModeType;
     studyCycle: StudyCycleType;
+    semesterNumber: number;
 }
 
 export interface SubjectEditData {
@@ -47,9 +47,9 @@ export interface SubjectEditData {
     moodleCourseId?: string | undefined;
     durationMinutes?: number | null | undefined;
     classRepeatWeeks?: number | undefined;
-    semesterNumber?: number | undefined;
     studyMode?: StudyModeType | undefined;
     studyCycle?: StudyCycleType | undefined;
+    semesterNumber?: number | undefined;
 }
 
 export class Subject {
@@ -61,9 +61,9 @@ export class Subject {
     moodleCourseId: string;
     durationMinutes: number | null;
     classRepeatWeeks: number;
-    semesterNumber: number;
     studyMode: StudyModeType;
     studyCycle: StudyCycleType;
+    semesterNumber: number;
 
     constructor(data: DbSubject) {
         this.id = data.id;
@@ -74,9 +74,9 @@ export class Subject {
         this.moodleCourseId = data.moodle_course_id;
         this.durationMinutes = data.duration_minutes;
         this.classRepeatWeeks = data.class_repeat_weeks;
-        this.semesterNumber = data.semester_number;
         this.studyMode = data.study_mode;
         this.studyCycle = data.study_cycle;
+        this.semesterNumber = data.semester_number;
     }
 
     get slug(): string {
@@ -129,7 +129,7 @@ export class Subject {
 
         const result = (
             await db.query<DbSubject>(
-                'INSERT INTO subjects (id, name, semester_id, teacher_ids, description, moodle_course_id, duration_minutes, class_repeat_weeks, semester_number, study_mode, study_cycle)' +
+                'INSERT INTO subjects (id, name, semester_id, teacher_ids, description, moodle_course_id, duration_minutes, class_repeat_weeks, study_mode, study_cycle, semester_number)' +
                     ' VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING *',
                 [
                     crypto.randomUUID(),
@@ -140,9 +140,9 @@ export class Subject {
                     data.moodleCourseId,
                     data.durationMinutes,
                     data.classRepeatWeeks,
-                    data.semesterNumber,
                     data.studyMode,
                     data.studyCycle,
+                    data.semesterNumber,
                 ],
             )
         ).rows[0];
@@ -181,10 +181,6 @@ export class Subject {
             this.classRepeatWeeks = data.classRepeatWeeks;
         }
 
-        if (data.semesterNumber !== undefined) {
-            this.semesterNumber = data.semesterNumber;
-        }
-
         if (data.studyMode !== undefined) {
             this.studyMode = data.studyMode;
         }
@@ -193,9 +189,13 @@ export class Subject {
             this.studyCycle = data.studyCycle;
         }
 
+        if (data.semesterNumber !== undefined) {
+            this.semesterNumber = data.semesterNumber;
+        }
+
         await db.query(
             'UPDATE subjects SET name = $2, semester_id = $3, teacher_ids = $4, description = $5, moodle_course_id = $6,' +
-                ' duration_minutes = $7, class_repeat_weeks = $8, semester_number = $9, study_mode = $10, study_cycle = $11 WHERE id = $1',
+                ' duration_minutes = $7, class_repeat_weeks = $8, study_mode = $9, study_cycle = $10, semester_number = $11 WHERE id = $1',
             [
                 this.id,
                 this.name,
@@ -205,9 +205,9 @@ export class Subject {
                 this.moodleCourseId,
                 this.durationMinutes,
                 this.classRepeatWeeks,
-                this.semesterNumber,
                 this.studyMode,
                 this.studyCycle,
+                this.semesterNumber,
             ],
         );
     }
