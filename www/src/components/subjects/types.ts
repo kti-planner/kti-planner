@@ -13,6 +13,7 @@ export interface SubjectData {
     moodleCourseUrl: string;
     durationMinutes: number | null;
     classRepeatWeeks: number;
+    semesterNumber: number;
     studyMode: StudyModeType;
     studyCycle: StudyCycleType;
 }
@@ -31,6 +32,7 @@ export const subjectCreateApiSchema = z.object({
     classRepeatWeeks: z.int().nonnegative(),
     studyMode: studyModeSchema,
     studyCycle: studyCycleSchema,
+    semesterNumber: z.int().min(1),
 });
 
 export type SubjectCreateApiData = z.input<typeof subjectCreateApiSchema>;
@@ -45,6 +47,7 @@ export const subjectEditApiSchema = z.object({
     classRepeatWeeks: z.int().nonnegative().optional(),
     studyMode: studyModeSchema.optional(),
     studyCycle: studyCycleSchema.optional(),
+    semesterNumber: z.int().min(1).optional(),
 });
 
 export type SubjectEditApiData = z.input<typeof subjectEditApiSchema>;

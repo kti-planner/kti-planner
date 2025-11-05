@@ -4,6 +4,7 @@ import { langId } from '@components/frontend/lang';
 import { apiGet, apiPost } from '@components/api';
 import type { SemesterData } from '@components/semesters/types';
 import type { SubjectCopyFromPreviousSemesterApiData, SubjectData } from '@components/subjects/types';
+import { numberToRoman } from '@components/utils';
 
 const { currentSemester } = defineProps<{
     currentSemester: SemesterData;
@@ -129,7 +130,7 @@ const subjectId = crypto.randomUUID();
                 <label :for="subjectId" class="form-label">{{ translate('Subject to copy') }}</label>
                 <select :id="subjectId" v-model="selectedSubject" class="form-select" required>
                     <option v-for="subject in subjectsData" :key="subject.slug" :value="subject">
-                        {{ subject.name }}
+                        {{ `${subject.name} sem. ${numberToRoman(subject.semesterNumber)}` }}
                     </option>
                 </select>
             </p>

@@ -3,6 +3,7 @@ import { Classroom, makeClassroomData } from '@backend/classroom';
 import { makeScheduleChangeData, makeSemesterData, Semester } from '@backend/semester';
 import { makeSubjectData, Subject } from '@backend/subject';
 import { makeUserPublicData, User } from '@backend/user';
+import { numberToRoman } from '@components/utils';
 import Layout from '@layouts/Layout.astro';
 import EditSemester from '@components/semesters/EditSemester.vue';
 import SemesterCalendar from '@components/semesters/SemesterCalendar.vue';
@@ -62,23 +63,27 @@ const classroomsData = classrooms.map(makeClassroomData);
 
 const subjectGroups = [
     {
-        subjects: subjects.filter(subject => subject.studyCycle === 'first-cycle' && subject.studyMode === 'full-time'),
+        subjects: subjects
+            .filter(subject => subject.studyCycle === 'first-cycle' && subject.studyMode === 'full-time')
+            .sort((a, b) => a.semesterNumber - b.semesterNumber),
         title: translate('Full-time first-cycle studies'),
     },
     {
-        subjects: subjects.filter(
-            subject => subject.studyCycle === 'second-cycle' && subject.studyMode === 'full-time',
-        ),
+        subjects: subjects
+            .filter(subject => subject.studyCycle === 'second-cycle' && subject.studyMode === 'full-time')
+            .sort((a, b) => a.semesterNumber - b.semesterNumber),
         title: translate('Full-time second-cycle studies'),
     },
     {
-        subjects: subjects.filter(subject => subject.studyCycle === 'first-cycle' && subject.studyMode === 'part-time'),
+        subjects: subjects
+            .filter(subject => subject.studyCycle === 'first-cycle' && subject.studyMode === 'part-time')
+            .sort((a, b) => a.semesterNumber - b.semesterNumber),
         title: translate('Part-time first-cycle studies'),
     },
     {
-        subjects: subjects.filter(
-            subject => subject.studyCycle === 'second-cycle' && subject.studyMode === 'part-time',
-        ),
+        subjects: subjects
+            .filter(subject => subject.studyCycle === 'second-cycle' && subject.studyMode === 'part-time')
+            .sort((a, b) => a.semesterNumber - b.semesterNumber),
         title: translate('Part-time second-cycle studies'),
     },
 ];
@@ -116,6 +121,8 @@ const subjectGroups = [
                             class="list-group-item list-group-item-action"
                         >
                             {subject.name}
+                            {'sem. '}
+                            {numberToRoman(subject.semesterNumber)}
                         </a>
                     ))}
                 </div>

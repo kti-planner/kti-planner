@@ -54,6 +54,7 @@ export const POST: APIRoute = async ({ locals, params }) => {
         classRepeatWeeks: subjectToBeCopied.classRepeatWeeks,
         studyMode: subjectToBeCopied.studyMode,
         studyCycle: subjectToBeCopied.studyCycle,
+        semesterNumber: subjectToBeCopied.semesterNumber,
     });
 
     // Copy exercises

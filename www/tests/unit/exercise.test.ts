@@ -55,6 +55,7 @@ test('Exercises', async () => {
         classRepeatWeeks: 1,
         studyMode: 'full-time',
         studyCycle: 'first-cycle',
+        semesterNumber: 5,
     });
 
     const subject2 = await Subject.create({
@@ -67,6 +68,7 @@ test('Exercises', async () => {
         classRepeatWeeks: 2,
         studyMode: 'full-time',
         studyCycle: 'first-cycle',
+        semesterNumber: 6,
     });
 
     const exercise1 = await Exercise.create({

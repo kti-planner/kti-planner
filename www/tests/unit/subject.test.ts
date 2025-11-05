@@ -45,6 +45,7 @@ test('Subjects', async () => {
         classRepeatWeeks: 1,
         studyMode: 'full-time',
         studyCycle: 'first-cycle',
+        semesterNumber: 5,
     });
 
     expect(subject1).toHaveProperty('name', 'Sieci komputerowe - Informatyka sem. V');
@@ -57,6 +58,7 @@ test('Subjects', async () => {
     expect(subject1).toHaveProperty('classRepeatWeeks', subject1.classRepeatWeeks);
     expect(subject1).toHaveProperty('studyMode', subject1.studyMode);
     expect(subject1).toHaveProperty('studyCycle', subject1.studyCycle);
+    expect(subject1).toHaveProperty('semesterNumber', subject1.semesterNumber);
 
     const subjectData1 = makeSubjectData(subject1, [user1]);
 
@@ -79,6 +81,7 @@ test('Subjects', async () => {
         classRepeatWeeks: 1,
         studyMode: 'full-time',
         studyCycle: 'first-cycle',
+        semesterNumber: 5,
     });
 
     expect(await subject1.getTeachers()).toStrictEqual([user1]);
@@ -105,6 +108,7 @@ test('Subjects', async () => {
             classRepeatWeeks: 1,
             studyMode: 'full-time',
             studyCycle: 'first-cycle',
+            semesterNumber: 5,
         }),
     ).rejects.toThrow(Error);
 
@@ -118,6 +122,7 @@ test('Subjects', async () => {
         classRepeatWeeks: 2,
         studyMode: 'full-time',
         studyCycle: 'first-cycle',
+        semesterNumber: 6,
     });
 
     expect(subject2).toHaveProperty('name', 'Zarządzanie bezpieczeństwem sieci - Informatyka sem. VI');
@@ -130,6 +135,7 @@ test('Subjects', async () => {
     expect(subject2).toHaveProperty('classRepeatWeeks', subject2.classRepeatWeeks);
     expect(subject2).toHaveProperty('studyMode', subject2.studyMode);
     expect(subject2).toHaveProperty('studyCycle', subject2.studyCycle);
+    expect(subject2).toHaveProperty('semesterNumber', subject2.semesterNumber);
 
     const subjectData2 = makeSubjectData(subject2, [user1, user2]);
 
@@ -157,6 +163,7 @@ test('Subjects', async () => {
         classRepeatWeeks: 2,
         studyMode: 'full-time',
         studyCycle: 'first-cycle',
+        semesterNumber: 6,
     });
 
     expect(await subject2.getTeachers()).toStrictEqual([user1, user2]);
@@ -188,6 +195,7 @@ test('Subjects', async () => {
         classRepeatWeeks: 1,
         studyMode: 'part-time',
         studyCycle: 'second-cycle',
+        semesterNumber: 7,
     });
 
     expect(subject2).toHaveProperty('name', 'Lokalne sieci bezprzewodowe - Informatyka sem. VI');
@@ -200,6 +208,7 @@ test('Subjects', async () => {
     expect(subject2).toHaveProperty('classRepeatWeeks', subject2.classRepeatWeeks);
     expect(subject2).toHaveProperty('studyMode', subject2.studyMode);
     expect(subject2).toHaveProperty('studyCycle', subject2.studyCycle);
+    expect(subject2).toHaveProperty('semesterNumber', subject2.semesterNumber);
 
     expect(await subject2.getTeachers()).toStrictEqual([user2]);
 
@@ -213,6 +222,7 @@ test('Subjects', async () => {
     expect(subject1).toHaveProperty('classRepeatWeeks', subject1.classRepeatWeeks);
     expect(subject1).toHaveProperty('studyMode', subject1.studyMode);
     expect(subject1).toHaveProperty('studyCycle', subject1.studyCycle);
+    expect(subject1).toHaveProperty('semesterNumber', subject1.semesterNumber);
 
     expect(await subject1.getTeachers()).toStrictEqual([user1]);
 

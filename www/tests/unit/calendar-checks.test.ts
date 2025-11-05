@@ -43,6 +43,7 @@ test('Detects event conflicts', async () => {
         classRepeatWeeks: 1,
         studyMode: 'full-time',
         studyCycle: 'first-cycle',
+        semesterNumber: 5,
     });
 
     const classroom1 = await Classroom.create({

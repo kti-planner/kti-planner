@@ -45,6 +45,7 @@ export const POST: APIRoute = async ({ locals }) => {
         classRepeatWeeks: data.classRepeatWeeks,
         studyMode: data.studyMode,
         studyCycle: data.studyCycle,
+        semesterNumber: data.semesterNumber,
     });
 
     return Response.json(true, { status: 201 });
@@ -98,6 +99,7 @@ export const PATCH: APIRoute = async ({ locals }) => {
         classRepeatWeeks: data.classRepeatWeeks,
         studyMode: data.studyMode,
         studyCycle: data.studyCycle,
+        semesterNumber: data.semesterNumber,
     });
 
     return Response.json(true, { status: 200 });

@@ -37,6 +37,7 @@ const customDurationMinutes = ref<number | string>(subject?.durationMinutes ?? 1
 const classRepeatWeeks = ref<number | string>(subject?.classRepeatWeeks ?? 1);
 const studyMode = ref<StudyModeType>(subject?.studyMode ?? 'full-time');
 const studyCycle = ref<StudyCycleType>(subject?.studyCycle ?? 'first-cycle');
+const semesterNumber = ref<number>(subject?.semesterNumber ?? 1);
 
 async function submit() {
     if (typeof customDurationMinutes.value === 'string' || typeof classRepeatWeeks.value === 'string') {
@@ -56,6 +57,7 @@ async function submit() {
                   classRepeatWeeks: classRepeatWeeks.value,
                   studyMode: studyMode.value,
                   studyCycle: studyCycle.value,
+                  semesterNumber: semesterNumber.value,
               } satisfies SubjectCreateApiData)
             : await apiPatch<boolean>('/semesters/api/subjects/', {
                   id: subject.id,
@@ -68,6 +70,7 @@ async function submit() {
                   classRepeatWeeks: classRepeatWeeks.value,
                   studyMode: studyMode.value,
                   studyCycle: studyCycle.value,
+                  semesterNumber: semesterNumber.value,
               } satisfies SubjectEditApiData);
 
     if (success === undefined) {
@@ -121,6 +124,7 @@ const translations = {
         'Study cycle': 'Study cycle',
         'First-cycle': 'First-cycle',
         'Second-cycle': 'Second-cycle',
+        'Semester': 'Semester',
     },
     'pl': {
         'Subject name': 'Nazwa przedmiotu',
@@ -142,6 +146,7 @@ const translations = {
         'Study cycle': 'Stopień studiów',
         'First-cycle': 'Pierwszy stopień',
         'Second-cycle': 'Drugi stopień',
+        'Semester': 'Semestr',
     },
 };
 
@@ -157,6 +162,7 @@ const durationId = crypto.randomUUID();
 const classRepeatId = crypto.randomUUID();
 const studyModeId = crypto.randomUUID();
 const studyCycleId = crypto.randomUUID();
+const semesterNumberId = crypto.randomUUID();
 </script>
 
 <template>
@@ -197,6 +203,27 @@ const studyCycleId = crypto.randomUUID();
             >
                 <option value="first-cycle">{{ translate('First-cycle') }}</option>
                 <option value="second-cycle">{{ translate('Second-cycle') }}</option>
+            </select>
+        </div>
+
+        <div>
+            <label :for="semesterNumberId" class="form-label">
+                {{ translate('Semester') }} <span class="text-danger">*</span>
+            </label>
+            <select
+                :id="semesterNumberId"
+                v-model="semesterNumber"
+                class="form-select"
+                :aria-label="translate('Semester')"
+                required
+            >
+                <option :value="1">I</option>
+                <option :value="2">II</option>
+                <option :value="3">III</option>
+                <option :value="4">IV</option>
+                <option :value="5">V</option>
+                <option :value="6">VI</option>
+                <option :value="7">VII</option>
             </select>
         </div>
 

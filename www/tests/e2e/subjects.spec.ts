@@ -45,6 +45,7 @@ test('Can add new subject and prevent duplicate subject creation', async ({ page
     await page.getByRole('textbox', { name: 'Subject name' }).fill('Sieci komputerowe - Informatyka sem. V');
     await page.getByRole('combobox', { name: 'Study mode' }).selectOption('Full-time');
     await page.getByRole('combobox', { name: 'Study cycle' }).selectOption('First-cycle');
+    await page.getByRole('combobox', { name: 'Semester' }).selectOption('5');
     await page.getByRole('textbox', { name: 'Moodle course ID' }).fill('1472');
     await page.getByRole('textbox', { name: 'Description' }).fill('Subject test description <script>alert(0)</script>');
     await page.getByRole('combobox', { name: 'Teachers' }).selectOption('Jan Kowalski');
@@ -119,6 +120,7 @@ test('Can edit subject and prevent duplicate subject', async ({ page }) => {
     await page.getByRole('textbox', { name: 'Subject name' }).fill('Sieci Ethernet i IP');
     await page.getByRole('combobox', { name: 'Study mode' }).selectOption('Part-time');
     await page.getByRole('combobox', { name: 'Study cycle' }).selectOption('Second-cycle');
+    await page.getByRole('combobox', { name: 'Semester' }).selectOption('6');
     await page.getByRole('textbox', { name: 'Moodle course ID' }).fill('15');
     await page.getByRole('textbox', { name: 'Description' }).fill('Test description');
     await page.getByRole('combobox', { name: 'Teachers' }).selectOption('Admin');
@@ -258,6 +260,7 @@ test.describe('API fetch tests', () => {
                 classRepeatWeeks: 1,
                 studyMode: 'full-time',
                 studyCycle: 'first-cycle',
+                semesterNumber: 5,
             },
         });
 
@@ -279,6 +282,7 @@ test.describe('API fetch tests', () => {
                 classRepeatWeeks: 1,
                 studyMode: 'full-time',
                 studyCycle: 'first-cycle',
+                semesterNumber: 5,
             },
         });
 
@@ -299,6 +303,7 @@ test.describe('API fetch tests', () => {
                 classRepeatWeeks: 2,
                 studyMode: 'part-time',
                 studyCycle: 'second-cycle',
+                semesterNumber: 6,
             },
         });
 
@@ -320,6 +325,7 @@ test.describe('API fetch tests', () => {
                 classRepeatWeeks: 2,
                 studyMode: 'part-time',
                 studyCycle: 'second-cycle',
+                semesterNumber: 6,
             },
         });
 
