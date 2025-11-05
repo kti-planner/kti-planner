@@ -9,6 +9,9 @@ import { toHyphenatedLowercase } from '@components/utils';
 assert(env.MOODLE_BASE_URL !== undefined);
 const moodleBaseUrl = env.MOODLE_BASE_URL;
 
+export type StudyModeType = 'full-time' | 'part-time';
+export type StudyCycleType = 'first-cycle' | 'second-cycle';
+
 interface DbSubject {
     id: string;
     name: string;
@@ -18,6 +21,8 @@ interface DbSubject {
     moodle_course_id: string;
     duration_minutes: number | null;
     class_repeat_weeks: number;
+    study_mode: StudyModeType;
+    study_cycle: StudyCycleType;
 }
 
 export interface SubjectCreateData {
@@ -28,6 +33,8 @@ export interface SubjectCreateData {
     moodleCourseId: string;
     durationMinutes: number | null;
     classRepeatWeeks: number;
+    studyMode: StudyModeType;
+    studyCycle: StudyCycleType;
 }
 
 export interface SubjectEditData {
@@ -38,6 +45,8 @@ export interface SubjectEditData {
     moodleCourseId?: string | undefined;
     durationMinutes?: number | null | undefined;
     classRepeatWeeks?: number | undefined;
+    studyMode?: StudyModeType | undefined;
+    studyCycle?: StudyCycleType | undefined;
 }
 
 export class Subject {
@@ -49,6 +58,8 @@ export class Subject {
     moodleCourseId: string;
     durationMinutes: number | null;
     classRepeatWeeks: number;
+    studyMode: StudyModeType;
+    studyCycle: StudyCycleType;
 
     constructor(data: DbSubject) {
         this.id = data.id;
@@ -59,6 +70,8 @@ export class Subject {
         this.moodleCourseId = data.moodle_course_id;
         this.durationMinutes = data.duration_minutes;
         this.classRepeatWeeks = data.class_repeat_weeks;
+        this.studyMode = data.study_mode;
+        this.studyCycle = data.study_cycle;
     }
 
     get slug(): string {
@@ -102,8 +115,8 @@ export class Subject {
 
         const result = (
             await db.query<DbSubject>(
-                'INSERT INTO subjects (id, name, semester_id, teacher_ids, description, moodle_course_id, duration_minutes, class_repeat_weeks)' +
-                    ' VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *',
+                'INSERT INTO subjects (id, name, semester_id, teacher_ids, description, moodle_course_id, duration_minutes, class_repeat_weeks, study_mode, study_cycle)' +
+                    ' VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *',
                 [
                     crypto.randomUUID(),
                     data.name,
@@ -113,6 +126,8 @@ export class Subject {
                     data.moodleCourseId,
                     data.durationMinutes,
                     data.classRepeatWeeks,
+                    data.studyMode,
+                    data.studyCycle,
                 ],
             )
         ).rows[0];
@@ -151,9 +166,17 @@ export class Subject {
             this.classRepeatWeeks = data.classRepeatWeeks;
         }
 
+        if (data.studyMode !== undefined) {
+            this.studyMode = data.studyMode;
+        }
+
+        if (data.studyCycle !== undefined) {
+            this.studyCycle = data.studyCycle;
+        }
+
         await db.query(
             'UPDATE subjects SET name = $2, semester_id = $3, teacher_ids = $4, description = $5, moodle_course_id = $6,' +
-                ' duration_minutes = $7, class_repeat_weeks = $8 WHERE id = $1',
+                ' duration_minutes = $7, class_repeat_weeks = $8, study_mode = $9, study_cycle = $10 WHERE id = $1',
             [
                 this.id,
                 this.name,
@@ -163,6 +186,8 @@ export class Subject {
                 this.moodleCourseId,
                 this.durationMinutes,
                 this.classRepeatWeeks,
+                this.studyMode,
+                this.studyCycle,
             ],
         );
     }
@@ -186,5 +211,7 @@ export function makeSubjectData(subject: Subject, allUsers: User[]): SubjectData
         moodleCourseUrl: subject.moodleCourseId !== '' ? moodleBaseUrl + subject.moodleCourseId : '',
         durationMinutes: subject.durationMinutes,
         classRepeatWeeks: subject.classRepeatWeeks,
+        studyMode: subject.studyMode,
+        studyCycle: subject.studyCycle,
     };
 }

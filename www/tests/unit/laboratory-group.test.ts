@@ -44,6 +44,8 @@ test('Laboratory groups', async () => {
         moodleCourseId: '',
         durationMinutes: 105,
         classRepeatWeeks: 1,
+        studyMode: 'full-time',
+        studyCycle: 'first-cycle',
     });
 
     const subject2 = await Subject.create({
@@ -54,6 +56,8 @@ test('Laboratory groups', async () => {
         moodleCourseId: '',
         durationMinutes: 165,
         classRepeatWeeks: 2,
+        studyMode: 'full-time',
+        studyCycle: 'first-cycle',
     });
 
     const laboratoryGroup1 = await LaboratoryGroup.create({

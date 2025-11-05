@@ -31,6 +31,10 @@ CREATE TABLE classrooms (
     name text NOT NULL UNIQUE
 );
 
+CREATE TYPE study_mode_type AS ENUM ('full-time', 'part-time');
+
+CREATE TYPE study_cycle_type AS ENUM ('first-cycle', 'second-cycle');
+
 CREATE TABLE subjects (
     id                 uuid PRIMARY KEY,
     name               text NOT NULL,
@@ -39,7 +43,9 @@ CREATE TABLE subjects (
     description        text NOT NULL,
     moodle_course_id   text NOT NULL,
     duration_minutes   integer,
-    class_repeat_weeks integer NOT NULL
+    class_repeat_weeks integer NOT NULL,
+    study_mode         study_mode_type NOT NULL,
+    study_cycle        study_cycle_type NOT NULL
 );
 
 CREATE TABLE exercises (
