@@ -33,7 +33,7 @@ const { laboratoryClass, subject, hideExerciseName } = defineProps<{
 
 const title = computed(
     () =>
-        (subject ? `${subject.name}\n` : '') +
+        (subject ? `${subject.fullName}\n` : '') +
         `${laboratoryClass.exercise.exerciseNumber}. ${laboratoryClass.exercise.name}\n` +
         `${translate('Group')}: ${laboratoryClass.laboratoryGroup.name}\n` +
         `${translate('Teacher')}: ${laboratoryClass.teacher?.name ?? translate('Unknown [teacher]')}\n` +
@@ -45,7 +45,7 @@ const title = computed(
     <div class="event-content" :title>
         <p class="text-truncate">{{ timeText }}</p>
         <p v-if="subject" class="text-truncate fw-bold">
-            {{ subject.name }}
+            {{ subject.fullName }}
         </p>
         <p v-if="!hideExerciseName" class="text-truncate" :class="{ 'fw-bold': !subject }">
             {{ `${laboratoryClass.exercise.exerciseNumber}. ${laboratoryClass.exercise.name}` }}

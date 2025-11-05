@@ -5,6 +5,7 @@ import type { UserPublicData } from '@components/users/types';
 export interface SubjectData {
     id: string;
     name: string;
+    fullName: string;
     semesterId: string;
     slug: string;
     teachers: UserPublicData[];

@@ -104,7 +104,7 @@ const events = computed<EventInput[]>(() => [
 
 const initialDate = computed(() => getInitialDate(laboratoryClasses.value ?? []));
 
-const subjectOptions = computed(() => Object.fromEntries(subjects.map(subject => [subject.name, subject])));
+const subjectOptions = computed(() => Object.fromEntries(subjects.map(subject => [subject.fullName, subject])));
 
 const classroomOptions = computed(() =>
     Object.fromEntries([

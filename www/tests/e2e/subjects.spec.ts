@@ -42,7 +42,7 @@ test('Can add new subject and prevent duplicate subject creation', async ({ page
 
     await expect(page.getByRole('heading', { name: 'Add new subject' })).toBeVisible();
 
-    await page.getByRole('textbox', { name: 'Subject name' }).fill('Sieci komputerowe - Informatyka sem. V');
+    await page.getByRole('textbox', { name: 'Subject name' }).fill('Sieci komputerowe - Informatyka');
     await page.getByRole('combobox', { name: 'Study mode' }).selectOption('Full-time');
     await page.getByRole('combobox', { name: 'Study cycle' }).selectOption('First-cycle');
     await page.getByRole('combobox', { name: 'Semester' }).selectOption('5');
@@ -67,7 +67,10 @@ test('Can add new subject and prevent duplicate subject creation', async ({ page
 
     await expect(page.getByRole('heading', { name: 'Add new subject' })).toBeVisible();
 
-    await page.getByRole('textbox', { name: 'Subject name' }).fill('Sieci komputerowe - Informatyka sem. V');
+    await page.getByRole('textbox', { name: 'Subject name' }).fill('Sieci komputerowe - Informatyka');
+    await page.getByRole('combobox', { name: 'Study mode' }).selectOption('Full-time');
+    await page.getByRole('combobox', { name: 'Study cycle' }).selectOption('First-cycle');
+    await page.getByRole('combobox', { name: 'Semester' }).selectOption('5');
     await page.getByRole('combobox', { name: 'Teachers' }).selectOption('Jan Kowalski');
 
     await page.getByRole('button', { name: 'Add', exact: true }).click();
@@ -139,9 +142,10 @@ test('Can edit subject and prevent duplicate subject', async ({ page }) => {
 
     await expect(page.getByRole('heading', { name: 'Edit subject Sieci Ethernet i IP' })).toBeVisible();
 
-    await page
-        .getByRole('textbox', { name: 'Subject name' })
-        .fill('Zarządzanie bezpieczeństwem sieci - Informatyka sem. VI');
+    await page.getByRole('textbox', { name: 'Subject name' }).fill('Zarządzanie bezpieczeństwem sieci - Informatyka');
+    await page.getByRole('combobox', { name: 'Study mode' }).selectOption('Full-time');
+    await page.getByRole('combobox', { name: 'Study cycle' }).selectOption('First-cycle');
+    await page.getByRole('combobox', { name: 'Semester' }).selectOption('6');
 
     await page.getByRole('button', { name: 'Save' }).click();
 

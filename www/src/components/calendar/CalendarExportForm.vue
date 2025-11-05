@@ -94,7 +94,7 @@ const icsUrlId = crypto.randomUUID();
         </h2>
         <Accordion>
             <AccordionItem v-for="subject in subjects" :key="subject.id" :id="subject.id">
-                <template #header>{{ subject.name }}</template>
+                <template #header>{{ subject }}</template>
                 <CalendarSubjectExportOptions
                     v-model:subjects="selectedSubjectIds"
                     v-model:groups="selectedGroupIds"

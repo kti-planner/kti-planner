@@ -223,6 +223,7 @@ export function makeSubjectData(subject: Subject, allUsers: User[]): SubjectData
     return {
         id: subject.id,
         name: subject.name,
+        fullName: subject.fullName,
         semesterId: subject.semesterId,
         slug: subject.slug,
         teachers: teachers.map(makeUserPublicData),

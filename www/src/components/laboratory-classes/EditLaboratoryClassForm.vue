@@ -127,7 +127,7 @@ const teacherId = crypto.randomUUID();
             {{ translate('Subject') }}:
             <br />
             <a :href="`/semesters/${semester.slug}/subjects/${subject.slug}/`" class="link-success">
-                {{ subject.name }}
+                {{ subject.fullName }}
             </a>
         </div>
 

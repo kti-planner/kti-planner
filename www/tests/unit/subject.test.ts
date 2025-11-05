@@ -68,6 +68,7 @@ test('Subjects', async () => {
         moodleCourseId: '1472',
         moodleCourseUrl: 'https://enauczanie.pg.edu.pl/2025/course/view.php?id=1472',
         name: 'Sieci komputerowe - Informatyka',
+        fullName: 'Sieci komputerowe - Informatyka sem. V',
         semesterId: semester1.id,
         slug: 'sieci-komputerowe---informatyka-sem.-v',
         teachers: [
@@ -145,6 +146,7 @@ test('Subjects', async () => {
         moodleCourseId: '',
         moodleCourseUrl: '',
         name: 'Zarządzanie bezpieczeństwem sieci - Informatyka',
+        fullName: 'Zarządzanie bezpieczeństwem sieci - Informatyka sem. VI',
         semesterId: semester2.id,
         slug: 'zarządzanie-bezpieczeństwem-sieci---informatyka-sem.-vi',
         teachers: [

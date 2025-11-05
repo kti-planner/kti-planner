@@ -8,7 +8,6 @@ import type { LaboratoryGroupData } from '@components/laboratory-groups/types';
 import type { ScheduleChangeData, SemesterData } from '@components/semesters/types';
 import type { SubjectData } from '@components/subjects/types';
 import type { UserPublicData } from '@components/users/types';
-import { numberToRoman } from '@components/utils';
 import AddExercise from '@components/exercises/AddExercise.vue';
 import GenerateClasses from '@components/laboratory-classes/GenerateClasses.vue';
 import LaboratoryGroupListModal from '@components/laboratory-groups/LaboratoryGroupListModal.vue';
@@ -58,7 +57,7 @@ const laboratoryGroupOptions = computed(() => Object.fromEntries(laboratoryGroup
 
 <template>
     <h1 class="text-center fs-4 mb-3">
-        {{ `${subject.name} sem. ${numberToRoman(subject.semesterNumber)}` }}
+        {{ subject.fullName }}
         <EditSubject v-if="currentUser" :semester :subject :all-users />
     </h1>
     <a
