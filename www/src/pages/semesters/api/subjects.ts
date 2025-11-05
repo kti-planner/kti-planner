@@ -33,11 +33,7 @@ export const POST: APIRoute = async ({ locals }) => {
 
     if (
         semesterSubjects.find(
-            s =>
-                s.name.toLowerCase() === data.name.toLowerCase() &&
-                s.semesterNumber === data.semesterNumber &&
-                s.studyCycle === data.studyCycle &&
-                s.studyMode === data.studyMode,
+            s => s.name.toLowerCase() === data.name.toLowerCase() && s.semesterNumber === data.semesterNumber,
         )
     ) {
         return Response.json(false, { status: 200 });
@@ -93,11 +89,7 @@ export const PATCH: APIRoute = async ({ locals }) => {
     const semesterSubjects = await Subject.fetchAllFromSemester(semester);
 
     const otherSubject = semesterSubjects.find(
-        s =>
-            s.name.toLowerCase() === data.name?.toLowerCase() &&
-            s.semesterNumber === data.semesterNumber &&
-            s.studyCycle === data.studyCycle &&
-            s.studyMode === data.studyMode,
+        s => s.name.toLowerCase() === data.name?.toLowerCase() && s.semesterNumber === data.semesterNumber,
     );
 
     if (otherSubject && otherSubject.id !== subject.id) {
