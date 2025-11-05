@@ -129,8 +129,8 @@ export class Subject {
 
         const result = (
             await db.query<DbSubject>(
-                'INSERT INTO subjects (id, name, semester_id, teacher_ids, description, moodle_course_id, duration_minutes, class_repeat_weeks, semester_number, study_mode, study_cycle) ' +
-                    'VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING *',
+                'INSERT INTO subjects (id, name, semester_id, teacher_ids, description, moodle_course_id, duration_minutes, class_repeat_weeks, semester_number, study_mode, study_cycle)' +
+                    ' VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING *',
                 [
                     crypto.randomUUID(),
                     data.name,
