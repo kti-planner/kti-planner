@@ -5,16 +5,16 @@ test('Can access exercises list', async ({ page }) => {
     await page.goto('/semesters/2025-winter/subjects/sieci-komputerowe---informatyka-sem.-v/');
 
     await expect(page.locator('body')).toContainText('1. Diagnostyka sieci IPv4');
-    await expect(page.locator('body')).toContainText('2025-10-03 - 2025-10-08');
+    await expect(page.locator('body')).toContainText('2025-10-01 - 2025-10-08');
 
     await expect(page.locator('body')).toContainText('2. Zarządzanie sprzętem sieciowym');
-    await expect(page.locator('body')).toContainText('2025-10-17 - 2025-10-22');
+    await expect(page.locator('body')).toContainText('2025-10-15 - 2025-10-22');
 
     await expect(page.locator('body')).toContainText('3. IPv6');
-    await expect(page.locator('body')).toContainText('2025-11-04 - 2025-11-07');
+    await expect(page.locator('body')).toContainText('2025-10-29 - 2025-11-07');
 
     await expect(page.locator('body')).toContainText('4. IPv6 cz. II');
-    await expect(page.locator('body')).toContainText('2025-11-18 - 2025-11-26');
+    await expect(page.locator('body')).toContainText('2025-11-19 - 2025-11-26');
 });
 
 test('Can access exercise page', async ({ page }) => {
