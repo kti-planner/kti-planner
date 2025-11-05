@@ -32,6 +32,14 @@ export interface UserEditData {
     role?: UserRole | undefined;
 }
 
+const academicTitles = [
+    [/^prof\. /, 5],
+    [/^dr hab\. /, 4],
+    [/^dr .+ prof\./, 3],
+    [/^dr /, 2],
+    [/^mgr /, 1],
+] as const;
+
 export class User {
     id: string;
     name: string;
@@ -175,17 +183,13 @@ export class User {
     }
 
     static scoreNameByTitle(name: string): number {
-        const titles = {
-            'hab.': 4,
-            'prof.': 3,
-            'dr': 2,
-            'mgr': 1,
-        };
+        for (const title of academicTitles) {
+            if (title[0].test(name)) {
+                return title[1];
+            }
+        }
 
-        return Object.entries(titles).reduce(
-            (nameScore, [title, score]) => nameScore + (name.includes(title) ? score : 0),
-            0,
-        );
+        return 0;
     }
 
     static compareNames(name1: string, name2: string): number {

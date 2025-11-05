@@ -149,3 +149,48 @@ test('Users', async () => {
 
     expect(await User.fetchAll()).toStrictEqual([user2]);
 });
+
+test('User sorting', async () => {
+    const user1 = await User.create({
+        name: 'Jan Kowalski',
+        email: 'jkol@test.com',
+        password: '123',
+        role: 'teacher',
+    });
+
+    const user2 = await User.create({
+        name: 'dr inż. Wojciech Dobrowski',
+        email: 'wdob@test.com',
+        password: '123',
+        role: 'teacher',
+    });
+
+    const user3 = await User.create({
+        name: 'mgr inż. Adrian Szczepański',
+        email: 'aszcz@test.com',
+        password: '123',
+        role: 'teacher',
+    });
+
+    const user4 = await User.create({
+        name: 'dr hab. inż. Stanisław Wyszyński, prof. uczelni',
+        email: 'swys@test.com',
+        password: '123',
+        role: 'teacher',
+    });
+
+    expect(await User.fetchAll()).toStrictEqual([user4, user2, user3, user1]);
+
+    expect(User.scoreNameByTitle('Jan Kowalski')).toBe(0);
+    expect(User.scoreNameByTitle('Jandr Kowmgralski')).toBe(0);
+    expect(User.scoreNameByTitle('Jan Kowalski prof. dr mgr dr hab.')).toBe(0);
+    expect(User.scoreNameByTitle('mgr Jan Kowalski')).toBe(1);
+    expect(User.scoreNameByTitle('dr Jan Kowalski')).toBe(2);
+    expect(User.scoreNameByTitle('dr hab. Jan Kowalski')).toBe(4);
+    expect(User.scoreNameByTitle('dr Jan Kowalski, prof. uczelni')).toBe(3);
+
+    expect(User.compareNames('Jan Abc', 'Jan Cba')).toBeLessThan(0);
+    expect(User.compareNames('Jan', 'Jan Cba')).toBeGreaterThan(0);
+    expect(User.compareNames('Abc Zxy', 'Cba Zxy')).toBeLessThan(0);
+    expect(User.compareNames('Abc Zxy', 'Abc Zxy')).toBe(0);
+});
