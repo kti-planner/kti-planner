@@ -2,18 +2,19 @@ import { expect } from 'playwright/test';
 import { loginAsAdmin, loginAsTeacher, test } from './fixtures';
 
 test('Can access exercises list', async ({ page }) => {
-    await page.goto('/semesters/2024-summer/subjects/lokalne-sieci-bezprzewodowe---informatyka-sem.-vi/');
+    await page.goto('/semesters/2025-winter/subjects/sieci-komputerowe---informatyka-sem.-v/');
 
-    await expect(page.locator('body')).toContainText('Tryby pracy punktów dostępowych');
-    await expect(page.locator('body')).toContainText('Wydajność sieci standardów IEEE 802.11');
-    await expect(page.locator('body')).toContainText('Podstawowe mechanizmy zabezpieczeń sieci standardu 802.11');
+    await expect(page.locator('body')).toContainText('1. Diagnostyka sieci IPv4');
+    await expect(page.locator('body')).toContainText('2025-10-03 - 2025-10-08');
 
-    await expect(page.locator('body')).toContainText(
-        'Podstawowe mechanizmy zabezpieczeń sieci standardu 802.11 cz. II',
-    );
+    await expect(page.locator('body')).toContainText('2. Zarządzanie sprzętem sieciowym');
+    await expect(page.locator('body')).toContainText('2025-10-17 - 2025-10-22');
 
-    await expect(page.locator('body')).toContainText('Emulacja sieci bezprzewodowych');
-    await expect(page.locator('body')).toContainText('Radius');
+    await expect(page.locator('body')).toContainText('3. IPv6');
+    await expect(page.locator('body')).toContainText('2025-11-04 - 2025-11-07');
+
+    await expect(page.locator('body')).toContainText('4. IPv6 cz. II');
+    await expect(page.locator('body')).toContainText('2025-11-18 - 2025-11-26');
 });
 
 test('Can access exercise page', async ({ page }) => {
