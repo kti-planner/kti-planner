@@ -4,7 +4,7 @@ import { db } from '@backend/db';
 import type { Semester } from '@backend/semester';
 import { makeUserPublicData, User } from '@backend/user';
 import type { SubjectData } from '@components/subjects/types';
-import { numberToRoman, toHyphenatedLowercase } from '@components/utils';
+import { makeSubjectFullName, toHyphenatedLowercase } from '@components/utils';
 
 assert(env.MOODLE_BASE_URL !== undefined);
 const moodleBaseUrl = env.MOODLE_BASE_URL;
@@ -84,7 +84,7 @@ export class Subject {
     }
 
     get fullName(): string {
-        return `${this.name} sem. ${numberToRoman(this.semesterNumber)}`;
+        return makeSubjectFullName(this.name, this.semesterNumber);
     }
 
     async getTeachers(): Promise<User[]> {
@@ -121,7 +121,7 @@ export class Subject {
         if (
             await Subject.fetchBySlug(
                 data.semester,
-                toHyphenatedLowercase(`${data.name} sem. ${numberToRoman(data.semesterNumber)}`),
+                toHyphenatedLowercase(makeSubjectFullName(data.name, data.semesterNumber)),
             )
         ) {
             throw new Error('Subject with this slug already exists');

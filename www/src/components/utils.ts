@@ -66,3 +66,7 @@ export function numberToRoman(number: number): string {
 
     return result;
 }
+
+export function makeSubjectFullName(name: string, semesterNumber: number): string {
+    return `${name} sem. ${numberToRoman(semesterNumber)}`;
+}
