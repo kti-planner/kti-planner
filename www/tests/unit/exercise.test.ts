@@ -46,7 +46,7 @@ test('Exercises', async () => {
     });
 
     const subject1 = await Subject.create({
-        name: 'Sieci komputerowe - Informatyka sem. V',
+        name: 'Sieci komputerowe - Informatyka',
         semester: semester1,
         teachers: [user1],
         description: '',
@@ -59,7 +59,7 @@ test('Exercises', async () => {
     });
 
     const subject2 = await Subject.create({
-        name: 'Zarządzanie bezpieczeństwem sieci - Informatyka sem. VI',
+        name: 'Zarządzanie bezpieczeństwem sieci - Informatyka',
         semester: semester2,
         teachers: [user1, user2],
         description: '',

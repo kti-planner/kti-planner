@@ -34,7 +34,7 @@ test('Detects event conflicts', async () => {
     });
 
     const subject = await Subject.create({
-        name: 'Sieci komputerowe - Informatyka sem. V',
+        name: 'Sieci komputerowe - Informatyka',
         semester: semester,
         teachers: [user],
         description: 'Opis',

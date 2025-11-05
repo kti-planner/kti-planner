@@ -3,7 +3,6 @@ import { Classroom, makeClassroomData } from '@backend/classroom';
 import { makeScheduleChangeData, makeSemesterData, Semester } from '@backend/semester';
 import { makeSubjectData, Subject } from '@backend/subject';
 import { makeUserPublicData, User } from '@backend/user';
-import { numberToRoman } from '@components/utils';
 import Layout from '@layouts/Layout.astro';
 import EditSemester from '@components/semesters/EditSemester.vue';
 import SemesterCalendar from '@components/semesters/SemesterCalendar.vue';
@@ -120,9 +119,7 @@ const subjectGroups = [
                             href={`/semesters/${semesterSlug}/subjects/${subject.slug}/`}
                             class="list-group-item list-group-item-action"
                         >
-                            {subject.name}
-                            {'sem. '}
-                            {numberToRoman(subject.semesterNumber)}
+                            {subject.fullName}
                         </a>
                     ))}
                 </div>
