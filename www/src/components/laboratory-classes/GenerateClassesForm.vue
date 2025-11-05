@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
 import { langId } from '@components/frontend/lang';
-import { apiPost } from '@components/api';
+import { apiPost, useApiFetch } from '@components/api';
 import type { EventConflict } from '@components/calendar/types';
 import type { ExerciseData } from '@components/exercises/types';
 import { getDayOfTheWeekOccurrence, truncateDate } from '@components/laboratory-classes/dates';
-import type { LaboratoryClassCreateApiData } from '@components/laboratory-classes/types';
+import type { LaboratoryClassCreateApiData, LaboratoryClassData } from '@components/laboratory-classes/types';
 import type { LaboratoryGroupData } from '@components/laboratory-groups/types';
 import type { ScheduleChangeData, SemesterData } from '@components/semesters/types';
 import type { SubjectData } from '@components/subjects/types';
@@ -30,6 +30,8 @@ const translations = {
         'You can edit the classes later from the calendar': 'You can edit the classes later from the calendar',
         'The classes do not fit in the semester': 'The classes do not fit in the semester',
         'There are conflicts with holidays or other events': 'There are conflicts with holidays or other events',
+        'Attention! This laboratory group already has scheduled classes, they will be deleted and replaced with newly generated ones.':
+            'Attention! This laboratory group already has scheduled classes, they will be deleted and replaced with newly generated ones.',
     },
     'pl': {
         'Laboratory group': 'Grupa laboratoryjna',
@@ -42,6 +44,8 @@ const translations = {
         'You can edit the classes later from the calendar': 'Możesz później edytować te zajęcia w kalendarzu',
         'The classes do not fit in the semester': 'Zajęcia nie mieszczą się w semestrze',
         'There are conflicts with holidays or other events': 'Są konflikty z dniami wolnymi lub innymi zajęciami',
+        'Attention! This laboratory group already has scheduled classes, they will be deleted and replaced with newly generated ones.':
+            'Uwaga! Ta grupa laboratoryjna posiada już zaplanowane zajęcia, zostaną one usunięte i zastąpione nowo wygenerowanymi.',
     },
 };
 
@@ -160,6 +164,14 @@ watch([classStartTime, firstClassDateStr], () => {
     classEndTime.value = formatDateLocalHhMm(endDate);
 });
 
+const { data: laboratoryClasses } = useApiFetch<LaboratoryClassData[]>(
+    apiUrl,
+    () => new URLSearchParams(group.value ? { laboratoryGroup: group.value.name } : {}),
+    { refetch: () => group.value !== null, immediate: group.value !== null },
+);
+
+const showAlert = computed<boolean>(() => laboratoryClasses.value !== null && laboratoryClasses.value.length > 0);
+
 const groupId = crypto.randomUUID();
 const dateId = crypto.randomUUID();
 const startTimeId = crypto.randomUUID();
@@ -201,6 +213,14 @@ const repeatId = crypto.randomUUID();
             <label :for="repeatId" class="form-label">{{ translate('How many weeks are between classes?') }}</label>
             <input :id="repeatId" v-model="repeatWeeks" type="number" min="1" class="form-control" required />
         </div>
+
+        <p v-if="showAlert" class="text-warning">
+            {{
+                translate(
+                    'Attention! This laboratory group already has scheduled classes, they will be deleted and replaced with newly generated ones.',
+                )
+            }}
+        </p>
 
         <div v-if="plannedClasses.length > 0">
             <h2 class="fs-6">{{ translate('Summary') }}</h2>
