@@ -30,8 +30,6 @@ const translations = {
         'You can edit the classes later from the calendar': 'You can edit the classes later from the calendar',
         'The classes do not fit in the semester': 'The classes do not fit in the semester',
         'There are conflicts with holidays or other events': 'There are conflicts with holidays or other events',
-        'Attention! In case the laboratory group already has scheduled classes, they will be deleted and replaced with newly generated ones.':
-            'Attention! In case the laboratory group already has scheduled classes, they will be deleted and replaced with newly generated ones.',
         'Attention! This laboratory group already has scheduled classes, they will be deleted and replaced with newly generated ones.':
             'Attention! This laboratory group already has scheduled classes, they will be deleted and replaced with newly generated ones.',
     },
@@ -46,8 +44,6 @@ const translations = {
         'You can edit the classes later from the calendar': 'Możesz później edytować te zajęcia w kalendarzu',
         'The classes do not fit in the semester': 'Zajęcia nie mieszczą się w semestrze',
         'There are conflicts with holidays or other events': 'Są konflikty z dniami wolnymi lub innymi zajęciami',
-        'Attention! In case the laboratory group already has scheduled classes, they will be deleted and replaced with newly generated ones.':
-            'Uwaga! W przypadku gdy grupa laboratoryjna posiada już zaplanowane zajęcia, to zostaną one usunięte i zastąpione nowo wygenerowanymi.',
         'Attention! This laboratory group already has scheduled classes, they will be deleted and replaced with newly generated ones.':
             'Uwaga! Ta grupa laboratoryjna posiada już zaplanowane zajęcia, zostaną one usunięte i zastąpione nowo wygenerowanymi.',
     },
@@ -170,14 +166,11 @@ watch([classStartTime, firstClassDateStr], () => {
 
 const { data: laboratoryClasses } = useApiFetch<LaboratoryClassData[]>(
     apiUrl,
-    () => new URLSearchParams(group.value ? [['laboratoryGroup', group.value.name]] : []),
+    () => new URLSearchParams(group.value ? { laboratoryGroup: group.value.name } : {}),
+    { refetch: () => group.value !== null, immediate: group.value !== null },
 );
 
-const showAlert = ref(true);
-
-watch(laboratoryClasses, () => {
-    showAlert.value = laboratoryClasses.value !== null && laboratoryClasses.value.length > 0;
-});
+const showAlert = computed<boolean>(() => laboratoryClasses.value !== null && laboratoryClasses.value.length > 0);
 
 const groupId = crypto.randomUUID();
 const dateId = crypto.randomUUID();
@@ -221,14 +214,7 @@ const repeatId = crypto.randomUUID();
             <input :id="repeatId" v-model="repeatWeeks" type="number" min="1" class="form-control" required />
         </div>
 
-        <p v-if="showAlert && !group" class="text-danger">
-            {{
-                translate(
-                    'Attention! In case the laboratory group already has scheduled classes, they will be deleted and replaced with newly generated ones.',
-                )
-            }}
-        </p>
-        <p v-if="showAlert && group" class="text-danger">
+        <p v-if="showAlert" class="text-warning">
             {{
                 translate(
                     'Attention! This laboratory group already has scheduled classes, they will be deleted and replaced with newly generated ones.',
