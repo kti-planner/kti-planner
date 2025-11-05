@@ -43,6 +43,8 @@ test('Subjects', async () => {
         moodleCourseId: '1472',
         durationMinutes: 105,
         classRepeatWeeks: 1,
+        studyMode: 'full-time',
+        studyCycle: 'first-cycle',
     });
 
     expect(subject1).toHaveProperty('name', 'Sieci komputerowe - Informatyka sem. V');
@@ -53,14 +55,13 @@ test('Subjects', async () => {
     expect(subject1).toHaveProperty('moodleCourseId', subject1.moodleCourseId);
     expect(subject1).toHaveProperty('durationMinutes', subject1.durationMinutes);
     expect(subject1).toHaveProperty('classRepeatWeeks', subject1.classRepeatWeeks);
+    expect(subject1).toHaveProperty('studyMode', subject1.studyMode);
+    expect(subject1).toHaveProperty('studyCycle', subject1.studyCycle);
 
     const subjectData1 = makeSubjectData(subject1, [user1]);
 
     expect(subjectData1).toStrictEqual({
-        classRepeatWeeks: 1,
-        color: 'hsl(154 35 38.141)',
         description: 'Opis',
-        durationMinutes: 105,
         id: subject1.id,
         moodleCourseId: '1472',
         moodleCourseUrl: 'https://enauczanie.pg.edu.pl/2025/course/view.php?id=1472',
@@ -74,6 +75,11 @@ test('Subjects', async () => {
                 role: 'teacher',
             },
         ],
+        durationMinutes: 105,
+        classRepeatWeeks: 1,
+        studyMode: 'full-time',
+        studyCycle: 'first-cycle',
+        color: 'hsl(154 35 38.141)',
     });
 
     expect(await subject1.getTeachers()).toStrictEqual([user1]);
@@ -98,6 +104,8 @@ test('Subjects', async () => {
             moodleCourseId: '1472',
             durationMinutes: 105,
             classRepeatWeeks: 1,
+            studyMode: 'full-time',
+            studyCycle: 'first-cycle',
         }),
     ).rejects.toThrow(Error);
 
@@ -109,6 +117,8 @@ test('Subjects', async () => {
         moodleCourseId: '',
         durationMinutes: 165,
         classRepeatWeeks: 2,
+        studyMode: 'full-time',
+        studyCycle: 'first-cycle',
     });
 
     expect(subject2).toHaveProperty('name', 'Zarządzanie bezpieczeństwem sieci - Informatyka sem. VI');
@@ -119,14 +129,13 @@ test('Subjects', async () => {
     expect(subject2).toHaveProperty('moodleCourseId', subject2.moodleCourseId);
     expect(subject2).toHaveProperty('durationMinutes', subject2.durationMinutes);
     expect(subject2).toHaveProperty('classRepeatWeeks', subject2.classRepeatWeeks);
+    expect(subject2).toHaveProperty('studyMode', subject2.studyMode);
+    expect(subject2).toHaveProperty('studyCycle', subject2.studyCycle);
 
     const subjectData2 = makeSubjectData(subject2, [user1, user2]);
 
     expect(subjectData2).toStrictEqual({
-        classRepeatWeeks: 2,
-        color: 'hsl(17 35 47.84)',
         description: '',
-        durationMinutes: 165,
         id: subject2.id,
         moodleCourseId: '',
         moodleCourseUrl: '',
@@ -145,6 +154,11 @@ test('Subjects', async () => {
                 role: 'teacher',
             },
         ],
+        durationMinutes: 165,
+        classRepeatWeeks: 2,
+        studyMode: 'full-time',
+        studyCycle: 'first-cycle',
+        color: 'hsl(17 35 47.84)',
     });
 
     expect(await subject2.getTeachers()).toStrictEqual([user1, user2]);
@@ -174,6 +188,8 @@ test('Subjects', async () => {
         moodleCourseId: '230',
         durationMinutes: 120,
         classRepeatWeeks: 1,
+        studyMode: 'part-time',
+        studyCycle: 'second-cycle',
     });
 
     expect(subject2).toHaveProperty('name', 'Lokalne sieci bezprzewodowe - Informatyka sem. VI');
@@ -184,6 +200,8 @@ test('Subjects', async () => {
     expect(subject2).toHaveProperty('moodleCourseId', subject2.moodleCourseId);
     expect(subject2).toHaveProperty('durationMinutes', subject2.durationMinutes);
     expect(subject2).toHaveProperty('classRepeatWeeks', subject2.classRepeatWeeks);
+    expect(subject2).toHaveProperty('studyMode', subject2.studyMode);
+    expect(subject2).toHaveProperty('studyCycle', subject2.studyCycle);
 
     expect(await subject2.getTeachers()).toStrictEqual([user2]);
 
@@ -195,6 +213,8 @@ test('Subjects', async () => {
     expect(subject1).toHaveProperty('moodleCourseId', subject1.moodleCourseId);
     expect(subject1).toHaveProperty('durationMinutes', subject1.durationMinutes);
     expect(subject1).toHaveProperty('classRepeatWeeks', subject1.classRepeatWeeks);
+    expect(subject1).toHaveProperty('studyMode', subject1.studyMode);
+    expect(subject1).toHaveProperty('studyCycle', subject1.studyCycle);
 
     expect(await subject1.getTeachers()).toStrictEqual([user1]);
 
