@@ -121,8 +121,8 @@ const clickedClassSubject = shallowRef<SubjectData | null>(null);
 
 const calendarEventModal = useTemplateRef('calendarEventModal');
 const clickedCalendarEvent = shallowRef<CalendarEventData | null>(null);
-const calendarSelectionStart = shallowRef(new Date());
-const calendarSelectionEnd = shallowRef(new Date());
+const calendarSelectionStart = shallowRef<Date | null>(new Date());
+const calendarSelectionEnd = shallowRef<Date | null>(new Date());
 
 const exportModal = useTemplateRef('exportModal');
 
@@ -153,6 +153,14 @@ function handleCalendarSelection(info: DateSelectArg) {
 function handleCalendarEventSubmit() {
     calendarEventModal.value?.hide();
     void refetchAllEvents();
+}
+
+function handleAddEventClick() {
+    calendarSelectionStart.value = null;
+    calendarSelectionEnd.value = null;
+    clickedCalendarEvent.value = null;
+
+    calendarEventModal.value?.show();
 }
 </script>
 
@@ -196,8 +204,10 @@ function handleCalendarEventSubmit() {
                     :classrooms
                     :calendar-event="
                         clickedCalendarEvent ?? {
-                            startDate: formatDateLocalYyyyMmDdHhMm(calendarSelectionStart),
-                            endDate: formatDateLocalYyyyMmDdHhMm(calendarSelectionEnd),
+                            startDate: calendarSelectionStart
+                                ? formatDateLocalYyyyMmDdHhMm(calendarSelectionStart)
+                                : '',
+                            endDate: calendarSelectionEnd ? formatDateLocalYyyyMmDdHhMm(calendarSelectionEnd) : '',
                         }
                     "
                     :users="allUsers"
@@ -229,6 +239,14 @@ function handleCalendarEventSubmit() {
             </Modal>
         </div>
         <div class="col-12 col-lg-3 order-1 order-lg-2 d-flex gap-2 flex-column-reverse flex-lg-column">
+            <button
+                type="button"
+                class="btn btn-success mx-auto"
+                style="width: fit-content"
+                @click="handleAddEventClick()"
+            >
+                {{ translate('Add event') }}
+            </button>
             <button
                 type="button"
                 class="btn btn-success mx-auto"
