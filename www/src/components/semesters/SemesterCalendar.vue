@@ -287,7 +287,7 @@ function handleViewChange(view: ViewApi) {
                 </h2>
 
                 <template v-for="{ subjectOptions, title } in subjectGroupsOptions" :key="title">
-                    <h2 class="fs-6 text-center">{{ title }}</h2>
+                    <h2 class="fs-6 text-center mt-3">{{ title }}</h2>
                     <ToggleButtonPicker
                         v-model="subjectGroupSelections[title]!"
                         center
