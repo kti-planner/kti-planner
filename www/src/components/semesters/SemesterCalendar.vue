@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, shallowRef, useTemplateRef } from 'vue';
+import { computed, ref, shallowRef, useTemplateRef, watchEffect } from 'vue';
 import type { DateSelectArg, EventClickArg, EventInput, ViewApi } from '@fullcalendar/core';
 import { langId } from '@components/frontend/lang';
 import { currentUser } from '@components/frontend/user';
@@ -75,8 +75,14 @@ const selectedTeachers = ref<UserPublicData[]>([]);
 
 const subjectGroupSelections = ref<Record<string, SubjectData[]>>({});
 
-subjectGroups.forEach(group => {
-    subjectGroupSelections.value[group.title] = [];
+watchEffect(() => {
+    subjectGroupSelections.value = subjectGroups.reduce(
+        (selections, group) => {
+            selections[group.title] = [];
+            return selections;
+        },
+        {} as Record<string, SubjectData[]>,
+    );
 });
 
 const selectedSubjects = computed<SubjectData[]>(() => {
@@ -114,14 +120,14 @@ const events = computed<EventInput[]>(() => [
 
 const initialDate = computed(() => getInitialDate(laboratoryClasses.value ?? []));
 
-const subjectGroupsOptions = subjectGroups
-    .filter(group => group.subjectsData.length > 0)
-    .map(group => ({
-        title: group.title,
-        subjectOptions: computed(() =>
-            Object.fromEntries(group.subjectsData.map(subject => [subject.fullName, subject])),
-        ),
-    }));
+const subjectGroupsOptions = computed(() =>
+    subjectGroups
+        .filter(group => group.subjectsData.length > 0)
+        .map(group => ({
+            title: group.title,
+            subjectOptions: Object.fromEntries(group.subjectsData.map(subject => [subject.fullName, subject])),
+        })),
+);
 
 const classroomOptions = computed(() =>
     Object.fromEntries([
@@ -288,11 +294,7 @@ function handleViewChange(view: ViewApi) {
 
                 <template v-for="{ subjectOptions, title } in subjectGroupsOptions" :key="title">
                     <h2 class="fs-6 text-center mt-3">{{ title }}</h2>
-                    <ToggleButtonPicker
-                        v-model="subjectGroupSelections[title]!"
-                        center
-                        :options="subjectOptions.value"
-                    />
+                    <ToggleButtonPicker v-model="subjectGroupSelections[title]!" center :options="subjectOptions" />
                 </template>
             </div>
             <div>
