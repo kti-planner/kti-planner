@@ -8,7 +8,6 @@ import type { ExerciseData } from '@components/exercises/types';
 import type { LaboratoryClassData } from '@components/laboratory-classes/types';
 import type { SemesterData } from '@components/semesters/types';
 import type { SubjectData } from '@components/subjects/types';
-import { formatDateLocalYyyyMmDd } from '@components/utils';
 import AddExercise from '@components/exercises/AddExercise.vue';
 
 const translations = {
@@ -89,14 +88,14 @@ defineExpose({
                 :href="`${subjectUrl}/${exercise.exerciseNumber}/`"
                 class="list-group-item list-group-item-action"
             >
-                <p>{{ `${exercise.exerciseNumber}. ${exercise.name}` }}</p>
+                <div>{{ `${exercise.exerciseNumber}. ${exercise.name}` }}</div>
                 <template v-if="exerciseDateRanges.has(exercise.id)">
-                    <p>
+                    <div>
                         <i class="bi bi-calendar2-event"></i>
                         {{
-                            `${formatDateLocalYyyyMmDd(exerciseDateRanges.get(exercise.id)!.start)} - ${formatDateLocalYyyyMmDd(exerciseDateRanges.get(exercise.id)!.end)}`
+                            `${exerciseDateRanges.get(exercise.id)!.start.toLocaleDateString('pl-PL')} - ${exerciseDateRanges.get(exercise.id)!.end.toLocaleDateString('pl-PL')}`
                         }}
-                    </p>
+                    </div>
                 </template>
             </a>
         </div>
@@ -110,9 +109,3 @@ defineExpose({
         />
     </div>
 </template>
-
-<style scoped lang="scss">
-p {
-    margin-bottom: 0;
-}
-</style>
