@@ -1,4 +1,5 @@
 import z from 'zod';
+import type { SubjectData } from '@components/subjects/types';
 
 export function formatDateLocalYyyyMmDd(date: Date): string {
     const year = date.getFullYear();
@@ -69,4 +70,18 @@ export function numberToRoman(number: number): string {
 
 export function makeSubjectFullName(name: string, semesterNumber: number): string {
     return `${name} sem. ${numberToRoman(semesterNumber)}`;
+}
+
+export function makeSubjectStudyDetails(subject: SubjectData, lang: LangId): string {
+    if (subject.studyMode === 'full-time' && subject.studyCycle === 'first-cycle') {
+        return lang === 'pl' ? 'Studia stacjonarne I stopnia (Inżynierskie)' : 'Full-time first-cycle studies';
+    } else if (subject.studyMode === 'full-time' && subject.studyCycle === 'second-cycle') {
+        return lang === 'pl' ? 'Studia stacjonarne II stopnia (Magisterskie)' : 'Full-time second-cycle studies';
+    } else if (subject.studyMode === 'part-time' && subject.studyCycle === 'first-cycle') {
+        return lang === 'pl' ? 'Studia niestacjonarne I stopnia (Inżynierskie)' : 'Part-time first-cycle studies';
+    } else if (subject.studyMode === 'part-time' && subject.studyCycle === 'second-cycle') {
+        return lang === 'pl' ? 'Studia niestacjonarne II stopnia (MSU)' : 'Part-time second-cycle studies';
+    } else {
+        return '';
+    }
 }
