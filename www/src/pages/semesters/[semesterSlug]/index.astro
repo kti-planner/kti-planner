@@ -62,25 +62,21 @@ const classroomsData = classrooms.map(makeClassroomData);
 
 const subjectGroups = [
     {
-        subjects: subjectsData.filter(
-            subject => subject.studyCycle === 'first-cycle' && subject.studyMode === 'full-time',
-        ),
+        subjects: subjects.filter(subject => subject.studyCycle === 'first-cycle' && subject.studyMode === 'full-time'),
         title: translate('Full-time first-cycle studies'),
     },
     {
-        subjects: subjectsData.filter(
+        subjects: subjects.filter(
             subject => subject.studyCycle === 'second-cycle' && subject.studyMode === 'full-time',
         ),
         title: translate('Full-time second-cycle studies'),
     },
     {
-        subjects: subjectsData.filter(
-            subject => subject.studyCycle === 'first-cycle' && subject.studyMode === 'part-time',
-        ),
+        subjects: subjects.filter(subject => subject.studyCycle === 'first-cycle' && subject.studyMode === 'part-time'),
         title: translate('Part-time first-cycle studies'),
     },
     {
-        subjects: subjectsData.filter(
+        subjects: subjects.filter(
             subject => subject.studyCycle === 'second-cycle' && subject.studyMode === 'part-time',
         ),
         title: translate('Part-time second-cycle studies'),
@@ -113,12 +109,11 @@ const subjectGroups = [
         subjectGroups.map(({ subjects, title }) => (
             <Show when={subjects.length > 0}>
                 <h2 class="text-center fs-6 mt-3">{title}</h2>
-                <div class="vstack gap-2 subjects-list mx-auto">
+                <div class="subjects-list list-group mx-auto">
                     {subjects.map(subject => (
                         <a
                             href={`/semesters/${semesterSlug}/subjects/${subject.slug}/`}
-                            class="btn text-start px-3 py-2 subject-item"
-                            style={`--str-color: ${subject.color}`}
+                            class="list-group-item list-group-item-action"
                         >
                             {subject.name}
                         </a>
@@ -142,16 +137,8 @@ const subjectGroups = [
     </div>
 </Layout>
 
-<style lang="scss">
+<style>
     .subjects-list {
         width: min(700px, 100%);
-    }
-
-    .subject-item {
-        background-color: color-mix(in srgb, var(--str-color) 20%, white 80%) !important;
-
-        &:hover {
-            background-color: color-mix(in srgb, var(--str-color) 40%, white 60%) !important;
-        }
     }
 </style>
