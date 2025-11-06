@@ -73,6 +73,8 @@ const selectedSubjects = ref<SubjectData[]>([]);
 const selectedClassrooms = ref<ClassroomData[]>([]);
 const selectedTeachers = ref<UserPublicData[]>([]);
 
+const subjectColors = computed(() => Object.fromEntries(subjects.map(subject => [subject.id, subject.color])));
+
 const { data: laboratoryClasses, execute: refetchLaboratoryClasses } = useApiFetch<LaboratoryClassData[]>(
     `/semesters/${semester.slug}/api/laboratory-classes/`,
     () =>
@@ -97,7 +99,7 @@ async function refetchAllEvents() {
 }
 
 const events = computed<EventInput[]>(() => [
-    ...getLaboratoryClassEvents(laboratoryClasses.value ?? []),
+    ...getLaboratoryClassEvents(laboratoryClasses.value ?? [], subjects),
     ...getScheduleChangeEvents(scheduleChanges),
     ...getCalendarEvents(calendarEvents.value ?? []),
 ]);
@@ -260,7 +262,12 @@ function handleAddEventClick() {
                 <h2 class="text-center fs-5">
                     {{ translate('Subjects') }}
                 </h2>
-                <ToggleButtonPicker v-model="selectedSubjects" center :options="subjectOptions" />
+                <ToggleButtonPicker
+                    v-model="selectedSubjects"
+                    center
+                    :options="subjectOptions"
+                    :colors="subjectColors"
+                />
             </div>
             <div>
                 <h2 class="text-center fs-5">

@@ -62,21 +62,25 @@ const classroomsData = classrooms.map(makeClassroomData);
 
 const subjectGroups = [
     {
-        subjects: subjects.filter(subject => subject.studyCycle === 'first-cycle' && subject.studyMode === 'full-time'),
+        subjects: subjectsData.filter(
+            subject => subject.studyCycle === 'first-cycle' && subject.studyMode === 'full-time',
+        ),
         title: translate('Full-time first-cycle studies'),
     },
     {
-        subjects: subjects.filter(
+        subjects: subjectsData.filter(
             subject => subject.studyCycle === 'second-cycle' && subject.studyMode === 'full-time',
         ),
         title: translate('Full-time second-cycle studies'),
     },
     {
-        subjects: subjects.filter(subject => subject.studyCycle === 'first-cycle' && subject.studyMode === 'part-time'),
+        subjects: subjectsData.filter(
+            subject => subject.studyCycle === 'first-cycle' && subject.studyMode === 'part-time',
+        ),
         title: translate('Part-time first-cycle studies'),
     },
     {
-        subjects: subjects.filter(
+        subjects: subjectsData.filter(
             subject => subject.studyCycle === 'second-cycle' && subject.studyMode === 'part-time',
         ),
         title: translate('Part-time second-cycle studies'),
@@ -113,7 +117,8 @@ const subjectGroups = [
                     {subjects.map(subject => (
                         <a
                             href={`/semesters/${semesterSlug}/subjects/${subject.slug}/`}
-                            class="list-group-item list-group-item-action"
+                            class="list-group-item list-group-item-action subject-item"
+                            style={`--subject-color: ${subject.color}`}
                         >
                             {subject.name}
                         </a>
@@ -137,8 +142,24 @@ const subjectGroups = [
     </div>
 </Layout>
 
-<style>
+<style lang="scss">
     .subjects-list {
         width: min(700px, 100%);
+    }
+
+    .subject-item {
+        position: relative;
+        overflow: hidden;
+
+        &::before {
+            content: '';
+            display: block;
+            position: absolute;
+            width: 10px;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            background-color: var(--subject-color);
+        }
     }
 </style>
