@@ -70,9 +70,18 @@ const teachers = computed<UserPublicData[]>(() => {
     return Object.values(teachersById).map<UserPublicData>(teachers => teachers![0]!);
 });
 
-const selectedSubjects = ref<SubjectData[]>([]);
 const selectedClassrooms = ref<ClassroomData[]>([]);
 const selectedTeachers = ref<UserPublicData[]>([]);
+
+const subjectGroupSelections = ref<Record<string, SubjectData[]>>({});
+
+subjectGroups.forEach(group => {
+    subjectGroupSelections.value[group.title] = [];
+});
+
+const selectedSubjects = computed<SubjectData[]>(() => {
+    return Object.values(subjectGroupSelections.value).flat();
+});
 
 const { data: laboratoryClasses, execute: refetchLaboratoryClasses } = useApiFetch<LaboratoryClassData[]>(
     `/semesters/${semester.slug}/api/laboratory-classes/`,
@@ -252,7 +261,11 @@ function handleCalendarEventSubmit() {
 
                 <div v-for="{ subjectOptions, title } in subjectGroupsOptions" :key="title">
                     <h2 class="fs-6 text-center">{{ title }}</h2>
-                    <ToggleButtonPicker v-model="selectedSubjects" center :options="subjectOptions.value" />
+                    <ToggleButtonPicker
+                        v-model="subjectGroupSelections[title]!"
+                        center
+                        :options="subjectOptions.value"
+                    />
                 </div>
             </div>
             <div>
