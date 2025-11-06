@@ -8,7 +8,7 @@ import type { LaboratoryGroupData } from '@components/laboratory-groups/types';
 import type { ScheduleChangeData, SemesterData } from '@components/semesters/types';
 import { makeSubjectStudyDetails, type SubjectData } from '@components/subjects/types';
 import type { UserPublicData } from '@components/users/types';
-import { numberToRoman } from '@components/utils';
+import { romanNumerals } from '@components/utils';
 import AddExercise from '@components/exercises/AddExercise.vue';
 import GenerateClasses from '@components/laboratory-classes/GenerateClasses.vue';
 import LaboratoryGroupListModal from '@components/laboratory-groups/LaboratoryGroupListModal.vue';
@@ -60,7 +60,7 @@ const laboratoryGroupOptions = computed(() => Object.fromEntries(laboratoryGroup
     <h1 class="text-center fs-4 mb-1">
         {{ subject.name.split(' - ')[0] }}
         <EditSubject v-if="currentUser" :semester :subject :all-users /><br />
-        {{ subject.name.split(' - ')[1] }}{{ ` - sem. ${numberToRoman(subject.semesterNumber)}` }}
+        {{ subject.name.split(' - ')[1] }}{{ ` - sem. ${romanNumerals[subject.semesterNumber - 1]}` }}
     </h1>
     <h2 class="text-center fs-5 mb-3">{{ makeSubjectStudyDetails(subject, langId) }}</h2>
     <a

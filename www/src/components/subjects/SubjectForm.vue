@@ -6,7 +6,7 @@ import { apiDelete, apiPatch, apiPost } from '@components/api';
 import type { SemesterData } from '@components/semesters/types';
 import type { SubjectCreateApiData, SubjectData, SubjectEditApiData } from '@components/subjects/types';
 import type { UserPublicData } from '@components/users/types';
-import { makeSubjectFullName, toHyphenatedLowercase } from '@components/utils';
+import { makeSubjectFullName, romanNumerals, toHyphenatedLowercase } from '@components/utils';
 import ButtonWithConfirmationPopover from '@components/ButtonWithConfirmationPopover.vue';
 import UserMultiSelector from '@components/users/UserMultiSelector.vue';
 
@@ -225,13 +225,9 @@ const semesterNumberId = crypto.randomUUID();
                 :aria-label="translate('Semester')"
                 required
             >
-                <option :value="1">I</option>
-                <option :value="2">II</option>
-                <option :value="3">III</option>
-                <option :value="4">IV</option>
-                <option :value="5">V</option>
-                <option :value="6">VI</option>
-                <option :value="7">VII</option>
+                <option v-for="(romanNumeral, index) in romanNumerals" :key="romanNumeral" :value="index + 1">
+                    {{ romanNumeral }}
+                </option>
             </select>
         </div>
 

@@ -39,34 +39,8 @@ export const dateTimeStringSchema = z.iso.datetime({ local: true }).transform(st
     return new Date(str);
 });
 
-export function numberToRoman(number: number): string {
-    const romanMap = [
-        { value: 1000, symbol: 'M' },
-        { value: 900, symbol: 'CM' },
-        { value: 500, symbol: 'D' },
-        { value: 400, symbol: 'CD' },
-        { value: 100, symbol: 'C' },
-        { value: 90, symbol: 'XC' },
-        { value: 50, symbol: 'L' },
-        { value: 40, symbol: 'XL' },
-        { value: 10, symbol: 'X' },
-        { value: 9, symbol: 'IX' },
-        { value: 5, symbol: 'V' },
-        { value: 4, symbol: 'IV' },
-        { value: 1, symbol: 'I' },
-    ];
-
-    let result = '';
-    for (const { value, symbol } of romanMap) {
-        while (number >= value) {
-            result += symbol;
-            number -= value;
-        }
-    }
-
-    return result;
-}
+export const romanNumerals = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII'];
 
 export function makeSubjectFullName(name: string, semesterNumber: number): string {
-    return `${name} sem. ${numberToRoman(semesterNumber)}`;
+    return `${name} sem. ${romanNumerals[semesterNumber - 1] ?? ''}`;
 }
