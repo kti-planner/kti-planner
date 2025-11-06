@@ -9,7 +9,7 @@ import type { ScheduleChangeData, SemesterData } from '@components/semesters/typ
 import { makeSubjectStudyDetails, type SubjectData } from '@components/subjects/types';
 import type { UserPublicData } from '@components/users/types';
 import { romanNumerals } from '@components/utils';
-import AddExercise from '@components/exercises/AddExercise.vue';
+import ExerciseList from '@components/exercises/ExerciseList.vue';
 import GenerateClasses from '@components/laboratory-classes/GenerateClasses.vue';
 import LaboratoryGroupListModal from '@components/laboratory-groups/LaboratoryGroupListModal.vue';
 import Markdown from '@components/Markdown.vue';
@@ -51,9 +51,15 @@ const { subject, semester, laboratoryGroups } = defineProps<{
 
 const selectedLaboratoryGroups = ref<LaboratoryGroupData[]>([]);
 const calendar = useTemplateRef('calendar');
+const exerciseList = useTemplateRef('exerciseList');
 const subjectUrl = computed(() => `/semesters/${semester.slug}/subjects/${subject.slug}`);
 
 const laboratoryGroupOptions = computed(() => Object.fromEntries(laboratoryGroups.map(group => [group.name, group])));
+
+function refreshClasses() {
+    calendar.value?.refreshClasses();
+    exerciseList.value?.refreshClasses();
+}
 </script>
 
 <template>
@@ -85,6 +91,7 @@ const laboratoryGroupOptions = computed(() => Object.fromEntries(laboratoryGroup
                 :semester
                 :subject
                 :teachers="subject.teachers"
+                @class-edited="exerciseList?.refreshClasses()"
             />
         </div>
         <div class="col-12 col-lg-3 order-1 order-lg-2 d-flex gap-4 flex-column-reverse flex-lg-column">
@@ -110,30 +117,10 @@ const laboratoryGroupOptions = computed(() => Object.fromEntries(laboratoryGroup
                     :schedule-changes
                     :api-url="`${subjectUrl}/api/laboratory-classes/`"
                     class="d-block mx-auto mt-3"
-                    @done="calendar?.refreshClasses()"
+                    @done="refreshClasses"
                 />
             </div>
-            <div>
-                <h2 class="text-center fs-5">{{ translate('Exercises') }}</h2>
-                <div v-if="exercises.length > 0" class="exercises-list list-group mx-auto">
-                    <a
-                        v-for="exercise in exercises"
-                        :key="exercise.id"
-                        :href="`${subjectUrl}/${exercise.exerciseNumber}/`"
-                        class="list-group-item list-group-item-action"
-                    >
-                        {{ `${exercise.exerciseNumber}. ${exercise.name}` }}
-                    </a>
-                </div>
-                <AddExercise
-                    v-if="currentUser"
-                    :semester
-                    :subject
-                    :classrooms
-                    :next-exercise-number
-                    class="d-block mx-auto mt-3"
-                />
-            </div>
+            <ExerciseList ref="exerciseList" :subject :semester :exercises :classrooms :next-exercise-number />
             <div>
                 <h2 class="text-center fs-5">
                     {{ translate('Teachers') }}
