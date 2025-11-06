@@ -55,7 +55,7 @@ function translate(text: keyof (typeof translations)[LangId]): string {
     return translations[langId][text];
 }
 
-const { semester, scheduleChanges, subjects, classrooms, subjectGroups } = defineProps<{
+const { semester, scheduleChanges, subjects, classrooms, allUsers, subjectGroups } = defineProps<{
     semester: SemesterData;
     scheduleChanges: ScheduleChangeData[];
     subjects: SubjectData[];
@@ -65,9 +65,7 @@ const { semester, scheduleChanges, subjects, classrooms, subjectGroups } = defin
 }>();
 
 const teachers = computed<UserPublicData[]>(() => {
-    const allTeachers = subjects.flatMap(subject => subject.teachers);
-    const teachersById = Object.groupBy(allTeachers, teacher => teacher.id);
-    return Object.values(teachersById).map<UserPublicData>(teachers => teachers![0]!);
+    return allUsers.filter(user => subjects.some(subject => subject.teachers.some(teacher => teacher.id === user.id)));
 });
 
 const selectedClassrooms = ref<ClassroomData[]>([]);

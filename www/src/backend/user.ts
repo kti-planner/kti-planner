@@ -32,6 +32,14 @@ export interface UserEditData {
     role?: UserRole | undefined;
 }
 
+const academicTitles = [
+    [/^prof\. /, 5],
+    [/^dr hab\. /, 4],
+    [/^dr .+ prof\./, 3],
+    [/^dr /, 2],
+    [/^mgr /, 1],
+] as const;
+
 export class User {
     id: string;
     name: string;
@@ -61,6 +69,15 @@ export class User {
 
     static async fetchAll(): Promise<User[]> {
         const records = (await db.query<DbUser>('SELECT * FROM users ORDER BY name')).rows;
+
+        records.sort((a, b) => {
+            const titleResult = User.scoreNameByTitle(b.name) - User.scoreNameByTitle(a.name);
+            if (titleResult !== 0) {
+                return titleResult;
+            }
+
+            return User.compareNames(a.name, b.name);
+        });
 
         return records.map(record => new User(record));
     }
@@ -163,6 +180,48 @@ export class User {
         const writeStream = pngStream.pipe(out);
         await once(writeStream, 'finish');
         /* v8 ignore end */
+    }
+
+    static scoreNameByTitle(name: string): number {
+        for (const title of academicTitles) {
+            if (title[0].test(name)) {
+                return title[1];
+            }
+        }
+
+        return 0;
+    }
+
+    static compareNames(name1: string, name2: string): number {
+        const nameParts1 = name1
+            .split(' ')
+            .filter(word => word.startsWith(word.charAt(0).toUpperCase()))
+            .toReversed();
+
+        const nameParts2 = name2
+            .split(' ')
+            .filter(word => word.startsWith(word.charAt(0).toUpperCase()))
+            .toReversed();
+
+        for (let i = 0; i < Math.max(nameParts1.length, nameParts2.length); i++) {
+            const part1 = nameParts1[i];
+            const part2 = nameParts2[i];
+
+            if (part1 === undefined) {
+                return 1;
+            }
+
+            if (part2 === undefined) {
+                return -1;
+            }
+
+            const compareResult = part1.localeCompare(part2);
+            if (compareResult !== 0) {
+                return compareResult;
+            }
+        }
+
+        return 0;
     }
 }
 
