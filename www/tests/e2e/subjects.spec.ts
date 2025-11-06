@@ -189,7 +189,7 @@ test('Can copy subject from previous semester and prevent duplicate subject copy
 
     await page
         .getByRole('combobox', { name: 'Subject to copy' })
-        .selectOption('Lokalne sieci bezprzewodowe - Informatyka sem. VI');
+        .selectOption('Lokalne sieci bezprzewodowe - Informatyka sem. VI Full-time first-cycle studies');
 
     await page.getByRole('button', { name: 'Copy' }).click();
 
@@ -238,7 +238,7 @@ test('Can copy subject from previous semester and prevent duplicate subject copy
 
     await page
         .getByRole('combobox', { name: 'Subject to copy' })
-        .selectOption('Lokalne sieci bezprzewodowe - Informatyka sem. VI');
+        .selectOption('Lokalne sieci bezprzewodowe - Informatyka sem. VI Full-time first-cycle studies');
 
     await page.getByRole('button', { name: 'Copy' }).click();
 
