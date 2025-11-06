@@ -6,6 +6,7 @@ import { type ClassroomData, formatClassroomName } from '@components/classrooms/
 import type { SemesterData } from '@components/semesters/types';
 import type { SubjectData } from '@components/subjects/types';
 import type { UserPublicData } from '@components/users/types';
+import { makeSubjectStudyDetails } from '@components/utils';
 import Accordion from '@components/accordion/Accordion.vue';
 import AccordionItem from '@components/accordion/AccordionItem.vue';
 import CalendarSubjectExportOptions from '@components/calendar/CalendarSubjectExportOptions.vue';
@@ -94,7 +95,7 @@ const icsUrlId = crypto.randomUUID();
         </h2>
         <Accordion>
             <AccordionItem v-for="subject in subjects" :key="subject.id" :id="subject.id">
-                <template #header>{{ subject.fullName }}</template>
+                <template #header>{{ subject.fullName }} {{ makeSubjectStudyDetails(subject, langId) }}</template>
                 <CalendarSubjectExportOptions
                     v-model:subjects="selectedSubjectIds"
                     v-model:groups="selectedGroupIds"

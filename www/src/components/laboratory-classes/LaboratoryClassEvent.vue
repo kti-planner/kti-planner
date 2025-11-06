@@ -4,6 +4,7 @@ import { langId } from '@components/frontend/lang';
 import { formatClassroomName } from '@components/classrooms/types';
 import type { LaboratoryClassData } from '@components/laboratory-classes/types';
 import type { SubjectData } from '@components/subjects/types';
+import { makeSubjectStudyDetails } from '@components/utils';
 
 const translations = {
     'en': {
@@ -33,7 +34,7 @@ const { laboratoryClass, subject, hideExerciseName } = defineProps<{
 
 const title = computed(
     () =>
-        (subject ? `${subject.fullName}\n` : '') +
+        (subject ? `${subject.fullName}\n${makeSubjectStudyDetails(subject, langId)}\n` : '') +
         `${laboratoryClass.exercise.exerciseNumber}. ${laboratoryClass.exercise.name}\n` +
         `${translate('Group')}: ${laboratoryClass.laboratoryGroup.name}\n` +
         `${translate('Teacher')}: ${laboratoryClass.teacher?.name ?? translate('Unknown [teacher]')}\n` +
@@ -45,7 +46,8 @@ const title = computed(
     <div class="event-content" :title>
         <p class="text-truncate">{{ timeText }}</p>
         <p v-if="subject" class="text-truncate fw-bold">
-            {{ subject.fullName }}
+            {{ subject.fullName }}<br />
+            {{ makeSubjectStudyDetails(subject, langId) }}
         </p>
         <p v-if="!hideExerciseName" class="text-truncate" :class="{ 'fw-bold': !subject }">
             {{ `${laboratoryClass.exercise.exerciseNumber}. ${laboratoryClass.exercise.name}` }}
