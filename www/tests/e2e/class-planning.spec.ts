@@ -29,6 +29,30 @@ test('Can plan classes without selecting a group beforehand', async ({ page }) =
     await expect(page.locator('p', { hasText: '11:15 - 13:00' })).toBeVisible();
 });
 
+test('Can regenerate classes for a group', async ({ page }) => {
+    await page.goto('/semesters/2025-winter/subjects/sieci-komputerowe---informatyka-sem.-v/');
+    await loginAsTeacher(page);
+
+    await expect(page.locator('p', { hasText: '11:15 - 13:00' })).toBeVisible();
+
+    await page.getByRole('button', { name: 'Plan classes' }).click();
+    await page.getByRole('combobox', { name: 'Laboratory group' }).selectOption('1A');
+
+    await expect(
+        page.getByText(
+            'Attention! This laboratory group already has scheduled classes, they will be deleted and replaced with newly generated ones.',
+        ),
+    ).toBeVisible();
+
+    await page.getByRole('textbox', { name: 'First class date' }).fill('2025-10-07');
+    await page.getByRole('textbox', { name: 'Class start time' }).fill('11:15');
+    await page.getByRole('textbox', { name: 'Class end time' }).fill('13:00');
+
+    await page.getByRole('button', { name: 'Generate classes' }).click();
+
+    await expect(page.locator('p', { hasText: '11:15 - 13:00' })).not.toBeVisible();
+});
+
 test('Cannot plan classes when there are conflicts', async ({ page }) => {
     await page.goto('/semesters/2025-winter/subjects/sieci-komputerowe---informatyka-sem.-v//');
     await loginAsTeacher(page);
