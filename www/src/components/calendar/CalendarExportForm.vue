@@ -91,7 +91,12 @@ const icsUrlId = crypto.randomUUID();
         <template v-for="group in subjectGroups.filter(group => group.subjectsData.length > 0)" :key="group.title">
             <Accordion class="mb-2">
                 <h2 class="text-center fs-6">{{ group.title }}</h2>
-                <AccordionItem v-for="subject in group.subjectsData" :key="subject.id" :id="subject.id">
+                <AccordionItem
+                    v-for="subject in group.subjectsData"
+                    :key="subject.id"
+                    :id="subject.id"
+                    :is-expanded="initialSelectedSubjects.some(s => s.id === subject.id)"
+                >
                     <template #header>{{ subject.fullName }}</template>
                     <CalendarSubjectExportOptions
                         v-model:subjects="selectedSubjectIds"
