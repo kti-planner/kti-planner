@@ -12,13 +12,17 @@ import Calendar from '@components/Calendar.vue';
 import LaboratoryClassEditModals from '@components/laboratory-classes/LaboratoryClassEditModals.vue';
 import LaboratoryClassEvent from '@components/laboratory-classes/LaboratoryClassEvent.vue';
 
-const { apiUrl, selectedLaboratoryGroups, scheduleChanges } = defineProps<{
+const { apiUrl, selectedLaboratoryGroups, scheduleChanges, subject } = defineProps<{
     apiUrl: string;
     selectedLaboratoryGroups: LaboratoryGroupData[];
     scheduleChanges: ScheduleChangeData[];
     semester: SemesterData;
     subject: SubjectData;
     teachers: UserPublicData[];
+}>();
+
+const emit = defineEmits<{
+    classEdited: [];
 }>();
 
 const { data: laboratoryClasses, execute: refreshClasses } = useApiFetch<LaboratoryClassData[]>(
@@ -31,7 +35,7 @@ defineExpose({
 });
 
 const events = computed<EventInput[]>(() => [
-    ...getLaboratoryClassEvents(laboratoryClasses.value ?? []),
+    ...getLaboratoryClassEvents(laboratoryClasses.value ?? [], [subject]),
     ...getScheduleChangeEvents(scheduleChanges),
 ]);
 
@@ -47,6 +51,11 @@ function handleEventClick(arg: EventClickArg) {
 
     editedLaboratoryClass.value = arg.event.extendedProps.laboratoryClass;
     modal.value?.classDetailsModal?.show();
+}
+
+function handleLaboratoryClassEdit() {
+    refreshClasses();
+    emit('classEdited');
 }
 </script>
 
@@ -68,6 +77,6 @@ function handleEventClick(arg: EventClickArg) {
         :teachers
         :semester
         show-subject
-        @submit="refreshClasses"
+        @submit="handleLaboratoryClassEdit"
     />
 </template>

@@ -71,6 +71,8 @@ const selectedSubjects = ref<SubjectData[]>([]);
 const selectedClassrooms = ref<ClassroomData[]>([]);
 const selectedTeachers = ref<UserPublicData[]>([]);
 
+const subjectColors = computed(() => Object.fromEntries(subjects.map(subject => [subject.id, subject.color])));
+
 const { data: laboratoryClasses, execute: refetchLaboratoryClasses } = useApiFetch<LaboratoryClassData[]>(
     `/semesters/${semester.slug}/api/laboratory-classes/`,
     () =>
@@ -95,7 +97,7 @@ async function refetchAllEvents() {
 }
 
 const events = computed<EventInput[]>(() => [
-    ...getLaboratoryClassEvents(laboratoryClasses.value ?? []),
+    ...getLaboratoryClassEvents(laboratoryClasses.value ?? [], subjects),
     ...getScheduleChangeEvents(scheduleChanges),
     ...getCalendarEvents(calendarEvents.value ?? []),
 ]);
@@ -119,8 +121,8 @@ const clickedClassSubject = shallowRef<SubjectData | null>(null);
 
 const calendarEventModal = useTemplateRef('calendarEventModal');
 const clickedCalendarEvent = shallowRef<CalendarEventData | null>(null);
-const calendarSelectionStart = shallowRef(new Date());
-const calendarSelectionEnd = shallowRef(new Date());
+const calendarSelectionStart = shallowRef<Date | null>(new Date());
+const calendarSelectionEnd = shallowRef<Date | null>(new Date());
 
 const exportModal = useTemplateRef('exportModal');
 
@@ -151,6 +153,14 @@ function handleCalendarSelection(info: DateSelectArg) {
 function handleCalendarEventSubmit() {
     calendarEventModal.value?.hide();
     void refetchAllEvents();
+}
+
+function handleAddEventClick() {
+    calendarSelectionStart.value = null;
+    calendarSelectionEnd.value = null;
+    clickedCalendarEvent.value = null;
+
+    calendarEventModal.value?.show();
 }
 </script>
 
@@ -194,8 +204,10 @@ function handleCalendarEventSubmit() {
                     :classrooms
                     :calendar-event="
                         clickedCalendarEvent ?? {
-                            startDate: formatDateLocalYyyyMmDdHhMm(calendarSelectionStart),
-                            endDate: formatDateLocalYyyyMmDdHhMm(calendarSelectionEnd),
+                            startDate: calendarSelectionStart
+                                ? formatDateLocalYyyyMmDdHhMm(calendarSelectionStart)
+                                : '',
+                            endDate: calendarSelectionEnd ? formatDateLocalYyyyMmDdHhMm(calendarSelectionEnd) : '',
                         }
                     "
                     :users="allUsers"
@@ -228,6 +240,15 @@ function handleCalendarEventSubmit() {
         </div>
         <div class="col-12 col-lg-3 order-1 order-lg-2 d-flex gap-2 flex-column-reverse flex-lg-column">
             <button
+                v-if="currentUser"
+                type="button"
+                class="btn btn-success mx-auto"
+                style="width: fit-content"
+                @click="handleAddEventClick()"
+            >
+                {{ translate('Add event') }}
+            </button>
+            <button
                 type="button"
                 class="btn btn-success mx-auto"
                 style="width: fit-content"
@@ -239,7 +260,12 @@ function handleCalendarEventSubmit() {
                 <h2 class="text-center fs-5">
                     {{ translate('Subjects') }}
                 </h2>
-                <ToggleButtonPicker v-model="selectedSubjects" center :options="subjectOptions" />
+                <ToggleButtonPicker
+                    v-model="selectedSubjects"
+                    center
+                    :options="subjectOptions"
+                    :colors="subjectColors"
+                />
             </div>
             <div>
                 <h2 class="text-center fs-5">

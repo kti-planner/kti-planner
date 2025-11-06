@@ -28,7 +28,7 @@ const { data: laboratoryClasses, execute: refreshClasses } = useApiFetch<Laborat
 );
 
 const events = computed<EventInput[]>(() => [
-    ...getLaboratoryClassEvents(laboratoryClasses.value ?? []),
+    ...getLaboratoryClassEvents(laboratoryClasses.value ?? [], [subject]),
     ...getScheduleChangeEvents(scheduleChanges),
 ]);
 

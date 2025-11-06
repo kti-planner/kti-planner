@@ -15,6 +15,7 @@ export interface SubjectData {
     classRepeatWeeks: number;
     studyMode: StudyModeType;
     studyCycle: StudyCycleType;
+    color: string;
 }
 
 const studyModeSchema = z.enum(['full-time', 'part-time']);
