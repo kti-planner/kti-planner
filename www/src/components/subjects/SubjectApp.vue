@@ -8,6 +8,7 @@ import type { LaboratoryGroupData } from '@components/laboratory-groups/types';
 import type { ScheduleChangeData, SemesterData } from '@components/semesters/types';
 import type { SubjectData } from '@components/subjects/types';
 import type { UserPublicData } from '@components/users/types';
+import { numberToRoman } from '@components/utils';
 import AddExercise from '@components/exercises/AddExercise.vue';
 import GenerateClasses from '@components/laboratory-classes/GenerateClasses.vue';
 import LaboratoryGroupListModal from '@components/laboratory-groups/LaboratoryGroupListModal.vue';
@@ -23,6 +24,10 @@ const translations = {
         'Teachers': 'Teachers',
         'Teacher email': 'Teacher email',
         'No course ID in subject data': 'No course ID in subject data',
+        'Full-time first-cycle studies': 'Full-time first-cycle studies',
+        'Full-time second-cycle studies': 'Full-time second-cycle studies',
+        'Part-time first-cycle studies': 'Part-time first-cycle studies',
+        'Part-time second-cycle studies': 'Part-time second-cycle studies',
     },
     'pl': {
         'Laboratory groups': 'Grupy laboratoryjne',
@@ -30,6 +35,10 @@ const translations = {
         'Teachers': 'Prowadzący',
         'Teacher email': 'Email prowadzącego',
         'No course ID in subject data': 'Brak ID kursu w danych przedmiotu',
+        'Full-time first-cycle studies': 'Studia stacjonarne I stopnia (Inżynierskie)',
+        'Full-time second-cycle studies': 'Studia stacjonarne II stopnia (Magisterskie)',
+        'Part-time first-cycle studies': 'Studia niestacjonarne I stopnia (Inżynierskie)',
+        'Part-time second-cycle studies': 'Studia niestacjonarne II stopnia (MSU)',
     },
 };
 
@@ -53,13 +62,29 @@ const calendar = useTemplateRef('calendar');
 const subjectUrl = computed(() => `/semesters/${semester.slug}/subjects/${subject.slug}`);
 
 const laboratoryGroupOptions = computed(() => Object.fromEntries(laboratoryGroups.map(group => [group.name, group])));
+
+const studyDetails = computed(() => {
+    if (subject.studyMode === 'full-time' && subject.studyCycle === 'first-cycle') {
+        return translate('Full-time first-cycle studies');
+    } else if (subject.studyMode === 'full-time' && subject.studyCycle === 'second-cycle') {
+        return translate('Full-time second-cycle studies');
+    } else if (subject.studyMode === 'part-time' && subject.studyCycle === 'first-cycle') {
+        return translate('Part-time first-cycle studies');
+    } else if (subject.studyMode === 'part-time' && subject.studyCycle === 'second-cycle') {
+        return translate('Part-time second-cycle studies');
+    } else {
+        return '';
+    }
+});
 </script>
 
 <template>
-    <h1 class="text-center fs-4 mb-3">
-        {{ subject.fullName }}
-        <EditSubject v-if="currentUser" :semester :subject :all-users />
+    <h1 class="text-center fs-4 mb-1">
+        {{ subject.name.split(' - ')[0] }}
+        <EditSubject v-if="currentUser" :semester :subject :all-users /><br />
+        {{ subject.name.split(' - ')[1] }}{{ ` - sem. ${numberToRoman(subject.semesterNumber)}` }}
     </h1>
+    <h2 class="text-center fs-5 mb-3">{{ studyDetails }}</h2>
     <a
         :href="subject.moodleCourseUrl !== '' ? subject.moodleCourseUrl : undefined"
         :target="subject.moodleCourseUrl !== '' ? '_blank' : undefined"

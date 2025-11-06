@@ -171,7 +171,15 @@ const semesterNumberId = crypto.randomUUID();
             <label :for="nameId" class="form-label">
                 {{ translate('Subject name') }} <span class="text-danger">*</span>
             </label>
-            <input :id="nameId" v-model="subjectName" type="text" class="form-control" required autofocus />
+            <input
+                :id="nameId"
+                v-model="subjectName"
+                type="text"
+                class="form-control"
+                placeholder="Sieci komputerowe - Informatyka"
+                required
+                autofocus
+            />
         </div>
 
         <div>
