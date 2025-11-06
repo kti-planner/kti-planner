@@ -62,25 +62,25 @@ const classroomsData = classrooms.map(makeClassroomData);
 
 const subjectGroups = [
     {
-        subjects: subjects
+        subjectsData: subjectsData
             .filter(subject => subject.studyCycle === 'first-cycle' && subject.studyMode === 'full-time')
             .sort((a, b) => a.semesterNumber - b.semesterNumber),
         title: translate('Full-time first-cycle studies'),
     },
     {
-        subjects: subjects
+        subjectsData: subjectsData
             .filter(subject => subject.studyCycle === 'second-cycle' && subject.studyMode === 'full-time')
             .sort((a, b) => a.semesterNumber - b.semesterNumber),
         title: translate('Full-time second-cycle studies'),
     },
     {
-        subjects: subjects
+        subjectsData: subjectsData
             .filter(subject => subject.studyCycle === 'first-cycle' && subject.studyMode === 'part-time')
             .sort((a, b) => a.semesterNumber - b.semesterNumber),
         title: translate('Part-time first-cycle studies'),
     },
     {
-        subjects: subjects
+        subjectsData: subjectsData
             .filter(subject => subject.studyCycle === 'second-cycle' && subject.studyMode === 'part-time')
             .sort((a, b) => a.semesterNumber - b.semesterNumber),
         title: translate('Part-time second-cycle studies'),
@@ -110,11 +110,11 @@ const subjectGroups = [
         {semester.startDate.toLocaleDateString('pl-PL')} - {semester.endDate.toLocaleDateString('pl-PL')}
     </div>
     {
-        subjectGroups.map(({ subjects, title }) => (
-            <Show when={subjects.length > 0}>
+        subjectGroups.map(({ subjectsData, title }) => (
+            <Show when={subjectsData.length > 0}>
                 <h2 class="text-center fs-6 mt-3">{title}</h2>
                 <div class="subjects-list list-group mx-auto">
-                    {subjects.map(subject => (
+                    {subjectsData.map(subject => (
                         <a
                             href={`/semesters/${semesterSlug}/subjects/${subject.slug}/`}
                             class="list-group-item list-group-item-action"
@@ -133,6 +133,7 @@ const subjectGroups = [
         <SemesterCalendar
             client:only="vue"
             semester={semesterData}
+            subjectGroups={subjectGroups}
             scheduleChanges={scheduleChangesData}
             subjects={subjectsData}
             classrooms={classroomsData}
