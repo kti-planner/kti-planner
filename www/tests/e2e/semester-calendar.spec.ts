@@ -204,6 +204,27 @@ test('Can create single calendar event', async ({ page }) => {
     ).toBeVisible();
 });
 
+test('Can create single calendar event from button', async ({ page }) => {
+    await page.goto('/semesters/2025-winter/');
+    await loginAsTeacher(page);
+
+    await page.getByRole('button', { name: 'Add event' }).click();
+
+    await expect(page.getByRole('heading', { name: 'Add event' })).toBeVisible();
+
+    await page.getByRole('textbox', { name: 'Date' }).fill('2025-10-02');
+    await page.getByRole('textbox', { name: 'Start time' }).fill('14:00');
+    await page.getByRole('textbox', { name: 'End time' }).fill('15:00');
+    await page.getByRole('textbox', { name: 'Name' }).fill('Test event');
+    await page.getByRole('combobox', { name: 'Classroom' }).selectOption('EA 204');
+
+    await page.getByRole('button', { name: 'Add', exact: true }).click();
+
+    await expect(
+        page.locator('.calendar-wrapper a').filter({ hasText: '14:00 - 15:00' }).filter({ hasText: 'Test event' }),
+    ).toBeVisible();
+});
+
 test('Can create repeating calendar event', async ({ page }) => {
     await page.goto('/semesters/2025-winter/');
     await loginAsTeacher(page);
