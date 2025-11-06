@@ -204,6 +204,19 @@ test('Can create single calendar event', async ({ page }) => {
     ).toBeVisible();
 });
 
+test('Add event button is hidden for logged-out users', async ({ page }) => {
+    await page.goto('/semesters/2025-winter/');
+
+    await expect(page.getByRole('button', { name: 'Add event' })).toHaveCount(0);
+});
+
+test('Add event button is visible for logged-in users', async ({ page }) => {
+    await page.goto('/semesters/2025-winter/');
+    await loginAsTeacher(page);
+
+    await expect(page.getByRole('button', { name: 'Add event' })).toBeVisible();
+});
+
 test('Can create single calendar event from button', async ({ page }) => {
     await page.goto('/semesters/2025-winter/');
     await loginAsTeacher(page);
