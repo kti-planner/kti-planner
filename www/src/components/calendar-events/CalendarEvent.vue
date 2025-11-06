@@ -29,8 +29,8 @@ const { calendarEvent } = defineProps<{
 const title = computed(
     () =>
         `${calendarEvent.name}\n` +
-        `${translate('Teacher')}: ${calendarEvent.user?.name ?? translate('Unknown [teacher]')}\n` +
-        `${translate('Classroom')}: ${formatClassroomName(calendarEvent.classroom, langId)}`,
+        `${translate('Classroom')}: ${formatClassroomName(calendarEvent.classroom, langId)}\n` +
+        `${translate('Teacher')}: ${calendarEvent.user?.name ?? translate('Unknown [teacher]')}`,
 );
 </script>
 
@@ -41,12 +41,12 @@ const title = computed(
             {{ calendarEvent.name }}
         </p>
         <div class="text-truncate">
-            <i class="bi bi-person-fill"></i>
-            <span class="ms-1">{{ calendarEvent.user?.name ?? translate('Unknown [teacher]') }}</span>
-        </div>
-        <div class="text-truncate">
             <i class="bi bi-building-fill"></i>
             <span class="ms-1">{{ formatClassroomName(calendarEvent.classroom, langId) }}</span>
+        </div>
+        <div class="text-truncate">
+            <i class="bi bi-person-fill"></i>
+            <span class="ms-1">{{ calendarEvent.user?.name ?? translate('Unknown [teacher]') }}</span>
         </div>
     </div>
 </template>
