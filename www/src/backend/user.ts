@@ -68,9 +68,9 @@ export class User {
     }
 
     static async fetchAll(): Promise<User[]> {
-        let records = (await db.query<DbUser>('SELECT * FROM users ORDER BY name')).rows;
+        const records = (await db.query<DbUser>('SELECT * FROM users ORDER BY name')).rows;
 
-        records = records.sort((a, b) => {
+        records.sort((a, b) => {
             const titleResult = User.scoreNameByTitle(b.name) - User.scoreNameByTitle(a.name);
             if (titleResult !== 0) {
                 return titleResult;
