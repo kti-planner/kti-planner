@@ -35,9 +35,9 @@ const title = computed(
     () =>
         (subject ? `${subject.name}\n` : '') +
         `${laboratoryClass.exercise.exerciseNumber}. ${laboratoryClass.exercise.name}\n` +
+        `${translate('Classroom')}: ${formatClassroomName(laboratoryClass.exercise.classroom, langId)}\n` +
         `${translate('Group')}: ${laboratoryClass.laboratoryGroup.name}\n` +
-        `${translate('Teacher')}: ${laboratoryClass.teacher?.name ?? translate('Unknown [teacher]')}\n` +
-        `${translate('Classroom')}: ${formatClassroomName(laboratoryClass.exercise.classroom, langId)}`,
+        `${translate('Teacher')}: ${laboratoryClass.teacher?.name ?? translate('Unknown [teacher]')}`,
 );
 </script>
 
@@ -51,16 +51,16 @@ const title = computed(
             {{ `${laboratoryClass.exercise.exerciseNumber}. ${laboratoryClass.exercise.name}` }}
         </p>
         <div class="text-truncate">
+            <i class="bi bi-building-fill"></i>
+            <span class="ms-1">{{ formatClassroomName(laboratoryClass.exercise.classroom, langId) }}</span>
+        </div>
+        <div class="text-truncate">
             <i class="bi bi-people-fill"></i>
             <span class="ms-1">{{ laboratoryClass.laboratoryGroup.name }}</span>
         </div>
         <div class="text-truncate">
             <i class="bi bi-person-fill"></i>
             <span class="ms-1">{{ laboratoryClass.teacher?.name ?? translate('Unknown [teacher]') }}</span>
-        </div>
-        <div class="text-truncate">
-            <i class="bi bi-building-fill"></i>
-            <span class="ms-1">{{ formatClassroomName(laboratoryClass.exercise.classroom, langId) }}</span>
         </div>
     </div>
 </template>
