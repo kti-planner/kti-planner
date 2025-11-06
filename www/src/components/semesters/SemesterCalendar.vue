@@ -180,7 +180,7 @@ function handleAddEventClick() {
     calendarEventModal.value?.show();
 }
 
-const currentView = ref('timeGridWeek');
+const currentView = ref<string>('');
 
 function handleViewChange(view: ViewApi) {
     currentView.value = view.type;
