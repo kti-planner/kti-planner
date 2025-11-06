@@ -82,6 +82,7 @@ test('Subjects', async () => {
         classRepeatWeeks: 1,
         studyMode: 'full-time',
         studyCycle: 'first-cycle',
+        color: 'hsl(154 35 38.141)',
         semesterNumber: 5,
     });
 
@@ -165,6 +166,7 @@ test('Subjects', async () => {
         classRepeatWeeks: 2,
         studyMode: 'full-time',
         studyCycle: 'first-cycle',
+        color: 'hsl(17 35 47.84)',
         semesterNumber: 6,
     });
 

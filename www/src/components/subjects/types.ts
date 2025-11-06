@@ -17,6 +17,7 @@ export interface SubjectData {
     semesterNumber: number;
     studyMode: StudyModeType;
     studyCycle: StudyCycleType;
+    color: string;
 }
 
 export function makeSubjectStudyDetails(subject: SubjectData, lang: LangId): string {

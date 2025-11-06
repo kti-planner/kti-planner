@@ -2,6 +2,7 @@ import type { EventInput } from '@fullcalendar/core';
 import type { CalendarEventData } from '@components/calendar-events/types';
 import type { LaboratoryClassData } from '@components/laboratory-classes/types';
 import type { ScheduleChangeData } from '@components/semesters/types';
+import type { SubjectData } from '@components/subjects/types';
 
 export type LaboratoryClassEventInput = EventInput & {
     extendedProps: {
@@ -15,13 +16,21 @@ export type CalendarEventInput = EventInput & {
     };
 };
 
-export function getLaboratoryClassEvents(laboratoryClasses: LaboratoryClassData[]): LaboratoryClassEventInput[] {
-    return laboratoryClasses.map<LaboratoryClassEventInput>(laboratoryClass => ({
-        title: `${laboratoryClass.laboratoryGroup.name} - ${laboratoryClass.exercise.name}`,
-        start: laboratoryClass.startDate,
-        end: laboratoryClass.endDate,
-        extendedProps: { laboratoryClass },
-    }));
+export function getLaboratoryClassEvents(
+    laboratoryClasses: LaboratoryClassData[],
+    subjects: SubjectData[],
+): LaboratoryClassEventInput[] {
+    return laboratoryClasses.map<LaboratoryClassEventInput>(laboratoryClass => {
+        const subject = subjects.find(subject => subject.id === laboratoryClass.exercise.subjectId);
+
+        return {
+            title: `${laboratoryClass.laboratoryGroup.name} - ${laboratoryClass.exercise.name}`,
+            start: laboratoryClass.startDate,
+            end: laboratoryClass.endDate,
+            ...(subject ? { color: subject.color } : {}),
+            extendedProps: { laboratoryClass },
+        };
+    });
 }
 
 export function getScheduleChangeEvents(scheduleChanges: ScheduleChangeData[]): EventInput[] {

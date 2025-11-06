@@ -1,5 +1,5 @@
 import assert from 'node:assert';
-import { env } from 'src/utils';
+import { env, stringToHslColor } from 'src/utils';
 import { db } from '@backend/db';
 import type { Semester } from '@backend/semester';
 import { makeUserPublicData, User } from '@backend/user';
@@ -235,5 +235,6 @@ export function makeSubjectData(subject: Subject, allUsers: User[]): SubjectData
         studyMode: subject.studyMode,
         studyCycle: subject.studyCycle,
         semesterNumber: subject.semesterNumber,
+        color: stringToHslColor(subject.fullName),
     };
 }

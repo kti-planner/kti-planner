@@ -117,7 +117,8 @@ const subjectGroups = [
                     {subjectsData.map(subject => (
                         <a
                             href={`/semesters/${semesterSlug}/subjects/${subject.slug}/`}
-                            class="list-group-item list-group-item-action"
+                            class="list-group-item list-group-item-action subject-item"
+                            style={`--subject-color: ${subject.color}`}
                         >
                             {subject.fullName}
                         </a>
@@ -142,8 +143,24 @@ const subjectGroups = [
     </div>
 </Layout>
 
-<style>
+<style lang="scss">
     .subjects-list {
         width: min(700px, 100%);
+    }
+
+    .subject-item {
+        position: relative;
+        overflow: hidden;
+
+        &::before {
+            content: '';
+            display: block;
+            position: absolute;
+            width: 10px;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            background-color: var(--subject-color);
+        }
     }
 </style>

@@ -73,6 +73,8 @@ const teachers = computed<UserPublicData[]>(() => {
 const selectedClassrooms = ref<ClassroomData[]>([]);
 const selectedTeachers = ref<UserPublicData[]>([]);
 
+const subjectColors = computed(() => Object.fromEntries(subjects.map(subject => [subject.id, subject.color])));
+
 const subjectGroupSelections = ref<Record<string, SubjectData[]>>({});
 
 watchEffect(() => {
@@ -113,7 +115,7 @@ async function refetchAllEvents() {
 }
 
 const events = computed<EventInput[]>(() => [
-    ...getLaboratoryClassEvents(laboratoryClasses.value ?? []),
+    ...getLaboratoryClassEvents(laboratoryClasses.value ?? [], subjects),
     ...getScheduleChangeEvents(scheduleChanges),
     ...getCalendarEvents(calendarEvents.value ?? []),
 ]);
@@ -295,7 +297,12 @@ function handleViewChange(view: ViewApi) {
 
                 <template v-for="{ subjectOptions, title } in subjectGroupsOptions" :key="title">
                     <h2 class="fs-6 text-center mt-3">{{ title }}</h2>
-                    <ToggleButtonPicker v-model="subjectGroupSelections[title]!" center :options="subjectOptions" />
+                    <ToggleButtonPicker
+                        v-model="subjectGroupSelections[title]!"
+                        center
+                        :options="subjectOptions"
+                        :colors="subjectColors"
+                    />
                 </template>
             </div>
             <div>
