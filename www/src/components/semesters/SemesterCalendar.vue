@@ -250,6 +250,7 @@ function handleViewChange(view: ViewApi) {
                     :initial-selected-subjects="selectedSubjects"
                     :initial-selected-classrooms="selectedClassrooms"
                     :initial-selected-teachers="selectedTeachers"
+                    :subject-groups="subjectGroups"
                 />
             </Modal>
         </div>
@@ -267,14 +268,14 @@ function handleViewChange(view: ViewApi) {
                     {{ translate('Subjects') }}
                 </h2>
 
-                <div v-for="{ subjectOptions, title } in subjectGroupsOptions" :key="title">
+                <template v-for="{ subjectOptions, title } in subjectGroupsOptions" :key="title">
                     <h2 class="fs-6 text-center">{{ title }}</h2>
                     <ToggleButtonPicker
                         v-model="subjectGroupSelections[title]!"
                         center
                         :options="subjectOptions.value"
                     />
-                </div>
+                </template>
             </div>
             <div>
                 <h2 class="text-center fs-5">

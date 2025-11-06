@@ -4,7 +4,7 @@ import { useCloned } from '@vueuse/core';
 import { langId } from '@components/frontend/lang';
 import { type ClassroomData, formatClassroomName } from '@components/classrooms/types';
 import type { SemesterData } from '@components/semesters/types';
-import { makeSubjectStudyDetails, type SubjectData } from '@components/subjects/types';
+import type { SubjectData } from '@components/subjects/types';
 import type { UserPublicData } from '@components/users/types';
 import Accordion from '@components/accordion/Accordion.vue';
 import AccordionItem from '@components/accordion/AccordionItem.vue';
@@ -16,7 +16,6 @@ const translations = {
     'en': {
         'Selected filters will apply to the exported events. Copy the link below and import it in a calendar application.':
             'Selected filters will apply to the exported events. Copy the link below and import it in a calendar application.',
-        'Subjects': 'Subjects',
         'Classrooms': 'Classrooms',
         'Teachers': 'Teachers',
         'Export this subject': 'Export this subject',
@@ -24,7 +23,6 @@ const translations = {
     'pl': {
         'Selected filters will apply to the exported events. Copy the link below and import it in a calendar application.':
             'Wybrane filtry zostaną zastosowane do wyeksportowanych wydarzeń. Skopiuj poniższy link i zaimportuj go w aplikacji kalendarzowej.',
-        'Subjects': 'Przedmioty',
         'Classrooms': 'Sale',
         'Teachers': 'Prowadzący',
         'Export this subject': 'Eksportuj ten przedmiot',
@@ -44,6 +42,7 @@ const { initialSelectedClassrooms, initialSelectedSubjects, initialSelectedTeach
         initialSelectedSubjects: SubjectData[];
         initialSelectedClassrooms: ClassroomData[];
         initialSelectedTeachers: UserPublicData[];
+        subjectGroups: { subjectsData: SubjectData[]; title: string }[];
     }>();
 
 const { cloned: selectedSubjects } = useCloned(computed(() => initialSelectedSubjects));
@@ -89,20 +88,20 @@ const icsUrlId = crypto.randomUUID();
 
 <template>
     <div class="mb-3">
-        <h2 class="fs-6">
-            {{ translate('Subjects') }}
-        </h2>
-        <Accordion>
-            <AccordionItem v-for="subject in subjects" :key="subject.id" :id="subject.id">
-                <template #header>{{ subject.fullName }} {{ makeSubjectStudyDetails(subject, langId) }}</template>
-                <CalendarSubjectExportOptions
-                    v-model:subjects="selectedSubjectIds"
-                    v-model:groups="selectedGroupIds"
-                    :semester
-                    :subject
-                />
-            </AccordionItem>
-        </Accordion>
+        <template v-for="group in subjectGroups.filter(group => group.subjectsData.length > 0)" :key="group.title">
+            <Accordion class="mb-2">
+                <h2 class="text-center fs-6">{{ group.title }}</h2>
+                <AccordionItem v-for="subject in group.subjectsData" :key="subject.id" :id="subject.id">
+                    <template #header>{{ subject.fullName }}</template>
+                    <CalendarSubjectExportOptions
+                        v-model:subjects="selectedSubjectIds"
+                        v-model:groups="selectedGroupIds"
+                        :semester
+                        :subject
+                    />
+                </AccordionItem>
+            </Accordion>
+        </template>
     </div>
     <div class="mb-3">
         <h2 class="fs-6">
