@@ -46,8 +46,7 @@ const title = computed(
     <div class="event-content" :title>
         <p class="text-truncate">{{ timeText }}</p>
         <p v-if="subject" class="text-truncate fw-bold">
-            {{ subject.fullName }}<br />
-            {{ makeSubjectStudyDetails(subject, langId) }}
+            {{ subject.fullName }}
         </p>
         <p v-if="!hideExerciseName" class="text-truncate" :class="{ 'fw-bold': !subject }">
             {{ `${laboratoryClass.exercise.exerciseNumber}. ${laboratoryClass.exercise.name}` }}
