@@ -3,11 +3,7 @@ import { ref, watchEffect } from 'vue';
 
 const model = defineModel<T[]>({ required: true });
 
-const {
-    options,
-    center = false,
-    colors = {},
-} = defineProps<{
+const { options, center = false } = defineProps<{
     options: Readonly<Record<string, T>>;
     center?: boolean;
     colors?: Record<string, string>;
@@ -39,12 +35,13 @@ const toggleBtnId = crypto.randomUUID();
                 :for="`${toggleBtnId}-${value.id}`"
                 class="btn"
                 :class="{
-                    'btn-success': selectedIds.has(value.id) && !(value.id in colors),
-                    'btn-light': !selectedIds.has(value.id),
-                    'btn-colored': selectedIds.has(value.id) && value.id in colors,
+                    'btn-light': !selectedIds.has(value.id) && !colors,
+                    'btn-success': selectedIds.has(value.id) && !colors,
+                    'btn-unselected': !selectedIds.has(value.id) && colors,
+                    'btn-selected': selectedIds.has(value.id) && colors,
                 }"
                 :style="{
-                    '--str-color': colors[value.id],
+                    '--str-color': colors ? colors[value.id] : undefined,
                 }"
                 >{{ label }}</label
             >
@@ -59,7 +56,15 @@ const toggleBtnId = crypto.randomUUID();
     border-color: var(--bs-btn-hover-border-color);
 }
 
-.btn-colored {
+.btn-unselected {
+    background-color: color-mix(in srgb, var(--str-color) 20%, white 80%) !important;
+
+    &:hover {
+        background-color: color-mix(in srgb, var(--str-color) 40%, white 60%) !important;
+    }
+}
+
+.btn-selected {
     color: white !important;
     background-color: var(--str-color) !important;
 }
