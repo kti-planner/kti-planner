@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, shallowRef, useTemplateRef } from 'vue';
-import type { DateSelectArg, EventClickArg, EventInput } from '@fullcalendar/core';
+import type { DateSelectArg, EventClickArg, EventInput, ViewApi } from '@fullcalendar/core';
 import { langId } from '@components/frontend/lang';
 import { currentUser } from '@components/frontend/user';
 import { useApiFetch } from '@components/api';
@@ -171,6 +171,12 @@ function handleCalendarEventSubmit() {
     calendarEventModal.value?.hide();
     void refetchAllEvents();
 }
+
+const currentView = ref('timeGridWeek');
+
+function handleViewChange(view: ViewApi) {
+    currentView.value = view.type;
+}
 </script>
 
 <template>
@@ -182,6 +188,7 @@ function handleCalendarEventSubmit() {
                 :selectable="currentUser !== null"
                 @event-click="handleEventClick"
                 @select="handleCalendarSelection"
+                @view-change="handleViewChange"
             >
                 <template #eventContent="arg">
                     <LaboratoryClassEvent
@@ -191,6 +198,7 @@ function handleCalendarEventSubmit() {
                         :subject="
                             subjects.find(s => s.id === arg.event.extendedProps.laboratoryClass.exercise.subjectId)
                         "
+                        :view-type="currentView"
                     />
                     <CalendarEvent
                         v-else-if="'calendarEvent' in arg.event.extendedProps"

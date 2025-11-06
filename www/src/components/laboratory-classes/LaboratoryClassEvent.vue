@@ -29,6 +29,7 @@ const { laboratoryClass, subject, hideExerciseName } = defineProps<{
     laboratoryClass: LaboratoryClassData;
     subject?: SubjectData | undefined;
     hideExerciseName?: boolean | undefined;
+    viewType?: string | undefined;
 }>();
 
 const title = computed(
@@ -46,6 +47,10 @@ const title = computed(
         <p class="text-truncate">{{ timeText }}</p>
         <p v-if="subject" class="text-truncate fw-bold">
             {{ subject.fullName }}
+            <span v-if="viewType === 'listYear'">
+                <br />
+                {{ makeSubjectStudyDetails(subject, langId) }}
+            </span>
         </p>
         <p v-if="!hideExerciseName" class="text-truncate" :class="{ 'fw-bold': !subject }">
             {{ `${laboratoryClass.exercise.exerciseNumber}. ${laboratoryClass.exercise.name}` }}
