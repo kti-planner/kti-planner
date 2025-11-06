@@ -31,10 +31,6 @@ const translations = {
         'Teachers': 'Prowadzący',
         'Teacher email': 'Email prowadzącego',
         'No course ID in subject data': 'Brak ID kursu w danych przedmiotu',
-        'Full-time first-cycle studies': 'Studia stacjonarne I stopnia (Inżynierskie)',
-        'Full-time second-cycle studies': 'Studia stacjonarne II stopnia (Magisterskie)',
-        'Part-time first-cycle studies': 'Studia niestacjonarne I stopnia (Inżynierskie)',
-        'Part-time second-cycle studies': 'Studia niestacjonarne II stopnia (MSU)',
     },
 };
 
