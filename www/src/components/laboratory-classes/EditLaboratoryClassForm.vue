@@ -7,14 +7,9 @@ import type { EventConflict } from '@components/calendar/types';
 import { formatClassroomName } from '@components/classrooms/types';
 import type { LaboratoryClassData, LaboratoryClassEditApiData } from '@components/laboratory-classes/types';
 import type { SemesterData } from '@components/semesters/types';
-import type { SubjectData } from '@components/subjects/types';
+import { makeSubjectStudyDetails, type SubjectData } from '@components/subjects/types';
 import type { UserPublicData } from '@components/users/types';
-import {
-    formatDateLocalHhMm,
-    formatDateLocalYyyyMmDd,
-    makeSubjectStudyDetails,
-    parseDateLocalYyyyMmDd,
-} from '@components/utils';
+import { formatDateLocalHhMm, formatDateLocalYyyyMmDd, parseDateLocalYyyyMmDd } from '@components/utils';
 import ButtonWithConfirmationPopover from '@components/ButtonWithConfirmationPopover.vue';
 import UserSelector from '@components/users/UserSelector.vue';
 

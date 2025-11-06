@@ -3,8 +3,7 @@ import { computed } from 'vue';
 import { langId } from '@components/frontend/lang';
 import { formatClassroomName } from '@components/classrooms/types';
 import type { LaboratoryClassData } from '@components/laboratory-classes/types';
-import type { SubjectData } from '@components/subjects/types';
-import { makeSubjectStudyDetails } from '@components/utils';
+import { makeSubjectStudyDetails, type SubjectData } from '@components/subjects/types';
 
 const translations = {
     'en': {

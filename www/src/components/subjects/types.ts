@@ -19,6 +19,20 @@ export interface SubjectData {
     studyCycle: StudyCycleType;
 }
 
+export function makeSubjectStudyDetails(subject: SubjectData, lang: LangId): string {
+    if (subject.studyMode === 'full-time' && subject.studyCycle === 'first-cycle') {
+        return lang === 'pl' ? 'Studia stacjonarne I stopnia (Inżynierskie)' : 'Full-time first-cycle studies';
+    } else if (subject.studyMode === 'full-time' && subject.studyCycle === 'second-cycle') {
+        return lang === 'pl' ? 'Studia stacjonarne II stopnia (Magisterskie)' : 'Full-time second-cycle studies';
+    } else if (subject.studyMode === 'part-time' && subject.studyCycle === 'first-cycle') {
+        return lang === 'pl' ? 'Studia niestacjonarne I stopnia (Inżynierskie)' : 'Part-time first-cycle studies';
+    } else if (subject.studyMode === 'part-time' && subject.studyCycle === 'second-cycle') {
+        return lang === 'pl' ? 'Studia niestacjonarne II stopnia (MSU)' : 'Part-time second-cycle studies';
+    } else {
+        return '';
+    }
+}
+
 const studyModeSchema = z.enum(['full-time', 'part-time']);
 
 const studyCycleSchema = z.enum(['first-cycle', 'second-cycle']);

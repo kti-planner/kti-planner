@@ -3,8 +3,11 @@ import { onMounted, ref, watch } from 'vue';
 import { langId } from '@components/frontend/lang';
 import { apiGet, apiPost } from '@components/api';
 import type { SemesterData } from '@components/semesters/types';
-import type { SubjectCopyFromPreviousSemesterApiData, SubjectData } from '@components/subjects/types';
-import { makeSubjectStudyDetails } from '@components/utils';
+import {
+    makeSubjectStudyDetails,
+    type SubjectCopyFromPreviousSemesterApiData,
+    type SubjectData,
+} from '@components/subjects/types';
 
 const { currentSemester } = defineProps<{
     currentSemester: SemesterData;
