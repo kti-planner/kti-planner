@@ -107,7 +107,7 @@ function maxLightnessForWhiteText(
     requiredContrast = 4.5,
     precision = 1e-3, // stop when L changes by < precision (%)
 ): number {
-    // Our liminance should be <= to this. See https://www.w3.org/WAI/GL/wiki/Contrast_ratio
+    // Our luminance should be <= to this. See https://www.w3.org/WAI/GL/wiki/Contrast_ratio
     const luminanceThreshold = 1.05 / requiredContrast - 0.05;
 
     let low = 0;
