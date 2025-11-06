@@ -21,6 +21,10 @@ const { apiUrl, selectedLaboratoryGroups, scheduleChanges } = defineProps<{
     teachers: UserPublicData[];
 }>();
 
+const emit = defineEmits<{
+    classEdited: [];
+}>();
+
 const { data: laboratoryClasses, execute: refreshClasses } = useApiFetch<LaboratoryClassData[]>(
     apiUrl,
     () => new URLSearchParams(selectedLaboratoryGroups.map(group => ['laboratoryGroup', group.name])),
@@ -48,6 +52,11 @@ function handleEventClick(arg: EventClickArg) {
     editedLaboratoryClass.value = arg.event.extendedProps.laboratoryClass;
     modal.value?.classDetailsModal?.show();
 }
+
+function handleLaboratoryClassEdit() {
+    refreshClasses();
+    emit('classEdited');
+}
 </script>
 
 <template>
@@ -68,6 +77,6 @@ function handleEventClick(arg: EventClickArg) {
         :teachers
         :semester
         show-subject
-        @submit="refreshClasses"
+        @submit="handleLaboratoryClassEdit"
     />
 </template>
