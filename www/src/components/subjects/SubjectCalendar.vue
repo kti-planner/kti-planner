@@ -84,7 +84,7 @@ const calendarAddClassModal = useTemplateRef('calendarAddClassModal');
 const calendarSelectionStart = shallowRef<Date>(new Date());
 
 function handleCalendarSelection(info: DateSelectArg) {
-    calendarSelectionStart.value = info.start;
+    calendarSelectionStart.value = new Date(info.start.getTime() + 15 * 60000);
 
     calendarAddClassModal.value?.show();
 }
