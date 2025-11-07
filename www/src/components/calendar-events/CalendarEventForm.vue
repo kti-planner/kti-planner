@@ -1,14 +1,16 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
+import type { EventType } from '@backend/calendar-events';
 import { langId } from '@components/frontend/lang';
 import { currentUser } from '@components/frontend/user';
 import { apiDelete, apiPatch, apiPost } from '@components/api';
 import type { EventConflict } from '@components/calendar/types';
 import { CalendarEventRepeatState } from '@components/calendar-events/state';
-import type {
-    CalendarEventCreateApiData,
-    CalendarEventData,
-    CalendarEventEditApiData,
+import {
+    type CalendarEventCreateApiData,
+    type CalendarEventData,
+    type CalendarEventEditApiData,
+    formatEventType,
 } from '@components/calendar-events/types';
 import { type ClassroomData, formatClassroomName } from '@components/classrooms/types';
 import type { SemesterData } from '@components/semesters/types';
@@ -34,6 +36,7 @@ const name = ref<string>(props.calendarEvent.name ?? '');
 const date = ref<string>(props.calendarEvent.startDate.split('T')[0] ?? '');
 const startTime = ref<string>(props.calendarEvent.startDate.split('T')[1] ?? '');
 const endTime = ref<string>(props.calendarEvent.endDate.split('T')[1] ?? '');
+const type = ref<EventType>(props.calendarEvent.type ?? 'class reservation');
 
 const user = ref<UserPublicData | null>(
     props.calendarEvent?.user ??
@@ -56,6 +59,12 @@ watch(date, newDate => (repeatOptions.value.startDate = parseDateLocalYyyyMmDd(n
 const eventConflicts = ref<EventConflict[]>([]);
 
 async function submit() {
+    if (type.value === 'rector hours') {
+        name.value = 'Rector hours';
+        user.value = currentUser;
+        classroomId.value = null;
+    }
+
     if (name.value === '' || classroomId.value === undefined || !user.value) {
         return;
     }
@@ -67,6 +76,7 @@ async function submit() {
                   userId: user.value.id,
                   classroomId: classroomId.value,
                   durations: repeatOptions.value.generateDurations(startTime.value, endTime.value),
+                  type: type.value,
               } satisfies CalendarEventCreateApiData)
             : await apiPatch<EventConflict[]>(`/semesters/${props.semester.slug}/api/calendar-events/`, {
                   id: props.calendarEvent.id,
@@ -75,6 +85,7 @@ async function submit() {
                   classroomId: classroomId.value,
                   startDate: `${date.value}T${startTime.value}`,
                   endDate: `${date.value}T${endTime.value}`,
+                  type: type.value,
               } satisfies CalendarEventEditApiData);
 
     if (conflicts === undefined) {
@@ -130,6 +141,9 @@ const translations = {
         'Another class takes place in this classroom': 'Another class takes place in this classroom',
         'Delete event': 'Delete event',
         'Outside of semester': 'Outside of semester',
+        'Type': 'Type',
+        'Rector hours': 'Rector hours',
+        'Class reservation': 'Class reservation',
     },
     'pl': {
         'Name': 'Nazwa',
@@ -156,6 +170,9 @@ const translations = {
         'Another class takes place in this classroom': 'W wybranej sali odbywają się inne zajęcia',
         'Delete event': 'Usuń wydarzenie',
         'Outside of semester': 'Poza semestrem',
+        'Type': 'Typ',
+        'Rector hours': 'Godziny rektorskie',
+        'Class reservation': 'Rezerwacja sali',
     },
 };
 
@@ -163,6 +180,15 @@ function translate(text: keyof (typeof translations)[LangId]): string {
     return translations[langId][text];
 }
 
+watch(type, (newType, oldType) => {
+    if (oldType === 'rector hours') {
+        name.value = name.value === 'Rector hours' ? '' : name.value;
+        user.value = null;
+        classroomId.value = undefined;
+    }
+});
+
+const typeId = crypto.randomUUID();
 const dateId = crypto.randomUUID();
 const startTimeId = crypto.randomUUID();
 const endTimeId = crypto.randomUUID();
@@ -179,6 +205,20 @@ const classroomInputId = crypto.randomUUID();
 
 <template>
     <form class="vstack gap-2 mx-auto" style="max-width: 500px" @submit.prevent="submit">
+        <div v-if="currentUser">
+            <label :for="typeId" class="form-label">{{ translate('Type') }}</label>
+            <select :id="typeId" v-model="type" class="form-select" required>
+                <option value="rector hours">{{ translate('Rector hours') }}</option>
+                <option value="class reservation">{{ translate('Class reservation') }}</option>
+            </select>
+        </div>
+
+        <div v-else>
+            {{ translate('Type') }}:
+            <br />
+            {{ formatEventType(calendarEvent.type, langId) }}
+        </div>
+
         <template v-if="currentUser">
             <div>
                 <label :for="dateId" class="form-label">{{ translate('Date') }}</label>
@@ -209,7 +249,7 @@ const classroomInputId = crypto.randomUUID();
             {{ parseDateLocalYyyyMmDd(date).toLocaleDateString('pl-PL') }} {{ startTime }} - {{ endTime }}
         </div>
 
-        <div v-if="currentUser && !isEditing" class="form-check">
+        <div v-if="currentUser && !isEditing && type !== 'rector hours'" class="form-check">
             <input :id="repeatsId" v-model="repeatOptions.repeats" class="form-check-input" type="checkbox" />
             <label class="form-check-label" :for="repeatsId">{{ translate('Repeats') }}</label>
         </div>
@@ -274,45 +314,47 @@ const classroomInputId = crypto.randomUUID();
             </div>
         </template>
 
-        <div v-if="currentUser">
-            <label :for="nameId" class="form-label">{{ translate('Name') }}</label>
-            <input :id="nameId" v-model="name" type="text" class="form-control" required autofocus />
-        </div>
-        <div v-else>
-            {{ translate('Name') }}:
-            <br />
-            {{ name }}
-        </div>
+        <template v-if="type !== `rector hours`">
+            <div v-if="currentUser">
+                <label :for="nameId" class="form-label">{{ translate('Name') }}</label>
+                <input :id="nameId" v-model="name" type="text" class="form-control" required autofocus />
+            </div>
+            <div v-else>
+                {{ translate('Name') }}:
+                <br />
+                {{ name }}
+            </div>
 
-        <div v-if="currentUser">
-            <label :for="userId" class="form-label">{{ translate('Teacher') }}</label>
-            <UserSelector :id="userId" v-model="user" :options="users" required />
-        </div>
-        <div v-else>
-            {{ translate('Teacher') }}:
-            <br />
-            {{ user?.name }}
-        </div>
+            <div v-if="currentUser">
+                <label :for="userId" class="form-label">{{ translate('Teacher') }}</label>
+                <UserSelector :id="userId" v-model="user" :options="users" required />
+            </div>
+            <div v-else>
+                {{ translate('Teacher') }}:
+                <br />
+                {{ user?.name }}
+            </div>
 
-        <div v-if="currentUser">
-            <label :for="classroomInputId" class="form-label">{{ translate('Classroom') }}</label>
-            <select :id="classroomInputId" v-model="classroomId" class="form-select" required>
-                <option v-for="classroom in classrooms" :key="classroom.id" :value="classroom.id">
-                    {{ classroom.name }}
-                </option>
-                <option :value="null">{{ formatClassroomName(null, langId) }}</option>
-            </select>
-            <a
-                href="/classrooms/"
-                class="d-block mt-2 link-success link-underline-opacity-0 link-underline-opacity-100-hover"
-                >{{ translate('Manage classrooms') }}</a
-            >
-        </div>
-        <div v-else>
-            {{ translate('Classroom') }}:
-            <br />
-            {{ formatClassroomName(calendarEvent.classroom, langId) }}
-        </div>
+            <div v-if="currentUser">
+                <label :for="classroomInputId" class="form-label">{{ translate('Classroom') }}</label>
+                <select :id="classroomInputId" v-model="classroomId" class="form-select" required>
+                    <option v-for="classroom in classrooms" :key="classroom.id" :value="classroom.id">
+                        {{ classroom.name }}
+                    </option>
+                    <option :value="null">{{ formatClassroomName(null, langId) }}</option>
+                </select>
+                <a
+                    href="/classrooms/"
+                    class="d-block mt-2 link-success link-underline-opacity-0 link-underline-opacity-100-hover"
+                    >{{ translate('Manage classrooms') }}</a
+                >
+            </div>
+            <div v-else>
+                {{ translate('Classroom') }}:
+                <br />
+                {{ formatClassroomName(calendarEvent.classroom, langId) }}
+            </div>
+        </template>
 
         <div v-if="currentUser" class="text-center mt-2">
             <button type="submit" class="btn btn-success">

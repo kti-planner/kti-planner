@@ -37,15 +37,17 @@ export const GET: APIRoute = async ({ params, url }) => {
                 const user = users.find(u => u.id === calendarEvent.userId) ?? null;
                 const classroom = classrooms.find(c => c.id === calendarEvent.classroomId) ?? null;
 
-                if (
-                    teacherFilter.length > 0 &&
-                    (calendarEvent.userId === null || !teacherFilter.includes(calendarEvent.userId))
-                ) {
-                    return null;
-                }
+                if (calendarEvent.type !== 'rector hours') {
+                    if (
+                        teacherFilter.length > 0 &&
+                        (calendarEvent.userId === null || !teacherFilter.includes(calendarEvent.userId))
+                    ) {
+                        return null;
+                    }
 
-                if (classroomFilter.length > 0 && !classroomFilter.includes(String(calendarEvent.classroomId))) {
-                    return null;
+                    if (classroomFilter.length > 0 && !classroomFilter.includes(String(calendarEvent.classroomId))) {
+                        return null;
+                    }
                 }
 
                 return makeCalendarEventData(calendarEvent, user, classroom, semester);
@@ -121,6 +123,7 @@ export const POST: APIRoute = async ({ locals, params }) => {
                 semester,
                 startDate,
                 endDate,
+                type: data.type,
             }),
         ),
     );
@@ -201,6 +204,7 @@ export const PATCH: APIRoute = async ({ locals, params }) => {
         classroom: classroom,
         startDate: data.startDate,
         endDate: data.endDate,
+        type: data.type,
     });
 
     return Response.json([]);
