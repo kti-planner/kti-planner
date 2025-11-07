@@ -21,9 +21,11 @@ import Modal from '@components/Modal.vue';
 
 const translations = {
     'en': {
+        'Plan classes': 'Plan classes',
         'Plan classes for group': 'Plan classes for group',
     },
     'pl': {
+        'Plan classes': 'Zaplanuj zajęcia',
         'Plan classes for group': 'Zaplanuj zajęcia dla grupy',
     },
 };
@@ -118,7 +120,9 @@ function handleGenerateClassesDone() {
     </Calendar>
 
     <Modal ref="calendarAddClassModal">
-        <template #header>{{ translate('Plan classes for group') }}</template>
+        <template #header>
+            {{ group ? `${translate('Plan classes for group')} ${group.name}` : translate('Plan classes') }}
+        </template>
         <GenerateClassesForm
             v-model:group="group"
             :semester
