@@ -12,7 +12,6 @@ import type { LaboratoryGroupData } from '@components/laboratory-groups/types';
 import type { ScheduleChangeData, SemesterData } from '@components/semesters/types';
 import type { SubjectData } from '@components/subjects/types';
 import type { UserPublicData } from '@components/users/types';
-import { formatDateLocalYyyyMmDdHhMm } from '@components/utils';
 import Calendar from '@components/Calendar.vue';
 import GenerateClassesForm from '@components/laboratory-classes/GenerateClassesForm.vue';
 import LaboratoryClassEditModals from '@components/laboratory-classes/LaboratoryClassEditModals.vue';
@@ -131,10 +130,8 @@ function handleGenerateClassesDone() {
             :api-url
             :laboratory-groups
             :schedule-changes
-            :calendar-event="{
-                startDate: calendarSelectionStart ? formatDateLocalYyyyMmDdHhMm(calendarSelectionStart) : '',
-            }"
-            :one-exercise-only="true"
+            :initial-date="calendarSelectionStart"
+            one-exercise-only
             @done="handleGenerateClassesDone"
         />
     </Modal>

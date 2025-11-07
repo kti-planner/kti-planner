@@ -73,7 +73,7 @@ const {
     semester,
     apiUrl,
     scheduleChanges,
-    calendarEvent,
+    initialDate,
     oneExerciseOnly = false,
 } = defineProps<{
     exercises: ExerciseData[];
@@ -82,7 +82,7 @@ const {
     apiUrl: string;
     laboratoryGroups: LaboratoryGroupData[];
     scheduleChanges: ScheduleChangeData[];
-    calendarEvent?: Pick<LaboratoryClassData, 'startDate'> & Partial<LaboratoryClassData>;
+    initialDate?: Date | undefined;
     oneExerciseOnly?: boolean;
 }>();
 
@@ -92,8 +92,8 @@ const emit = defineEmits<{
 
 const isSingleExercise = ref(oneExerciseOnly);
 const selectedExercise = ref<ExerciseData | null>(null);
-const firstClassDateStr = ref<string | undefined>(calendarEvent?.startDate.split('T')[0] ?? undefined);
-const classStartTime = ref<string | undefined>(calendarEvent?.startDate.split('T')[1] ?? undefined);
+const firstClassDateStr = ref<string | undefined>(initialDate ? formatDateLocalYyyyMmDd(initialDate) : undefined);
+const classStartTime = ref<string | undefined>(initialDate ? formatDateLocalHhMm(initialDate) : undefined);
 const classEndTime = ref<string>();
 const repeatWeeks = ref<number | string>(subject.classRepeatWeeks ?? 1);
 
@@ -222,16 +222,12 @@ const showAllExercisesAlert = computed<boolean>(
     () => !isSingleExercise.value && laboratoryClasses.value !== null && laboratoryClasses.value.length > 0,
 );
 
-const showOneExerciseAlert = ref<boolean>(false);
-
-watch([selectedExercise, group, isSingleExercise], () => {
-    if (!isSingleExercise.value || laboratoryClasses.value === null) {
-        showOneExerciseAlert.value = false;
-        return;
+const showOneExerciseAlert = computed<boolean>(() => {
+    if (!isSingleExercise.value || laboratoryClasses.value === null || selectedExercise.value === null) {
+        return false;
     }
 
-    showOneExerciseAlert.value =
-        laboratoryClasses.value.find(labClass => labClass.exercise.id === selectedExercise.value?.id) !== undefined;
+    return laboratoryClasses.value.find(labClass => labClass.exercise.id === selectedExercise.value?.id) !== undefined;
 });
 
 const groupId = crypto.randomUUID();
