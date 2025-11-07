@@ -219,7 +219,7 @@ const showAllExercisesAlert = computed<boolean>(
 
 const showOneExerciseAlert = ref<boolean>(false);
 
-watch([selectedExercise, group], () => {
+watch([selectedExercise, group, isSingleExercise], () => {
     if (!isSingleExercise.value || laboratoryClasses.value === null) {
         showOneExerciseAlert.value = false;
         return;
