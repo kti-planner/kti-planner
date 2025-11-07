@@ -21,31 +21,43 @@ import LaboratoryGroupSelector from '@components/laboratory-groups/LaboratoryGro
 const translations = {
     'en': {
         'Laboratory group': 'Laboratory group',
+        'Plan only one exercise': 'Plan only one exercise',
+        'Exercise': 'Exercise',
+        'Class date': 'Class date',
         'First class date': 'First class date',
         'Class start time': 'Class start time',
         'Class end time': 'Class end time',
         'How many weeks are between classes?': 'How many weeks are between classes?',
         'Summary': 'Summary',
+        'Add class': 'Add class',
         'Generate classes': 'Generate classes',
         'You can edit the classes later from the calendar': 'You can edit the classes later from the calendar',
         'The classes do not fit in the semester': 'The classes do not fit in the semester',
         'There are conflicts with holidays or other events': 'There are conflicts with holidays or other events',
         'Attention! This laboratory group already has scheduled classes, they will be deleted and replaced with newly generated ones.':
             'Attention! This laboratory group already has scheduled classes, they will be deleted and replaced with newly generated ones.',
+        'Attention! This exercise is already planned for this laboratory group, it will be deleted and replaced with a newly generated one.':
+            'Attention! This exercise is already planned for this laboratory group, it will be deleted and replaced with a newly generated one.',
     },
     'pl': {
         'Laboratory group': 'Grupa laboratoryjna',
+        'Plan only one exercise': 'Zaplanuj tylko jedno ćwiczenie',
+        'Exercise': 'Ćwiczenie',
+        'Class date': 'Data zajęć',
         'First class date': 'Data pierwszych zajęć',
         'Class start time': 'Godzina rozpoczęcia zajęć',
         'Class end time': 'Godzina zakończenia zajęć',
         'How many weeks are between classes?': 'Co ile tygodni zajęcia się powtarzają?',
         'Summary': 'Podsumowanie',
+        'Add class': 'Dodaj zajęcie',
         'Generate classes': 'Wygeneruj zajęcia',
         'You can edit the classes later from the calendar': 'Możesz później edytować te zajęcia w kalendarzu',
         'The classes do not fit in the semester': 'Zajęcia nie mieszczą się w semestrze',
         'There are conflicts with holidays or other events': 'Są konflikty z dniami wolnymi lub innymi zajęciami',
         'Attention! This laboratory group already has scheduled classes, they will be deleted and replaced with newly generated ones.':
             'Uwaga! Ta grupa laboratoryjna posiada już zaplanowane zajęcia, zostaną one usunięte i zastąpione nowo wygenerowanymi.',
+        'Attention! This exercise is already planned for this laboratory group, it will be deleted and replaced with a newly generated one.':
+            'Uwaga! To ćwiczenie jest już zaplanowane dla tej grupy laboratoryjnej, zostanie ono usunięte i zastąpione nowo wygenerowanym.',
     },
 };
 
@@ -55,21 +67,33 @@ function translate(text: keyof (typeof translations)[LangId]): string {
 
 const group = defineModel<LaboratoryGroupData | null>('group', { default: null });
 
-const { exercises, subject, semester, apiUrl, scheduleChanges } = defineProps<{
+const {
+    exercises,
+    subject,
+    semester,
+    apiUrl,
+    scheduleChanges,
+    calendarEvent,
+    oneExerciseOnly = false,
+} = defineProps<{
     exercises: ExerciseData[];
     subject: SubjectData;
     semester: SemesterData;
     apiUrl: string;
     laboratoryGroups: LaboratoryGroupData[];
     scheduleChanges: ScheduleChangeData[];
+    calendarEvent?: Pick<LaboratoryClassData, 'startDate'> & Partial<LaboratoryClassData>;
+    oneExerciseOnly?: boolean;
 }>();
 
 const emit = defineEmits<{
     done: [];
 }>();
 
-const firstClassDateStr = ref<string>();
-const classStartTime = ref<string>();
+const isSingleExercise = ref(oneExerciseOnly);
+const selectedExercise = ref<ExerciseData | null>(null);
+const firstClassDateStr = ref<string | undefined>(calendarEvent?.startDate.split('T')[0] ?? undefined);
+const classStartTime = ref<string | undefined>(calendarEvent?.startDate.split('T')[1] ?? undefined);
 const classEndTime = ref<string>();
 const repeatWeeks = ref<number | string>(subject.classRepeatWeeks ?? 1);
 
@@ -88,6 +112,21 @@ const plannedClasses = computed<PlannedClass[]>(() => {
         typeof repeatWeeks.value === 'string'
     ) {
         return [];
+    }
+
+    if (isSingleExercise.value) {
+        if (selectedExercise.value === null) {
+            return [];
+        }
+
+        const date = parseDateLocalYyyyMmDd(firstClassDateStr.value);
+        return [
+            {
+                exercise: selectedExercise.value,
+                start: new Date(`${formatDateLocalYyyyMmDd(date)}T${classStartTime.value}`),
+                end: new Date(`${formatDateLocalYyyyMmDd(date)}T${classEndTime.value}`),
+            },
+        ];
     }
 
     const repeatWeeksNumber = repeatWeeks.value;
@@ -150,19 +189,23 @@ async function generate() {
     eventConflicts.value = conflicts;
 }
 
-watch([classStartTime, firstClassDateStr], () => {
-    if (
-        subject.durationMinutes === null ||
-        classStartTime.value === undefined ||
-        firstClassDateStr.value === undefined
-    ) {
-        return;
-    }
+watch(
+    [classStartTime, firstClassDateStr],
+    () => {
+        if (
+            subject.durationMinutes === null ||
+            classStartTime.value === undefined ||
+            firstClassDateStr.value === undefined
+        ) {
+            return;
+        }
 
-    const endDate = new Date(`${firstClassDateStr.value}T${classStartTime.value}`);
-    endDate.setMinutes(endDate.getMinutes() + subject.durationMinutes);
-    classEndTime.value = formatDateLocalHhMm(endDate);
-});
+        const endDate = new Date(`${firstClassDateStr.value}T${classStartTime.value}`);
+        endDate.setMinutes(endDate.getMinutes() + subject.durationMinutes);
+        classEndTime.value = formatDateLocalHhMm(endDate);
+    },
+    { immediate: true },
+);
 
 const { data: laboratoryClasses } = useApiFetch<LaboratoryClassData[]>(
     apiUrl,
@@ -170,13 +213,29 @@ const { data: laboratoryClasses } = useApiFetch<LaboratoryClassData[]>(
     { refetch: () => group.value !== null, immediate: group.value !== null },
 );
 
-const showAlert = computed<boolean>(() => laboratoryClasses.value !== null && laboratoryClasses.value.length > 0);
+const showAllExercisesAlert = computed<boolean>(
+    () => !isSingleExercise.value && laboratoryClasses.value !== null && laboratoryClasses.value.length > 0,
+);
+
+const showOneExerciseAlert = ref<boolean>(false);
+
+watch([selectedExercise, group], () => {
+    if (!isSingleExercise.value || laboratoryClasses.value === null) {
+        showOneExerciseAlert.value = false;
+        return;
+    }
+
+    showOneExerciseAlert.value =
+        laboratoryClasses.value.find(labClass => labClass.exercise.id === selectedExercise.value?.id) !== undefined;
+});
 
 const groupId = crypto.randomUUID();
 const dateId = crypto.randomUUID();
 const startTimeId = crypto.randomUUID();
 const endTimeId = crypto.randomUUID();
 const repeatId = crypto.randomUUID();
+const onlyOneExerciseId = crypto.randomUUID();
+const selectedExerciseId = crypto.randomUUID();
 </script>
 
 <template>
@@ -186,8 +245,25 @@ const repeatId = crypto.randomUUID();
             <LaboratoryGroupSelector :id="groupId" v-model="group" :options="laboratoryGroups" />
         </div>
 
+        <div class="form-check">
+            <input :id="onlyOneExerciseId" v-model="isSingleExercise" class="form-check-input" type="checkbox" />
+            <label class="form-check-label" :for="onlyOneExerciseId">
+                {{ translate('Plan only one exercise') }}
+            </label>
+        </div>
+        <div v-if="isSingleExercise">
+            <label :for="selectedExerciseId" class="form-label">{{ translate('Exercise') }}</label>
+            <select :id="selectedExerciseId" v-model="selectedExercise" class="form-select" required>
+                <option v-for="exercise in exercises" :key="exercise.id" :value="exercise">
+                    {{ exercise.exerciseNumber }}. {{ exercise.name }}
+                </option>
+            </select>
+        </div>
+
         <div>
-            <label :for="dateId" class="form-label">{{ translate('First class date') }}</label>
+            <label :for="dateId" class="form-label">
+                {{ isSingleExercise ? translate('Class date') : translate('First class date') }}
+            </label>
             <input
                 :id="dateId"
                 v-model="firstClassDateStr"
@@ -209,15 +285,22 @@ const repeatId = crypto.randomUUID();
             <input :id="endTimeId" v-model="classEndTime" type="time" step="300" class="form-control" required />
         </div>
 
-        <div>
+        <div v-if="!isSingleExercise">
             <label :for="repeatId" class="form-label">{{ translate('How many weeks are between classes?') }}</label>
             <input :id="repeatId" v-model="repeatWeeks" type="number" min="1" class="form-control" required />
         </div>
 
-        <p v-if="showAlert" class="text-warning">
+        <p v-if="showAllExercisesAlert" class="text-warning">
             {{
                 translate(
                     'Attention! This laboratory group already has scheduled classes, they will be deleted and replaced with newly generated ones.',
+                )
+            }}
+        </p>
+        <p v-if="showOneExerciseAlert" class="text-warning">
+            {{
+                translate(
+                    'Attention! This exercise is already planned for this laboratory group, it will be deleted and replaced with a newly generated one.',
                 )
             }}
         </p>
@@ -242,7 +325,7 @@ const repeatId = crypto.randomUUID();
 
         <div class="text-center mt-2">
             <button type="submit" class="btn btn-success" :disabled="cantGenerate">
-                {{ translate('Generate classes') }}
+                {{ isSingleExercise ? translate('Add class') : translate('Generate classes') }}
             </button>
         </div>
 
