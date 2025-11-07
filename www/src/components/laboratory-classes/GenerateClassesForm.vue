@@ -189,6 +189,11 @@ async function generate() {
     eventConflicts.value = conflicts;
 }
 
+// Clear conflicts when dependencies change
+watch([firstClassDateStr, classStartTime, classEndTime, group, repeatWeeks, isSingleExercise, selectedExercise], () => {
+    eventConflicts.value = [];
+});
+
 watch(
     [classStartTime, firstClassDateStr],
     () => {
