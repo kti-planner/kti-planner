@@ -35,7 +35,7 @@ test('Can plan single class without selecting a group beforehand', async ({ page
 
     await page.getByRole('button', { name: 'Plan classes' }).click();
     await page.getByRole('combobox', { name: 'Laboratory group' }).selectOption('5B');
-    await page.getByRole('checkbox', { name: 'Plan only one exercise' }).check();
+    await page.getByRole('checkbox', { name: 'Plan single exercise' }).check();
     await page.getByRole('combobox', { name: 'Exercise' }).selectOption('1. Tryby pracy punktów dostępowych');
     await page.getByRole('textbox', { name: 'Class date' }).fill('2025-05-20');
     await page.getByRole('textbox', { name: 'Class start time' }).fill('13:15');
@@ -66,7 +66,7 @@ test('Can plan classes from calendar when logged in', async ({ page }) => {
     await expect(page.getByRole('heading', { name: 'Plan classes for group' })).toBeVisible();
 
     await page.getByRole('combobox', { name: 'Laboratory group' }).selectOption('5A');
-    await page.getByRole('checkbox', { name: 'Plan only one exercise' }).check();
+    await page.getByRole('checkbox', { name: 'Plan single exercise' }).check();
     await page.getByRole('combobox', { name: 'Exercise' }).selectOption('1. Diagnostyka sieci IPv4');
     await expect(page.getByRole('textbox', { name: 'Class date' })).toHaveValue('2025-10-02');
     await expect(page.getByRole('textbox', { name: 'Class start time' })).toHaveValue('14:15');
@@ -111,7 +111,7 @@ test('Can regenerate single class for a group', async ({ page }) => {
 
     await page.getByRole('button', { name: 'Plan classes' }).click();
     await page.getByRole('combobox', { name: 'Laboratory group' }).selectOption('1A');
-    await page.getByRole('checkbox', { name: 'Plan only one exercise' }).check();
+    await page.getByRole('checkbox', { name: 'Plan single exercise' }).check();
     await page.getByRole('combobox', { name: 'Exercise' }).selectOption('1. Diagnostyka sieci IPv4');
 
     await expect(
@@ -203,13 +203,13 @@ test('Can plan single class with a group selected beforehand', async ({ page }) 
     await page.getByRole('button', { name: 'Plan classes' }).click();
 
     await expectSelectedOptionText(page.getByRole('combobox', { name: 'Laboratory group' }), '5A');
-    await page.getByRole('checkbox', { name: 'Plan only one exercise' }).check();
+    await page.getByRole('checkbox', { name: 'Plan single exercise' }).check();
     await page.getByRole('combobox', { name: 'Exercise' }).selectOption('1. Tryby pracy punktów dostępowych');
     await page.getByRole('textbox', { name: 'Class date' }).fill('2025-05-20');
     await page.getByRole('textbox', { name: 'Class start time' }).fill('11:15');
     await page.getByRole('textbox', { name: 'Class end time' }).fill('13:00');
 
-    await expect(page.getByText('2025-05-20 13:15 - 15:00')).toBeVisible();
+    await expect(page.getByText('2025-05-20 11:15 - 13:00')).toBeVisible();
 
     await page.getByRole('button', { name: 'Add Class' }).click();
 

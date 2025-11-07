@@ -21,7 +21,7 @@ import LaboratoryGroupSelector from '@components/laboratory-groups/LaboratoryGro
 const translations = {
     'en': {
         'Laboratory group': 'Laboratory group',
-        'Plan only one exercise': 'Plan only one exercise',
+        'Plan single exercise': 'Plan single exercise',
         'Exercise': 'Exercise',
         'Class date': 'Class date',
         'First class date': 'First class date',
@@ -41,7 +41,7 @@ const translations = {
     },
     'pl': {
         'Laboratory group': 'Grupa laboratoryjna',
-        'Plan only one exercise': 'Zaplanuj tylko jedno ćwiczenie',
+        'Plan single exercise': 'Zaplanuj pojedyncze ćwiczenie',
         'Exercise': 'Ćwiczenie',
         'Class date': 'Data zajęć',
         'First class date': 'Data pierwszych zajęć',
@@ -234,7 +234,7 @@ const dateId = crypto.randomUUID();
 const startTimeId = crypto.randomUUID();
 const endTimeId = crypto.randomUUID();
 const repeatId = crypto.randomUUID();
-const onlyOneExerciseId = crypto.randomUUID();
+const singleExerciseId = crypto.randomUUID();
 const selectedExerciseId = crypto.randomUUID();
 </script>
 
@@ -246,9 +246,9 @@ const selectedExerciseId = crypto.randomUUID();
         </div>
 
         <div class="form-check">
-            <input :id="onlyOneExerciseId" v-model="isSingleExercise" class="form-check-input" type="checkbox" />
-            <label class="form-check-label" :for="onlyOneExerciseId">
-                {{ translate('Plan only one exercise') }}
+            <input :id="singleExerciseId" v-model="isSingleExercise" class="form-check-input" type="checkbox" />
+            <label class="form-check-label" :for="singleExerciseId">
+                {{ translate('Plan single exercise') }}
             </label>
         </div>
         <div v-if="isSingleExercise">
