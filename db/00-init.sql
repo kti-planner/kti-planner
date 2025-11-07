@@ -74,7 +74,7 @@ CREATE TABLE laboratory_classes (
     teacher_id          uuid REFERENCES users ON DELETE SET NULL
 );
 
-CREATE TYPE event_type AS ENUM ('rector hours', 'class reservation');
+CREATE TYPE event_type AS ENUM ('classes-canceled', 'class-reservation');
 
 CREATE TABLE calendar_events (
     id           uuid PRIMARY KEY,

@@ -37,7 +37,7 @@ export const GET: APIRoute = async ({ params, url }) => {
                 const user = users.find(u => u.id === calendarEvent.userId) ?? null;
                 const classroom = classrooms.find(c => c.id === calendarEvent.classroomId) ?? null;
 
-                if (calendarEvent.type !== 'rector hours') {
+                if (calendarEvent.type !== 'classes-canceled') {
                     if (
                         teacherFilter.length > 0 &&
                         (calendarEvent.userId === null || !teacherFilter.includes(calendarEvent.userId))

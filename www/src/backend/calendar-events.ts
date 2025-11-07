@@ -6,7 +6,7 @@ import { makeUserPublicData, type User } from '@backend/user';
 import type { CalendarEventData } from '@components/calendar-events/types';
 import { formatDateLocalYyyyMmDdHhMm } from '@components/utils';
 
-export type EventType = 'rector hours' | 'class reservation';
+export type EventType = 'classes-canceled' | 'class-reservation';
 
 interface DbCalendarEvent {
     id: string;

@@ -48,7 +48,7 @@ export function getCalendarEvents(calendarEvents: CalendarEventData[]): Calendar
         start: calendarEvent.startDate,
         end: calendarEvent.endDate,
         extendedProps: { calendarEvent },
-        backgroundColor: calendarEvent.type === 'rector hours' ? 'var(--bs-danger)' : 'var(--bs-success)',
+        backgroundColor: calendarEvent.type === 'classes-canceled' ? 'var(--bs-danger)' : 'var(--bs-success)',
     }));
 }
 

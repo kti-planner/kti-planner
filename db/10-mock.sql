@@ -244,7 +244,8 @@ VALUES
 INSERT INTO calendar_events (id, name, user_id, classroom_id, semester_id, start_date, end_date, type)
 VALUES
   -- Winter 2025/2026
-  ( '3dbd9654-e207-4c36-8c31-5e3ff4ef9187', 'Koło naukowe', 'feeaa186-3d69-4801-a580-88be10d53553', '8689d55d-508e-4f5d-aef8-d5052f220d20', 'b2805b48-3d24-4169-8f67-88561345ee99', '2025-10-02 11:15 Europe/Warsaw', '2025-10-02 13:00 Europe/Warsaw', 'class reservation' ),
-  ( '5cef97c4-436d-4775-b05f-d144c9a84023', 'Koło naukowe', 'feeaa186-3d69-4801-a580-88be10d53553', '8689d55d-508e-4f5d-aef8-d5052f220d20', 'b2805b48-3d24-4169-8f67-88561345ee99', '2025-10-09 11:15 Europe/Warsaw', '2025-10-09 13:00 Europe/Warsaw', 'class reservation' ),
-  ( '4357dae8-7d60-4444-8578-a737069b31e3', 'Szkolenie', 'c393c524-453c-4b02-bfad-5114fe828200', '2affdc99-7dd6-47f0-b26c-3c413bf063dd', 'b2805b48-3d24-4169-8f67-88561345ee99', '2025-10-03 14:15 Europe/Warsaw', '2025-10-03 17:00 Europe/Warsaw', 'class reservation' ),
-  ( 'b3147c24-7108-454a-98c4-33a7f851a186', 'Rector hours', 'c393c524-453c-4b02-bfad-5114fe828200', null, 'b2805b48-3d24-4169-8f67-88561345ee99', '2025-11-07 15:00 Europe/Warsaw', '2025-11-07 17:00 Europe/Warsaw', 'rector hours' );
+  ( '3dbd9654-e207-4c36-8c31-5e3ff4ef9187', 'Koło naukowe', 'feeaa186-3d69-4801-a580-88be10d53553', '8689d55d-508e-4f5d-aef8-d5052f220d20', 'b2805b48-3d24-4169-8f67-88561345ee99', '2025-10-02 11:15 Europe/Warsaw', '2025-10-02 13:00 Europe/Warsaw', 'class-reservation' ),
+  ( '5cef97c4-436d-4775-b05f-d144c9a84023', 'Koło naukowe', 'feeaa186-3d69-4801-a580-88be10d53553', '8689d55d-508e-4f5d-aef8-d5052f220d20', 'b2805b48-3d24-4169-8f67-88561345ee99', '2025-10-09 11:15 Europe/Warsaw', '2025-10-09 13:00 Europe/Warsaw', 'class-reservation' ),
+  ( '4357dae8-7d60-4444-8578-a737069b31e3', 'Szkolenie', 'c393c524-453c-4b02-bfad-5114fe828200', '2affdc99-7dd6-47f0-b26c-3c413bf063dd', 'b2805b48-3d24-4169-8f67-88561345ee99', '2025-10-03 14:15 Europe/Warsaw', '2025-10-03 17:00 Europe/Warsaw', 'class-reservation' ),
+  ( 'b3147c24-7108-454a-98c4-33a7f851a186', 'Godziny Rektorskie - Rector''s hours', 'c393c524-453c-4b02-bfad-5114fe828200', null, 'b2805b48-3d24-4169-8f67-88561345ee99', '2025-11-07 15:00 Europe/Warsaw', '2025-11-07 17:00 Europe/Warsaw', 'classes-canceled' ),
+  ( '8149b77b-f4f4-4105-ba3c-2566ab4ced04', 'Godziny Dziekańskie - Dean''s hours', 'c393c524-453c-4b02-bfad-5114fe828200', null, 'b2805b48-3d24-4169-8f67-88561345ee99', '2025-11-05 12:00 Europe/Warsaw', '2025-11-05 14:00 Europe/Warsaw', 'classes-canceled' );

@@ -16,7 +16,7 @@ export interface CalendarEventData {
     type: EventType;
 }
 
-const typeSchema = z.enum(['rector hours', 'class reservation']);
+const typeSchema = z.enum(['classes-canceled', 'class-reservation']);
 
 export const calendarEventCreateApiSchema = z.object({
     name: z.string(),
@@ -44,22 +44,3 @@ export const calendarEventEditApiSchema = z.object({
 });
 
 export type CalendarEventEditApiData = z.input<typeof calendarEventEditApiSchema>;
-
-export function formatEventType(type: EventType | undefined | null, langId: LangId): string {
-    if (type === null || type === undefined) {
-        return '';
-    }
-
-    const labels: Record<LangId, Record<EventType, string>> = {
-        'en': {
-            'rector hours': "Rector's hours",
-            'class reservation': 'Class reservation',
-        },
-        'pl': {
-            'rector hours': 'Godziny rektorskie',
-            'class reservation': 'Rezerwacja sali',
-        },
-    };
-
-    return labels[langId][type];
-}

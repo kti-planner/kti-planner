@@ -6,11 +6,10 @@ import { currentUser } from '@components/frontend/user';
 import { apiDelete, apiPatch, apiPost } from '@components/api';
 import type { EventConflict } from '@components/calendar/types';
 import { CalendarEventRepeatState } from '@components/calendar-events/state';
-import {
-    type CalendarEventCreateApiData,
-    type CalendarEventData,
-    type CalendarEventEditApiData,
-    formatEventType,
+import type {
+    CalendarEventCreateApiData,
+    CalendarEventData,
+    CalendarEventEditApiData,
 } from '@components/calendar-events/types';
 import { type ClassroomData, formatClassroomName } from '@components/classrooms/types';
 import type { SemesterData } from '@components/semesters/types';
@@ -36,7 +35,7 @@ const name = ref<string>(props.calendarEvent.name ?? '');
 const date = ref<string>(props.calendarEvent.startDate.split('T')[0] ?? '');
 const startTime = ref<string>(props.calendarEvent.startDate.split('T')[1] ?? '');
 const endTime = ref<string>(props.calendarEvent.endDate.split('T')[1] ?? '');
-const type = ref<EventType>(props.calendarEvent.type ?? 'class reservation');
+const type = ref<EventType>(props.calendarEvent.type ?? 'class-reservation');
 
 const user = ref<UserPublicData | null>(
     props.calendarEvent?.user ??
@@ -59,8 +58,7 @@ watch(date, newDate => (repeatOptions.value.startDate = parseDateLocalYyyyMmDd(n
 const eventConflicts = ref<EventConflict[]>([]);
 
 async function submit() {
-    if (type.value === 'rector hours') {
-        name.value = 'Rector hours';
+    if (type.value === 'classes-canceled') {
         user.value = currentUser;
         classroomId.value = null;
     }
@@ -142,7 +140,7 @@ const translations = {
         'Delete event': 'Delete event',
         'Outside of semester': 'Outside of semester',
         'Type': 'Type',
-        'Rector hours': 'Rector hours',
+        'Classes canceled': 'Classes canceled',
         'Class reservation': 'Class reservation',
     },
     'pl': {
@@ -171,7 +169,7 @@ const translations = {
         'Delete event': 'Usuń wydarzenie',
         'Outside of semester': 'Poza semestrem',
         'Type': 'Typ',
-        'Rector hours': 'Godziny rektorskie',
+        'Classes canceled': 'Odwołane zajęcia',
         'Class reservation': 'Rezerwacja sali',
     },
 };
@@ -179,14 +177,6 @@ const translations = {
 function translate(text: keyof (typeof translations)[LangId]): string {
     return translations[langId][text];
 }
-
-watch(type, (newType, oldType) => {
-    if (oldType === 'rector hours') {
-        name.value = name.value === 'Rector hours' ? '' : name.value;
-        user.value = null;
-        classroomId.value = undefined;
-    }
-});
 
 const typeId = crypto.randomUUID();
 const dateId = crypto.randomUUID();
@@ -208,15 +198,9 @@ const classroomInputId = crypto.randomUUID();
         <div v-if="currentUser">
             <label :for="typeId" class="form-label">{{ translate('Type') }}</label>
             <select :id="typeId" v-model="type" class="form-select" required>
-                <option value="rector hours">{{ translate('Rector hours') }}</option>
-                <option value="class reservation">{{ translate('Class reservation') }}</option>
+                <option value="classes-canceled">{{ translate('Classes canceled') }}</option>
+                <option value="class-reservation">{{ translate('Class reservation') }}</option>
             </select>
-        </div>
-
-        <div v-else>
-            {{ translate('Type') }}:
-            <br />
-            {{ formatEventType(calendarEvent.type, langId) }}
         </div>
 
         <template v-if="currentUser">
@@ -249,7 +233,7 @@ const classroomInputId = crypto.randomUUID();
             {{ parseDateLocalYyyyMmDd(date).toLocaleDateString('pl-PL') }} {{ startTime }} - {{ endTime }}
         </div>
 
-        <div v-if="currentUser && !isEditing && type !== 'rector hours'" class="form-check">
+        <div v-if="currentUser && !isEditing && type !== 'classes-canceled'" class="form-check">
             <input :id="repeatsId" v-model="repeatOptions.repeats" class="form-check-input" type="checkbox" />
             <label class="form-check-label" :for="repeatsId">{{ translate('Repeats') }}</label>
         </div>
@@ -314,17 +298,25 @@ const classroomInputId = crypto.randomUUID();
             </div>
         </template>
 
-        <template v-if="type !== `rector hours`">
-            <div v-if="currentUser">
-                <label :for="nameId" class="form-label">{{ translate('Name') }}</label>
-                <input :id="nameId" v-model="name" type="text" class="form-control" required autofocus />
-            </div>
-            <div v-else>
-                {{ translate('Name') }}:
-                <br />
-                {{ name }}
-            </div>
+        <div v-if="currentUser">
+            <label :for="nameId" class="form-label">{{ translate('Name') }}</label>
+            <input
+                :id="nameId"
+                v-model="name"
+                type="text"
+                class="form-control"
+                :placeholder="type === 'classes-canceled' ? `Godziny Rektorskie - Rector's hours` : ''"
+                required
+                autofocus
+            />
+        </div>
+        <div v-else>
+            {{ translate('Name') }}:
+            <br />
+            {{ name }}
+        </div>
 
+        <template v-if="type !== `classes-canceled`">
             <div v-if="currentUser">
                 <label :for="userId" class="form-label">{{ translate('Teacher') }}</label>
                 <UserSelector :id="userId" v-model="user" :options="users" required />
