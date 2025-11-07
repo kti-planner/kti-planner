@@ -54,7 +54,7 @@ test('Cannot plan classes from calendar when not logged in', async ({ page }) =>
 
     await page.locator('.fc-timegrid-slot-lane[data-time="14:00:00"]').click();
 
-    await expect(page.getByRole('heading', { name: 'Plan classes for group' })).not.toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Plan classes' })).not.toBeVisible();
 });
 
 test('Can plan classes from calendar when logged in', async ({ page }) => {
@@ -63,7 +63,7 @@ test('Can plan classes from calendar when logged in', async ({ page }) => {
 
     await page.locator('.fc-timegrid-slot-lane[data-time="14:00:00"]').click();
 
-    await expect(page.getByRole('heading', { name: 'Plan classes for group' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Plan classes' })).toBeVisible();
 
     await page.getByRole('combobox', { name: 'Laboratory group' }).selectOption('5A');
     await page.getByRole('checkbox', { name: 'Plan single exercise' }).check();
