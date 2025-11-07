@@ -40,7 +40,7 @@ const title = computed(() => {
 </script>
 
 <template>
-    <div class="event-content" :title="title">
+    <div class="event-content" :title>
         <p class="text-truncate">{{ timeText }}</p>
         <p class="text-truncate fw-bold">
             {{ calendarEvent.name }}
