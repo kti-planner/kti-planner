@@ -29,6 +29,56 @@ test('Can plan classes without selecting a group beforehand', async ({ page }) =
     await expect(page.locator('p', { hasText: '11:15 - 13:00' })).toBeVisible();
 });
 
+test('Can plan single class without selecting a group beforehand', async ({ page }) => {
+    await page.goto('/semesters/2024-summer/subjects/lokalne-sieci-bezprzewodowe---informatyka-sem.-vi/');
+    await loginAsTeacher(page);
+
+    await page.getByRole('button', { name: 'Plan classes' }).click();
+    await page.getByRole('combobox', { name: 'Laboratory group' }).selectOption('5B');
+    await page.getByRole('checkbox', { name: 'Plan only one exercise' }).check();
+    await page.getByRole('combobox', { name: 'Exercise' }).selectOption('1. Tryby pracy punktów dostępowych');
+    await page.getByRole('textbox', { name: 'Class date' }).fill('2025-05-20');
+    await page.getByRole('textbox', { name: 'Class start time' }).fill('13:15');
+    await page.getByRole('textbox', { name: 'Class end time' }).fill('15:00');
+
+    await expect(page.getByText('2025-05-20 13:15 - 15:00')).toBeVisible();
+
+    await page.getByRole('button', { name: 'Add Class' }).click();
+
+    await expect(page.getByText('19 – 25 May 2025')).toBeVisible();
+    await expect(page.locator('p', { hasText: '13:15 - 15:00' })).toBeVisible();
+});
+
+test('Cannot plan classes from calendar when not logged in', async ({ page }) => {
+    await page.goto('/semesters/2025-winter/subjects/sieci-komputerowe---informatyka-sem.-v/');
+
+    await page.locator('.fc-timegrid-slot-lane[data-time="14:00:00"]').click();
+
+    await expect(page.getByRole('heading', { name: 'Plan classes for group' })).not.toBeVisible();
+});
+
+test('Can plan classes from calendar when logged in', async ({ page }) => {
+    await page.goto('/semesters/2025-winter/subjects/sieci-komputerowe---informatyka-sem.-v/');
+    await loginAsTeacher(page);
+
+    await page.locator('.fc-timegrid-slot-lane[data-time="14:00:00"]').click();
+
+    await expect(page.getByRole('heading', { name: 'Plan classes for group' })).toBeVisible();
+
+    await page.getByRole('combobox', { name: 'Laboratory group' }).selectOption('5A');
+    await page.getByRole('checkbox', { name: 'Plan only one exercise' }).check();
+    await page.getByRole('combobox', { name: 'Exercise' }).selectOption('1. Diagnostyka sieci IPv4');
+    await expect(page.getByRole('textbox', { name: 'Class date' })).toHaveValue('2025-10-02');
+    await expect(page.getByRole('textbox', { name: 'Class start time' })).toHaveValue('14:15');
+    await expect(page.getByRole('textbox', { name: 'Class end time' })).toHaveValue('16:00');
+
+    await expect(page.getByText('2025-10-02 14:15 - 16:00')).toBeVisible();
+
+    await page.getByRole('button', { name: 'Add Class' }).click();
+
+    await expect(page.locator('p', { hasText: '14:15 - 16:00' })).toBeVisible();
+});
+
 test('Can regenerate classes for a group', async ({ page }) => {
     await page.goto('/semesters/2025-winter/subjects/sieci-komputerowe---informatyka-sem.-v/');
     await loginAsTeacher(page);
@@ -49,6 +99,32 @@ test('Can regenerate classes for a group', async ({ page }) => {
     await page.getByRole('textbox', { name: 'Class end time' }).fill('13:00');
 
     await page.getByRole('button', { name: 'Generate classes' }).click();
+
+    await expect(page.locator('p', { hasText: '11:15 - 13:00' })).not.toBeVisible();
+});
+
+test('Can regenerate single class for a group', async ({ page }) => {
+    await page.goto('/semesters/2025-winter/subjects/sieci-komputerowe---informatyka-sem.-v/');
+    await loginAsTeacher(page);
+
+    await expect(page.locator('p', { hasText: '11:15 - 13:00' })).toBeVisible();
+
+    await page.getByRole('button', { name: 'Plan classes' }).click();
+    await page.getByRole('combobox', { name: 'Laboratory group' }).selectOption('1A');
+    await page.getByRole('checkbox', { name: 'Plan only one exercise' }).check();
+    await page.getByRole('combobox', { name: 'Exercise' }).selectOption('1. Diagnostyka sieci IPv4');
+
+    await expect(
+        page.getByText(
+            'Attention! This exercise is already planned for this laboratory group, it will be deleted and replaced with a newly generated one.',
+        ),
+    ).toBeVisible();
+
+    await page.getByRole('textbox', { name: 'Class date' }).fill('2025-10-07');
+    await page.getByRole('textbox', { name: 'Class start time' }).fill('11:15');
+    await page.getByRole('textbox', { name: 'Class end time' }).fill('13:00');
+
+    await page.getByRole('button', { name: 'Add Class' }).click();
 
     await expect(page.locator('p', { hasText: '11:15 - 13:00' })).not.toBeVisible();
 });
@@ -114,6 +190,28 @@ test('Can plan classes with a group selected beforehand', async ({ page }) => {
     await expect(page.getByText('2025-05-20 11:15 - 13:00')).toBeVisible();
 
     await page.getByRole('button', { name: 'Generate classes' }).click();
+
+    await expect(page.getByText('19 – 25 May 2025')).toBeVisible();
+    await expect(page.locator('p', { hasText: '11:15 - 13:00' })).toBeVisible();
+});
+
+test('Can plan single class with a group selected beforehand', async ({ page }) => {
+    await page.goto('/semesters/2024-summer/subjects/lokalne-sieci-bezprzewodowe---informatyka-sem.-vi/');
+    await loginAsTeacher(page);
+
+    await page.locator('label', { hasText: '5A' }).click();
+    await page.getByRole('button', { name: 'Plan classes' }).click();
+
+    await expectSelectedOptionText(page.getByRole('combobox', { name: 'Laboratory group' }), '5A');
+    await page.getByRole('checkbox', { name: 'Plan only one exercise' }).check();
+    await page.getByRole('combobox', { name: 'Exercise' }).selectOption('1. Tryby pracy punktów dostępowych');
+    await page.getByRole('textbox', { name: 'Class date' }).fill('2025-05-20');
+    await page.getByRole('textbox', { name: 'Class start time' }).fill('11:15');
+    await page.getByRole('textbox', { name: 'Class end time' }).fill('13:00');
+
+    await expect(page.getByText('2025-05-20 13:15 - 15:00')).toBeVisible();
+
+    await page.getByRole('button', { name: 'Add Class' }).click();
 
     await expect(page.getByText('19 – 25 May 2025')).toBeVisible();
     await expect(page.locator('p', { hasText: '11:15 - 13:00' })).toBeVisible();
