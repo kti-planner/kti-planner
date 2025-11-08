@@ -24,7 +24,7 @@ test('Can get iCalendar URL without filters', async ({ page }) => {
     await page.getByRole('button', { name: 'Export calendar' }).click();
 
     await expect(page.getByRole('textbox', { name: 'iCalendar/WebCal link' })).toHaveValue(
-        `${page.url()}api/ics/?lang=en`,
+        `${page.url()}api/ics/?exportCalendarEvents=true&lang=en`,
     );
 });
 
@@ -36,7 +36,7 @@ test('Can use subject and group filters when exporting calendar', async ({ page 
     await page.getByRole('button', { name: 'Export calendar' }).click();
 
     await expect(page.getByRole('textbox', { name: 'iCalendar/WebCal link' })).toHaveValue(
-        `${page.url()}api/ics/?lang=en`,
+        `${page.url()}api/ics/?exportCalendarEvents=true&lang=en`,
     );
 
     const exportModal = page.locator('.modal');
@@ -47,7 +47,7 @@ test('Can use subject and group filters when exporting calendar', async ({ page 
 
     await expect(page.getByRole('textbox', { name: 'iCalendar/WebCal link' })).toHaveValue(
         new RegExp(
-            `^${`${page.url()}api/ics/`.replaceAll('/', '\\/')}\\?subject=${uuidRegexStr}&laboratoryGroup=${uuidRegexStr}&lang=en`,
+            `^${`${page.url()}api/ics/`.replaceAll('/', '\\/')}\\?subject=${uuidRegexStr}&laboratoryGroup=${uuidRegexStr}&exportCalendarEvents=true&lang=en`,
         ),
     );
 
@@ -57,7 +57,7 @@ test('Can use subject and group filters when exporting calendar', async ({ page 
     await exportModal.getByRole('button', { name: 'Sieci komputerowe - Informatyka sem. V' }).click();
 
     await expect(page.getByRole('textbox', { name: 'iCalendar/WebCal link' })).toHaveValue(
-        `${page.url()}api/ics/?lang=en`,
+        `${page.url()}api/ics/?exportCalendarEvents=true&lang=en`,
     );
 });
 
@@ -67,7 +67,7 @@ test('Can use classroom and teacher filters when exporting calendar', async ({ p
     await page.getByRole('button', { name: 'Export calendar' }).click();
 
     await expect(page.getByRole('textbox', { name: 'iCalendar/WebCal link' })).toHaveValue(
-        `${page.url()}api/ics/?lang=en`,
+        `${page.url()}api/ics/?exportCalendarEvents=true&lang=en`,
     );
 
     const exportModal = page.locator('.modal');
@@ -76,7 +76,7 @@ test('Can use classroom and teacher filters when exporting calendar', async ({ p
 
     await expect(page.getByRole('textbox', { name: 'iCalendar/WebCal link' })).toHaveValue(
         new RegExp(
-            `^${`${page.url()}api/ics/`.replaceAll('/', '\\/')}\\?classroom=${uuidRegexStr}&classroom=${uuidRegexStr}&lang=en`,
+            `^${`${page.url()}api/ics/`.replaceAll('/', '\\/')}\\?classroom=${uuidRegexStr}&classroom=${uuidRegexStr}&exportCalendarEvents=true&lang=en`,
         ),
     );
 
@@ -85,7 +85,7 @@ test('Can use classroom and teacher filters when exporting calendar', async ({ p
 
     await expect(page.getByRole('textbox', { name: 'iCalendar/WebCal link' })).toHaveValue(
         new RegExp(
-            `^${`${page.url()}api/ics/`.replaceAll('/', '\\/')}\\?classroom=${uuidRegexStr}&classroom=${uuidRegexStr}&teacher=${uuidRegexStr}&teacher=${uuidRegexStr}&lang=en`,
+            `^${`${page.url()}api/ics/`.replaceAll('/', '\\/')}\\?classroom=${uuidRegexStr}&classroom=${uuidRegexStr}&teacher=${uuidRegexStr}&teacher=${uuidRegexStr}&exportCalendarEvents=true&lang=en`,
         ),
     );
 
@@ -93,7 +93,7 @@ test('Can use classroom and teacher filters when exporting calendar', async ({ p
 
     await expect(page.getByRole('textbox', { name: 'iCalendar/WebCal link' })).toHaveValue(
         new RegExp(
-            `^${`${page.url()}api/ics/`.replaceAll('/', '\\/')}\\?classroom=${uuidRegexStr}&classroom=${uuidRegexStr}&teacher=${uuidRegexStr}&lang=en`,
+            `^${`${page.url()}api/ics/`.replaceAll('/', '\\/')}\\?classroom=${uuidRegexStr}&classroom=${uuidRegexStr}&teacher=${uuidRegexStr}&exportCalendarEvents=true&lang=en`,
         ),
     );
 });
@@ -104,12 +104,12 @@ test('Can export with or without calendar events', async ({ page }) => {
     await page.getByRole('button', { name: 'Export calendar' }).click();
 
     await expect(page.getByRole('textbox', { name: 'iCalendar/WebCal link' })).toHaveValue(
-        `${page.url()}api/ics/?lang=en`,
+        `${page.url()}api/ics/?exportCalendarEvents=true&lang=en`,
     );
 
-    await page.getByRole('switch', { name: 'Export events outside of subjects' }).check();
+    await page.getByRole('switch', { name: 'Export events outside of subjects' }).uncheck();
 
     await expect(page.getByRole('textbox', { name: 'iCalendar/WebCal link' })).toHaveValue(
-        `${page.url()}api/ics/?exportCalendarEvents=true&lang=en`,
+        `${page.url()}api/ics/?lang=en`,
     );
 });
