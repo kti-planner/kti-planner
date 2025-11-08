@@ -73,15 +73,7 @@ const selectedTeachers = ref<UserPublicData[]>([]);
 
 const subjectColors = computed(() => Object.fromEntries(subjects.map(subject => [subject.id, subject.color])));
 
-const subjectGroupSelections = ref<Record<string, SubjectData[]>>({});
-
-watchEffect(() => {
-    subjectGroupSelections.value = Object.fromEntries(subjectGroups.map(group => [group.title, []]));
-});
-
-const selectedSubjects = computed<SubjectData[]>(() => {
-    return Object.values(subjectGroupSelections.value).flat();
-});
+const selectedSubjects = ref<SubjectData[]>([]);
 
 const { data: laboratoryClasses, execute: refetchLaboratoryClasses } = useApiFetch<LaboratoryClassData[]>(
     `/semesters/${semester.slug}/api/laboratory-classes/`,
@@ -290,7 +282,7 @@ function handleViewChange(view: ViewApi) {
                 <template v-for="{ subjectOptions, title } in subjectGroupsOptions" :key="title">
                     <h2 class="fs-6 text-center mt-3">{{ title }}</h2>
                     <ToggleButtonPicker
-                        v-model="subjectGroupSelections[title]!"
+                        v-model="selectedSubjects"
                         center
                         :options="subjectOptions"
                         :colors="subjectColors"
