@@ -41,14 +41,14 @@ You can run the entire app with Docker Compose:
 docker compose -f compose.prod.yaml up --build -d
 ```
 
-## Run unit tests
+## Run integration tests
 
-This repository uses the `Vitest` library for unit tests, you can run them like so:
+This repository uses the `Vitest` library for integration tests, you can run them like so:
 
 ```bash
 # make sure db is available
 docker compose up postgres --build
-npm run test-unit
+npm run test-integration
 ```
 
 ## Run E2E tests
