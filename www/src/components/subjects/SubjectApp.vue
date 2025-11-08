@@ -62,11 +62,12 @@ function refreshClasses() {
 </script>
 
 <template>
-    <h1 class="text-center fs-4 mb-1">
+    <h1 class="text-center fs-4 mb-3">
         {{ subject.fullName }}
-        <EditSubject v-if="currentUser" :semester :subject :all-users /><br />
+        <EditSubject v-if="currentUser" :semester :subject :all-users />
+        <br />
+        <span class="fs-5">{{ makeSubjectStudyDetails(subject, langId) }}</span>
     </h1>
-    <h2 class="text-center fs-5 mb-3">{{ makeSubjectStudyDetails(subject, langId) }}</h2>
     <a
         :href="subject.moodleCourseUrl !== '' ? subject.moodleCourseUrl : undefined"
         :target="subject.moodleCourseUrl !== '' ? '_blank' : undefined"
