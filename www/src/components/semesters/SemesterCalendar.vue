@@ -68,12 +68,11 @@ const teachers = computed<UserPublicData[]>(() => {
     return allUsers.filter(user => subjects.some(subject => subject.teachers.some(teacher => teacher.id === user.id)));
 });
 
+const selectedSubjects = ref<SubjectData[]>([]);
 const selectedClassrooms = ref<ClassroomData[]>([]);
 const selectedTeachers = ref<UserPublicData[]>([]);
 
 const subjectColors = computed(() => Object.fromEntries(subjects.map(subject => [subject.id, subject.color])));
-
-const selectedSubjects = ref<SubjectData[]>([]);
 
 const { data: laboratoryClasses, execute: refetchLaboratoryClasses } = useApiFetch<LaboratoryClassData[]>(
     `/semesters/${semester.slug}/api/laboratory-classes/`,
