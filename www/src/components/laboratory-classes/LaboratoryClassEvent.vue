@@ -24,7 +24,7 @@ function translate(text: keyof (typeof translations)[LangId]): string {
     return translations[langId][text];
 }
 
-const { laboratoryClass, subject, hideExerciseName } = defineProps<{
+const { laboratoryClass, subject, hideExerciseName, viewType } = defineProps<{
     timeText: string;
     laboratoryClass: LaboratoryClassData;
     subject?: SubjectData | undefined;
@@ -34,7 +34,9 @@ const { laboratoryClass, subject, hideExerciseName } = defineProps<{
 
 const title = computed(
     () =>
-        (subject ? `${subject.fullName}\n${makeSubjectStudyDetails(subject, langId)}\n` : '') +
+        (subject
+            ? `${subject.fullName}\n` + (viewType === 'listYear' ? `${makeSubjectStudyDetails(subject, langId)}\n` : '')
+            : '') +
         `${laboratoryClass.exercise.exerciseNumber}. ${laboratoryClass.exercise.name}\n` +
         `${translate('Classroom')}: ${formatClassroomName(laboratoryClass.exercise.classroom, langId)}\n` +
         `${translate('Group')}: ${laboratoryClass.laboratoryGroup.name}\n` +
