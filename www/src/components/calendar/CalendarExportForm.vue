@@ -102,7 +102,7 @@ const exportCalendarEventsId = crypto.randomUUID();
                     v-for="subject in group.subjectsData"
                     :key="subject.id"
                     :id="subject.id"
-                    :is-expanded="initialSelectedSubjects.some(s => s.id === subject.id)"
+                    :initially-expanded="initialSelectedSubjects.some(s => s.id === subject.id)"
                 >
                     <template #header>{{ subject.fullName }}</template>
                     <CalendarSubjectExportOptions
