@@ -106,7 +106,7 @@ test('Can view class details', async ({ page }) => {
 
     await expect(
         page.locator('.modal').getByRole('link', {
-            name: 'Sieci komputerowe - Informatyka sem. V Full-time first-cycle studies',
+            name: 'Sieci komputerowe - Informatyka sem. V - Full-time first-cycle studies',
             exact: true,
         }),
     ).toBeVisible();
@@ -134,7 +134,7 @@ test('Can edit class time when logged in', async ({ page }) => {
 
     await expect(
         page.locator('.modal').getByRole('link', {
-            name: 'Sieci komputerowe - Informatyka sem. V Full-time first-cycle studies',
+            name: 'Sieci komputerowe - Informatyka sem. V - Full-time first-cycle studies',
             exact: true,
         }),
     ).toBeVisible();
