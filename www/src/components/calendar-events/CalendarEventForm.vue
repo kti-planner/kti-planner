@@ -198,8 +198,8 @@ const classroomInputId = crypto.randomUUID();
         <div v-if="currentUser">
             <label :for="typeId" class="form-label">{{ translate('Type') }}</label>
             <select :id="typeId" v-model="type" class="form-select" required>
-                <option value="classes-canceled">{{ translate('Classes canceled') }}</option>
                 <option value="class-reservation">{{ translate('Class reservation') }}</option>
+                <option value="classes-canceled">{{ translate('Classes canceled') }}</option>
             </select>
         </div>
 
