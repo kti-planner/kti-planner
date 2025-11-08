@@ -19,7 +19,9 @@ const translations = {
         'Subjects': 'Subjects',
         'Classrooms': 'Classrooms',
         'Teachers': 'Teachers',
+        'Events': 'Events',
         'Export this subject': 'Export this subject',
+        'Export events outside of subjects': 'Export events outside of subjects',
     },
     'pl': {
         'Selected filters will apply to the exported events. Copy the link below and import it in a calendar application.':
@@ -27,7 +29,9 @@ const translations = {
         'Subjects': 'Przedmioty',
         'Classrooms': 'Sale',
         'Teachers': 'Prowadzący',
+        'Events': 'Wydarzenia',
         'Export this subject': 'Eksportuj ten przedmiot',
+        'Export events outside of subjects': 'Eksportuj wydarzenia poza przedmiotami',
     },
 };
 
@@ -49,6 +53,7 @@ const { initialSelectedClassrooms, initialSelectedSubjects, initialSelectedTeach
 const { cloned: selectedSubjects } = useCloned(computed(() => initialSelectedSubjects));
 const { cloned: selectedClassrooms } = useCloned(computed(() => initialSelectedClassrooms));
 const { cloned: selectedTeachers } = useCloned(computed(() => initialSelectedTeachers));
+const exportCalendarEvents = ref(true);
 
 const classroomOptions = computed(() =>
     Object.fromEntries([
@@ -73,6 +78,7 @@ const icsUrl = computed<string>(() => {
         ...selectedClassrooms.value.map(classroom => ['classroom', classroom.id]),
         ...selectedTeachers.value.map(teacher => ['teacher', teacher.id]),
         ...[...selectedGroupIds.value].map(id => ['laboratoryGroup', id]),
+        ...(exportCalendarEvents.value ? [['exportCalendarEvents', 'true']] : []),
         ['lang', langId],
     ]);
 
@@ -85,6 +91,7 @@ const icsUrl = computed<string>(() => {
 });
 
 const icsUrlId = crypto.randomUUID();
+const exportCalendarEventsId = crypto.randomUUID();
 </script>
 
 <template>
@@ -110,11 +117,28 @@ const icsUrlId = crypto.randomUUID();
         </h2>
         <ToggleButtonPicker v-model="selectedClassrooms" :options="classroomOptions" />
     </div>
-    <div class="mb-4">
+    <div class="mb-3">
         <h2 class="fs-6">
             {{ translate('Teachers') }}
         </h2>
         <ToggleButtonPicker v-model="selectedTeachers" :options="teacherOptions" />
+    </div>
+    <div class="mb-4">
+        <h2 class="fs-6">
+            {{ translate('Events') }}
+        </h2>
+        <div class="form-check form-switch mb-3">
+            <input
+                :id="exportCalendarEventsId"
+                v-model="exportCalendarEvents"
+                class="form-check-input"
+                type="checkbox"
+                role="switch"
+            />
+            <label class="form-check-label" :for="exportCalendarEventsId">{{
+                translate('Export events outside of subjects')
+            }}</label>
+        </div>
     </div>
     <p>
         {{
