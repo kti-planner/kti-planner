@@ -76,13 +76,7 @@ const subjectColors = computed(() => Object.fromEntries(subjects.map(subject => 
 const subjectGroupSelections = ref<Record<string, SubjectData[]>>({});
 
 watchEffect(() => {
-    subjectGroupSelections.value = subjectGroups.reduce(
-        (selections, group) => {
-            selections[group.title] = [];
-            return selections;
-        },
-        {} as Record<string, SubjectData[]>,
-    );
+    subjectGroupSelections.value = Object.fromEntries(subjectGroups.map(group => [group.title, []]));
 });
 
 const selectedSubjects = computed<SubjectData[]>(() => {
