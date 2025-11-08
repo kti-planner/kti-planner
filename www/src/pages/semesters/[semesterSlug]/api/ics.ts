@@ -54,6 +54,7 @@ export const ALL: APIRoute = async ({ params, url, request }) => {
     const classroomFilter = url.searchParams.getAll('classroom');
     const teacherFilter = url.searchParams.getAll('teacher');
     const groupFilter = url.searchParams.getAll('laboratoryGroup');
+    const exportCalendarEvents = url.searchParams.get('exportCalendarEvents');
 
     const subjects = await Subject.fetchAllFromSemester(semester);
     const groups = await LaboratoryGroup.fetchAllFromSubjects(subjects);
@@ -62,7 +63,7 @@ export const ALL: APIRoute = async ({ params, url, request }) => {
     const exercises = await Exercise.fetchAllFromSubjects(subjects);
 
     const classes = await LaboratoryClass.fetchAllFromSubjects(subjects);
-    const calendarEvents = await CalendarEvent.fetchAllFromSemester(semester);
+    const calendarEvents = exportCalendarEvents !== null ? await CalendarEvent.fetchAllFromSemester(semester) : [];
 
     const laboratoryClassEvents: EventAttributes[] = classes
         .map<EventAttributes | null>(laboratoryClass => {
