@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, shallowRef, useTemplateRef, watchEffect } from 'vue';
+import { computed, ref, shallowRef, useTemplateRef } from 'vue';
 import type { DateSelectArg, EventClickArg, EventInput, ViewApi } from '@fullcalendar/core';
 import { langId } from '@components/frontend/lang';
 import { currentUser } from '@components/frontend/user';
