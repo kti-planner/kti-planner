@@ -97,3 +97,19 @@ test('Can use classroom and teacher filters when exporting calendar', async ({ p
         ),
     );
 });
+
+test('Can export with or without calendar events', async ({ page }) => {
+    await page.goto('/semesters/2025-winter/');
+
+    await page.getByRole('button', { name: 'Export calendar' }).click();
+
+    await expect(page.getByRole('textbox', { name: 'iCalendar/WebCal link' })).toHaveValue(
+        `${page.url()}api/ics/?lang=en`,
+    );
+
+    await page.getByRole('switch', { name: 'Export events outside of subjects' }).check();
+
+    await expect(page.getByRole('textbox', { name: 'iCalendar/WebCal link' })).toHaveValue(
+        `${page.url()}api/ics/?exportCalendarEvents=true&lang=en`,
+    );
+});
