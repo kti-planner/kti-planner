@@ -32,7 +32,7 @@ export default tseslint.config(
         },
     },
     {
-        files: ['www/tests/unit/**/*.ts'],
+        files: ['www/tests/integration/**/*.ts'],
         ...vitest.configs.recommended,
     },
     {

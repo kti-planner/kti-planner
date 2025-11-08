@@ -54,6 +54,7 @@ export const ALL: APIRoute = async ({ params, url, request }) => {
     const classroomFilter = url.searchParams.getAll('classroom');
     const teacherFilter = url.searchParams.getAll('teacher');
     const groupFilter = url.searchParams.getAll('laboratoryGroup');
+    const exportCalendarEvents = url.searchParams.get('exportCalendarEvents');
 
     const subjects = await Subject.fetchAllFromSemester(semester);
     const groups = await LaboratoryGroup.fetchAllFromSubjects(subjects);
@@ -62,7 +63,7 @@ export const ALL: APIRoute = async ({ params, url, request }) => {
     const exercises = await Exercise.fetchAllFromSubjects(subjects);
 
     const classes = await LaboratoryClass.fetchAllFromSubjects(subjects);
-    const calendarEvents = await CalendarEvent.fetchAllFromSemester(semester);
+    const calendarEvents = exportCalendarEvents !== null ? await CalendarEvent.fetchAllFromSemester(semester) : [];
 
     const laboratoryClassEvents: EventAttributes[] = classes
         .map<EventAttributes | null>(laboratoryClass => {
@@ -97,14 +98,20 @@ export const ALL: APIRoute = async ({ params, url, request }) => {
                 return null;
             }
 
-            let description = `${translations[langId]['Group']}: ${group.name}`;
+            let description = '';
+
+            if (exerciseClassroom) {
+                description += `${translations[langId]['Classroom']}: ${exerciseClassroom.name}`;
+            }
+
+            if (description !== '') {
+                description += '\n';
+            }
+
+            description += `${translations[langId]['Group']}: ${group.name}`;
 
             if (classTeacher) {
                 description += `\n${translations[langId]['Teacher']}: ${classTeacher.name}`;
-            }
-
-            if (exerciseClassroom) {
-                description += `\n${translations[langId]['Classroom']}: ${exerciseClassroom.name}`;
             }
 
             return {
@@ -135,16 +142,17 @@ export const ALL: APIRoute = async ({ params, url, request }) => {
             }
 
             let description = '';
-            if (user) {
-                description += `${translations[langId]['Teacher']}: ${user.name}`;
-            }
 
             if (classroom) {
+                description += `${translations[langId]['Classroom']}: ${classroom.name}`;
+            }
+
+            if (user) {
                 if (description !== '') {
                     description += '\n';
                 }
 
-                description += `${translations[langId]['Classroom']}: ${classroom.name}`;
+                description += `${translations[langId]['Teacher']}: ${user.name}`;
             }
 
             return {
