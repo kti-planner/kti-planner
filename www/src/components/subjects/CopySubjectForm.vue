@@ -133,7 +133,7 @@ const subjectId = crypto.randomUUID();
                 <label :for="subjectId" class="form-label">{{ translate('Subject to copy') }}</label>
                 <select :id="subjectId" v-model="selectedSubject" class="form-select" required>
                     <option v-for="subject in subjectsData" :key="subject.slug" :value="subject">
-                        {{ subject.fullName }} {{ makeSubjectStudyDetails(subject, langId) }}
+                        {{ subject.fullName }} - {{ makeSubjectStudyDetails(subject, langId) }}
                     </option>
                 </select>
             </p>
