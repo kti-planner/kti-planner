@@ -6,8 +6,8 @@ export default defineConfig({
     plugins: [tsconfigPaths()],
     envPrefix: ['POSTGRES_', 'MOODLE_BASE_URL'],
     test: {
-        include: ['www/tests/unit/**/*.test.ts'],
-        setupFiles: ['www/tests/unit/test-db.ts'],
+        include: ['www/tests/integration/**/*.test.ts'],
+        setupFiles: ['www/tests/integration/test-db.ts'],
         silent: 'passed-only',
         coverage: {
             enabled: true,

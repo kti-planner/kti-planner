@@ -11,8 +11,8 @@
     "build-www": "astro check --root ./www --minimumSeverity warning && vue-tsc --project ./www && astro build --root ./www",
     "lint": "eslint .",
     "prettier": "prettier src/ www/src/ --write",
-    "test": "npm run test-unit && npm run test-e2e",
-    "test-unit": "vitest run",
+    "test": "npm run test-integration && npm run test-e2e",
+    "test-integration": "vitest run",
     "test-e2e": "playwright test",
     "dev": "astro dev --root ./www"
   },

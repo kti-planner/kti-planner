@@ -42,8 +42,8 @@ jobs:
         run: |
           docker compose up --build -d --wait
 
-      - name: Unit test
-        run: npm run test-unit
+      - name: Integration test
+        run: npm run test-integration
 
       - name: Code coverage Report
         uses: davelosert/vitest-coverage-report-action@v2
