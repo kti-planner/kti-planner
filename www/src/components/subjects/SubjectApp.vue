@@ -91,6 +91,8 @@ function refreshClasses() {
                 :semester
                 :subject
                 :teachers="subject.teachers"
+                :laboratory-groups
+                :exercises
                 @class-edited="exerciseList?.refreshClasses()"
             />
         </div>
