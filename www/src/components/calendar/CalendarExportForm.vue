@@ -53,7 +53,7 @@ const { initialSelectedClassrooms, initialSelectedSubjects, initialSelectedTeach
 const { cloned: selectedSubjects } = useCloned(computed(() => initialSelectedSubjects));
 const { cloned: selectedClassrooms } = useCloned(computed(() => initialSelectedClassrooms));
 const { cloned: selectedTeachers } = useCloned(computed(() => initialSelectedTeachers));
-const exportCalendarEvents = ref(true);
+const exportCalendarEvents = ref(false);
 
 const classroomOptions = computed(() =>
     Object.fromEntries([
