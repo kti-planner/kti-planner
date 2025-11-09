@@ -111,10 +111,9 @@ test.describe('API fetch tests', () => {
         await page.goto('/semesters/2025-winter/subjects/sieci-komputerowe---informatyka-sem.-v/');
 
         const response = await page.request.patch(
-            '/api/subjects/981c68ba-3f6a-459e-83af-f9fc578adc85/laboratory-groups/',
+            '/api/subjects/981c68ba-3f6a-459e-83af-f9fc578adc85/laboratory-groups/c9854621-e713-4b3f-b442-8e8cbdb20b57/',
             {
                 data: {
-                    id: 'c9854621-e713-4b3f-b442-8e8cbdb20b57',
                     name: 'Updated Group',
                 },
             },
@@ -128,10 +127,9 @@ test.describe('API fetch tests', () => {
         await loginAsAdmin(page);
 
         const response = await page.request.patch(
-            '/api/subjects/981c68ba-3f6a-459e-83af-f9fc578adc85/laboratory-groups/',
+            '/api/subjects/981c68ba-3f6a-459e-83af-f9fc578adc85/laboratory-groups/c9854621-e713-4b3f-b442-8e8cbdb20b57/',
             {
                 data: {
-                    id: 'c9854621-e713-4b3f-b442-8e8cbdb20b57',
                     name: 'Updated Group',
                 },
             },
@@ -144,12 +142,9 @@ test.describe('API fetch tests', () => {
         await page.goto('/semesters/2025-winter/subjects/sieci-komputerowe---informatyka-sem.-v/');
 
         const response = await page.request.delete(
-            '/api/subjects/981c68ba-3f6a-459e-83af-f9fc578adc85/laboratory-groups/',
+            '/api/subjects/981c68ba-3f6a-459e-83af-f9fc578adc85/laboratory-groups/c9854621-e713-4b3f-b442-8e8cbdb20b57/',
             {
                 data: null,
-                params: {
-                    id: 'c9854621-e713-4b3f-b442-8e8cbdb20b57',
-                },
             },
         );
 
@@ -161,12 +156,9 @@ test.describe('API fetch tests', () => {
         await loginAsAdmin(page);
 
         const response = await page.request.delete(
-            '/api/subjects/981c68ba-3f6a-459e-83af-f9fc578adc85/laboratory-groups/',
+            '/api/subjects/981c68ba-3f6a-459e-83af-f9fc578adc85/laboratory-groups/c9854621-e713-4b3f-b442-8e8cbdb20b57/',
             {
                 data: null,
-                params: {
-                    id: 'c9854621-e713-4b3f-b442-8e8cbdb20b57',
-                },
             },
         );
 
