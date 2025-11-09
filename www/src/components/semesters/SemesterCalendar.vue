@@ -100,7 +100,13 @@ async function refetchAllEvents() {
 const events = computed<EventInput[]>(() => [
     ...getLaboratoryClassEvents(laboratoryClasses.value ?? [], subjects),
     ...getScheduleChangeEvents(scheduleChanges),
-    ...getCalendarEvents(calendarEvents.value ?? []),
+    ...getCalendarEvents(
+        calendarEvents.value
+            ? selectedSubjects.value.length > 0
+                ? calendarEvents.value.filter(event => event.type === 'classes-canceled')
+                : calendarEvents.value
+            : [],
+    ),
 ]);
 
 const initialDate = computed(() => getInitialDate(laboratoryClasses.value ?? []));
