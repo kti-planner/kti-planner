@@ -105,7 +105,10 @@ test('Can view class details', async ({ page }) => {
     await expect(page.getByRole('heading', { name: 'Class details' })).toBeVisible();
 
     await expect(
-        page.locator('.modal').getByRole('link', { name: 'Sieci komputerowe - Informatyka sem. V', exact: true }),
+        page.locator('.modal').getByRole('link', {
+            name: 'Sieci komputerowe - Informatyka sem. V - Full-time first-cycle studies',
+            exact: true,
+        }),
     ).toBeVisible();
 
     await expect(page.getByRole('link', { name: '1. Diagnostyka sieci IPv4', exact: true })).toBeVisible();
@@ -130,7 +133,10 @@ test('Can edit class time when logged in', async ({ page }) => {
     await expect(page.getByRole('heading', { name: 'Edit class' })).toBeVisible();
 
     await expect(
-        page.locator('.modal').getByRole('link', { name: 'Sieci komputerowe - Informatyka sem. V', exact: true }),
+        page.locator('.modal').getByRole('link', {
+            name: 'Sieci komputerowe - Informatyka sem. V - Full-time first-cycle studies',
+            exact: true,
+        }),
     ).toBeVisible();
 
     await expect(page.getByRole('link', { name: '1. Diagnostyka sieci IPv4', exact: true })).toBeVisible();

@@ -45,7 +45,8 @@ CREATE TABLE subjects (
     duration_minutes   integer,
     class_repeat_weeks integer NOT NULL,
     study_mode         study_mode_type NOT NULL,
-    study_cycle        study_cycle_type NOT NULL
+    study_cycle        study_cycle_type NOT NULL,
+    semester_number    integer NOT NULL
 );
 
 CREATE TABLE exercises (

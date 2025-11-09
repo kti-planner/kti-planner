@@ -31,7 +31,11 @@ export const POST: APIRoute = async ({ locals }) => {
 
     const semesterSubjects = await Subject.fetchAllFromSemester(semester);
 
-    if (semesterSubjects.find(s => s.name.toLowerCase() === data.name.toLowerCase())) {
+    if (
+        semesterSubjects.find(
+            s => s.name.toLowerCase() === data.name.toLowerCase() && s.semesterNumber === data.semesterNumber,
+        )
+    ) {
         return Response.json(false, { status: 200 });
     }
 
@@ -45,6 +49,7 @@ export const POST: APIRoute = async ({ locals }) => {
         classRepeatWeeks: data.classRepeatWeeks,
         studyMode: data.studyMode,
         studyCycle: data.studyCycle,
+        semesterNumber: data.semesterNumber,
     });
 
     return Response.json(true, { status: 201 });
@@ -83,7 +88,9 @@ export const PATCH: APIRoute = async ({ locals }) => {
 
     const semesterSubjects = await Subject.fetchAllFromSemester(semester);
 
-    const otherSubject = semesterSubjects.find(s => s.name.toLowerCase() === data.name?.toLowerCase());
+    const otherSubject = semesterSubjects.find(
+        s => s.name.toLowerCase() === data.name?.toLowerCase() && s.semesterNumber === data.semesterNumber,
+    );
 
     if (otherSubject && otherSubject.id !== subject.id) {
         return Response.json(false, { status: 200 });
@@ -98,6 +105,7 @@ export const PATCH: APIRoute = async ({ locals }) => {
         classRepeatWeeks: data.classRepeatWeeks,
         studyMode: data.studyMode,
         studyCycle: data.studyCycle,
+        semesterNumber: data.semesterNumber,
     });
 
     return Response.json(true, { status: 200 });

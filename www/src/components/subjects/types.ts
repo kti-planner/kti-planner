@@ -5,6 +5,7 @@ import type { UserPublicData } from '@components/users/types';
 export interface SubjectData {
     id: string;
     name: string;
+    fullName: string;
     semesterId: string;
     slug: string;
     teachers: UserPublicData[];
@@ -13,9 +14,24 @@ export interface SubjectData {
     moodleCourseUrl: string;
     durationMinutes: number | null;
     classRepeatWeeks: number;
+    semesterNumber: number;
     studyMode: StudyModeType;
     studyCycle: StudyCycleType;
     color: string;
+}
+
+export function makeSubjectStudyDetails(subject: SubjectData, lang: LangId): string {
+    if (subject.studyMode === 'full-time' && subject.studyCycle === 'first-cycle') {
+        return lang === 'pl' ? 'Studia stacjonarne I stopnia (Inżynierskie)' : 'Full-time first-cycle studies';
+    } else if (subject.studyMode === 'full-time' && subject.studyCycle === 'second-cycle') {
+        return lang === 'pl' ? 'Studia stacjonarne II stopnia (Magisterskie)' : 'Full-time second-cycle studies';
+    } else if (subject.studyMode === 'part-time' && subject.studyCycle === 'first-cycle') {
+        return lang === 'pl' ? 'Studia niestacjonarne I stopnia (Inżynierskie)' : 'Part-time first-cycle studies';
+    } else if (subject.studyMode === 'part-time' && subject.studyCycle === 'second-cycle') {
+        return lang === 'pl' ? 'Studia niestacjonarne II stopnia (MSU)' : 'Part-time second-cycle studies';
+    } else {
+        return '';
+    }
 }
 
 const studyModeSchema = z.enum(['full-time', 'part-time']);
@@ -32,6 +48,7 @@ export const subjectCreateApiSchema = z.object({
     classRepeatWeeks: z.int().nonnegative(),
     studyMode: studyModeSchema,
     studyCycle: studyCycleSchema,
+    semesterNumber: z.int().min(1).max(7),
 });
 
 export type SubjectCreateApiData = z.input<typeof subjectCreateApiSchema>;
@@ -46,6 +63,7 @@ export const subjectEditApiSchema = z.object({
     classRepeatWeeks: z.int().nonnegative().optional(),
     studyMode: studyModeSchema.optional(),
     studyCycle: studyCycleSchema.optional(),
+    semesterNumber: z.int().min(1).max(7).optional(),
 });
 
 export type SubjectEditApiData = z.input<typeof subjectEditApiSchema>;

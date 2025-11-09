@@ -116,7 +116,7 @@ export const ALL: APIRoute = async ({ params, url, request }) => {
 
             return {
                 uid: laboratoryClass.id,
-                title: `${subject.name} - ${exercise.name}`,
+                title: `${subject.fullName} - ${exercise.name}`,
                 description,
                 ...(exerciseClassroom ? { location: exerciseClassroom.name } : {}),
                 start: laboratoryClass.startDate.getTime(),

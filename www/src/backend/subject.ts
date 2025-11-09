@@ -4,7 +4,7 @@ import { db } from '@backend/db';
 import type { Semester } from '@backend/semester';
 import { makeUserPublicData, User } from '@backend/user';
 import type { SubjectData } from '@components/subjects/types';
-import { toHyphenatedLowercase } from '@components/utils';
+import { makeSubjectFullName, toHyphenatedLowercase } from '@components/utils';
 
 assert(env.MOODLE_BASE_URL !== undefined);
 const moodleBaseUrl = env.MOODLE_BASE_URL;
@@ -23,6 +23,7 @@ interface DbSubject {
     class_repeat_weeks: number;
     study_mode: StudyModeType;
     study_cycle: StudyCycleType;
+    semester_number: number;
 }
 
 export interface SubjectCreateData {
@@ -35,6 +36,7 @@ export interface SubjectCreateData {
     classRepeatWeeks: number;
     studyMode: StudyModeType;
     studyCycle: StudyCycleType;
+    semesterNumber: number;
 }
 
 export interface SubjectEditData {
@@ -47,6 +49,7 @@ export interface SubjectEditData {
     classRepeatWeeks?: number | undefined;
     studyMode?: StudyModeType | undefined;
     studyCycle?: StudyCycleType | undefined;
+    semesterNumber?: number | undefined;
 }
 
 export class Subject {
@@ -60,6 +63,7 @@ export class Subject {
     classRepeatWeeks: number;
     studyMode: StudyModeType;
     studyCycle: StudyCycleType;
+    semesterNumber: number;
 
     constructor(data: DbSubject) {
         this.id = data.id;
@@ -72,10 +76,15 @@ export class Subject {
         this.classRepeatWeeks = data.class_repeat_weeks;
         this.studyMode = data.study_mode;
         this.studyCycle = data.study_cycle;
+        this.semesterNumber = data.semester_number;
     }
 
     get slug(): string {
-        return toHyphenatedLowercase(this.name);
+        return toHyphenatedLowercase(this.fullName);
+    }
+
+    get fullName(): string {
+        return makeSubjectFullName(this.name, this.semesterNumber);
     }
 
     async getTeachers(): Promise<User[]> {
@@ -109,14 +118,19 @@ export class Subject {
     }
 
     static async create(data: SubjectCreateData): Promise<Subject> {
-        if (await Subject.fetchBySlug(data.semester, toHyphenatedLowercase(data.name))) {
+        if (
+            await Subject.fetchBySlug(
+                data.semester,
+                toHyphenatedLowercase(makeSubjectFullName(data.name, data.semesterNumber)),
+            )
+        ) {
             throw new Error('Subject with this slug already exists');
         }
 
         const result = (
             await db.query<DbSubject>(
-                'INSERT INTO subjects (id, name, semester_id, teacher_ids, description, moodle_course_id, duration_minutes, class_repeat_weeks, study_mode, study_cycle)' +
-                    ' VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *',
+                'INSERT INTO subjects (id, name, semester_id, teacher_ids, description, moodle_course_id, duration_minutes, class_repeat_weeks, study_mode, study_cycle, semester_number)' +
+                    ' VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING *',
                 [
                     crypto.randomUUID(),
                     data.name,
@@ -128,6 +142,7 @@ export class Subject {
                     data.classRepeatWeeks,
                     data.studyMode,
                     data.studyCycle,
+                    data.semesterNumber,
                 ],
             )
         ).rows[0];
@@ -174,9 +189,13 @@ export class Subject {
             this.studyCycle = data.studyCycle;
         }
 
+        if (data.semesterNumber !== undefined) {
+            this.semesterNumber = data.semesterNumber;
+        }
+
         await db.query(
             'UPDATE subjects SET name = $2, semester_id = $3, teacher_ids = $4, description = $5, moodle_course_id = $6,' +
-                ' duration_minutes = $7, class_repeat_weeks = $8, study_mode = $9, study_cycle = $10 WHERE id = $1',
+                ' duration_minutes = $7, class_repeat_weeks = $8, study_mode = $9, study_cycle = $10, semester_number = $11 WHERE id = $1',
             [
                 this.id,
                 this.name,
@@ -188,6 +207,7 @@ export class Subject {
                 this.classRepeatWeeks,
                 this.studyMode,
                 this.studyCycle,
+                this.semesterNumber,
             ],
         );
     }
@@ -203,6 +223,7 @@ export function makeSubjectData(subject: Subject, allUsers: User[]): SubjectData
     return {
         id: subject.id,
         name: subject.name,
+        fullName: subject.fullName,
         semesterId: subject.semesterId,
         slug: subject.slug,
         teachers: teachers.map(makeUserPublicData),
@@ -213,6 +234,7 @@ export function makeSubjectData(subject: Subject, allUsers: User[]): SubjectData
         classRepeatWeeks: subject.classRepeatWeeks,
         studyMode: subject.studyMode,
         studyCycle: subject.studyCycle,
-        color: stringToHslColor(subject.name),
+        semesterNumber: subject.semesterNumber,
+        color: stringToHslColor(subject.fullName),
     };
 }

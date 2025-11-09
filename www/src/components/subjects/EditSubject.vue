@@ -42,7 +42,7 @@ const modalId = crypto.randomUUID();
     />
 
     <Modal :id="modalId">
-        <template #header>{{ translate('Edit subject') }} {{ subject.name }}</template>
+        <template #header>{{ translate('Edit subject') }} {{ subject.fullName }}</template>
         <SubjectForm :semester :subject :all-users />
     </Modal>
 </template>

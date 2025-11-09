@@ -55,12 +55,13 @@ function translate(text: keyof (typeof translations)[LangId]): string {
     return translations[langId][text];
 }
 
-const { semester, scheduleChanges, subjects, classrooms, allUsers } = defineProps<{
+const { semester, scheduleChanges, subjects, classrooms, allUsers, subjectGroups } = defineProps<{
     semester: SemesterData;
     scheduleChanges: ScheduleChangeData[];
     subjects: SubjectData[];
     classrooms: ClassroomData[];
     allUsers: UserPublicData[];
+    subjectGroups: { subjectsData: SubjectData[]; title: string }[];
 }>();
 
 const teachers = computed<UserPublicData[]>(() => {
@@ -104,7 +105,14 @@ const events = computed<EventInput[]>(() => [
 
 const initialDate = computed(() => getInitialDate(laboratoryClasses.value ?? []));
 
-const subjectOptions = computed(() => Object.fromEntries(subjects.map(subject => [subject.name, subject])));
+const subjectGroupsOptions = computed(() =>
+    subjectGroups
+        .filter(group => group.subjectsData.length > 0)
+        .map(group => ({
+            title: group.title,
+            subjectOptions: Object.fromEntries(group.subjectsData.map(subject => [subject.fullName, subject])),
+        })),
+);
 
 const classroomOptions = computed(() =>
     Object.fromEntries([
@@ -235,6 +243,7 @@ function handleAddEventClick() {
                     :initial-selected-subjects="selectedSubjects"
                     :initial-selected-classrooms="selectedClassrooms"
                     :initial-selected-teachers="selectedTeachers"
+                    :subject-groups="subjectGroups"
                 />
             </Modal>
         </div>
@@ -260,12 +269,16 @@ function handleAddEventClick() {
                 <h2 class="text-center fs-5">
                     {{ translate('Subjects') }}
                 </h2>
-                <ToggleButtonPicker
-                    v-model="selectedSubjects"
-                    center
-                    :options="subjectOptions"
-                    :colors="subjectColors"
-                />
+
+                <template v-for="{ subjectOptions, title } in subjectGroupsOptions" :key="title">
+                    <h2 class="fs-6 text-center mt-3">{{ title }}</h2>
+                    <ToggleButtonPicker
+                        v-model="selectedSubjects"
+                        center
+                        :options="subjectOptions"
+                        :colors="subjectColors"
+                    />
+                </template>
             </div>
             <div>
                 <h2 class="text-center fs-5">

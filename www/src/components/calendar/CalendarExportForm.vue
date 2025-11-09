@@ -16,7 +16,6 @@ const translations = {
     'en': {
         'Selected filters will apply to the exported events. Copy the link below and import it in a calendar application.':
             'Selected filters will apply to the exported events. Copy the link below and import it in a calendar application.',
-        'Subjects': 'Subjects',
         'Classrooms': 'Classrooms',
         'Teachers': 'Teachers',
         'Events': 'Events',
@@ -26,7 +25,6 @@ const translations = {
     'pl': {
         'Selected filters will apply to the exported events. Copy the link below and import it in a calendar application.':
             'Wybrane filtry zostaną zastosowane do wyeksportowanych wydarzeń. Skopiuj poniższy link i zaimportuj go w aplikacji kalendarzowej.',
-        'Subjects': 'Przedmioty',
         'Classrooms': 'Sale',
         'Teachers': 'Prowadzący',
         'Events': 'Wydarzenia',
@@ -48,6 +46,7 @@ const { initialSelectedClassrooms, initialSelectedSubjects, initialSelectedTeach
         initialSelectedSubjects: SubjectData[];
         initialSelectedClassrooms: ClassroomData[];
         initialSelectedTeachers: UserPublicData[];
+        subjectGroups: { subjectsData: SubjectData[]; title: string }[];
     }>();
 
 const { cloned: selectedSubjects } = useCloned(computed(() => initialSelectedSubjects));
@@ -96,20 +95,25 @@ const exportCalendarEventsId = crypto.randomUUID();
 
 <template>
     <div class="mb-3">
-        <h2 class="fs-6">
-            {{ translate('Subjects') }}
-        </h2>
-        <Accordion>
-            <AccordionItem v-for="subject in subjects" :key="subject.id" :id="subject.id">
-                <template #header>{{ subject.name }}</template>
-                <CalendarSubjectExportOptions
-                    v-model:subjects="selectedSubjectIds"
-                    v-model:groups="selectedGroupIds"
-                    :semester
-                    :subject
-                />
-            </AccordionItem>
-        </Accordion>
+        <template v-for="group in subjectGroups.filter(group => group.subjectsData.length > 0)" :key="group.title">
+            <Accordion class="mb-2">
+                <h2 class="text-center fs-6">{{ group.title }}</h2>
+                <AccordionItem
+                    v-for="subject in group.subjectsData"
+                    :key="subject.id"
+                    :id="subject.id"
+                    :initially-expanded="initialSelectedSubjects.some(s => s.id === subject.id)"
+                >
+                    <template #header>{{ subject.fullName }}</template>
+                    <CalendarSubjectExportOptions
+                        v-model:subjects="selectedSubjectIds"
+                        v-model:groups="selectedGroupIds"
+                        :semester
+                        :subject
+                    />
+                </AccordionItem>
+            </Accordion>
+        </template>
     </div>
     <div class="mb-3">
         <h2 class="fs-6">

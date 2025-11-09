@@ -7,7 +7,7 @@ import type { EventConflict } from '@components/calendar/types';
 import { formatClassroomName } from '@components/classrooms/types';
 import type { LaboratoryClassData, LaboratoryClassEditApiData } from '@components/laboratory-classes/types';
 import type { SemesterData } from '@components/semesters/types';
-import type { SubjectData } from '@components/subjects/types';
+import { makeSubjectStudyDetails, type SubjectData } from '@components/subjects/types';
 import type { UserPublicData } from '@components/users/types';
 import { formatDateLocalHhMm, formatDateLocalYyyyMmDd, parseDateLocalYyyyMmDd } from '@components/utils';
 import ButtonWithConfirmationPopover from '@components/ButtonWithConfirmationPopover.vue';
@@ -127,7 +127,7 @@ const teacherId = crypto.randomUUID();
             {{ translate('Subject') }}:
             <br />
             <a :href="`/semesters/${semester.slug}/subjects/${subject.slug}/`" class="link-success">
-                {{ subject.name }}
+                {{ subject.fullName }} - {{ makeSubjectStudyDetails(subject, langId) }}
             </a>
         </div>
 

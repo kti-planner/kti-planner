@@ -40,7 +40,13 @@ export const POST: APIRoute = async ({ locals, params }) => {
     const currentSemesterSubjects = await Subject.fetchAllFromSemester(currentSemester);
 
     // Copy subject
-    if (currentSemesterSubjects.find(s => s.name.toLowerCase() === subjectToBeCopied.name.toLowerCase())) {
+    if (
+        currentSemesterSubjects.find(
+            s =>
+                s.name.toLowerCase() === subjectToBeCopied.name.toLowerCase() &&
+                s.semesterNumber === subjectToBeCopied.semesterNumber,
+        )
+    ) {
         return Response.json(false, { status: 200 });
     }
 
@@ -54,6 +60,7 @@ export const POST: APIRoute = async ({ locals, params }) => {
         classRepeatWeeks: subjectToBeCopied.classRepeatWeeks,
         studyMode: subjectToBeCopied.studyMode,
         studyCycle: subjectToBeCopied.studyCycle,
+        semesterNumber: subjectToBeCopied.semesterNumber,
     });
 
     // Copy exercises

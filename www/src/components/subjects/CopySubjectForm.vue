@@ -3,7 +3,11 @@ import { onMounted, ref, watch } from 'vue';
 import { langId } from '@components/frontend/lang';
 import { apiGet, apiPost } from '@components/api';
 import type { SemesterData } from '@components/semesters/types';
-import type { SubjectCopyFromPreviousSemesterApiData, SubjectData } from '@components/subjects/types';
+import {
+    makeSubjectStudyDetails,
+    type SubjectCopyFromPreviousSemesterApiData,
+    type SubjectData,
+} from '@components/subjects/types';
 
 const { currentSemester } = defineProps<{
     currentSemester: SemesterData;
@@ -129,7 +133,7 @@ const subjectId = crypto.randomUUID();
                 <label :for="subjectId" class="form-label">{{ translate('Subject to copy') }}</label>
                 <select :id="subjectId" v-model="selectedSubject" class="form-select" required>
                     <option v-for="subject in subjectsData" :key="subject.slug" :value="subject">
-                        {{ subject.name }}
+                        {{ subject.fullName }} - {{ makeSubjectStudyDetails(subject, langId) }}
                     </option>
                 </select>
             </p>
