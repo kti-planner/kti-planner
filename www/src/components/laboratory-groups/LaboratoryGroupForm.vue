@@ -7,11 +7,12 @@ import type {
     LaboratoryGroupData,
     LaboratoryGroupEditApiData,
 } from '@components/laboratory-groups/types';
+import type { SubjectData } from '@components/subjects/types';
 import ButtonWithConfirmationPopover from '@components/ButtonWithConfirmationPopover.vue';
 
 const props = defineProps<{
     group?: LaboratoryGroupData;
-    apiUrl: string;
+    subject: SubjectData;
 }>();
 
 const isEditing = computed(() => props.group !== undefined);
@@ -23,10 +24,10 @@ const name = ref<string>(props.group?.name ?? '');
 async function submit() {
     const success =
         props.group === undefined
-            ? await apiPost<boolean>(props.apiUrl, {
+            ? await apiPost<boolean>(`/api/subjects/${props.subject.id}/laboratory-groups/`, {
                   name: name.value,
               } satisfies LaboratoryGroupCreateApiData)
-            : await apiPatch<boolean>(props.apiUrl, {
+            : await apiPatch<boolean>(`/api/subjects/${props.subject.id}/laboratory-groups/`, {
                   id: props.group.id,
                   name: name.value,
               } satisfies LaboratoryGroupEditApiData);
@@ -47,7 +48,10 @@ async function doDelete() {
         return;
     }
 
-    const result = await apiDelete<boolean>(props.apiUrl, new URLSearchParams({ id: props.group.id }));
+    const result = await apiDelete<boolean>(
+        `/api/subjects/${props.subject.id}/laboratory-groups/`,
+        new URLSearchParams({ id: props.group.id }),
+    );
 
     if (result) {
         window.location.reload();

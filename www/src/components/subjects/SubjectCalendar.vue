@@ -33,8 +33,7 @@ function translate(text: keyof (typeof translations)[LangId]): string {
     return translations[langId][text];
 }
 
-const { apiUrl, selectedLaboratoryGroups, scheduleChanges, subject } = defineProps<{
-    apiUrl: string;
+const { selectedLaboratoryGroups, scheduleChanges, subject } = defineProps<{
     selectedLaboratoryGroups: LaboratoryGroupData[];
     scheduleChanges: ScheduleChangeData[];
     semester: SemesterData;
@@ -49,7 +48,7 @@ const emit = defineEmits<{
 }>();
 
 const { data: laboratoryClasses, execute: refreshClasses } = useApiFetch<LaboratoryClassData[]>(
-    apiUrl,
+    `/api/subjects/${subject.id}/laboratory-classes/`,
     () => new URLSearchParams(selectedLaboratoryGroups.map(group => ['laboratoryGroup', group.name])),
 );
 
@@ -127,7 +126,6 @@ function handleGenerateClassesDone() {
             :semester
             :subject
             :exercises
-            :api-url
             :laboratory-groups
             :schedule-changes
             :initial-date="calendarSelectionStart"

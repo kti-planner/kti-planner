@@ -2,6 +2,7 @@
 import { useTemplateRef } from 'vue';
 import { langId } from '@components/frontend/lang';
 import type { LaboratoryGroupData } from '@components/laboratory-groups/types';
+import type { SubjectData } from '@components/subjects/types';
 import IconButton from '@components/IconButton.vue';
 import AddLaboratoryGroup from '@components/laboratory-groups/AddLaboratoryGroup.vue';
 import EditLaboratoryGroup from '@components/laboratory-groups/EditLaboratoryGroup.vue';
@@ -9,7 +10,7 @@ import Modal from '@components/Modal.vue';
 
 defineProps<{
     groups: LaboratoryGroupData[];
-    apiUrl: string;
+    subject: SubjectData;
 }>();
 
 const translations = {
@@ -51,10 +52,10 @@ const modalId = crypto.randomUUID();
                 class="list-group-item d-flex justify-content-between align-items-center"
             >
                 <span>{{ group.name }}</span>
-                <EditLaboratoryGroup :group :api-url @hide="modal?.show()" />
+                <EditLaboratoryGroup :group :subject @hide="modal?.show()" />
             </div>
         </div>
-        <AddLaboratoryGroup :api-url @hide="modal?.show()" />
+        <AddLaboratoryGroup :subject @hide="modal?.show()" />
     </Modal>
 </template>
 

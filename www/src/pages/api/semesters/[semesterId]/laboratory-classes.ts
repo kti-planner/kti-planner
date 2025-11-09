@@ -10,13 +10,13 @@ import { User } from '@backend/user';
 import type { LaboratoryClassData } from '@components/laboratory-classes/types';
 
 export const GET: APIRoute = async ({ params, url }) => {
-    const { semesterSlug } = params;
+    const { semesterId } = params;
 
-    if (semesterSlug === undefined) {
+    if (semesterId === undefined) {
         return new Response(null, { status: 404 });
     }
 
-    const semester = await Semester.fetchBySlug(semesterSlug);
+    const semester = await Semester.fetch(semesterId);
     if (!semester) {
         return new Response(null, { status: 404 });
     }

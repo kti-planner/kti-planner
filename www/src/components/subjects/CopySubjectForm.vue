@@ -26,7 +26,7 @@ async function submit() {
         return;
     }
 
-    const success = await apiPost<boolean>(`/semesters/${currentSemester.slug}/api/subject-copy/`, {
+    const success = await apiPost<boolean>(`/api/semesters/${currentSemester.id}/subject-copy/`, {
         semesterId: selectedSemester.value.id,
         subjectId: selectedSubject.value.id,
     } satisfies SubjectCopyFromPreviousSemesterApiData);
@@ -43,7 +43,7 @@ async function submit() {
 }
 
 onMounted(async () => {
-    const data = await apiGet<SemesterData[]>('/semesters/api/semesters/');
+    const data = await apiGet<SemesterData[]>('/api/semesters/');
     if (data !== undefined) {
         semestersData.value = data.filter(semester => semester.slug !== currentSemester.slug);
 
@@ -56,7 +56,7 @@ onMounted(async () => {
 watch(selectedSemester, async newSemester => {
     if (newSemester) {
         selectedSubject.value = undefined;
-        const data = await apiGet<SubjectData[]>(`/semesters/${newSemester.slug}/api/subjects/`);
+        const data = await apiGet<SubjectData[]>(`/api/semesters/${newSemester.id}/subjects/`);
         if (data !== undefined) {
             subjectsData.value = data;
         }

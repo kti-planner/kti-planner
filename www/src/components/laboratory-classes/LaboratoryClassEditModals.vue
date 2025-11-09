@@ -66,7 +66,6 @@ const moveClassModalId = crypto.randomUUID();
             v-if="laboratoryClass && subject"
             :laboratory-class
             :subject
-            :api-url="`/semesters/${semester.slug}/subjects/${subject.slug}/api/laboratory-classes/`"
             :teachers
             :semester
             show-subject
@@ -91,7 +90,7 @@ const moveClassModalId = crypto.randomUUID();
         <MoveLaboratoryClass
             v-if="laboratoryClass && subject"
             :laboratory-class
-            :api-url="`/semesters/${semester.slug}/subjects/${subject.slug}/api/move-laboratory-classes/`"
+            :subject
             @submit="handleMoveClassSubmit"
         />
     </Modal>

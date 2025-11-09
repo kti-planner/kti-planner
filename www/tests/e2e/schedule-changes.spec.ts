@@ -83,9 +83,12 @@ test.describe('API fetch tests', () => {
     test('Logged-out user cannot edit schedule changes', async ({ page }) => {
         await page.goto('/semesters/2024-summer/schedule-changes/');
 
-        const response = await page.request.put('/semesters/2024-summer/api/schedule-changes/', {
-            data: [],
-        });
+        const response = await page.request.put(
+            '/api/semesters/094f8324-7c58-4566-b5d7-e4fe8ed03a18/schedule-changes/',
+            {
+                data: [],
+            },
+        );
 
         expect(response.status()).toBe(404);
     });
@@ -94,9 +97,12 @@ test.describe('API fetch tests', () => {
         await page.goto('/semesters/2024-summer/schedule-changes/');
         await loginAsTeacher(page);
 
-        const response = await page.request.put('/semesters/2024-summer/api/schedule-changes/', {
-            data: [],
-        });
+        const response = await page.request.put(
+            '/api/semesters/094f8324-7c58-4566-b5d7-e4fe8ed03a18/schedule-changes/',
+            {
+                data: [],
+            },
+        );
 
         expect(response.status()).toBe(200);
     });

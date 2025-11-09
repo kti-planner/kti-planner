@@ -43,14 +43,14 @@ async function submit() {
 
     const success =
         props.exercise?.id === undefined
-            ? await apiPost<boolean>('/semesters/api/exercises/', {
+            ? await apiPost<boolean>('/api/exercises/', {
                   name: exerciseName.value,
                   exerciseNumber: exerciseNumber.value,
                   subjectId: props.subject.id,
                   classroomId: exerciseClassroomId.value,
                   teacherId: teacher.value.id,
               } satisfies ExerciseCreateApiData)
-            : await apiPatch<boolean>('/semesters/api/exercises/', {
+            : await apiPatch<boolean>('/api/exercises/', {
                   id: props.exercise.id,
                   name: exerciseName.value,
                   exerciseNumber: exerciseNumber.value,
@@ -81,10 +81,7 @@ async function doDelete() {
         return;
     }
 
-    const result = await apiDelete<boolean>(
-        '/semesters/api/exercises/',
-        new URLSearchParams({ id: props.exercise.id }),
-    );
+    const result = await apiDelete<boolean>('/api/exercises/', new URLSearchParams({ id: props.exercise.id }));
 
     if (result) {
         window.location.assign(`/semesters/${props.semester.slug}/subjects/${props.subject.slug}/`);

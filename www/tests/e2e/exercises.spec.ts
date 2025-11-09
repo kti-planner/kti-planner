@@ -201,7 +201,7 @@ test.describe('API fetch tests', () => {
     test('Logged-out user cannot create new exercise', async ({ page }) => {
         await page.goto('/semesters/2024-summer/subjects/lokalne-sieci-bezprzewodowe---informatyka-sem.-vi/');
 
-        const response = await page.request.post('/semesters/api/exercises/', {
+        const response = await page.request.post('/api/exercises/', {
             data: {
                 name: 'Test Exercise',
                 exerciseNumber: 7,
@@ -218,7 +218,7 @@ test.describe('API fetch tests', () => {
         await page.goto('/semesters/2024-summer/subjects/lokalne-sieci-bezprzewodowe---informatyka-sem.-vi/');
         await loginAsAdmin(page);
 
-        const response = await page.request.post('/semesters/api/exercises/', {
+        const response = await page.request.post('/api/exercises/', {
             data: {
                 name: 'Test Exercise',
                 exerciseNumber: 7,
@@ -234,7 +234,7 @@ test.describe('API fetch tests', () => {
     test('Logged-out user cannot edit exercise', async ({ page }) => {
         await page.goto('/semesters/2024-summer/subjects/lokalne-sieci-bezprzewodowe---informatyka-sem.-vi/');
 
-        const response = await page.request.patch('/semesters/api/exercises/', {
+        const response = await page.request.patch('/api/exercises/', {
             data: {
                 id: 'e4ffb869-8d1d-4396-89b5-f427af451e50',
                 name: 'Updated Test Exercise',
@@ -251,7 +251,7 @@ test.describe('API fetch tests', () => {
         await page.goto('/semesters/2024-summer/subjects/lokalne-sieci-bezprzewodowe---informatyka-sem.-vi/');
         await loginAsAdmin(page);
 
-        const response = await page.request.patch('/semesters/api/exercises/', {
+        const response = await page.request.patch('/api/exercises/', {
             data: {
                 id: 'e4ffb869-8d1d-4396-89b5-f427af451e50',
                 name: 'Updated Test Exercise',
@@ -267,7 +267,7 @@ test.describe('API fetch tests', () => {
     test('Logged-out user cannot delete exercise', async ({ page }) => {
         await page.goto('/semesters/2024-summer/subjects/lokalne-sieci-bezprzewodowe---informatyka-sem.-vi/');
 
-        const response = await page.request.delete('/semesters/api/exercises/', {
+        const response = await page.request.delete('/api/exercises/', {
             data: null,
             params: {
                 id: 'e4ffb869-8d1d-4396-89b5-f427af451e50',
@@ -281,7 +281,7 @@ test.describe('API fetch tests', () => {
         await page.goto('/semesters/2024-summer/subjects/lokalne-sieci-bezprzewodowe---informatyka-sem.-vi/');
         await loginAsAdmin(page);
 
-        const response = await page.request.delete('/semesters/api/exercises/', {
+        const response = await page.request.delete('/api/exercises/', {
             data: null,
             params: {
                 id: 'e4ffb869-8d1d-4396-89b5-f427af451e50',

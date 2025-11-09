@@ -13,11 +13,10 @@ import { formatDateLocalHhMm, formatDateLocalYyyyMmDd, parseDateLocalYyyyMmDd } 
 import ButtonWithConfirmationPopover from '@components/ButtonWithConfirmationPopover.vue';
 import UserSelector from '@components/users/UserSelector.vue';
 
-const { laboratoryClass, semester, apiUrl, subject } = defineProps<{
+const { laboratoryClass, semester, subject } = defineProps<{
     laboratoryClass: LaboratoryClassData;
     teachers: UserPublicData[];
     semester: SemesterData;
-    apiUrl: string;
     subject: SubjectData;
     showSubject?: boolean | undefined;
 }>();
@@ -78,7 +77,7 @@ async function saveLaboratoryClass() {
 
     eventConflict.value = null;
 
-    const conflicts = await apiPatch<EventConflict[]>(apiUrl, {
+    const conflicts = await apiPatch<EventConflict[]>(`/api/subjects/${subject.id}/laboratory-classes/`, {
         id: laboratoryClass.id,
         startDate: `${date.value}T${startTime.value}`,
         endDate: `${date.value}T${endTime.value}`,
@@ -98,7 +97,10 @@ async function saveLaboratoryClass() {
 }
 
 async function doDelete() {
-    const result = await apiDelete<boolean>(apiUrl, new URLSearchParams({ id: laboratoryClass.id }));
+    const result = await apiDelete<boolean>(
+        `/api/subjects/${subject.id}/laboratory-classes/`,
+        new URLSearchParams({ id: laboratoryClass.id }),
+    );
 
     if (result) {
         emit('submit');

@@ -79,7 +79,7 @@ function addScheduleChange() {
 
 async function save() {
     await apiPut(
-        `/semesters/${semester.slug}/api/schedule-changes/`,
+        `/api/semesters/${semester.id}/schedule-changes/`,
         [...scheduleChanges.value.entries()].map(([date, type]) => ({ date, type })) satisfies ScheduleChangeData[],
     );
 

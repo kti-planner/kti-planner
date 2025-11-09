@@ -16,7 +16,7 @@ const password = ref<string>('');
 const passwordVisible = ref<boolean>(false);
 
 async function submit() {
-    const success = await apiPatch<boolean>('/users/api/password-reset/', {
+    const success = await apiPatch<boolean>('/api/users/password-reset/', {
         id: props.user?.id,
         password: password.value,
     } satisfies PasswordResetApiData);

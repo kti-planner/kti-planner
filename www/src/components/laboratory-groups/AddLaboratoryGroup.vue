@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { langId } from '@components/frontend/lang';
+import type { SubjectData } from '@components/subjects/types';
 import LaboratoryGroupForm from '@components/laboratory-groups/LaboratoryGroupForm.vue';
 import Modal from '@components/Modal.vue';
 
@@ -17,7 +18,7 @@ function translate(text: keyof (typeof translations)[LangId]): string {
 }
 
 defineProps<{
-    apiUrl: string;
+    subject: SubjectData;
 }>();
 
 const modalId = crypto.randomUUID();
@@ -35,7 +36,7 @@ const modalId = crypto.randomUUID();
             <template #header>
                 {{ translate('Add new laboratory group') }}
             </template>
-            <LaboratoryGroupForm :api-url />
+            <LaboratoryGroupForm :subject />
         </Modal>
     </div>
 </template>

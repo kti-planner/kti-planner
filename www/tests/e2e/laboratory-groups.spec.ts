@@ -80,7 +80,7 @@ test.describe('API fetch tests', () => {
         await page.goto('/semesters/2025-winter/subjects/sieci-komputerowe---informatyka-sem.-v/');
 
         const response = await page.request.post(
-            '/semesters/2025-winter/subjects/sieci-komputerowe---informatyka-sem.-v/api/laboratory-groups/',
+            '/api/subjects/981c68ba-3f6a-459e-83af-f9fc578adc85/laboratory-groups/',
             {
                 data: {
                     name: 'Test Group',
@@ -96,7 +96,7 @@ test.describe('API fetch tests', () => {
         await loginAsAdmin(page);
 
         const response = await page.request.post(
-            '/semesters/2025-winter/subjects/sieci-komputerowe---informatyka-sem.-v/api/laboratory-groups/',
+            '/api/subjects/981c68ba-3f6a-459e-83af-f9fc578adc85/laboratory-groups/',
             {
                 data: {
                     name: 'Test Group',
@@ -111,7 +111,7 @@ test.describe('API fetch tests', () => {
         await page.goto('/semesters/2025-winter/subjects/sieci-komputerowe---informatyka-sem.-v/');
 
         const response = await page.request.patch(
-            '/semesters/2025-winter/subjects/sieci-komputerowe---informatyka-sem.-v/api/laboratory-groups/',
+            '/api/subjects/981c68ba-3f6a-459e-83af-f9fc578adc85/laboratory-groups/',
             {
                 data: {
                     id: 'c9854621-e713-4b3f-b442-8e8cbdb20b57',
@@ -128,7 +128,7 @@ test.describe('API fetch tests', () => {
         await loginAsAdmin(page);
 
         const response = await page.request.patch(
-            '/semesters/2025-winter/subjects/sieci-komputerowe---informatyka-sem.-v/api/laboratory-groups/',
+            '/api/subjects/981c68ba-3f6a-459e-83af-f9fc578adc85/laboratory-groups/',
             {
                 data: {
                     id: 'c9854621-e713-4b3f-b442-8e8cbdb20b57',
@@ -144,7 +144,7 @@ test.describe('API fetch tests', () => {
         await page.goto('/semesters/2025-winter/subjects/sieci-komputerowe---informatyka-sem.-v/');
 
         const response = await page.request.delete(
-            '/semesters/2025-winter/subjects/sieci-komputerowe---informatyka-sem.-v/api/laboratory-groups/',
+            '/api/subjects/981c68ba-3f6a-459e-83af-f9fc578adc85/laboratory-groups/',
             {
                 data: null,
                 params: {
@@ -161,7 +161,7 @@ test.describe('API fetch tests', () => {
         await loginAsAdmin(page);
 
         const response = await page.request.delete(
-            '/semesters/2025-winter/subjects/sieci-komputerowe---informatyka-sem.-v/api/laboratory-groups/',
+            '/api/subjects/981c68ba-3f6a-459e-83af-f9fc578adc85/laboratory-groups/',
             {
                 data: null,
                 params: {

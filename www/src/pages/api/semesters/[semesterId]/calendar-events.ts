@@ -14,12 +14,12 @@ import {
 } from '@components/calendar-events/types';
 
 export const GET: APIRoute = async ({ params, url }) => {
-    const { semesterSlug } = params;
-    if (semesterSlug === undefined) {
+    const { semesterId } = params;
+    if (semesterId === undefined) {
         return new Response(null, { status: 404 });
     }
 
-    const semester = await Semester.fetchBySlug(semesterSlug);
+    const semester = await Semester.fetch(semesterId);
     if (!semester) {
         return new Response(null, { status: 404 });
     }
@@ -56,17 +56,17 @@ export const GET: APIRoute = async ({ params, url }) => {
 
 export const POST: APIRoute = async ({ locals, params }) => {
     const { jsonData, user } = locals;
-    const { semesterSlug } = params;
+    const { semesterId } = params;
 
     if (!user) {
         return Response.json(null, { status: 404 });
     }
 
-    if (semesterSlug === undefined) {
+    if (semesterId === undefined) {
         return new Response(null, { status: 404 });
     }
 
-    const semester = await Semester.fetchBySlug(semesterSlug);
+    const semester = await Semester.fetch(semesterId);
     if (!semester) {
         return new Response(null, { status: 404 });
     }
@@ -130,17 +130,17 @@ export const POST: APIRoute = async ({ locals, params }) => {
 
 export const PATCH: APIRoute = async ({ locals, params }) => {
     const { jsonData, user } = locals;
-    const { semesterSlug } = params;
+    const { semesterId } = params;
 
     if (!user) {
         return Response.json(null, { status: 404 });
     }
 
-    if (semesterSlug === undefined) {
+    if (semesterId === undefined) {
         return new Response(null, { status: 404 });
     }
 
-    const semester = await Semester.fetchBySlug(semesterSlug);
+    const semester = await Semester.fetch(semesterId);
     if (!semester) {
         return new Response(null, { status: 404 });
     }
@@ -208,17 +208,17 @@ export const PATCH: APIRoute = async ({ locals, params }) => {
 
 export const DELETE: APIRoute = async ({ locals, url, params }) => {
     const { user } = locals;
-    const { semesterSlug } = params;
+    const { semesterId } = params;
 
     if (!user) {
         return Response.json(null, { status: 404 });
     }
 
-    if (semesterSlug === undefined) {
+    if (semesterId === undefined) {
         return new Response(null, { status: 404 });
     }
 
-    const semester = await Semester.fetchBySlug(semesterSlug);
+    const semester = await Semester.fetch(semesterId);
 
     if (!semester) {
         return new Response(null, { status: 404 });

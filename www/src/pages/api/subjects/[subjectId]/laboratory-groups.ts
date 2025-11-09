@@ -1,13 +1,13 @@
 import type { APIRoute } from 'astro';
 import { LaboratoryGroup, makeLaboratoryGroupData } from '@backend/laboratory-group';
+import { Subject } from '@backend/subject';
 import { laboratoryGroupCreateApiSchema, laboratoryGroupEditApiSchema } from '@components/laboratory-groups/types';
-import { getSubjectFromParams } from '@pages/semesters/[semesterSlug]/subjects/[subjectSlug]/api/_subject-utils';
 
 export const GET: APIRoute = async ({ url, params }) => {
-    const subject = await getSubjectFromParams(params);
+    const subject = await Subject.fetch(params.subjectId ?? '');
 
     if (subject === null) {
-        return Response.json(null, { status: 400 });
+        return Response.json(null, { status: 404 });
     }
 
     const laboratoryGroups = await LaboratoryGroup.fetchAllFromSubject(subject);
@@ -22,10 +22,10 @@ export const POST: APIRoute = async ({ locals, params }) => {
         return Response.json(null, { status: 404 });
     }
 
-    const subject = await getSubjectFromParams(params);
+    const subject = await Subject.fetch(params.subjectId ?? '');
 
     if (subject === null) {
-        return Response.json(null, { status: 400 });
+        return Response.json(null, { status: 404 });
     }
 
     const data = laboratoryGroupCreateApiSchema.nullable().catch(null).parse(jsonData);
@@ -54,10 +54,10 @@ export const PATCH: APIRoute = async ({ locals, params }) => {
         return Response.json(null, { status: 404 });
     }
 
-    const subject = await getSubjectFromParams(params);
+    const subject = await Subject.fetch(params.subjectId ?? '');
 
     if (subject === null) {
-        return Response.json(null, { status: 400 });
+        return Response.json(null, { status: 404 });
     }
 
     const data = laboratoryGroupEditApiSchema.nullable().catch(null).parse(jsonData);
@@ -93,10 +93,10 @@ export const DELETE: APIRoute = async ({ locals, url, params }) => {
         return Response.json(null, { status: 404 });
     }
 
-    const subject = await getSubjectFromParams(params);
+    const subject = await Subject.fetch(params.subjectId ?? '');
 
     if (subject === null) {
-        return Response.json(null, { status: 400 });
+        return Response.json(null, { status: 404 });
     }
 
     const id = url.searchParams.get('id');

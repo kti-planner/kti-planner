@@ -96,7 +96,7 @@ test.describe('API fetch tests', () => {
     test('Logged-out user cannot create new classroom', async ({ page }) => {
         await page.goto('/classrooms/');
 
-        const response = await page.request.post('/classrooms/api/', {
+        const response = await page.request.post('/api/classrooms/', {
             data: {
                 name: 'Test classroom',
             },
@@ -109,7 +109,7 @@ test.describe('API fetch tests', () => {
         await page.goto('/classrooms/');
         await loginAsAdmin(page);
 
-        const response = await page.request.post('/classrooms/api/', {
+        const response = await page.request.post('/api/classrooms/', {
             data: {
                 name: 'Test Classroom',
             },
@@ -121,7 +121,7 @@ test.describe('API fetch tests', () => {
     test('Logged-out user cannot edit classroom', async ({ page }) => {
         await page.goto('/classrooms/');
 
-        const response = await page.request.patch('/classrooms/api/', {
+        const response = await page.request.patch('/api/classrooms/', {
             data: {
                 id: '8689d55d-508e-4f5d-aef8-d5052f220d20',
                 name: 'Updated Classroom',
@@ -135,7 +135,7 @@ test.describe('API fetch tests', () => {
         await page.goto('/classrooms/');
         await loginAsAdmin(page);
 
-        const response = await page.request.patch('/classrooms/api/', {
+        const response = await page.request.patch('/api/classrooms/', {
             data: {
                 id: '8689d55d-508e-4f5d-aef8-d5052f220d20',
                 name: 'Updated Classroom',
@@ -148,7 +148,7 @@ test.describe('API fetch tests', () => {
     test('Logged-out user cannot delete classroom', async ({ page }) => {
         await page.goto('/classrooms/');
 
-        const response = await page.request.delete('/classrooms/api/', {
+        const response = await page.request.delete('/api/classrooms/', {
             data: null,
             params: {
                 id: '8689d55d-508e-4f5d-aef8-d5052f220d20',
@@ -162,7 +162,7 @@ test.describe('API fetch tests', () => {
         await page.goto('/classrooms/');
         await loginAsAdmin(page);
 
-        const response = await page.request.delete('/classrooms/api/', {
+        const response = await page.request.delete('/api/classrooms/', {
             data: null,
             params: {
                 id: '8689d55d-508e-4f5d-aef8-d5052f220d20',

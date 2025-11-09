@@ -14,10 +14,9 @@ import {
     type LaboratoryClassData,
     laboratoryClassEditApiSchema,
 } from '@components/laboratory-classes/types';
-import { getSubjectFromParams } from '@pages/semesters/[semesterSlug]/subjects/[subjectSlug]/api/_subject-utils';
 
 export const GET: APIRoute = async ({ params, url }) => {
-    const subject = await getSubjectFromParams(params);
+    const subject = await Subject.fetch(params.subjectId ?? '');
     if (!subject) {
         return Response.json(null, { status: 404 });
     }
@@ -62,24 +61,19 @@ export const GET: APIRoute = async ({ params, url }) => {
 
 export const POST: APIRoute = async ({ locals, params }) => {
     const { jsonData, user } = locals;
-    const { semesterSlug } = params;
 
     if (!user) {
         return Response.json(null, { status: 404 });
     }
 
-    if (semesterSlug === undefined) {
-        return new Response(null, { status: 404 });
-    }
-
-    const semester = await Semester.fetchBySlug(semesterSlug);
-    if (!semester) {
-        return new Response(null, { status: 404 });
-    }
-
-    const subject = await getSubjectFromParams(params);
+    const subject = await Subject.fetch(params.subjectId ?? '');
     if (!subject) {
         return Response.json(null, { status: 404 });
+    }
+
+    const semester = await Semester.fetch(subject.semesterId);
+    if (!semester) {
+        return new Response(null, { status: 404 });
     }
 
     const data = laboratoryClassCreateApiSchema.nullable().catch(null).parse(jsonData);
@@ -171,24 +165,19 @@ export const POST: APIRoute = async ({ locals, params }) => {
 
 export const PATCH: APIRoute = async ({ locals, params }) => {
     const { jsonData, user } = locals;
-    const { semesterSlug } = params;
 
     if (!user) {
         return Response.json(null, { status: 404 });
     }
 
-    if (semesterSlug === undefined) {
-        return new Response(null, { status: 404 });
-    }
-
-    const semester = await Semester.fetchBySlug(semesterSlug);
-    if (!semester) {
-        return new Response(null, { status: 404 });
-    }
-
-    const subject = await getSubjectFromParams(params);
+    const subject = await Subject.fetch(params.subjectId ?? '');
     if (!subject) {
         return Response.json(null, { status: 404 });
+    }
+
+    const semester = await Semester.fetch(subject.semesterId);
+    if (!semester) {
+        return new Response(null, { status: 404 });
     }
 
     const data = laboratoryClassEditApiSchema.nullable().catch(null).parse(jsonData);
@@ -253,10 +242,10 @@ export const DELETE: APIRoute = async ({ locals, url, params }) => {
         return Response.json(null, { status: 404 });
     }
 
-    const subject = await getSubjectFromParams(params);
+    const subject = await Subject.fetch(params.subjectId ?? '');
 
     if (subject === null) {
-        return Response.json(null, { status: 400 });
+        return Response.json(null, { status: 404 });
     }
 
     const id = url.searchParams.get('id');
