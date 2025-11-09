@@ -24,19 +24,16 @@ function translate(text: keyof (typeof translations)[LangId]): string {
     return translations[langId][text];
 }
 
-const { laboratoryClass, subject, hideExerciseName, viewType } = defineProps<{
+const { laboratoryClass, subject, hideExerciseName } = defineProps<{
     timeText: string;
     laboratoryClass: LaboratoryClassData;
     subject?: SubjectData | undefined;
     hideExerciseName?: boolean | undefined;
-    viewType?: string | undefined;
 }>();
 
 const title = computed(
     () =>
-        (subject
-            ? `${subject.fullName}\n` + (viewType === 'listYear' ? `${makeSubjectStudyDetails(subject, langId)}\n` : '')
-            : '') +
+        (subject ? `${subject.fullName} - ${makeSubjectStudyDetails(subject, langId)}\n` : '') +
         `${laboratoryClass.exercise.exerciseNumber}. ${laboratoryClass.exercise.name}\n` +
         `${translate('Classroom')}: ${formatClassroomName(laboratoryClass.exercise.classroom, langId)}\n` +
         `${translate('Group')}: ${laboratoryClass.laboratoryGroup.name}\n` +
@@ -48,11 +45,7 @@ const title = computed(
     <div class="event-content" :title>
         <p class="text-truncate">{{ timeText }}</p>
         <p v-if="subject" class="text-truncate fw-bold">
-            {{ subject.fullName }}
-            <span v-if="viewType === 'listYear'">
-                <br />
-                {{ makeSubjectStudyDetails(subject, langId) }}
-            </span>
+            {{ subject.fullName }} - {{ makeSubjectStudyDetails(subject, langId) }}
         </p>
         <p v-if="!hideExerciseName" class="text-truncate" :class="{ 'fw-bold': !subject }">
             {{ `${laboratoryClass.exercise.exerciseNumber}. ${laboratoryClass.exercise.name}` }}

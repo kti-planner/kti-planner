@@ -8,7 +8,6 @@ import type {
     EventClickArg,
     EventContentArg,
     EventInput,
-    ViewApi,
 } from '@fullcalendar/core';
 import enGbLocale from '@fullcalendar/core/locales/en-gb';
 import plLocale from '@fullcalendar/core/locales/pl';
@@ -30,7 +29,6 @@ const { selectable, events, initialDate, initialView } = defineProps<{
 const emit = defineEmits<{
     eventClick: [event: EventClickArg];
     select: [event: DateSelectArg];
-    viewChange: [event: ViewApi];
 }>();
 
 type CalendarEventArg = EventContentArg & {
@@ -102,9 +100,6 @@ const options = computed((): CalendarOptions => {
         eventColor: 'var(--bs-success)',
         events,
         initialDate: initialDate ?? new Date(),
-        viewDidMount: info => {
-            emit('viewChange', info.view);
-        },
     };
 });
 </script>

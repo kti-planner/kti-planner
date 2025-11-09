@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, shallowRef, useTemplateRef } from 'vue';
-import type { DateSelectArg, EventClickArg, EventInput, ViewApi } from '@fullcalendar/core';
+import type { DateSelectArg, EventClickArg, EventInput } from '@fullcalendar/core';
 import { langId } from '@components/frontend/lang';
 import { currentUser } from '@components/frontend/user';
 import { useApiFetch } from '@components/api';
@@ -170,12 +170,6 @@ function handleAddEventClick() {
 
     calendarEventModal.value?.show();
 }
-
-const currentView = ref<string>('');
-
-function handleViewChange(view: ViewApi) {
-    currentView.value = view.type;
-}
 </script>
 
 <template>
@@ -187,7 +181,6 @@ function handleViewChange(view: ViewApi) {
                 :selectable="currentUser !== null"
                 @event-click="handleEventClick"
                 @select="handleCalendarSelection"
-                @view-change="handleViewChange"
             >
                 <template #eventContent="arg">
                     <LaboratoryClassEvent
@@ -197,7 +190,6 @@ function handleViewChange(view: ViewApi) {
                         :subject="
                             subjects.find(s => s.id === arg.event.extendedProps.laboratoryClass.exercise.subjectId)
                         "
-                        :view-type="currentView"
                     />
                     <CalendarEvent
                         v-else-if="'calendarEvent' in arg.event.extendedProps"
