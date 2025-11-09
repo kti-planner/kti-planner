@@ -152,7 +152,17 @@ export const POST: APIRoute = async ({ locals, params }) => {
         });
     }
 
-    await group.deleteAllClasses();
+    if (createData.length === 1) {
+        const classToDelete = laboratoryClasses.find(
+            laboratoryClass =>
+                laboratoryClass.laboratoryGroupId === group.id &&
+                laboratoryClass.exerciseId === createData[0]!.exercise.id,
+        );
+
+        await classToDelete?.delete();
+    } else {
+        await group.deleteAllClasses();
+    }
 
     await Promise.all(createData.map(createDatum => LaboratoryClass.create(createDatum)));
 

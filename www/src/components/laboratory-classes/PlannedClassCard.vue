@@ -12,12 +12,14 @@ const translations = {
         'This is a holiday': 'This is a holiday',
         'There is another class in this classroom during this time':
             'There is another class in this classroom during this time',
+        'The class does not fit in the semester': 'The class does not fit in the semester',
     },
     'pl': {
         'Unknown [teacher]': 'Nieznany',
         'This is a holiday': 'To jest dzień wolny',
         'There is another class in this classroom during this time':
             'W tym samym czasie w tej sali odbywają się inne zajęcia',
+        'The class does not fit in the semester': 'Ćwiczenie nie mieści się w semestrze',
     },
 };
 
@@ -63,7 +65,9 @@ const conflict = computed<EventConflict | null>(
                 {{
                     conflict.type === 'holiday'
                         ? translate('This is a holiday')
-                        : translate('There is another class in this classroom during this time')
+                        : conflict.type === 'outside-of-semester'
+                          ? translate('The class does not fit in the semester')
+                          : translate('There is another class in this classroom during this time')
                 }}
             </p>
         </div>

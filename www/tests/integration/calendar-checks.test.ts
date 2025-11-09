@@ -34,7 +34,7 @@ test('Detects event conflicts', async () => {
     });
 
     const subject = await Subject.create({
-        name: 'Sieci komputerowe - Informatyka sem. V',
+        name: 'Sieci komputerowe - Informatyka',
         semester: semester,
         teachers: [user],
         description: 'Opis',
@@ -43,6 +43,7 @@ test('Detects event conflicts', async () => {
         classRepeatWeeks: 1,
         studyMode: 'full-time',
         studyCycle: 'first-cycle',
+        semesterNumber: 5,
     });
 
     const classroom1 = await Classroom.create({

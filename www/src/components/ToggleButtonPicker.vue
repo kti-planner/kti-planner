@@ -1,5 +1,5 @@
 <script setup lang="ts" generic="T extends { id: string }">
-import { ref, watchEffect } from 'vue';
+import { computed } from 'vue';
 
 const model = defineModel<T[]>({ required: true });
 
@@ -9,13 +9,27 @@ const { options, center = false } = defineProps<{
     colors?: Record<string, string>;
 }>();
 
-const selectedIds = ref(new Set<string>(model.value.map(item => item.id)));
+const selectedIds = computed(() => new Set<string>(model.value.map(item => item.id)));
 
-watchEffect(() => {
-    model.value = Object.entries(options)
-        .map(([_, option]) => option)
-        .filter(option => selectedIds.value.has(option.id));
-});
+function onChange(event: Event, value: T): void {
+    const target = event.target;
+
+    if (!(target instanceof HTMLInputElement)) {
+        return;
+    }
+
+    if (target.checked) {
+        if (!model.value.find(item => item.id === value.id)) {
+            model.value.push(value);
+        }
+    } else {
+        const index = model.value.findIndex(item => item.id === value.id);
+
+        if (index !== -1) {
+            model.value.splice(index, 1);
+        }
+    }
+}
 
 const toggleBtnId = crypto.randomUUID();
 </script>
@@ -25,11 +39,11 @@ const toggleBtnId = crypto.randomUUID();
         <div v-for="(value, label) in options" :key="value.id">
             <input
                 :id="`${toggleBtnId}-${value.id}`"
-                v-model="selectedIds"
-                :value="value.id"
                 type="checkbox"
                 class="btn-check"
                 autocomplete="off"
+                :checked="selectedIds.has(value.id)"
+                @change="event => onChange(event, value)"
             />
             <label
                 :for="`${toggleBtnId}-${value.id}`"

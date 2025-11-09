@@ -16,18 +16,20 @@ const translations = {
     'en': {
         'Selected filters will apply to the exported events. Copy the link below and import it in a calendar application.':
             'Selected filters will apply to the exported events. Copy the link below and import it in a calendar application.',
-        'Subjects': 'Subjects',
         'Classrooms': 'Classrooms',
         'Teachers': 'Teachers',
+        'Events': 'Events',
         'Export this subject': 'Export this subject',
+        'Export events outside of subjects': 'Export events outside of subjects',
     },
     'pl': {
         'Selected filters will apply to the exported events. Copy the link below and import it in a calendar application.':
             'Wybrane filtry zostaną zastosowane do wyeksportowanych wydarzeń. Skopiuj poniższy link i zaimportuj go w aplikacji kalendarzowej.',
-        'Subjects': 'Przedmioty',
         'Classrooms': 'Sale',
         'Teachers': 'Prowadzący',
+        'Events': 'Wydarzenia',
         'Export this subject': 'Eksportuj ten przedmiot',
+        'Export events outside of subjects': 'Eksportuj wydarzenia poza przedmiotami',
     },
 };
 
@@ -44,11 +46,13 @@ const { initialSelectedClassrooms, initialSelectedSubjects, initialSelectedTeach
         initialSelectedSubjects: SubjectData[];
         initialSelectedClassrooms: ClassroomData[];
         initialSelectedTeachers: UserPublicData[];
+        subjectGroups: { subjectsData: SubjectData[]; title: string }[];
     }>();
 
 const { cloned: selectedSubjects } = useCloned(computed(() => initialSelectedSubjects));
 const { cloned: selectedClassrooms } = useCloned(computed(() => initialSelectedClassrooms));
 const { cloned: selectedTeachers } = useCloned(computed(() => initialSelectedTeachers));
+const exportCalendarEvents = ref(false);
 
 const classroomOptions = computed(() =>
     Object.fromEntries([
@@ -73,6 +77,7 @@ const icsUrl = computed<string>(() => {
         ...selectedClassrooms.value.map(classroom => ['classroom', classroom.id]),
         ...selectedTeachers.value.map(teacher => ['teacher', teacher.id]),
         ...[...selectedGroupIds.value].map(id => ['laboratoryGroup', id]),
+        ...(exportCalendarEvents.value ? [['exportCalendarEvents', 'true']] : []),
         ['lang', langId],
     ]);
 
@@ -85,24 +90,30 @@ const icsUrl = computed<string>(() => {
 });
 
 const icsUrlId = crypto.randomUUID();
+const exportCalendarEventsId = crypto.randomUUID();
 </script>
 
 <template>
     <div class="mb-3">
-        <h2 class="fs-6">
-            {{ translate('Subjects') }}
-        </h2>
-        <Accordion>
-            <AccordionItem v-for="subject in subjects" :key="subject.id" :id="subject.id">
-                <template #header>{{ subject.name }}</template>
-                <CalendarSubjectExportOptions
-                    v-model:subjects="selectedSubjectIds"
-                    v-model:groups="selectedGroupIds"
-                    :semester
-                    :subject
-                />
-            </AccordionItem>
-        </Accordion>
+        <template v-for="group in subjectGroups.filter(group => group.subjectsData.length > 0)" :key="group.title">
+            <Accordion class="mb-2">
+                <h2 class="text-center fs-6">{{ group.title }}</h2>
+                <AccordionItem
+                    v-for="subject in group.subjectsData"
+                    :key="subject.id"
+                    :id="subject.id"
+                    :initially-expanded="initialSelectedSubjects.some(s => s.id === subject.id)"
+                >
+                    <template #header>{{ subject.fullName }}</template>
+                    <CalendarSubjectExportOptions
+                        v-model:subjects="selectedSubjectIds"
+                        v-model:groups="selectedGroupIds"
+                        :semester
+                        :subject
+                    />
+                </AccordionItem>
+            </Accordion>
+        </template>
     </div>
     <div class="mb-3">
         <h2 class="fs-6">
@@ -110,11 +121,28 @@ const icsUrlId = crypto.randomUUID();
         </h2>
         <ToggleButtonPicker v-model="selectedClassrooms" :options="classroomOptions" />
     </div>
-    <div class="mb-4">
+    <div class="mb-3">
         <h2 class="fs-6">
             {{ translate('Teachers') }}
         </h2>
         <ToggleButtonPicker v-model="selectedTeachers" :options="teacherOptions" />
+    </div>
+    <div class="mb-4">
+        <h2 class="fs-6">
+            {{ translate('Events') }}
+        </h2>
+        <div class="form-check form-switch mb-3">
+            <input
+                :id="exportCalendarEventsId"
+                v-model="exportCalendarEvents"
+                class="form-check-input"
+                type="checkbox"
+                role="switch"
+            />
+            <label class="form-check-label" :for="exportCalendarEventsId">{{
+                translate('Export events outside of subjects')
+            }}</label>
+        </div>
     </div>
     <p>
         {{

@@ -6,7 +6,7 @@ import { apiDelete, apiPatch, apiPost } from '@components/api';
 import type { SemesterData } from '@components/semesters/types';
 import type { SubjectCreateApiData, SubjectData, SubjectEditApiData } from '@components/subjects/types';
 import type { UserPublicData } from '@components/users/types';
-import { toHyphenatedLowercase } from '@components/utils';
+import { makeSubjectFullName, romanNumerals, toHyphenatedLowercase } from '@components/utils';
 import ButtonWithConfirmationPopover from '@components/ButtonWithConfirmationPopover.vue';
 import UserMultiSelector from '@components/users/UserMultiSelector.vue';
 
@@ -37,6 +37,7 @@ const customDurationMinutes = ref<number | string>(subject?.durationMinutes ?? 1
 const classRepeatWeeks = ref<number | string>(subject?.classRepeatWeeks ?? 1);
 const studyMode = ref<StudyModeType>(subject?.studyMode ?? 'full-time');
 const studyCycle = ref<StudyCycleType>(subject?.studyCycle ?? 'first-cycle');
+const semesterNumber = ref<number>(subject?.semesterNumber ?? 1);
 
 async function submit() {
     if (typeof customDurationMinutes.value === 'string' || typeof classRepeatWeeks.value === 'string') {
@@ -56,6 +57,7 @@ async function submit() {
                   classRepeatWeeks: classRepeatWeeks.value,
                   studyMode: studyMode.value,
                   studyCycle: studyCycle.value,
+                  semesterNumber: semesterNumber.value,
               } satisfies SubjectCreateApiData)
             : await apiPatch<boolean>('/semesters/api/subjects/', {
                   id: subject.id,
@@ -68,6 +70,7 @@ async function submit() {
                   classRepeatWeeks: classRepeatWeeks.value,
                   studyMode: studyMode.value,
                   studyCycle: studyCycle.value,
+                  semesterNumber: semesterNumber.value,
               } satisfies SubjectEditApiData);
 
     if (success === undefined) {
@@ -77,7 +80,7 @@ async function submit() {
     submitFailed.value = !success;
 
     if (success) {
-        const newUrl = `/semesters/${semester.slug}/subjects/${toHyphenatedLowercase(subjectName.value ?? '')}/`;
+        const newUrl = `/semesters/${semester.slug}/subjects/${toHyphenatedLowercase(makeSubjectFullName(subjectName.value, semesterNumber.value))}/`;
 
         if (isEditing.value) {
             window.history.replaceState({}, '', newUrl);
@@ -121,6 +124,7 @@ const translations = {
         'Study cycle': 'Study cycle',
         'First-cycle': 'First-cycle',
         'Second-cycle': 'Second-cycle',
+        'Semester': 'Semester',
     },
     'pl': {
         'Subject name': 'Nazwa przedmiotu',
@@ -142,6 +146,7 @@ const translations = {
         'Study cycle': 'Stopień studiów',
         'First-cycle': 'Pierwszy stopień',
         'Second-cycle': 'Drugi stopień',
+        'Semester': 'Semestr',
     },
 };
 
@@ -157,6 +162,7 @@ const durationId = crypto.randomUUID();
 const classRepeatId = crypto.randomUUID();
 const studyModeId = crypto.randomUUID();
 const studyCycleId = crypto.randomUUID();
+const semesterNumberId = crypto.randomUUID();
 </script>
 
 <template>
@@ -165,7 +171,15 @@ const studyCycleId = crypto.randomUUID();
             <label :for="nameId" class="form-label">
                 {{ translate('Subject name') }} <span class="text-danger">*</span>
             </label>
-            <input :id="nameId" v-model="subjectName" type="text" class="form-control" required autofocus />
+            <input
+                :id="nameId"
+                v-model="subjectName"
+                type="text"
+                class="form-control"
+                placeholder="Sieci komputerowe - Informatyka"
+                required
+                autofocus
+            />
         </div>
 
         <div>
@@ -197,6 +211,23 @@ const studyCycleId = crypto.randomUUID();
             >
                 <option value="first-cycle">{{ translate('First-cycle') }}</option>
                 <option value="second-cycle">{{ translate('Second-cycle') }}</option>
+            </select>
+        </div>
+
+        <div>
+            <label :for="semesterNumberId" class="form-label">
+                {{ translate('Semester') }} <span class="text-danger">*</span>
+            </label>
+            <select
+                :id="semesterNumberId"
+                v-model="semesterNumber"
+                class="form-select"
+                :aria-label="translate('Semester')"
+                required
+            >
+                <option v-for="(romanNumeral, index) in romanNumerals" :key="romanNumeral" :value="index + 1">
+                    {{ romanNumeral }}
+                </option>
             </select>
         </div>
 

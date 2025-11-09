@@ -6,7 +6,7 @@ import type { ClassroomData } from '@components/classrooms/types';
 import type { ExerciseData } from '@components/exercises/types';
 import type { LaboratoryGroupData } from '@components/laboratory-groups/types';
 import type { ScheduleChangeData, SemesterData } from '@components/semesters/types';
-import type { SubjectData } from '@components/subjects/types';
+import { makeSubjectStudyDetails, type SubjectData } from '@components/subjects/types';
 import type { UserPublicData } from '@components/users/types';
 import ExerciseList from '@components/exercises/ExerciseList.vue';
 import GenerateClasses from '@components/laboratory-classes/GenerateClasses.vue';
@@ -63,8 +63,10 @@ function refreshClasses() {
 
 <template>
     <h1 class="text-center fs-4 mb-3">
-        {{ subject.name }}
+        {{ subject.fullName }}
         <EditSubject v-if="currentUser" :semester :subject :all-users />
+        <br />
+        <span class="fs-5">{{ makeSubjectStudyDetails(subject, langId) }}</span>
     </h1>
     <a
         :href="subject.moodleCourseUrl !== '' ? subject.moodleCourseUrl : undefined"
@@ -88,6 +90,8 @@ function refreshClasses() {
                 :semester
                 :subject
                 :teachers="subject.teachers"
+                :laboratory-groups
+                :exercises
                 @class-edited="exerciseList?.refreshClasses()"
             />
         </div>

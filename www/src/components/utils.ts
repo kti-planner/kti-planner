@@ -38,3 +38,9 @@ export const dateStringSchema = z.iso.date().transform(str => {
 export const dateTimeStringSchema = z.iso.datetime({ local: true }).transform(str => {
     return new Date(str);
 });
+
+export const romanNumerals = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII'];
+
+export function makeSubjectFullName(name: string, semesterNumber: number): string {
+    return `${name} sem. ${romanNumerals[semesterNumber - 1] ?? ''}`;
+}
