@@ -27,8 +27,7 @@ async function submit() {
             ? await apiPost<boolean>(`/api/subjects/${props.subject.id}/laboratory-groups/`, {
                   name: name.value,
               } satisfies LaboratoryGroupCreateApiData)
-            : await apiPatch<boolean>(`/api/subjects/${props.subject.id}/laboratory-groups/`, {
-                  id: props.group.id,
+            : await apiPatch<boolean>(`/api/subjects/${props.subject.id}/laboratory-groups/${props.group.id}/`, {
                   name: name.value,
               } satisfies LaboratoryGroupEditApiData);
 
@@ -48,10 +47,7 @@ async function doDelete() {
         return;
     }
 
-    const result = await apiDelete<boolean>(
-        `/api/subjects/${props.subject.id}/laboratory-groups/`,
-        new URLSearchParams({ id: props.group.id }),
-    );
+    const result = await apiDelete<boolean>(`/api/subjects/${props.subject.id}/laboratory-groups/${props.group.id}/`);
 
     if (result) {
         window.location.reload();

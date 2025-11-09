@@ -68,14 +68,16 @@ async function submit() {
                   classroomId: classroomId.value,
                   durations: repeatOptions.value.generateDurations(startTime.value, endTime.value),
               } satisfies CalendarEventCreateApiData)
-            : await apiPatch<EventConflict[]>(`/api/semesters/${props.semester.id}/calendar-events/`, {
-                  id: props.calendarEvent.id,
-                  name: name.value,
-                  userId: user.value.id,
-                  classroomId: classroomId.value,
-                  startDate: `${date.value}T${startTime.value}`,
-                  endDate: `${date.value}T${endTime.value}`,
-              } satisfies CalendarEventEditApiData);
+            : await apiPatch<EventConflict[]>(
+                  `/api/semesters/${props.semester.id}/calendar-events/${props.calendarEvent.id}/`,
+                  {
+                      name: name.value,
+                      userId: user.value.id,
+                      classroomId: classroomId.value,
+                      startDate: `${date.value}T${startTime.value}`,
+                      endDate: `${date.value}T${endTime.value}`,
+                  } satisfies CalendarEventEditApiData,
+              );
 
     if (conflicts === undefined) {
         return;
@@ -95,8 +97,7 @@ async function doDelete() {
     }
 
     const result = await apiDelete<boolean>(
-        `/api/semesters/${props.semester.id}/calendar-events/`,
-        new URLSearchParams({ id: props.calendarEvent.id }),
+        `/api/semesters/${props.semester.id}/calendar-events/${props.calendarEvent.id}/`,
     );
 
     if (result) {

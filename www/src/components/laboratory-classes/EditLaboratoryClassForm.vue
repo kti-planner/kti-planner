@@ -77,12 +77,14 @@ async function saveLaboratoryClass() {
 
     eventConflict.value = null;
 
-    const conflicts = await apiPatch<EventConflict[]>(`/api/subjects/${subject.id}/laboratory-classes/`, {
-        id: laboratoryClass.id,
-        startDate: `${date.value}T${startTime.value}`,
-        endDate: `${date.value}T${endTime.value}`,
-        teacherId: teacher.value.id,
-    } satisfies LaboratoryClassEditApiData);
+    const conflicts = await apiPatch<EventConflict[]>(
+        `/api/subjects/${subject.id}/laboratory-classes/${laboratoryClass.id}/`,
+        {
+            startDate: `${date.value}T${startTime.value}`,
+            endDate: `${date.value}T${endTime.value}`,
+            teacherId: teacher.value.id,
+        } satisfies LaboratoryClassEditApiData,
+    );
 
     if (conflicts === undefined) {
         return;
@@ -97,10 +99,7 @@ async function saveLaboratoryClass() {
 }
 
 async function doDelete() {
-    const result = await apiDelete<boolean>(
-        `/api/subjects/${subject.id}/laboratory-classes/`,
-        new URLSearchParams({ id: laboratoryClass.id }),
-    );
+    const result = await apiDelete<boolean>(`/api/subjects/${subject.id}/laboratory-classes/${laboratoryClass.id}/`);
 
     if (result) {
         emit('submit');
