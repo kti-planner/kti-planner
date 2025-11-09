@@ -59,8 +59,7 @@ async function submit() {
                   studyCycle: studyCycle.value,
                   semesterNumber: semesterNumber.value,
               } satisfies SubjectCreateApiData)
-            : await apiPatch<boolean>('/api/subjects/', {
-                  id: subject.id,
+            : await apiPatch<boolean>(`/api/subjects/${subject.id}/`, {
                   name: subjectName.value,
                   teacherIds: teachers.value.map(user => user.id),
                   description: description.value,
@@ -96,7 +95,7 @@ async function doDelete() {
         return;
     }
 
-    const result = await apiDelete<boolean>('/api/subjects/', new URLSearchParams({ id: subject.id }));
+    const result = await apiDelete<boolean>(`/api/subjects/${subject.id}/`);
 
     if (result) {
         window.location.assign(`/semesters/${semester.slug}/`);

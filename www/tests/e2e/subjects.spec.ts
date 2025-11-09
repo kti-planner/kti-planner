@@ -296,9 +296,8 @@ test.describe('API fetch tests', () => {
     test('Logged-out user cannot edit subject', async ({ page }) => {
         await page.goto('/semesters/2024-summer/');
 
-        const response = await page.request.patch('/api/subjects/', {
+        const response = await page.request.patch('/api/subjects/3f58b671-5b38-43f8-bf0f-49d93048c52e/', {
             data: {
-                id: '3f58b671-5b38-43f8-bf0f-49d93048c52e',
                 name: 'Updated Subject',
                 teacherIds: ['feeaa186-3d69-4801-a580-88be10d53553'],
                 description: '',
@@ -318,9 +317,8 @@ test.describe('API fetch tests', () => {
         await page.goto('/semesters/2024-summer/');
         await loginAsAdmin(page);
 
-        const response = await page.request.patch('/api/subjects/', {
+        const response = await page.request.patch('/api/subjects/3f58b671-5b38-43f8-bf0f-49d93048c52e/', {
             data: {
-                id: '3f58b671-5b38-43f8-bf0f-49d93048c52e',
                 name: 'Updated Subject',
                 teacherIds: ['feeaa186-3d69-4801-a580-88be10d53553'],
                 description: '',
@@ -339,11 +337,8 @@ test.describe('API fetch tests', () => {
     test('Logged-out user cannot delete subject', async ({ page }) => {
         await page.goto('/semesters/');
 
-        const response = await page.request.delete('/api/subjects/', {
+        const response = await page.request.delete('/api/subjects/3f58b671-5b38-43f8-bf0f-49d93048c52e/', {
             data: null,
-            params: {
-                id: '3f58b671-5b38-43f8-bf0f-49d93048c52e',
-            },
         });
 
         expect(response.status()).toBe(404);
@@ -353,11 +348,8 @@ test.describe('API fetch tests', () => {
         await page.goto('/semesters/');
         await loginAsAdmin(page);
 
-        const response = await page.request.delete('/api/subjects/', {
+        const response = await page.request.delete('/api/subjects/3f58b671-5b38-43f8-bf0f-49d93048c52e/', {
             data: null,
-            params: {
-                id: '3f58b671-5b38-43f8-bf0f-49d93048c52e',
-            },
         });
 
         expect(response.status()).toBe(200);
