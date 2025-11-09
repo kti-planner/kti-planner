@@ -38,8 +38,7 @@ async function submit() {
                   startDate: startDate.value,
                   endDate: endDate.value,
               } satisfies SemesterCreateApiData)
-            : await apiPatch<boolean>('/api/semesters/', {
-                  id: props.semester.id,
+            : await apiPatch<boolean>(`/api/semesters/${props.semester.id}/`, {
                   type: type.value,
                   year: year.value,
                   startDate: startDate.value,
@@ -62,7 +61,7 @@ async function doDelete() {
         return;
     }
 
-    const result = await apiDelete<boolean>('/api/semesters/', new URLSearchParams({ id: props.semester.id }));
+    const result = await apiDelete<boolean>(`/api/semesters/${props.semester.id}/`);
 
     if (result === undefined) {
         return;

@@ -1,7 +1,21 @@
 import type { APIRoute } from 'astro';
 import { makeSemesterData, Semester } from '@backend/semester';
-import { Subject } from '@backend/subject';
-import { semesterCreateApiSchema, semesterEditApiSchema } from '@components/semesters/types';
+import { semesterCreateApiSchema } from '@components/semesters/types';
+
+export const GET: APIRoute = async ({ locals }) => {
+    const { user } = locals;
+
+    if (!user) {
+        return Response.json(null, { status: 404 });
+    }
+
+    const semesters = await Semester.fetchAll();
+
+    return Response.json(
+        semesters.map(semester => makeSemesterData(semester)),
+        { status: 200 },
+    );
+};
 
 export const POST: APIRoute = async ({ locals }) => {
     const { jsonData, user } = locals;
@@ -23,77 +37,4 @@ export const POST: APIRoute = async ({ locals }) => {
     await Semester.create(data);
 
     return Response.json(true, { status: 201 });
-};
-
-export const PATCH: APIRoute = async ({ locals }) => {
-    const { jsonData, user } = locals;
-
-    if (!user) {
-        return Response.json(null, { status: 404 });
-    }
-
-    const data = semesterEditApiSchema.nullable().catch(null).parse(jsonData);
-
-    if (!data) {
-        return Response.json(null, { status: 400 });
-    }
-
-    const semester = await Semester.fetch(data.id);
-
-    if (semester === null) {
-        return Response.json(null, { status: 404 });
-    }
-
-    const other = await Semester.fetchByYearAndType(data.year ?? semester.year, data.type ?? semester.type);
-
-    if (other && other.id !== semester.id) {
-        return Response.json(false, { status: 200 });
-    }
-
-    await semester.edit(data);
-
-    return Response.json(true, { status: 200 });
-};
-
-export const GET: APIRoute = async ({ locals }) => {
-    const { user } = locals;
-
-    if (!user) {
-        return Response.json(null, { status: 404 });
-    }
-
-    const semesters = await Semester.fetchAll();
-
-    return Response.json(
-        semesters.map(semester => makeSemesterData(semester)),
-        { status: 200 },
-    );
-};
-
-export const DELETE: APIRoute = async ({ locals, url }) => {
-    const { user } = locals;
-
-    if (!user) {
-        return Response.json(null, { status: 404 });
-    }
-
-    const id = url.searchParams.get('id');
-
-    if (id === null) {
-        return Response.json(null, { status: 400 });
-    }
-
-    const semester = await Semester.fetch(id);
-
-    if (!semester) {
-        return Response.json(null, { status: 404 });
-    }
-
-    if ((await Subject.fetchAllFromSemester(semester)).length > 0) {
-        return Response.json(false, { status: 200 });
-    }
-
-    await semester.delete();
-
-    return Response.json(true, { status: 200 });
 };
