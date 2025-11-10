@@ -398,7 +398,7 @@ test.describe('API fetch tests', () => {
     test('Logged-out user cannot create new user', async ({ page }) => {
         await page.goto('/users/');
 
-        const response = await page.request.post('/users/api/users/', {
+        const response = await page.request.post('/api/users/', {
             data: {
                 name: 'New User',
                 email: 'newuser@example.com',
@@ -414,7 +414,7 @@ test.describe('API fetch tests', () => {
         await page.goto('/users/');
         await loginAsTeacher(page);
 
-        const response = await page.request.post('/users/api/users/', {
+        const response = await page.request.post('/api/users/', {
             data: {
                 name: 'New User',
                 email: 'newuser@example.com',
@@ -430,7 +430,7 @@ test.describe('API fetch tests', () => {
         await page.goto('/users/');
         await loginAsAdmin(page);
 
-        const response = await page.request.post('/users/api/users/', {
+        const response = await page.request.post('/api/users/', {
             data: {
                 name: 'New User',
                 email: 'newuser@example.com',
@@ -445,9 +445,8 @@ test.describe('API fetch tests', () => {
     test('Logged-out user cannot edit user data', async ({ page }) => {
         await page.goto('/profile/');
 
-        const response = await page.request.patch('/users/api/users/', {
+        const response = await page.request.patch('/api/users/feeaa186-3d69-4801-a580-88be10d53553/', {
             data: {
-                id: 'feeaa186-3d69-4801-a580-88be10d53553',
                 name: 'New Name',
                 email: 'newemail@example.com',
             },
@@ -460,9 +459,8 @@ test.describe('API fetch tests', () => {
         await page.goto('/profile/');
         await loginAsTeacher(page);
 
-        const response = await page.request.patch('/users/api/users/', {
+        const response = await page.request.patch('/api/users/feeaa186-3d69-4801-a580-88be10d53553/', {
             data: {
-                id: 'feeaa186-3d69-4801-a580-88be10d53553',
                 name: 'New Name',
                 email: 'newemail@example.com',
             },
@@ -470,9 +468,8 @@ test.describe('API fetch tests', () => {
 
         expect(response.status()).toBe(200);
 
-        const failResponse = await page.request.patch('/users/api/users/', {
+        const failResponse = await page.request.patch('/api/users/feeaa186-3d69-4801-a580-88be10d53553/', {
             data: {
-                id: 'feeaa186-3d69-4801-a580-88be10d53553',
                 role: 'admin',
             },
         });
@@ -484,9 +481,8 @@ test.describe('API fetch tests', () => {
         await page.goto('/profile/');
         await loginAsTeacher(page);
 
-        const response = await page.request.patch('/users/api/users/', {
+        const response = await page.request.patch('/api/users/c393c524-453c-4b02-bfad-5114fe828200/', {
             data: {
-                id: 'c393c524-453c-4b02-bfad-5114fe828200',
                 name: 'New Name',
                 email: 'newemail@example.com',
             },
@@ -499,9 +495,8 @@ test.describe('API fetch tests', () => {
         await page.goto('/users/');
         await loginAsAdmin(page);
 
-        const response = await page.request.patch('/users/api/users/', {
+        const response = await page.request.patch('/api/users/feeaa186-3d69-4801-a580-88be10d53553/', {
             data: {
-                id: 'c393c524-453c-4b02-bfad-5114fe828200',
                 name: 'New Name',
                 email: 'newemail@example.com',
                 role: 'admin',
@@ -514,7 +509,7 @@ test.describe('API fetch tests', () => {
     test('Logged-out user cannot change password', async ({ page }) => {
         await page.goto('/profile/');
 
-        const response = await page.request.patch('/users/api/password-change/', {
+        const response = await page.request.patch('/api/users/password-change/', {
             data: {
                 currentPassword: 'kti',
                 newPassword: 'NewPassword',
@@ -529,7 +524,7 @@ test.describe('API fetch tests', () => {
         await page.goto('/profile/');
         await loginAsTeacher(page);
 
-        const response = await page.request.patch('/users/api/password-change/', {
+        const response = await page.request.patch('/api/users/password-change/', {
             data: {
                 currentPassword: 'kti',
                 newPassword: 'NewPassword',
@@ -543,9 +538,8 @@ test.describe('API fetch tests', () => {
     test('Logged-out user cannot reset user password', async ({ page }) => {
         await page.goto('/profile/');
 
-        const response = await page.request.patch('/users/api/password-reset/', {
+        const response = await page.request.patch('/api/users/c393c524-453c-4b02-bfad-5114fe828200/password-reset/', {
             data: {
-                id: 'c393c524-453c-4b02-bfad-5114fe828200',
                 password: 'NewPassword',
             },
         });
@@ -557,9 +551,8 @@ test.describe('API fetch tests', () => {
         await page.goto('/profile/');
         await loginAsTeacher(page);
 
-        const response = await page.request.patch('/users/api/password-reset/', {
+        const response = await page.request.patch('/api/users/c393c524-453c-4b02-bfad-5114fe828200/password-reset/', {
             data: {
-                id: 'c393c524-453c-4b02-bfad-5114fe828200',
                 password: 'NewPassword',
             },
         });
@@ -571,9 +564,8 @@ test.describe('API fetch tests', () => {
         await page.goto('/profile/');
         await loginAsAdmin(page);
 
-        const response = await page.request.patch('/users/api/password-reset/', {
+        const response = await page.request.patch('/api/users/c393c524-453c-4b02-bfad-5114fe828200/password-reset/', {
             data: {
-                id: 'c393c524-453c-4b02-bfad-5114fe828200',
                 password: 'NewPassword',
             },
         });
@@ -601,11 +593,8 @@ test.describe('API fetch tests', () => {
     test('Logged-out user cannot delete user', async ({ page }) => {
         await page.goto('/users/');
 
-        const response = await page.request.delete('/users/api/users/', {
+        const response = await page.request.delete('/api/users/c393c524-453c-4b02-bfad-5114fe828200/', {
             data: null,
-            params: {
-                id: 'c393c524-453c-4b02-bfad-5114fe828200',
-            },
         });
 
         expect(response.status()).toBe(404);
@@ -615,11 +604,8 @@ test.describe('API fetch tests', () => {
         await page.goto('/users/');
         await loginAsTeacher(page);
 
-        const response = await page.request.delete('/users/api/users/', {
+        const response = await page.request.delete('/api/users/c393c524-453c-4b02-bfad-5114fe828200/', {
             data: null,
-            params: {
-                id: 'c393c524-453c-4b02-bfad-5114fe828200',
-            },
         });
 
         expect(response.status()).toBe(404);
@@ -629,11 +615,8 @@ test.describe('API fetch tests', () => {
         await page.goto('/users/');
         await loginAsAdmin(page);
 
-        const response = await page.request.delete('/users/api/users/', {
+        const response = await page.request.delete('/api/users/c393c524-453c-4b02-bfad-5114fe828200/', {
             data: null,
-            params: {
-                id: 'c393c524-453c-4b02-bfad-5114fe828200',
-            },
         });
 
         expect(response.status()).toBe(200);

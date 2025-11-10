@@ -9,7 +9,6 @@ export const passwordChangeApiSchema = z.object({
 export type PasswordChangeApiData = z.input<typeof passwordChangeApiSchema>;
 
 export const passwordResetApiSchema = z.object({
-    id: z.uuid(),
     password: z.string().nonempty(),
 });
 

@@ -21,7 +21,6 @@ export const semesterCreateApiSchema = z.object({
 export type SemesterCreateApiData = z.input<typeof semesterCreateApiSchema>;
 
 export const semesterEditApiSchema = z.object({
-    id: z.uuid(),
     year: z.number().optional(),
     type: z.enum(['summer', 'winter']).optional(),
     startDate: dateStringSchema.optional(),

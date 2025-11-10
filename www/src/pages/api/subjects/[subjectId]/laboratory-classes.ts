@@ -9,15 +9,10 @@ import { LaboratoryGroup } from '@backend/laboratory-group';
 import { Semester } from '@backend/semester';
 import { Subject } from '@backend/subject';
 import { User } from '@backend/user';
-import {
-    laboratoryClassCreateApiSchema,
-    type LaboratoryClassData,
-    laboratoryClassEditApiSchema,
-} from '@components/laboratory-classes/types';
-import { getSubjectFromParams } from '@pages/semesters/[semesterSlug]/subjects/[subjectSlug]/api/_subject-utils';
+import { laboratoryClassCreateApiSchema, type LaboratoryClassData } from '@components/laboratory-classes/types';
 
 export const GET: APIRoute = async ({ params, url }) => {
-    const subject = await getSubjectFromParams(params);
+    const subject = await Subject.fetch(params.subjectId ?? '');
     if (!subject) {
         return Response.json(null, { status: 404 });
     }
@@ -62,24 +57,19 @@ export const GET: APIRoute = async ({ params, url }) => {
 
 export const POST: APIRoute = async ({ locals, params }) => {
     const { jsonData, user } = locals;
-    const { semesterSlug } = params;
 
     if (!user) {
         return Response.json(null, { status: 404 });
     }
 
-    if (semesterSlug === undefined) {
-        return new Response(null, { status: 404 });
-    }
-
-    const semester = await Semester.fetchBySlug(semesterSlug);
-    if (!semester) {
-        return new Response(null, { status: 404 });
-    }
-
-    const subject = await getSubjectFromParams(params);
+    const subject = await Subject.fetch(params.subjectId ?? '');
     if (!subject) {
         return Response.json(null, { status: 404 });
+    }
+
+    const semester = await Semester.fetch(subject.semesterId);
+    if (!semester) {
+        return new Response(null, { status: 404 });
     }
 
     const data = laboratoryClassCreateApiSchema.nullable().catch(null).parse(jsonData);
@@ -167,111 +157,4 @@ export const POST: APIRoute = async ({ locals, params }) => {
     await Promise.all(createData.map(createDatum => LaboratoryClass.create(createDatum)));
 
     return Response.json([]);
-};
-
-export const PATCH: APIRoute = async ({ locals, params }) => {
-    const { jsonData, user } = locals;
-    const { semesterSlug } = params;
-
-    if (!user) {
-        return Response.json(null, { status: 404 });
-    }
-
-    if (semesterSlug === undefined) {
-        return new Response(null, { status: 404 });
-    }
-
-    const semester = await Semester.fetchBySlug(semesterSlug);
-    if (!semester) {
-        return new Response(null, { status: 404 });
-    }
-
-    const subject = await getSubjectFromParams(params);
-    if (!subject) {
-        return Response.json(null, { status: 404 });
-    }
-
-    const data = laboratoryClassEditApiSchema.nullable().catch(null).parse(jsonData);
-
-    if (!data) {
-        return Response.json(null, { status: 400 });
-    }
-
-    const laboratoryClass = await LaboratoryClass.fetch(data.id);
-
-    if (!laboratoryClass) {
-        return Response.json(null, { status: 404 });
-    }
-
-    const teacher = data.teacherId === undefined ? undefined : await User.fetch(data.teacherId);
-
-    if (teacher === null) {
-        return Response.json(null, { status: 400 });
-    }
-
-    const subjects = await Subject.fetchAllFromSemester(semester);
-    const scheduleChanges = await semester.getScheduleChanges();
-    const laboratoryClasses = await LaboratoryClass.fetchAllFromSubjects(subjects);
-    const exercises = await Exercise.fetchAllFromSubjects(subjects);
-    const calendarEvents = await CalendarEvent.fetchAllFromSemester(semester);
-    const exercise = exercises.find(exercise => laboratoryClass.exerciseId === exercise.id);
-    assert(exercise);
-
-    const conflicts = checkForEventConflicts(
-        [
-            {
-                id: laboratoryClass.id,
-                classroomId: exercise.classroomId,
-                startDate: data.startDate ?? laboratoryClass.startDate,
-                endDate: data.endDate ?? laboratoryClass.endDate,
-            },
-        ],
-        semester,
-        scheduleChanges,
-        laboratoryClasses,
-        exercises,
-        calendarEvents,
-    );
-
-    if (conflicts.length > 0) {
-        return Response.json(conflicts);
-    }
-
-    await laboratoryClass.edit({
-        startDate: data.startDate,
-        endDate: data.endDate,
-        teacher,
-    });
-
-    return Response.json([]);
-};
-
-export const DELETE: APIRoute = async ({ locals, url, params }) => {
-    const { user } = locals;
-
-    if (!user) {
-        return Response.json(null, { status: 404 });
-    }
-
-    const subject = await getSubjectFromParams(params);
-
-    if (subject === null) {
-        return Response.json(null, { status: 400 });
-    }
-
-    const id = url.searchParams.get('id');
-
-    if (id === null) {
-        return Response.json(null, { status: 400 });
-    }
-
-    const laboratoryClass = await LaboratoryClass.fetch(id);
-
-    if (!laboratoryClass || (await Exercise.fetch(laboratoryClass.exerciseId))?.subjectId !== subject.id) {
-        return Response.json(null, { status: 404 });
-    }
-
-    await laboratoryClass.delete();
-
-    return Response.json(true, { status: 200 });
 };

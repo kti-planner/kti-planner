@@ -16,7 +16,6 @@ export const classroomCreateApiSchema = z.object({
 export type ClassroomCreateApiData = z.input<typeof classroomCreateApiSchema>;
 
 export const classroomEditApiSchema = z.object({
-    id: z.uuid(),
     name: z.string().trim().nonempty().optional(),
 });
 

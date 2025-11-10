@@ -29,7 +29,6 @@ export const calendarEventCreateApiSchema = z.object({
 export type CalendarEventCreateApiData = z.input<typeof calendarEventCreateApiSchema>;
 
 export const calendarEventEditApiSchema = z.object({
-    id: z.uuid(),
     name: z.string().optional(),
     userId: z.uuid().optional(),
     classroomId: z.uuid().nullable().optional(),

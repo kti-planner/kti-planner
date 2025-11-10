@@ -20,10 +20,8 @@ const { exercise, semester, subject, scheduleChanges } = defineProps<{
     scheduleChanges: ScheduleChangeData[];
 }>();
 
-const apiUrl = computed(() => `/semesters/${semester.slug}/subjects/${subject.slug}/api/laboratory-classes/`);
-
 const { data: laboratoryClasses, execute: refreshClasses } = useApiFetch<LaboratoryClassData[]>(
-    apiUrl,
+    () => `/api/subjects/${subject.id}/laboratory-classes/`,
     () => new URLSearchParams({ exercise: exercise.id }),
 );
 

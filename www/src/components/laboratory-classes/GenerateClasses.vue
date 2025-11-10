@@ -29,7 +29,6 @@ const { initialGroup } = defineProps<{
     exercises: ExerciseData[];
     subject: SubjectData;
     semester: SemesterData;
-    apiUrl: string;
     laboratoryGroups: LaboratoryGroupData[];
     scheduleChanges: ScheduleChangeData[];
 }>();
@@ -62,7 +61,6 @@ function handleFormDone() {
             :semester
             :subject
             :exercises
-            :api-url
             :laboratory-groups
             :schedule-changes
             @done="handleFormDone"

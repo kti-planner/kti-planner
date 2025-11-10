@@ -4,11 +4,12 @@ import { langId } from '@components/frontend/lang';
 import { apiPatch } from '@components/api';
 import type { EventConflict } from '@components/calendar/types';
 import type { LaboratoryClassData, LaboratoryClassMoveApiData } from '@components/laboratory-classes/types';
+import type { SubjectData } from '@components/subjects/types';
 import { formatDateLocalYyyyMmDd } from '@components/utils';
 
-const { laboratoryClass, apiUrl } = defineProps<{
+const { laboratoryClass, subject } = defineProps<{
     laboratoryClass: LaboratoryClassData;
-    apiUrl: string;
+    subject: SubjectData;
 }>();
 
 const translations = {
@@ -66,7 +67,7 @@ async function moveLaboratoryClasses() {
 
     eventConflicts.value = [];
 
-    const conflicts = await apiPatch<EventConflict[]>(apiUrl, {
+    const conflicts = await apiPatch<EventConflict[]>(`/api/subjects/${subject.id}/move-laboratory-classes/`, {
         id: laboratoryClass.id,
         moveByWeeks: weeks.value * (direction.value === 'forwards' ? 1 : -1),
     } satisfies LaboratoryClassMoveApiData);

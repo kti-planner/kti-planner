@@ -253,7 +253,7 @@ test.describe('API fetch tests', () => {
     test('Logged-out user cannot create new subject', async ({ page }) => {
         await page.goto('/semesters/2024-summer/');
 
-        const response = await page.request.post('/semesters/api/subjects/', {
+        const response = await page.request.post('/api/subjects/', {
             data: {
                 name: 'New Subject',
                 semesterId: '094f8324-7c58-4566-b5d7-e4fe8ed03a18',
@@ -275,7 +275,7 @@ test.describe('API fetch tests', () => {
         await page.goto('/semesters/2024-summer/');
         await loginAsAdmin(page);
 
-        const response = await page.request.post('/semesters/api/subjects/', {
+        const response = await page.request.post('/api/subjects/', {
             data: {
                 name: 'New Subject',
                 semesterId: '094f8324-7c58-4566-b5d7-e4fe8ed03a18',
@@ -296,9 +296,8 @@ test.describe('API fetch tests', () => {
     test('Logged-out user cannot edit subject', async ({ page }) => {
         await page.goto('/semesters/2024-summer/');
 
-        const response = await page.request.patch('/semesters/api/subjects/', {
+        const response = await page.request.patch('/api/subjects/3f58b671-5b38-43f8-bf0f-49d93048c52e/', {
             data: {
-                id: '3f58b671-5b38-43f8-bf0f-49d93048c52e',
                 name: 'Updated Subject',
                 teacherIds: ['feeaa186-3d69-4801-a580-88be10d53553'],
                 description: '',
@@ -318,9 +317,8 @@ test.describe('API fetch tests', () => {
         await page.goto('/semesters/2024-summer/');
         await loginAsAdmin(page);
 
-        const response = await page.request.patch('/semesters/api/subjects/', {
+        const response = await page.request.patch('/api/subjects/3f58b671-5b38-43f8-bf0f-49d93048c52e/', {
             data: {
-                id: '3f58b671-5b38-43f8-bf0f-49d93048c52e',
                 name: 'Updated Subject',
                 teacherIds: ['feeaa186-3d69-4801-a580-88be10d53553'],
                 description: '',
@@ -339,11 +337,8 @@ test.describe('API fetch tests', () => {
     test('Logged-out user cannot delete subject', async ({ page }) => {
         await page.goto('/semesters/');
 
-        const response = await page.request.delete('/semesters/api/subjects/', {
+        const response = await page.request.delete('/api/subjects/3f58b671-5b38-43f8-bf0f-49d93048c52e/', {
             data: null,
-            params: {
-                id: '3f58b671-5b38-43f8-bf0f-49d93048c52e',
-            },
         });
 
         expect(response.status()).toBe(404);
@@ -353,11 +348,8 @@ test.describe('API fetch tests', () => {
         await page.goto('/semesters/');
         await loginAsAdmin(page);
 
-        const response = await page.request.delete('/semesters/api/subjects/', {
+        const response = await page.request.delete('/api/subjects/3f58b671-5b38-43f8-bf0f-49d93048c52e/', {
             data: null,
-            params: {
-                id: '3f58b671-5b38-43f8-bf0f-49d93048c52e',
-            },
         });
 
         expect(response.status()).toBe(200);
@@ -366,7 +358,7 @@ test.describe('API fetch tests', () => {
     test('Logged-out user cannot copy subject from previous semester', async ({ page }) => {
         await page.goto('/semesters/2025-winter/');
 
-        const response = await page.request.post('/semesters/2025-winter/api/subject-copy/', {
+        const response = await page.request.post('/api/semesters/b2805b48-3d24-4169-8f67-88561345ee99/subject-copy/', {
             data: {
                 semesterId: '094f8324-7c58-4566-b5d7-e4fe8ed03a18',
                 subjectId: '25108321-0391-4c7a-b4d8-5ea20388e813',
@@ -380,7 +372,7 @@ test.describe('API fetch tests', () => {
         await page.goto('/semesters/2025-winter/');
         await loginAsAdmin(page);
 
-        const response = await page.request.post('/semesters/2025-winter/api/subject-copy/', {
+        const response = await page.request.post('/api/semesters/b2805b48-3d24-4169-8f67-88561345ee99/subject-copy/', {
             data: {
                 semesterId: '094f8324-7c58-4566-b5d7-e4fe8ed03a18',
                 subjectId: '25108321-0391-4c7a-b4d8-5ea20388e813',

@@ -33,7 +33,6 @@ export const userCreateApiSchema = z.object({
 export type UserCreateApiData = z.input<typeof userCreateApiSchema>;
 
 export const userEditApiSchema = z.object({
-    id: z.uuid(),
     name: z.string().trim().optional(),
     email: z.string().trim().optional(),
     role: userRoleSchema.optional(),

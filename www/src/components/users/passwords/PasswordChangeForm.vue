@@ -12,7 +12,7 @@ const newPassword = ref<string>('');
 const newPasswordRepeated = ref<string>('');
 
 async function submit() {
-    const success = await apiPatch<boolean>('/users/api/password-change/', {
+    const success = await apiPatch<boolean>('/api/users/password-change/', {
         currentPassword: currentPassword.value,
         newPassword: newPassword.value,
         newPasswordRepeated: newPasswordRepeated.value,

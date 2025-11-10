@@ -12,7 +12,6 @@ export const laboratoryGroupCreateApiSchema = z.object({
 export type LaboratoryGroupCreateApiData = z.input<typeof laboratoryGroupCreateApiSchema>;
 
 export const laboratoryGroupEditApiSchema = z.object({
-    id: z.uuid(),
     name: z.string(),
 });
 

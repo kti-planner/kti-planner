@@ -54,7 +54,6 @@ export const subjectCreateApiSchema = z.object({
 export type SubjectCreateApiData = z.input<typeof subjectCreateApiSchema>;
 
 export const subjectEditApiSchema = z.object({
-    id: z.uuid(),
     name: z.string().optional(),
     teacherIds: z.uuid().array().optional(),
     description: z.string().optional(),

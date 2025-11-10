@@ -71,7 +71,6 @@ const {
     exercises,
     subject,
     semester,
-    apiUrl,
     scheduleChanges,
     initialDate,
     oneExerciseOnly = false,
@@ -79,7 +78,6 @@ const {
     exercises: ExerciseData[];
     subject: SubjectData;
     semester: SemesterData;
-    apiUrl: string;
     laboratoryGroups: LaboratoryGroupData[];
     scheduleChanges: ScheduleChangeData[];
     initialDate?: Date | undefined;
@@ -168,7 +166,7 @@ async function generate() {
 
     eventConflicts.value = [];
 
-    const conflicts = await apiPost<EventConflict[]>(apiUrl, {
+    const conflicts = await apiPost<EventConflict[]>(`/api/subjects/${subject.id}/laboratory-classes/`, {
         laboratoryGroupId: group.value.id,
         classes: plannedClasses.value.map(plannedClass => ({
             exerciseId: plannedClass.exercise.id,
@@ -213,7 +211,7 @@ watch(
 );
 
 const { data: laboratoryClasses } = useApiFetch<LaboratoryClassData[]>(
-    apiUrl,
+    `/api/subjects/${subject.id}/laboratory-classes/`,
     () => new URLSearchParams(group.value ? { laboratoryGroup: group.value.name } : {}),
     { refetch: () => group.value !== null, immediate: group.value !== null },
 );

@@ -22,7 +22,6 @@ export const exerciseCreateApiSchema = z.object({
 export type ExerciseCreateApiData = z.input<typeof exerciseCreateApiSchema>;
 
 export const exerciseEditApiSchema = z.object({
-    id: z.uuid(),
     name: z.string().optional(),
     exerciseNumber: z.number().optional(),
     classroomId: z.uuid().nullable().optional(),

@@ -51,7 +51,6 @@ const { subject, semester, laboratoryGroups } = defineProps<{
 const selectedLaboratoryGroups = ref<LaboratoryGroupData[]>([]);
 const calendar = useTemplateRef('calendar');
 const exerciseList = useTemplateRef('exerciseList');
-const subjectUrl = computed(() => `/semesters/${semester.slug}/subjects/${subject.slug}`);
 
 const laboratoryGroupOptions = computed(() => Object.fromEntries(laboratoryGroups.map(group => [group.name, group])));
 
@@ -84,7 +83,6 @@ function refreshClasses() {
         <div class="col-12 col-lg-9 mb-2 order-2 order-lg-1">
             <SubjectCalendar
                 ref="calendar"
-                :api-url="`${subjectUrl}/api/laboratory-classes/`"
                 :selected-laboratory-groups
                 :schedule-changes
                 :semester
@@ -99,11 +97,7 @@ function refreshClasses() {
             <div>
                 <h2 class="text-center fs-5">
                     {{ translate('Laboratory groups') }}
-                    <LaboratoryGroupListModal
-                        v-if="currentUser"
-                        :groups="laboratoryGroups"
-                        :api-url="`${subjectUrl}/api/laboratory-groups/`"
-                    />
+                    <LaboratoryGroupListModal v-if="currentUser" :groups="laboratoryGroups" :subject />
                 </h2>
                 <ToggleButtonPicker v-model="selectedLaboratoryGroups" center :options="laboratoryGroupOptions" />
                 <GenerateClasses
@@ -116,7 +110,6 @@ function refreshClasses() {
                     :subject
                     :laboratory-groups
                     :schedule-changes
-                    :api-url="`${subjectUrl}/api/laboratory-classes/`"
                     class="d-block mx-auto mt-3"
                     @done="refreshClasses"
                 />
