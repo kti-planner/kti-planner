@@ -163,7 +163,7 @@ test('Can edit class time when logged in', async ({ page }) => {
     await expect(page.locator('.calendar-wrapper a').filter({ hasText: '13:15 - 15:00' })).toBeVisible();
 });
 
-test('Can view calendar event details', async ({ page }) => {
+test('Can view class-reservation calendar event details', async ({ page }) => {
     await page.goto('/semesters/2025-winter/');
 
     await page
@@ -182,7 +182,26 @@ test('Can view calendar event details', async ({ page }) => {
     await expect(page.getByRole('button', { name: 'Save' })).not.toBeVisible();
 });
 
-test('Can create single calendar event', async ({ page }) => {
+test('can view classes-canceled calendar event details', async ({ page }) => {
+    await page.goto('/semesters/2025-winter/');
+
+    await page
+        .locator('.calendar-wrapper a')
+        .filter({ hasText: '11:00 - 13:00' })
+        .filter({ hasText: "Godziny Rektorskie - Rector's hours" })
+        .click();
+
+    await expect(page.getByRole('heading', { name: 'Event details' })).toBeVisible();
+
+    await expect(page.getByText('Date: 3.10.2025 11:00 - 13:00')).toBeVisible();
+    await expect(page.getByText("Name: Godziny Rektorskie - Rector's hours")).toBeVisible();
+    await expect(page.getByText('Teacher:')).not.toBeVisible();
+    await expect(page.getByText('Classroom:')).not.toBeVisible();
+
+    await expect(page.getByRole('button', { name: 'Save' })).not.toBeVisible();
+});
+
+test('Can create single class-reservation calendar event', async ({ page }) => {
     await page.goto('/semesters/2025-winter/');
     await loginAsTeacher(page);
 
@@ -194,6 +213,7 @@ test('Can create single calendar event', async ({ page }) => {
     await expect(page.getByRole('textbox', { name: 'Start time' })).toHaveValue('14:00');
     await expect(page.getByRole('textbox', { name: 'End time' })).toHaveValue('15:00');
 
+    await page.getByRole('combobox', { name: 'Type' }).selectOption('class-reservation');
     await page.getByRole('textbox', { name: 'Name' }).fill('Test event');
     await page.getByRole('combobox', { name: 'Classroom' }).selectOption('EA 204');
 
@@ -201,6 +221,32 @@ test('Can create single calendar event', async ({ page }) => {
 
     await expect(
         page.locator('.calendar-wrapper a').filter({ hasText: '14:00 - 15:00' }).filter({ hasText: 'Test event' }),
+    ).toBeVisible();
+});
+
+test('Can create single classes-canceled calendar event', async ({ page }) => {
+    await page.goto('/semesters/2025-winter/');
+    await loginAsTeacher(page);
+
+    await page.locator('.fc-timegrid-slot-lane[data-time="10:00:00"]').click();
+
+    await expect(page.getByRole('heading', { name: 'Add event' })).toBeVisible();
+
+    await expect(page.getByRole('textbox', { name: 'Date' })).toHaveValue('2025-10-02');
+    await expect(page.getByRole('textbox', { name: 'Start time' })).toHaveValue('10:00');
+    await expect(page.getByRole('textbox', { name: 'End time' })).toHaveValue('11:00');
+
+    await page.getByRole('combobox', { name: 'Type' }).selectOption('classes-canceled');
+    await page.getByRole('textbox', { name: 'Name' }).fill('Test cancellation');
+    await page.getByRole('textbox', { name: 'End time' }).fill('12:00');
+
+    await page.getByRole('button', { name: 'Add', exact: true }).click();
+
+    await expect(
+        page
+            .locator('.calendar-wrapper a')
+            .filter({ hasText: '10:00 - 12:00' })
+            .filter({ hasText: 'Test cancellation' }),
     ).toBeVisible();
 });
 
@@ -217,7 +263,7 @@ test('Add event button is visible for logged-in users', async ({ page }) => {
     await expect(page.getByRole('button', { name: 'Add event' })).toBeVisible();
 });
 
-test('Can create single calendar event from button', async ({ page }) => {
+test('Can create single class-reservation calendar event from button', async ({ page }) => {
     await page.goto('/semesters/2025-winter/');
     await loginAsTeacher(page);
 
@@ -225,6 +271,7 @@ test('Can create single calendar event from button', async ({ page }) => {
 
     await expect(page.getByRole('heading', { name: 'Add event' })).toBeVisible();
 
+    await page.getByRole('combobox', { name: 'Type' }).selectOption('class-reservation');
     await page.getByRole('textbox', { name: 'Date' }).fill('2025-10-02');
     await page.getByRole('textbox', { name: 'Start time' }).fill('14:00');
     await page.getByRole('textbox', { name: 'End time' }).fill('15:00');
@@ -235,6 +282,30 @@ test('Can create single calendar event from button', async ({ page }) => {
 
     await expect(
         page.locator('.calendar-wrapper a').filter({ hasText: '14:00 - 15:00' }).filter({ hasText: 'Test event' }),
+    ).toBeVisible();
+});
+
+test('Can create single classes-canceled calendar event from button', async ({ page }) => {
+    await page.goto('/semesters/2025-winter/');
+    await loginAsTeacher(page);
+
+    await page.getByRole('button', { name: 'Add event' }).click();
+
+    await expect(page.getByRole('heading', { name: 'Add event' })).toBeVisible();
+
+    await page.getByRole('combobox', { name: 'Type' }).selectOption('classes-canceled');
+    await page.getByRole('textbox', { name: 'Date' }).fill('2025-10-02');
+    await page.getByRole('textbox', { name: 'Start time' }).fill('10:00');
+    await page.getByRole('textbox', { name: 'End time' }).fill('12:00');
+    await page.getByRole('textbox', { name: 'Name' }).fill('Test cancellation');
+
+    await page.getByRole('button', { name: 'Add', exact: true }).click();
+
+    await expect(
+        page
+            .locator('.calendar-wrapper a')
+            .filter({ hasText: '10:00 - 12:00' })
+            .filter({ hasText: 'Test cancellation' }),
     ).toBeVisible();
 });
 
@@ -334,6 +405,46 @@ test('Can edit calendar event when logged in', async ({ page }) => {
 
     await expect(
         page.locator('.calendar-wrapper a').filter({ hasText: '12:15 - 14:00' }).filter({ hasText: 'Koło naukowe 2' }),
+    ).toBeVisible();
+});
+
+test('can edit classes-canceled calendar event details', async ({ page }) => {
+    await page.goto('/semesters/2025-winter/');
+    await loginAsTeacher(page);
+
+    await page
+        .locator('.calendar-wrapper a')
+        .filter({ hasText: '11:00 - 13:00' })
+        .filter({ hasText: "Godziny Rektorskie - Rector's hours" })
+        .click();
+
+    await expect(page.getByRole('heading', { name: 'Edit event' })).toBeVisible();
+
+    await expect(page.getByRole('textbox', { name: 'Date' })).toHaveValue('2025-10-03');
+    await expect(page.getByRole('textbox', { name: 'Start time' })).toHaveValue('11:00');
+    await expect(page.getByRole('textbox', { name: 'End time' })).toHaveValue('13:00');
+    await expect(page.getByRole('textbox', { name: 'Name' })).toHaveValue("Godziny Rektorskie - Rector's hours");
+    await expect(page.getByRole('combobox', { name: 'Teacher' })).not.toBeVisible();
+    await expect(page.getByRole('combobox', { name: 'Classroom' })).not.toBeVisible();
+
+    await page.getByRole('textbox', { name: 'Date' }).fill('2025-10-04');
+    await page.getByRole('textbox', { name: 'Start time' }).fill('10:00');
+    await page.getByRole('textbox', { name: 'End time' }).fill('12:00');
+    await page.getByRole('textbox', { name: 'Name' }).fill('Canceled class updated');
+    await page.getByRole('button', { name: 'Save' }).click();
+
+    await expect(
+        page
+            .locator('.calendar-wrapper a')
+            .filter({ hasText: '11:00 - 13:00' })
+            .filter({ hasText: "Godziny Rektorskie - Rector's hours" }),
+    ).not.toBeVisible();
+
+    await expect(
+        page
+            .locator('.calendar-wrapper a')
+            .filter({ hasText: '10:00 - 12:00' })
+            .filter({ hasText: 'Canceled class updated' }),
     ).toBeVisible();
 });
 
