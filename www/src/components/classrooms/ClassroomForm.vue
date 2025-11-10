@@ -18,9 +18,10 @@ const name = ref<string>(props.classroom?.name ?? '');
 async function submit() {
     const success =
         props.classroom === undefined
-            ? await apiPost<boolean>('/classrooms/api/', { name: name.value } satisfies ClassroomCreateApiData)
-            : await apiPatch<boolean>('/classrooms/api/', {
-                  id: props.classroom.id,
+            ? await apiPost<boolean>('/api/classrooms/', {
+                  name: name.value,
+              } satisfies ClassroomCreateApiData)
+            : await apiPatch<boolean>(`/api/classrooms/${props.classroom.id}/`, {
                   name: name.value,
               } satisfies ClassroomEditApiData);
 
@@ -40,7 +41,7 @@ async function doDelete() {
         return;
     }
 
-    const result = await apiDelete<boolean>('/classrooms/api/', new URLSearchParams({ id: props.classroom.id }));
+    const result = await apiDelete<boolean>(`/api/classrooms/${props.classroom.id}/`);
 
     if (result) {
         window.location.assign(`/classrooms/`);

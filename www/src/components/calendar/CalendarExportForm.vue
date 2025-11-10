@@ -108,7 +108,6 @@ const exportCalendarEventsId = crypto.randomUUID();
                     <CalendarSubjectExportOptions
                         v-model:subjects="selectedSubjectIds"
                         v-model:groups="selectedGroupIds"
-                        :semester
                         :subject
                     />
                 </AccordionItem>

@@ -9,28 +9,22 @@ import { Subject } from '@backend/subject';
 import { getDayOfTheWeekOccurrence } from '@components/laboratory-classes/dates';
 import { laboratoryClassMoveApiSchema } from '@components/laboratory-classes/types';
 import type { ScheduleChangeData } from '@components/semesters/types';
-import { getSubjectFromParams } from '@pages/semesters/[semesterSlug]/subjects/[subjectSlug]/api/_subject-utils';
 
 export const PATCH: APIRoute = async ({ locals, params }) => {
     const { jsonData, user } = locals;
-    const { semesterSlug } = params;
 
     if (!user) {
         return Response.json(null, { status: 404 });
     }
 
-    if (semesterSlug === undefined) {
-        return new Response(null, { status: 404 });
-    }
-
-    const semester = await Semester.fetchBySlug(semesterSlug);
-    if (!semester) {
-        return new Response(null, { status: 404 });
-    }
-
-    const subject = await getSubjectFromParams(params);
+    const subject = await Subject.fetch(params.subjectId ?? '');
     if (!subject) {
         return Response.json(null, { status: 404 });
+    }
+
+    const semester = await Semester.fetch(subject.semesterId);
+    if (!semester) {
+        return new Response(null, { status: 404 });
     }
 
     const data = laboratoryClassMoveApiSchema.nullable().catch(null).parse(jsonData);

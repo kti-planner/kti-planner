@@ -22,7 +22,7 @@ function translate(text: keyof (typeof translations)[LangId]): string {
 }
 
 async function doDelete() {
-    const result = await apiDelete<boolean>('/users/api/users/', new URLSearchParams({ id: user.id }));
+    const result = await apiDelete<boolean>(`/api/users/${user.id}/`);
 
     if (result) {
         window.location.assign('/users/');

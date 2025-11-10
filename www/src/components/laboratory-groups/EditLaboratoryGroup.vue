@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import { langId } from '@components/frontend/lang';
 import type { LaboratoryGroupData } from '@components/laboratory-groups/types';
+import type { SubjectData } from '@components/subjects/types';
 import IconButton from '@components/IconButton.vue';
 import LaboratoryGroupForm from '@components/laboratory-groups/LaboratoryGroupForm.vue';
 import Modal from '@components/Modal.vue';
 
 defineProps<{
     group: LaboratoryGroupData;
-    apiUrl: string;
+    subject: SubjectData;
 }>();
 
 const translations = {
@@ -38,6 +39,6 @@ const modalId = crypto.randomUUID();
 
     <Modal :id="modalId" :="$attrs">
         <template #header>{{ translate('Edit group') }} {{ group.name }}</template>
-        <LaboratoryGroupForm :group :api-url />
+        <LaboratoryGroupForm :group :subject />
     </Modal>
 </template>

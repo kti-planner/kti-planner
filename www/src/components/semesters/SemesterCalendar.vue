@@ -75,7 +75,7 @@ const selectedTeachers = ref<UserPublicData[]>([]);
 const subjectColors = computed(() => Object.fromEntries(subjects.map(subject => [subject.id, subject.color])));
 
 const { data: laboratoryClasses, execute: refetchLaboratoryClasses } = useApiFetch<LaboratoryClassData[]>(
-    `/semesters/${semester.slug}/api/laboratory-classes/`,
+    `/api/semesters/${semester.id}/laboratory-classes/`,
     () =>
         new URLSearchParams([
             ...selectedSubjects.value.map(subject => ['subject', subject.id]),
@@ -85,7 +85,7 @@ const { data: laboratoryClasses, execute: refetchLaboratoryClasses } = useApiFet
 );
 
 const { data: calendarEvents, execute: refetchCalendarEvents } = useApiFetch<CalendarEventData[]>(
-    `/semesters/${semester.slug}/api/calendar-events/`,
+    `/api/semesters/${semester.id}/calendar-events/`,
     () =>
         new URLSearchParams([
             ...selectedClassrooms.value.map(classroom => ['classroom', classroom.id]),

@@ -10,7 +10,7 @@ export const GET: APIRoute = async ({ locals, params }) => {
         return Response.json(null, { status: 404 });
     }
 
-    const semester = await Semester.fetchBySlug(params.semesterSlug ?? '');
+    const semester = await Semester.fetch(params.semesterId ?? '');
 
     if (!semester) {
         return Response.json(null, { status: 404 });

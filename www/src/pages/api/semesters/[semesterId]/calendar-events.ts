@@ -7,19 +7,15 @@ import { LaboratoryClass } from '@backend/laboratory-class';
 import { Semester } from '@backend/semester';
 import { Subject } from '@backend/subject';
 import { User } from '@backend/user';
-import {
-    calendarEventCreateApiSchema,
-    type CalendarEventData,
-    calendarEventEditApiSchema,
-} from '@components/calendar-events/types';
+import { calendarEventCreateApiSchema, type CalendarEventData } from '@components/calendar-events/types';
 
 export const GET: APIRoute = async ({ params, url }) => {
-    const { semesterSlug } = params;
-    if (semesterSlug === undefined) {
+    const { semesterId } = params;
+    if (semesterId === undefined) {
         return new Response(null, { status: 404 });
     }
 
-    const semester = await Semester.fetchBySlug(semesterSlug);
+    const semester = await Semester.fetch(semesterId);
     if (!semester) {
         return new Response(null, { status: 404 });
     }
@@ -58,17 +54,17 @@ export const GET: APIRoute = async ({ params, url }) => {
 
 export const POST: APIRoute = async ({ locals, params }) => {
     const { jsonData, user } = locals;
-    const { semesterSlug } = params;
+    const { semesterId } = params;
 
     if (!user) {
         return Response.json(null, { status: 404 });
     }
 
-    if (semesterSlug === undefined) {
+    if (semesterId === undefined) {
         return new Response(null, { status: 404 });
     }
 
-    const semester = await Semester.fetchBySlug(semesterSlug);
+    const semester = await Semester.fetch(semesterId);
     if (!semester) {
         return new Response(null, { status: 404 });
     }
@@ -129,118 +125,4 @@ export const POST: APIRoute = async ({ locals, params }) => {
     );
 
     return Response.json([]);
-};
-
-export const PATCH: APIRoute = async ({ locals, params }) => {
-    const { jsonData, user } = locals;
-    const { semesterSlug } = params;
-
-    if (!user) {
-        return Response.json(null, { status: 404 });
-    }
-
-    if (semesterSlug === undefined) {
-        return new Response(null, { status: 404 });
-    }
-
-    const semester = await Semester.fetchBySlug(semesterSlug);
-    if (!semester) {
-        return new Response(null, { status: 404 });
-    }
-
-    const data = calendarEventEditApiSchema.nullable().catch(null).parse(jsonData);
-    if (!data) {
-        return Response.json(null, { status: 400 });
-    }
-
-    const calendarEvent = await CalendarEvent.fetch(data.id);
-    if (!calendarEvent) {
-        return Response.json(null, { status: 404 });
-    }
-
-    const classroom =
-        data.classroomId !== undefined && data.classroomId !== null
-            ? await Classroom.fetch(data.classroomId)
-            : data.classroomId;
-
-    if (data.classroomId !== null && classroom === null) {
-        return Response.json(null, { status: 400 });
-    }
-
-    const eventUser = data.userId !== undefined ? await User.fetch(data.userId) : undefined;
-    if (eventUser === null) {
-        return Response.json(null, { status: 400 });
-    }
-
-    const scheduleChanges = await semester.getScheduleChanges();
-    const subjects = await Subject.fetchAllFromSemester(semester);
-    const laboratoryClasses = await LaboratoryClass.fetchAllFromSubjects(subjects);
-    const exercises = await Exercise.fetchAllFromSubjects(subjects);
-    const calendarEvents = await CalendarEvent.fetchAllFromSemester(semester);
-
-    const conflicts = checkForEventConflicts(
-        [
-            {
-                id: calendarEvent.id,
-                classroomId: classroom !== undefined ? (classroom?.id ?? null) : calendarEvent.classroomId,
-                startDate: data.startDate ?? calendarEvent.startDate,
-                endDate: data.endDate ?? calendarEvent.endDate,
-            },
-        ],
-        semester,
-        scheduleChanges,
-        laboratoryClasses,
-        exercises,
-        calendarEvents,
-    );
-
-    if (conflicts.length > 0) {
-        return Response.json(conflicts);
-    }
-
-    await calendarEvent.edit({
-        name: data.name,
-        user: eventUser,
-        classroom: classroom,
-        startDate: data.startDate,
-        endDate: data.endDate,
-        type: data.type,
-    });
-
-    return Response.json([]);
-};
-
-export const DELETE: APIRoute = async ({ locals, url, params }) => {
-    const { user } = locals;
-    const { semesterSlug } = params;
-
-    if (!user) {
-        return Response.json(null, { status: 404 });
-    }
-
-    if (semesterSlug === undefined) {
-        return new Response(null, { status: 404 });
-    }
-
-    const semester = await Semester.fetchBySlug(semesterSlug);
-
-    if (!semester) {
-        return new Response(null, { status: 404 });
-    }
-
-    const id = url.searchParams.get('id');
-
-    if (id === null) {
-        return Response.json(null, { status: 400 });
-    }
-
-    const calendarEvent = await CalendarEvent.fetch(id);
-
-    if (!calendarEvent || calendarEvent.semesterId !== semester.id) {
-        return Response.json(null, { status: 404 });
-    }
-
-    await calendarEvent.delete();
-
-    return Response.json(true, { status: 200 });
 };

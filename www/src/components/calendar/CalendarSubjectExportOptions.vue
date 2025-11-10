@@ -2,7 +2,6 @@
 import { langId } from '@components/frontend/lang';
 import { useApiFetch } from '@components/api';
 import type { LaboratoryGroupData } from '@components/laboratory-groups/types';
-import type { SemesterData } from '@components/semesters/types';
 import type { SubjectData } from '@components/subjects/types';
 
 const translations = {
@@ -20,17 +19,14 @@ function translate(text: keyof (typeof translations)[LangId]): string {
     return translations[langId][text];
 }
 
-const { semester, subject } = defineProps<{
-    semester: SemesterData;
+const { subject } = defineProps<{
     subject: SubjectData;
 }>();
 
 const selectedSubjectIds = defineModel<Set<string>>('subjects', { required: true });
 const selectedGroupIds = defineModel<Set<string>>('groups', { required: true });
 
-const { data: laboratoryGroups } = useApiFetch<LaboratoryGroupData[]>(
-    `/semesters/${semester.slug}/subjects/${subject.slug}/api/laboratory-groups/`,
-);
+const { data: laboratoryGroups } = useApiFetch<LaboratoryGroupData[]>(`/api/subjects/${subject.id}/laboratory-groups/`);
 
 const switchId = crypto.randomUUID();
 const toggleBtnId = crypto.randomUUID();

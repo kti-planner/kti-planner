@@ -3,58 +3,17 @@ import { Classroom } from '@backend/classroom';
 import { Exercise } from '@backend/exercise';
 import { Subject } from '@backend/subject';
 import { User } from '@backend/user';
-import { exerciseCreateApiSchema, exerciseEditApiSchema } from '@components/exercises/types';
+import { exerciseEditApiSchema } from '@components/exercises/types';
 
-export const POST: APIRoute = async ({ locals }) => {
+export const PATCH: APIRoute = async ({ locals, params }) => {
     const { jsonData, user } = locals;
 
     if (!user) {
         return Response.json(null, { status: 404 });
     }
 
-    const data = exerciseCreateApiSchema.nullable().catch(null).parse(jsonData);
-
-    if (!data) {
-        return Response.json(null, { status: 400 });
-    }
-
-    const classroom = data.classroomId !== null ? await Classroom.fetch(data.classroomId) : null;
-    if (data.classroomId !== null && !classroom) {
-        return new Response(null, { status: 400 });
-    }
-
-    const subject = await Subject.fetch(data.subjectId);
-    if (subject === null) {
-        return Response.json(false, { status: 404 });
-    }
-
-    const teacher = await User.fetch(data.teacherId);
-
-    const subjectExercises = await Exercise.fetchAllFromSubject(subject);
-
-    if (subjectExercises.find(e => e.name.toLowerCase() === data.name.toLowerCase())) {
-        return Response.json(false, { status: 200 });
-    }
-
-    if (subjectExercises.find(e => e.exerciseNumber === data.exerciseNumber)) {
-        return Response.json(false, { status: 200 });
-    }
-
-    await Exercise.create({
-        name: data.name,
-        exerciseNumber: data.exerciseNumber,
-        subject: subject,
-        classroom: classroom,
-        teacher: teacher,
-    });
-
-    return Response.json(true, { status: 201 });
-};
-
-export const PATCH: APIRoute = async ({ locals }) => {
-    const { jsonData, user } = locals;
-
-    if (!user) {
+    const exercise = await Exercise.fetch(params.exerciseId ?? '');
+    if (exercise === null) {
         return Response.json(null, { status: 404 });
     }
 
@@ -62,11 +21,6 @@ export const PATCH: APIRoute = async ({ locals }) => {
 
     if (!data) {
         return Response.json(null, { status: 400 });
-    }
-
-    const exercise = await Exercise.fetch(data.id);
-    if (exercise === null) {
-        return Response.json(null, { status: 404 });
     }
 
     const classroom =
@@ -110,20 +64,14 @@ export const PATCH: APIRoute = async ({ locals }) => {
     return Response.json(true, { status: 200 });
 };
 
-export const DELETE: APIRoute = async ({ locals, url }) => {
+export const DELETE: APIRoute = async ({ locals, params }) => {
     const { user } = locals;
 
     if (!user) {
         return Response.json(null, { status: 404 });
     }
 
-    const id = url.searchParams.get('id');
-
-    if (id === null) {
-        return Response.json(null, { status: 400 });
-    }
-
-    const exercise = await Exercise.fetch(id);
+    const exercise = await Exercise.fetch(params.exerciseId ?? '');
 
     if (!exercise) {
         return Response.json(null, { status: 404 });

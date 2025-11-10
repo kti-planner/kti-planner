@@ -173,7 +173,7 @@ test.describe('API fetch tests', () => {
     test('Logged-out user cannot create new semester', async ({ page }) => {
         await page.goto('/semesters/');
 
-        const response = await page.request.post('/semesters/api/semesters/', {
+        const response = await page.request.post('/api/semesters/', {
             data: {
                 year: 2069,
                 type: 'summer',
@@ -189,7 +189,7 @@ test.describe('API fetch tests', () => {
         await page.goto('/semesters/');
         await loginAsAdmin(page);
 
-        const response = await page.request.post('/semesters/api/semesters/', {
+        const response = await page.request.post('/api/semesters/', {
             data: {
                 year: 2069,
                 type: 'summer',
@@ -204,9 +204,8 @@ test.describe('API fetch tests', () => {
     test('Logged-out user cannot edit semester', async ({ page }) => {
         await page.goto('/semesters/');
 
-        const response = await page.request.patch('/semesters/api/semesters/', {
+        const response = await page.request.patch('/api/semesters/094f8324-7c58-4566-b5d7-e4fe8ed03a18/', {
             data: {
-                id: '094f8324-7c58-4566-b5d7-e4fe8ed03a18',
                 year: 2069,
                 type: 'summer',
                 startDate: '2069-06-01',
@@ -221,9 +220,8 @@ test.describe('API fetch tests', () => {
         await page.goto('/semesters/');
         await loginAsAdmin(page);
 
-        const response = await page.request.patch('/semesters/api/semesters/', {
+        const response = await page.request.patch('/api/semesters/094f8324-7c58-4566-b5d7-e4fe8ed03a18/', {
             data: {
-                id: '094f8324-7c58-4566-b5d7-e4fe8ed03a18',
                 year: 2069,
                 type: 'summer',
                 startDate: '2069-06-01',
@@ -237,11 +235,8 @@ test.describe('API fetch tests', () => {
     test('Logged-out user cannot delete semester', async ({ page }) => {
         await page.goto('/semesters/');
 
-        const response = await page.request.delete('/semesters/api/semesters/', {
+        const response = await page.request.delete('/api/semesters/b2805b48-3d24-4169-8f67-88561345ee99/', {
             data: null,
-            params: {
-                id: 'b2805b48-3d24-4169-8f67-88561345ee99',
-            },
         });
 
         expect(response.status()).toBe(404);
@@ -251,11 +246,8 @@ test.describe('API fetch tests', () => {
         await page.goto('/semesters/');
         await loginAsAdmin(page);
 
-        const response = await page.request.delete('/semesters/api/semesters/', {
+        const response = await page.request.delete('/api/semesters/b2805b48-3d24-4169-8f67-88561345ee99/', {
             data: null,
-            params: {
-                id: 'b2805b48-3d24-4169-8f67-88561345ee99',
-            },
         });
 
         expect(response.status()).toBe(200);

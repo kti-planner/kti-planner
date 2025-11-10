@@ -30,14 +30,13 @@ async function submit() {
 
     const success =
         props.user === undefined
-            ? await apiPost<boolean>('/users/api/users/', {
+            ? await apiPost<boolean>('/api/users/', {
                   name: name.value,
                   email: email.value,
                   password: password.value,
                   role: role.value,
               } satisfies UserCreateApiData)
-            : await apiPatch<boolean>('/users/api/users/', {
-                  id: props.user.id,
+            : await apiPatch<boolean>(`/api/users/${props.user.id}/`, {
                   name: name.value,
                   email: email.value,
                   role: currentUser?.role === 'admin' ? role.value : undefined,

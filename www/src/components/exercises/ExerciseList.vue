@@ -42,7 +42,7 @@ const { subject, semester } = defineProps<{
 const subjectUrl = computed(() => `/semesters/${semester.slug}/subjects/${subject.slug}`);
 
 const { data: laboratoryClasses, execute: refreshClasses } = useApiFetch<LaboratoryClassData[]>(
-    `${subjectUrl.value}/api/laboratory-classes/`,
+    `/api/subjects/${subject.id}/laboratory-classes/`,
 );
 
 const exerciseDateRanges = computed(() => {
