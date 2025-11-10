@@ -1,8 +1,6 @@
 <script setup lang="ts">
-import { computed } from 'vue';
-import { type RemovableRef, useStorage, useStyleTag } from '@vueuse/core';
+import { type RemovableRef, useStorage } from '@vueuse/core';
 import { langId } from '@components/frontend/lang';
-import classicCSS from '@components/themes/classic.css?raw';
 import IconButton from '@components/IconButton.vue';
 
 const translations = {
@@ -25,15 +23,12 @@ function translate(text: keyof (typeof translations)[LangId]): string {
 }
 
 type Theme = 'modern' | 'classic';
-
-const themes: Record<Theme, string> = {
-    'modern': '',
-    'classic': classicCSS,
-};
-
 const theme = useStorage('theme', 'modern') as RemovableRef<Theme>;
-const themeCSS = computed<string>(() => themes[theme.value]);
-useStyleTag(themeCSS);
+
+function changeTheme(newTheme: Theme) {
+    theme.value = newTheme;
+    window.location.reload();
+}
 </script>
 
 <template>
@@ -60,8 +55,8 @@ useStyleTag(themeCSS);
                 <button
                     class="dropdown-item"
                     type="button"
-                    :style="{ paddingLeft: theme !== 'modern' ? '38px' : undefined }"
-                    @click="theme = 'modern'"
+                    :style="{ paddingLeft: theme !== 'modern' ? '37px' : undefined }"
+                    @click="changeTheme('modern')"
                 >
                     <i v-if="theme === 'modern'" class="bi bi-check text-success"></i>
                     {{ translate('Modern') }}
@@ -71,8 +66,8 @@ useStyleTag(themeCSS);
                 <button
                     class="dropdown-item"
                     type="button"
-                    :style="{ paddingLeft: theme !== 'classic' ? '38px' : undefined }"
-                    @click="theme = 'classic'"
+                    :style="{ paddingLeft: theme !== 'classic' ? '37px' : undefined }"
+                    @click="changeTheme('classic')"
                 >
                     <i v-if="theme === 'classic'" class="bi bi-check text-success"></i>
                     {{ translate('Classic (green)') }}

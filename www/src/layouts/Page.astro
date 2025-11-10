@@ -32,6 +32,16 @@ const userData = user ? makeUserDetailsData(user) : null;
             globalThis.user = userData;
         </script>
         <script is:inline src="/assets/js/bootstrap.bundle.min.js?ver=5.3.3"></script>
+        <script>
+            import classicCSS from '@components/themes/classic.css?raw';
+
+            const theme = localStorage.getItem('theme');
+            if (theme === 'classic') {
+                const classicTheme = new CSSStyleSheet();
+                classicTheme.replaceSync(classicCSS);
+                document.adoptedStyleSheets.push(classicTheme);
+            }
+        </script>
     </head>
     <body>
         <div class="wrapper">
