@@ -16,11 +16,10 @@ import type { LaboratoryClassData } from '@components/laboratory-classes/types';
 import type { ScheduleChangeData, SemesterData } from '@components/semesters/types';
 import type { SubjectData } from '@components/subjects/types';
 import type { UserPublicData } from '@components/users/types';
-import { formatDateLocalYyyyMmDdHhMm } from '@components/utils';
 import Calendar from '@components/Calendar.vue';
 import CalendarExportForm from '@components/calendar/CalendarExportForm.vue';
 import CalendarEvent from '@components/calendar-events/CalendarEvent.vue';
-import CalendarEventForm from '@components/calendar-events/CalendarEventForm.vue';
+import CalendarEventModal from '@components/calendar-events/CalendarEventModal.vue';
 import LaboratoryClassEditModals from '@components/laboratory-classes/LaboratoryClassEditModals.vue';
 import LaboratoryClassEvent from '@components/laboratory-classes/LaboratoryClassEvent.vue';
 import Modal from '@components/Modal.vue';
@@ -34,8 +33,6 @@ const translations = {
         'Edit class': 'Edit class',
         'Class details': 'Class details',
         'Add event': 'Add event',
-        'Edit event': 'Edit event',
-        'Event details': 'Event details',
         'Export calendar': 'Export calendar',
     },
     'pl': {
@@ -45,8 +42,6 @@ const translations = {
         'Edit class': 'Edytuj zajęcia',
         'Class details': 'Szczegóły zajęć',
         'Add event': 'Dodaj wydarzenie',
-        'Edit event': 'Edytuj wydarzenie',
-        'Event details': 'Szczegóły wydarzenia',
         'Export calendar': 'Eksport kalendarza',
     },
 };
@@ -152,7 +147,7 @@ function handleEventClick(arg: EventClickArg) {
 
     if ('calendarEvent' in arg.event.extendedProps) {
         clickedCalendarEvent.value = arg.event.extendedProps.calendarEvent;
-        calendarEventModal.value?.show();
+        calendarEventModal.value?.calendarEventModal?.show();
     }
 }
 
@@ -161,11 +156,11 @@ function handleCalendarSelection(info: DateSelectArg) {
     calendarSelectionEnd.value = info.end;
     clickedCalendarEvent.value = null;
 
-    calendarEventModal.value?.show();
+    calendarEventModal.value?.calendarEventModal?.show();
 }
 
 function handleCalendarEventSubmit() {
-    calendarEventModal.value?.hide();
+    calendarEventModal.value?.calendarEventModal?.hide();
     void refetchAllEvents();
 }
 
@@ -174,7 +169,7 @@ function handleAddEventClick() {
     calendarSelectionEnd.value = null;
     clickedCalendarEvent.value = null;
 
-    calendarEventModal.value?.show();
+    calendarEventModal.value?.calendarEventModal?.show();
 }
 </script>
 
@@ -205,29 +200,16 @@ function handleAddEventClick() {
                 </template>
             </Calendar>
 
-            <Modal ref="calendarEventModal">
-                <template #header>{{
-                    clickedCalendarEvent === null
-                        ? translate('Add event')
-                        : currentUser
-                          ? translate('Edit event')
-                          : translate('Event details')
-                }}</template>
-                <CalendarEventForm
-                    :semester
-                    :classrooms
-                    :calendar-event="
-                        clickedCalendarEvent ?? {
-                            startDate: calendarSelectionStart
-                                ? formatDateLocalYyyyMmDdHhMm(calendarSelectionStart)
-                                : '',
-                            endDate: calendarSelectionEnd ? formatDateLocalYyyyMmDdHhMm(calendarSelectionEnd) : '',
-                        }
-                    "
-                    :users="allUsers"
-                    @submit="handleCalendarEventSubmit"
-                />
-            </Modal>
+            <CalendarEventModal
+                ref="calendarEventModal"
+                :event="clickedCalendarEvent"
+                :start-date="calendarSelectionStart"
+                :end-date="calendarSelectionEnd"
+                :all-users="allUsers"
+                :semester="semester"
+                :classrooms="classrooms"
+                @submit="handleCalendarEventSubmit"
+            />
 
             <LaboratoryClassEditModals
                 ref="classEditModals"

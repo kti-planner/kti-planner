@@ -90,6 +90,8 @@ function refreshClasses() {
                 :teachers="subject.teachers"
                 :laboratory-groups
                 :exercises
+                :classrooms
+                :all-users="allUsers"
                 @class-edited="exerciseList?.refreshClasses()"
             />
         </div>

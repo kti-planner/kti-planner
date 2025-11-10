@@ -22,6 +22,7 @@ export const GET: APIRoute = async ({ params, url }) => {
 
     const classroomFilter = url.searchParams.getAll('classroom');
     const teacherFilter = url.searchParams.getAll('teacher');
+    const typeFilter = url.searchParams.getAll('type');
 
     const calendarEvents = await CalendarEvent.fetchAllFromSemester(semester);
     const users = await User.fetchAll();
@@ -44,6 +45,10 @@ export const GET: APIRoute = async ({ params, url }) => {
                     if (classroomFilter.length > 0 && !classroomFilter.includes(String(calendarEvent.classroomId))) {
                         return null;
                     }
+                }
+
+                if (typeFilter.length > 0 && !typeFilter.includes(calendarEvent.type)) {
+                    return null;
                 }
 
                 return makeCalendarEventData(calendarEvent, user, classroom, semester);
