@@ -36,8 +36,8 @@ const title = computed(
         (subject ? `${subject.fullName} - ${makeSubjectStudyDetails(subject, langId)}\n` : '') +
         `${laboratoryClass.exercise.exerciseNumber}. ${laboratoryClass.exercise.name}\n` +
         `${translate('Classroom')}: ${formatClassroomName(laboratoryClass.exercise.classroom, langId)}\n` +
-        `${translate('Group')}: ${laboratoryClass.laboratoryGroup.name}\n` +
-        `${translate('Teacher')}: ${laboratoryClass.teacher?.name ?? translate('Unknown [teacher]')}`,
+        `${translate('Teacher')}: ${laboratoryClass.teacher?.name ?? translate('Unknown [teacher]')}\n` +
+        `${translate('Group')}: ${laboratoryClass.laboratoryGroup.name}`,
 );
 </script>
 
@@ -55,12 +55,12 @@ const title = computed(
             <span class="ms-1">{{ formatClassroomName(laboratoryClass.exercise.classroom, langId) }}</span>
         </div>
         <div class="text-truncate">
-            <i class="bi bi-people-fill"></i>
-            <span class="ms-1">{{ laboratoryClass.laboratoryGroup.name }}</span>
-        </div>
-        <div class="text-truncate">
             <i class="bi bi-person-fill"></i>
             <span class="ms-1">{{ laboratoryClass.teacher?.name ?? translate('Unknown [teacher]') }}</span>
+        </div>
+        <div class="text-truncate">
+            <i class="bi bi-people-fill"></i>
+            <span class="ms-1">{{ laboratoryClass.laboratoryGroup.name }}</span>
         </div>
     </div>
 </template>
