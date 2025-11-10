@@ -88,7 +88,7 @@ export class Subject {
     }
 
     async getTeachers(): Promise<User[]> {
-        return (await User.fetchBulk(this.teacherIds)).filter(user => user !== null);
+        return User.sortUsers((await User.fetchBulk(this.teacherIds)).filter(user => user !== null));
     }
 
     static async fetch(id: string): Promise<Subject | null> {
