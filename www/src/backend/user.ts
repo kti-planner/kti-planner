@@ -70,16 +70,7 @@ export class User {
     static async fetchAll(): Promise<User[]> {
         const records = (await db.query<DbUser>('SELECT * FROM users ORDER BY name')).rows;
 
-        records.sort((a, b) => {
-            const titleResult = User.scoreNameByTitle(b.name) - User.scoreNameByTitle(a.name);
-            if (titleResult !== 0) {
-                return titleResult;
-            }
-
-            return User.compareNames(a.name, b.name);
-        });
-
-        return records.map(record => new User(record));
+        return User.sortUsers(records.map(record => new User(record)));
     }
 
     static async fetchBulk(ids: string[]): Promise<(User | null)[]> {
@@ -180,6 +171,17 @@ export class User {
         const writeStream = pngStream.pipe(out);
         await once(writeStream, 'finish');
         /* v8 ignore end */
+    }
+
+    static sortUsers(users: User[]): User[] {
+        return users.toSorted((a, b) => {
+            const titleResult = User.scoreNameByTitle(b.name) - User.scoreNameByTitle(a.name);
+            if (titleResult !== 0) {
+                return titleResult;
+            }
+
+            return User.compareNames(a.name, b.name);
+        });
     }
 
     static scoreNameByTitle(name: string): number {
