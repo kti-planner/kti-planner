@@ -32,6 +32,7 @@ export const onRequest = defineMiddleware(async ({ request, locals, cookies, ses
         cookies.set('langId', locals.langId, {
             path: '/',
             secure: true,
+            maxAge: 60 * 60 * 24 * 365 * 10, // 10 years
         });
     } else {
         locals.langId = langIdCookie;
