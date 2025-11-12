@@ -24,6 +24,12 @@ function translate(text: keyof (typeof translations)[LangId]): string {
 }
 
 type Theme = 'modern' | 'classic';
+
+const themeLabels: Record<Theme, string> = {
+    'modern': translate('Modern'),
+    'classic': translate('Classic (green)'),
+};
+
 const theme = useStorage('theme', 'modern') as RemovableRef<Theme>;
 
 onMounted(() => {
@@ -58,26 +64,15 @@ function changeTheme(newTheme: Theme) {
             <li>
                 <h6 class="dropdown-header">{{ translate('Themes') }}</h6>
             </li>
-            <li>
+            <li v-for="(label, themeName) in themeLabels" :key="themeName">
                 <button
                     class="dropdown-item"
                     type="button"
-                    :style="{ paddingLeft: theme !== 'modern' ? '37px' : undefined }"
-                    @click="changeTheme('modern')"
+                    :style="{ paddingLeft: theme !== themeName ? '37px' : undefined }"
+                    @click="changeTheme(themeName)"
                 >
-                    <i v-if="theme === 'modern'" class="bi bi-check text-success"></i>
-                    {{ translate('Modern') }}
-                </button>
-            </li>
-            <li>
-                <button
-                    class="dropdown-item"
-                    type="button"
-                    :style="{ paddingLeft: theme !== 'classic' ? '37px' : undefined }"
-                    @click="changeTheme('classic')"
-                >
-                    <i v-if="theme === 'classic'" class="bi bi-check text-success"></i>
-                    {{ translate('Classic (green)') }}
+                    <i v-if="theme === themeName" class="bi bi-check text-success"></i>
+                    {{ label }}
                 </button>
             </li>
         </ul>
