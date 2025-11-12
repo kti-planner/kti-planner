@@ -28,15 +28,15 @@ export const onRequest = defineMiddleware(async ({ request, locals, cookies, ses
     if (langIdCookie === undefined || !isLangId(langIdCookie)) {
         const langId = locals.req?.acceptsLanguages(langIds) as LangId | false | undefined;
         locals.langId = langId !== false && langId !== undefined ? langId : 'pl';
-
-        cookies.set('langId', locals.langId, {
-            path: '/',
-            secure: true,
-            maxAge: 60 * 60 * 24 * 365 * 10, // 10 years
-        });
     } else {
         locals.langId = langIdCookie;
     }
+
+    cookies.set('langId', locals.langId, {
+        path: '/',
+        secure: true,
+        maxAge: 60 * 60 * 24 * 365 * 10, // 10 years
+    });
 
     const userId = await session?.get('userId');
     if (userId !== undefined && userId !== null) {
