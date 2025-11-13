@@ -13,6 +13,7 @@ const translations = {
         'There is another class in this classroom during this time':
             'There is another class in this classroom during this time',
         'The class does not fit in the semester': 'The class does not fit in the semester',
+        'Conflict with canceled classes schedule': 'Conflict with canceled classes schedule',
     },
     'pl': {
         'Unknown [teacher]': 'Nieznany',
@@ -20,6 +21,7 @@ const translations = {
         'There is another class in this classroom during this time':
             'W tym samym czasie w tej sali odbywają się inne zajęcia',
         'The class does not fit in the semester': 'Ćwiczenie nie mieści się w semestrze',
+        'Conflict with canceled classes schedule': 'Konflikt z godzinami odwołanych zajęć',
     },
 };
 
@@ -40,12 +42,26 @@ const conflict = computed<EventConflict | null>(
                 formatDateLocalYyyyMmDdHhMm(plannedClass.end) === conflict.endDate,
         ) ?? null,
 );
+
+const conflictTextClass = computed(() => {
+    if (!conflict.value) {
+        return '';
+    }
+
+    return conflict.value.type === 'classes-canceled' ? 'text-warning' : 'text-danger';
+});
 </script>
 
 <template>
-    <div class="card" :class="{ 'border-danger': conflict }">
+    <div
+        class="card"
+        :class="{
+            'border-warning': conflict?.type === 'classes-canceled',
+            'border-danger': conflict && conflict.type !== 'classes-canceled',
+        }"
+    >
         <div class="card-body">
-            <h3 class="card-title fs-6" :class="{ 'text-danger': conflict }">
+            <h3 class="card-title fs-6" :class="conflictTextClass">
                 {{ `${plannedClass.exercise.exerciseNumber}. ${plannedClass.exercise.name}` }}
             </h3>
             <h4 class="card-subtitle mb-2 text-body-secondary fs-6">
@@ -61,13 +77,15 @@ const conflict = computed<EventConflict | null>(
                 <i class="bi bi-building-fill"></i>
                 <span class="ms-1">{{ formatClassroomName(plannedClass.exercise.classroom, langId) }}</span>
             </div>
-            <p v-if="conflict" class="text-danger mt-2 mb-0">
+            <p v-if="conflict" class="mt-2 mb-0" :class="conflictTextClass">
                 {{
                     conflict.type === 'holiday'
                         ? translate('This is a holiday')
                         : conflict.type === 'outside-of-semester'
                           ? translate('The class does not fit in the semester')
-                          : translate('There is another class in this classroom during this time')
+                          : conflict.type === 'classes-canceled'
+                            ? translate('Conflict with canceled classes schedule')
+                            : translate('There is another class in this classroom during this time')
                 }}
             </p>
         </div>

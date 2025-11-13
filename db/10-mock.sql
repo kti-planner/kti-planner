@@ -242,9 +242,12 @@ VALUES
   ( 'f8759326-af65-4e7c-975b-802cc8c6fa31', 'fc48900f-fd81-45a6-8878-5044076c0c06', '35ac8c7d-737c-4155-9c6d-9be5b6908c5a', '2025-10-29 09:15 Europe/Warsaw', '2025-10-29 11:00 Europe/Warsaw', 'c393c524-453c-4b02-bfad-5114fe828200' ),
   ( '5c7eff85-77a9-445d-8425-d54190e9a74a', '019e221d-85fe-4d00-afbc-c81b609ad252', '35ac8c7d-737c-4155-9c6d-9be5b6908c5a', '2025-11-05 09:15 Europe/Warsaw', '2025-11-05 11:00 Europe/Warsaw', 'c393c524-453c-4b02-bfad-5114fe828200' );
 
-INSERT INTO calendar_events (id, name, user_id, classroom_id, semester_id, start_date, end_date)
+INSERT INTO calendar_events (id, name, user_id, classroom_id, semester_id, start_date, end_date, type)
 VALUES
   -- Winter 2025/2026
-  ( '3dbd9654-e207-4c36-8c31-5e3ff4ef9187', 'Koło naukowe', 'feeaa186-3d69-4801-a580-88be10d53553', '8689d55d-508e-4f5d-aef8-d5052f220d20', 'b2805b48-3d24-4169-8f67-88561345ee99', '2025-10-02 11:15 Europe/Warsaw', '2025-10-02 13:00 Europe/Warsaw' ),
-  ( '5cef97c4-436d-4775-b05f-d144c9a84023', 'Koło naukowe', 'feeaa186-3d69-4801-a580-88be10d53553', '8689d55d-508e-4f5d-aef8-d5052f220d20', 'b2805b48-3d24-4169-8f67-88561345ee99', '2025-10-09 11:15 Europe/Warsaw', '2025-10-09 13:00 Europe/Warsaw' ),
-  ( '4357dae8-7d60-4444-8578-a737069b31e3', 'Szkolenie', 'c393c524-453c-4b02-bfad-5114fe828200', '2affdc99-7dd6-47f0-b26c-3c413bf063dd', 'b2805b48-3d24-4169-8f67-88561345ee99', '2025-10-03 14:15 Europe/Warsaw', '2025-10-03 17:00 Europe/Warsaw' );
+  ( '3dbd9654-e207-4c36-8c31-5e3ff4ef9187', 'Koło naukowe', 'feeaa186-3d69-4801-a580-88be10d53553', '8689d55d-508e-4f5d-aef8-d5052f220d20', 'b2805b48-3d24-4169-8f67-88561345ee99', '2025-10-02 11:15 Europe/Warsaw', '2025-10-02 13:00 Europe/Warsaw', 'class-reservation' ),
+  ( '5cef97c4-436d-4775-b05f-d144c9a84023', 'Koło naukowe', 'feeaa186-3d69-4801-a580-88be10d53553', '8689d55d-508e-4f5d-aef8-d5052f220d20', 'b2805b48-3d24-4169-8f67-88561345ee99', '2025-10-09 11:15 Europe/Warsaw', '2025-10-09 13:00 Europe/Warsaw', 'class-reservation' ),
+  ( '4357dae8-7d60-4444-8578-a737069b31e3', 'Szkolenie', 'c393c524-453c-4b02-bfad-5114fe828200', '2affdc99-7dd6-47f0-b26c-3c413bf063dd', 'b2805b48-3d24-4169-8f67-88561345ee99', '2025-10-03 14:15 Europe/Warsaw', '2025-10-03 17:00 Europe/Warsaw', 'class-reservation' ),
+  ( 'c047da6e-0a42-4f0b-b399-76bb2a99826f', 'Godziny Rektorskie - Rector''s hours', 'c393c524-453c-4b02-bfad-5114fe828200', null, 'b2805b48-3d24-4169-8f67-88561345ee99', '2025-10-03 11:00 Europe/Warsaw', '2025-10-03 13:00 Europe/Warsaw', 'classes-canceled' ),
+  ( 'b3147c24-7108-454a-98c4-33a7f851a186', 'Godziny Rektorskie - Rector''s hours', 'c393c524-453c-4b02-bfad-5114fe828200', null, 'b2805b48-3d24-4169-8f67-88561345ee99', '2025-11-07 15:00 Europe/Warsaw', '2025-11-07 17:00 Europe/Warsaw', 'classes-canceled' ),
+  ( '8149b77b-f4f4-4105-ba3c-2566ab4ced04', 'Godziny Dziekańskie - Dean''s hours', 'c393c524-453c-4b02-bfad-5114fe828200', null, 'b2805b48-3d24-4169-8f67-88561345ee99', '2025-11-05 12:00 Europe/Warsaw', '2025-11-05 14:00 Europe/Warsaw', 'classes-canceled' );

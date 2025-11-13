@@ -22,6 +22,7 @@ export const GET: APIRoute = async ({ params, url }) => {
 
     const classroomFilter = url.searchParams.getAll('classroom');
     const teacherFilter = url.searchParams.getAll('teacher');
+    const typeFilter = url.searchParams.getAll('type');
 
     const calendarEvents = await CalendarEvent.fetchAllFromSemester(semester);
     const users = await User.fetchAll();
@@ -33,14 +34,20 @@ export const GET: APIRoute = async ({ params, url }) => {
                 const user = users.find(u => u.id === calendarEvent.userId) ?? null;
                 const classroom = classrooms.find(c => c.id === calendarEvent.classroomId) ?? null;
 
-                if (
-                    teacherFilter.length > 0 &&
-                    (calendarEvent.userId === null || !teacherFilter.includes(calendarEvent.userId))
-                ) {
-                    return null;
+                if (calendarEvent.type !== 'classes-canceled') {
+                    if (
+                        teacherFilter.length > 0 &&
+                        (calendarEvent.userId === null || !teacherFilter.includes(calendarEvent.userId))
+                    ) {
+                        return null;
+                    }
+
+                    if (classroomFilter.length > 0 && !classroomFilter.includes(String(calendarEvent.classroomId))) {
+                        return null;
+                    }
                 }
 
-                if (classroomFilter.length > 0 && !classroomFilter.includes(String(calendarEvent.classroomId))) {
+                if (typeFilter.length > 0 && !typeFilter.includes(calendarEvent.type)) {
                     return null;
                 }
 
@@ -117,6 +124,7 @@ export const POST: APIRoute = async ({ locals, params }) => {
                 semester,
                 startDate,
                 endDate,
+                type: data.type,
             }),
         ),
     );

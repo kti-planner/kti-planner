@@ -3,6 +3,7 @@ import { computed, ref, watch } from 'vue';
 import { langId } from '@components/frontend/lang';
 import { apiPost, useApiFetch } from '@components/api';
 import type { EventConflict } from '@components/calendar/types';
+import type { CalendarEventData } from '@components/calendar-events/types';
 import type { ExerciseData } from '@components/exercises/types';
 import { getDayOfTheWeekOccurrence, truncateDate } from '@components/laboratory-classes/dates';
 import type { LaboratoryClassCreateApiData, LaboratoryClassData } from '@components/laboratory-classes/types';
@@ -38,6 +39,8 @@ const translations = {
             'Attention! This laboratory group already has scheduled classes, they will be deleted and replaced with newly generated ones.',
         'Attention! This exercise is already planned for this laboratory group, it will be deleted and replaced with a newly generated one.':
             'Attention! This exercise is already planned for this laboratory group, it will be deleted and replaced with a newly generated one.',
+        'Planned classes conflict with canceled classes schedule. Classes can still be generated.':
+            'Planned classes conflict with canceled classes schedule. Classes can still be generated.',
     },
     'pl': {
         'Laboratory group': 'Grupa laboratoryjna',
@@ -58,6 +61,8 @@ const translations = {
             'Uwaga! Ta grupa laboratoryjna posiada już zaplanowane zajęcia, zostaną one usunięte i zastąpione nowo wygenerowanymi.',
         'Attention! This exercise is already planned for this laboratory group, it will be deleted and replaced with a newly generated one.':
             'Uwaga! To ćwiczenie jest już zaplanowane dla tej grupy laboratoryjnej, zostanie ono usunięte i zastąpione nowo wygenerowanym.',
+        'Planned classes conflict with canceled classes schedule. Classes can still be generated.':
+            'Zaplanowane zajęcia kolidują z terminem odwołanych zajęć. Zajęcia nadal można wygenerować.',
     },
 };
 
@@ -228,6 +233,31 @@ const showOneExerciseAlert = computed<boolean>(() => {
     return laboratoryClasses.value.find(labClass => labClass.exercise.id === selectedExercise.value?.id) !== undefined;
 });
 
+const { data: calendarEvents } = useApiFetch<CalendarEventData[]>(
+    `/api/semesters/${semester.id}/calendar-events/`,
+    () => new URLSearchParams([['type', 'classes-canceled']]),
+);
+
+const canceledClassesEventConflicts = computed<EventConflict[]>(() => {
+    if (calendarEvents.value === null) {
+        return [];
+    }
+
+    return plannedClasses.value
+        .filter(plannedClass =>
+            calendarEvents.value?.some(
+                calendarEvent =>
+                    plannedClass.start.getTime() < new Date(calendarEvent.endDate).getTime() &&
+                    plannedClass.end.getTime() > new Date(calendarEvent.startDate).getTime(),
+            ),
+        )
+        .map<EventConflict>(plannedClass => ({
+            type: 'classes-canceled',
+            startDate: formatDateLocalYyyyMmDdHhMm(plannedClass.start),
+            endDate: formatDateLocalYyyyMmDdHhMm(plannedClass.end),
+        }));
+});
+
 const groupId = crypto.randomUUID();
 const dateId = crypto.randomUUID();
 const startTimeId = crypto.randomUUID();
@@ -311,7 +341,7 @@ const selectedExerciseId = crypto.randomUUID();
                     v-for="(plannedClass, index) in plannedClasses"
                     :key="index"
                     :planned-class
-                    :conflicts="eventConflicts"
+                    :conflicts="[...eventConflicts, ...canceledClassesEventConflicts]"
                 />
             </div>
             <p class="text-secondary mt-2 mb-0">
@@ -330,6 +360,10 @@ const selectedExerciseId = crypto.randomUUID();
 
         <div v-if="eventConflicts.length > 0" class="text-center text-danger">
             {{ translate('There are conflicts with holidays or other events') }}
+        </div>
+
+        <div v-if="canceledClassesEventConflicts.length > 0" class="text-center text-warning">
+            {{ translate('Planned classes conflict with canceled classes schedule. Classes can still be generated.') }}
         </div>
     </form>
 </template>

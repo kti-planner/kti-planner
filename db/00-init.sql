@@ -75,6 +75,8 @@ CREATE TABLE laboratory_classes (
     teacher_id          uuid REFERENCES users ON DELETE SET NULL
 );
 
+CREATE TYPE event_type AS ENUM ('classes-canceled', 'class-reservation');
+
 CREATE TABLE calendar_events (
     id           uuid PRIMARY KEY,
     name         text NOT NULL,
@@ -82,5 +84,6 @@ CREATE TABLE calendar_events (
     classroom_id uuid REFERENCES classrooms ON DELETE SET NULL,
     semester_id  uuid NOT NULL REFERENCES semesters ON DELETE CASCADE,
     start_date   timestamptz NOT NULL,
-    end_date     timestamptz NOT NULL
+    end_date     timestamptz NOT NULL,
+    type         event_type NOT NULL
 );
