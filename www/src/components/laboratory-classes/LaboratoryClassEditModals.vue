@@ -5,7 +5,6 @@ import { currentUser } from '@components/frontend/user';
 import type { LaboratoryClassData } from '@components/laboratory-classes/types';
 import type { SemesterData } from '@components/semesters/types';
 import type { SubjectData } from '@components/subjects/types';
-import type { UserPublicData } from '@components/users/types';
 import EditLaboratoryClassForm from '@components/laboratory-classes/EditLaboratoryClassForm.vue';
 import MoveLaboratoryClass from '@components/laboratory-classes/MoveLaboratoryClass.vue';
 import Modal from '@components/Modal.vue';
@@ -29,7 +28,6 @@ function translate(text: keyof (typeof translations)[LangId]): string {
 
 defineProps<{
     laboratoryClass: LaboratoryClassData | null;
-    teachers: UserPublicData[];
     semester: SemesterData;
     subject: SubjectData | null;
     showSubject?: boolean | undefined;
@@ -66,7 +64,6 @@ const moveClassModalId = crypto.randomUUID();
             v-if="laboratoryClass && subject"
             :laboratory-class
             :subject
-            :teachers
             :semester
             show-subject
             @submit="handleClassDetailsSubmit"

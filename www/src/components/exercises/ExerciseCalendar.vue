@@ -16,7 +16,6 @@ const { exercise, semester, subject, scheduleChanges } = defineProps<{
     exercise: ExerciseData;
     semester: SemesterData;
     subject: SubjectData;
-    teachers: UserPublicData[];
     scheduleChanges: ScheduleChangeData[];
 }>();
 
@@ -61,7 +60,6 @@ function handleEventClick(arg: EventClickArg) {
         ref="editModal"
         :laboratory-class="editedLaboratoryClass"
         :subject
-        :teachers
         :semester
         show-subject
         @submit="refreshClasses"

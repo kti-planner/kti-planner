@@ -87,7 +87,6 @@ function refreshClasses() {
                 :schedule-changes
                 :semester
                 :subject
-                :teachers="subject.teachers"
                 :laboratory-groups
                 :exercises
                 @class-edited="exerciseList?.refreshClasses()"

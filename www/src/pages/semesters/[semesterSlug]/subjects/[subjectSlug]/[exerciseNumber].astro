@@ -64,9 +64,6 @@ const classroom = classrooms.find(classroom => classroom.id === exercise.classro
 
 const exerciseData = makeExerciseData(exercise, classroom, await exercise.getTeacher());
 
-const teachers = await subject.getTeachers();
-const teachersData = teachers.map(makeUserPublicData);
-
 const scheduleChanges = await semester.getScheduleChanges();
 const scheduleChangesData = scheduleChanges.map(makeScheduleChangeData);
 ---
@@ -110,7 +107,6 @@ const scheduleChangesData = scheduleChanges.map(makeScheduleChangeData);
             exercise={exerciseData}
             semester={semesterData}
             subject={subjectData}
-            teachers={teachersData}
             scheduleChanges={scheduleChangesData}
         />
     </div>

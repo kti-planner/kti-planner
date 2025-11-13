@@ -38,7 +38,6 @@ const { selectedLaboratoryGroups, scheduleChanges, subject } = defineProps<{
     scheduleChanges: ScheduleChangeData[];
     semester: SemesterData;
     subject: SubjectData;
-    teachers: UserPublicData[];
     laboratoryGroups: LaboratoryGroupData[];
     exercises: ExerciseData[];
 }>();
@@ -138,7 +137,6 @@ function handleGenerateClassesDone() {
         ref="modal"
         :laboratory-class="editedLaboratoryClass"
         :subject
-        :teachers
         :semester
         show-subject
         @submit="handleLaboratoryClassEdit"
