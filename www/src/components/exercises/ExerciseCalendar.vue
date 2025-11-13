@@ -14,6 +14,7 @@ import type { ExerciseData } from '@components/exercises/types';
 import type { LaboratoryClassData } from '@components/laboratory-classes/types';
 import type { ScheduleChangeData, SemesterData } from '@components/semesters/types';
 import type { SubjectData } from '@components/subjects/types';
+import type { UserPublicData } from '@components/users/types';
 import Calendar from '@components/Calendar.vue';
 import CalendarEvent from '@components/calendar-events/CalendarEvent.vue';
 import CalendarEventModal from '@components/calendar-events/CalendarEventModal.vue';
