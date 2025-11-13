@@ -51,12 +51,13 @@ plLocale.buttonText!.list = 'Lista';
 
 const calendar = useTemplateRef('calendar');
 
-watch(
+const unwatchInitialDate = watch(
     () => initialDate,
     (newDate, oldDate) => {
         if (oldDate === undefined && newDate !== undefined) {
             const api = calendar.value?.getApi();
             api?.gotoDate(newDate);
+            unwatchInitialDate();
         }
     },
 );
