@@ -215,7 +215,6 @@ function handleAddEventClick() {
                 ref="classEditModals"
                 :laboratory-class="clickedLaboratoryClass"
                 :subject="clickedClassSubject"
-                :teachers
                 :semester
                 show-subject
                 @submit="refetchAllEvents"

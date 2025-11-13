@@ -14,7 +14,6 @@ import type { ExerciseData } from '@components/exercises/types';
 import type { LaboratoryClassData } from '@components/laboratory-classes/types';
 import type { ScheduleChangeData, SemesterData } from '@components/semesters/types';
 import type { SubjectData } from '@components/subjects/types';
-import type { UserPublicData } from '@components/users/types';
 import Calendar from '@components/Calendar.vue';
 import CalendarEvent from '@components/calendar-events/CalendarEvent.vue';
 import CalendarEventModal from '@components/calendar-events/CalendarEventModal.vue';
@@ -25,7 +24,6 @@ const { exercise, semester, subject, scheduleChanges } = defineProps<{
     exercise: ExerciseData;
     semester: SemesterData;
     subject: SubjectData;
-    teachers: UserPublicData[];
     scheduleChanges: ScheduleChangeData[];
     classrooms: ClassroomData[];
     allUsers: UserPublicData[];
@@ -98,7 +96,6 @@ function handleEventClick(arg: EventClickArg) {
         ref="classEditModals"
         :laboratory-class="editedLaboratoryClass"
         :subject
-        :teachers
         :semester
         show-subject
         @submit="refreshClasses"

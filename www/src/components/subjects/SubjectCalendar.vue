@@ -18,7 +18,6 @@ import type { LaboratoryClassData } from '@components/laboratory-classes/types';
 import type { LaboratoryGroupData } from '@components/laboratory-groups/types';
 import type { ScheduleChangeData, SemesterData } from '@components/semesters/types';
 import type { SubjectData } from '@components/subjects/types';
-import type { UserPublicData } from '@components/users/types';
 import Calendar from '@components/Calendar.vue';
 import CalendarEvent from '@components/calendar-events/CalendarEvent.vue';
 import CalendarEventModal from '@components/calendar-events/CalendarEventModal.vue';
@@ -47,7 +46,6 @@ const { selectedLaboratoryGroups, scheduleChanges, subject, semester } = defineP
     scheduleChanges: ScheduleChangeData[];
     semester: SemesterData;
     subject: SubjectData;
-    teachers: UserPublicData[];
     laboratoryGroups: LaboratoryGroupData[];
     exercises: ExerciseData[];
     classrooms: ClassroomData[];
@@ -176,7 +174,6 @@ function handleGenerateClassesDone() {
         ref="classEditModals"
         :laboratory-class="editedLaboratoryClass"
         :subject
-        :teachers
         :semester
         show-subject
         @submit="handleLaboratoryClassEdit"

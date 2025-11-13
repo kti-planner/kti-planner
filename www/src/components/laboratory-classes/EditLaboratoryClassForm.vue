@@ -15,7 +15,6 @@ import UserSelector from '@components/users/UserSelector.vue';
 
 const { laboratoryClass, semester, subject } = defineProps<{
     laboratoryClass: LaboratoryClassData;
-    teachers: UserPublicData[];
     semester: SemesterData;
     subject: SubjectData;
     showSubject?: boolean | undefined;
@@ -187,7 +186,13 @@ const teacherId = crypto.randomUUID();
 
         <div v-if="currentUser">
             <label :for="teacherId" class="form-label">{{ translate('Teacher') }}</label>
-            <UserSelector :id="teacherId" v-model="teacher" required :options="teachers" :disabled="!currentUser" />
+            <UserSelector
+                :id="teacherId"
+                v-model="teacher"
+                required
+                :options="subject.teachers"
+                :disabled="!currentUser"
+            />
         </div>
         <div v-else>
             {{ translate('Teacher') }}:
