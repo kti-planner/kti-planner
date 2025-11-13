@@ -77,6 +77,7 @@ export const PATCH: APIRoute = async ({ locals, params }) => {
         classroom: classroom,
         startDate: data.startDate,
         endDate: data.endDate,
+        type: data.type,
     });
 
     return Response.json([]);

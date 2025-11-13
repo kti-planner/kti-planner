@@ -241,6 +241,30 @@ test('Can plan classes with two weeks between each one', async ({ page }) => {
     await expect(page.locator('p', { hasText: '11:15 - 13:00' })).toBeVisible();
 });
 
+test('Show class-canceled event conflict when generating classes', async ({ page }) => {
+    await page.goto('/semesters/2025-winter/subjects/sieci-komputerowe---informatyka-sem.-v/');
+    await loginAsTeacher(page);
+
+    await page.getByRole('button', { name: 'Plan classes' }).click();
+    await page.getByRole('combobox', { name: 'Laboratory group' }).selectOption('1A');
+    await page.getByRole('textbox', { name: 'First class date' }).fill('2025-10-03');
+    await page.getByRole('textbox', { name: 'Class start time' }).fill('11:15');
+    await page.getByRole('textbox', { name: 'Class end time' }).fill('13:00');
+
+    await expect(page.getByText('2025-10-03 11:15 - 13:00')).toBeVisible();
+    await expect(page.getByText('2025-10-17 11:15 - 13:00')).toBeVisible();
+    await expect(page.getByText('2025-11-07 11:15 - 13:00')).toBeVisible();
+    await expect(page.getByText('2025-11-21 11:15 - 13:00')).toBeVisible();
+
+    await expect(page.getByText('Conflict with canceled classes schedule', { exact: true })).toBeVisible();
+
+    await expect(
+        page.getByText('Planned classes conflict with canceled classes schedule. Classes can still be generated.', {
+            exact: true,
+        }),
+    ).toBeVisible();
+});
+
 test('Generating classes that extend beyond semester end results in a warning', async ({ page }) => {
     await page.goto('/semesters/2024-summer/subjects/lokalne-sieci-bezprzewodowe---informatyka-sem.-vi/');
     await loginAsTeacher(page);

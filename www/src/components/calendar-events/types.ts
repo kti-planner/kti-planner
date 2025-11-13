@@ -1,4 +1,5 @@
 import z from 'zod';
+import type { EventType } from '@backend/calendar-events';
 import type { ClassroomData } from '@components/classrooms/types';
 import type { SemesterData } from '@components/semesters/types';
 import type { UserPublicData } from '@components/users/types';
@@ -12,7 +13,10 @@ export interface CalendarEventData {
     semester: SemesterData;
     startDate: string;
     endDate: string;
+    type: EventType;
 }
+
+const typeSchema = z.enum(['classes-canceled', 'class-reservation']);
 
 export const calendarEventCreateApiSchema = z.object({
     name: z.string(),
@@ -24,6 +28,7 @@ export const calendarEventCreateApiSchema = z.object({
             endDate: dateTimeStringSchema,
         })
         .array(),
+    type: typeSchema,
 });
 
 export type CalendarEventCreateApiData = z.input<typeof calendarEventCreateApiSchema>;
@@ -34,6 +39,7 @@ export const calendarEventEditApiSchema = z.object({
     classroomId: z.uuid().nullable().optional(),
     startDate: dateTimeStringSchema.optional(),
     endDate: dateTimeStringSchema.optional(),
+    type: typeSchema.optional(),
 });
 
 export type CalendarEventEditApiData = z.input<typeof calendarEventEditApiSchema>;

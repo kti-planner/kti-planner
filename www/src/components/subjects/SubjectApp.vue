@@ -89,6 +89,8 @@ function refreshClasses() {
                 :subject
                 :laboratory-groups
                 :exercises
+                :classrooms
+                :all-users="allUsers"
                 @class-edited="exerciseList?.refreshClasses()"
             />
         </div>

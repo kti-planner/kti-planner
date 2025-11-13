@@ -3,6 +3,7 @@ import { Classroom, makeClassroomData } from '@backend/classroom';
 import { Exercise, makeExerciseData } from '@backend/exercise';
 import { makeScheduleChangeData, makeSemesterData, Semester } from '@backend/semester';
 import { makeSubjectData, Subject } from '@backend/subject';
+import { makeUserPublicData, User } from '@backend/user';
 import Layout from '@layouts/Layout.astro';
 import EditExercise from '@components/exercises/EditExercise.vue';
 import ExerciseCalendar from '@components/exercises/ExerciseCalendar.vue';
@@ -63,6 +64,9 @@ const classroom = classrooms.find(classroom => classroom.id === exercise.classro
 
 const exerciseData = makeExerciseData(exercise, classroom, await exercise.getTeacher());
 
+const allUsers = await User.fetchAll();
+const allUsersData = allUsers.map(user => makeUserPublicData(user));
+
 const scheduleChanges = await semester.getScheduleChanges();
 const scheduleChangesData = scheduleChanges.map(makeScheduleChangeData);
 ---
@@ -107,6 +111,8 @@ const scheduleChangesData = scheduleChanges.map(makeScheduleChangeData);
             semester={semesterData}
             subject={subjectData}
             scheduleChanges={scheduleChangesData}
+            classrooms={classroomsData}
+            allUsers={allUsersData}
         />
     </div>
 </Layout>

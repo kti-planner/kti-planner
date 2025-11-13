@@ -26,12 +26,17 @@ const { calendarEvent } = defineProps<{
     calendarEvent: CalendarEventData;
 }>();
 
-const title = computed(
-    () =>
-        `${calendarEvent.name}\n` +
-        `${translate('Classroom')}: ${formatClassroomName(calendarEvent.classroom, langId)}\n` +
-        `${translate('Teacher')}: ${calendarEvent.user?.name ?? translate('Unknown [teacher]')}`,
-);
+const title = computed(() => {
+    if (calendarEvent.type === 'classes-canceled') {
+        return calendarEvent.name;
+    } else {
+        return (
+            `${calendarEvent.name}\n` +
+            `${translate('Classroom')}: ${formatClassroomName(calendarEvent.classroom, langId)}\n` +
+            `${translate('Teacher')}: ${calendarEvent.user?.name ?? translate('Unknown [teacher]')}\n`
+        );
+    }
+});
 </script>
 
 <template>
@@ -40,14 +45,16 @@ const title = computed(
         <p class="text-truncate fw-bold">
             {{ calendarEvent.name }}
         </p>
-        <div class="text-truncate">
-            <i class="bi bi-building-fill"></i>
-            <span class="ms-1">{{ formatClassroomName(calendarEvent.classroom, langId) }}</span>
-        </div>
-        <div class="text-truncate">
-            <i class="bi bi-person-fill"></i>
-            <span class="ms-1">{{ calendarEvent.user?.name ?? translate('Unknown [teacher]') }}</span>
-        </div>
+        <template v-if="calendarEvent.type !== 'classes-canceled'">
+            <div class="text-truncate">
+                <i class="bi bi-building-fill"></i>
+                <span class="ms-1">{{ formatClassroomName(calendarEvent.classroom, langId) }}</span>
+            </div>
+            <div class="text-truncate">
+                <i class="bi bi-person-fill"></i>
+                <span class="ms-1">{{ calendarEvent.user?.name ?? translate('Unknown [teacher]') }}</span>
+            </div>
+        </template>
     </div>
 </template>
 

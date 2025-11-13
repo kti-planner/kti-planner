@@ -6,6 +6,8 @@ import { makeUserPublicData, type User } from '@backend/user';
 import type { CalendarEventData } from '@components/calendar-events/types';
 import { formatDateLocalYyyyMmDdHhMm } from '@components/utils';
 
+export type EventType = 'classes-canceled' | 'class-reservation';
+
 interface DbCalendarEvent {
     id: string;
     name: string;
@@ -14,6 +16,7 @@ interface DbCalendarEvent {
     semester_id: string;
     start_date: Date;
     end_date: Date;
+    type: EventType;
 }
 
 export interface CalendarEventCreateData {
@@ -23,6 +26,7 @@ export interface CalendarEventCreateData {
     semester: Semester;
     startDate: Date;
     endDate: Date;
+    type: EventType;
 }
 
 export interface CalendarEventEditData {
@@ -31,6 +35,7 @@ export interface CalendarEventEditData {
     classroom?: Classroom | null | undefined;
     startDate?: Date | undefined;
     endDate?: Date | undefined;
+    type?: EventType | undefined;
 }
 
 export class CalendarEvent {
@@ -41,6 +46,7 @@ export class CalendarEvent {
     semesterId: string;
     startDate: Date;
     endDate: Date;
+    type: EventType;
 
     constructor(data: DbCalendarEvent) {
         this.id = data.id;
@@ -50,6 +56,7 @@ export class CalendarEvent {
         this.semesterId = data.semester_id;
         this.startDate = data.start_date;
         this.endDate = data.end_date;
+        this.type = data.type;
     }
 
     static async fetch(id: string): Promise<CalendarEvent | null> {
@@ -78,8 +85,8 @@ export class CalendarEvent {
     static async create(data: CalendarEventCreateData): Promise<CalendarEvent> {
         const result = (
             await db.query<DbCalendarEvent>(
-                'INSERT INTO calendar_events (id, name, user_id, classroom_id, semester_id, start_date, end_date)' +
-                    ' VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
+                'INSERT INTO calendar_events (id, name, user_id, classroom_id, semester_id, start_date, end_date, type)' +
+                    ' VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *',
                 [
                     crypto.randomUUID(),
                     data.name,
@@ -88,6 +95,7 @@ export class CalendarEvent {
                     data.semester.id,
                     data.startDate,
                     data.endDate,
+                    data.type,
                 ],
             )
         ).rows[0];
@@ -118,9 +126,13 @@ export class CalendarEvent {
             this.endDate = data.endDate;
         }
 
+        if (data.type !== undefined) {
+            this.type = data.type;
+        }
+
         await db.query(
-            'UPDATE calendar_events SET name = $2, user_id = $3, classroom_id = $4, start_date = $5, end_date = $6 WHERE id = $1',
-            [this.id, this.name, this.userId, this.classroomId, this.startDate, this.endDate],
+            'UPDATE calendar_events SET name = $2, user_id = $3, classroom_id = $4, start_date = $5, end_date = $6, type = $7 WHERE id = $1',
+            [this.id, this.name, this.userId, this.classroomId, this.startDate, this.endDate, this.type],
         );
     }
 
@@ -143,5 +155,6 @@ export function makeCalendarEventData(
         semester: makeSemesterData(semester),
         startDate: formatDateLocalYyyyMmDdHhMm(calendarEvent.startDate),
         endDate: formatDateLocalYyyyMmDdHhMm(calendarEvent.endDate),
+        type: calendarEvent.type,
     };
 }
