@@ -11,7 +11,6 @@ import type { LaboratoryClassData } from '@components/laboratory-classes/types';
 import type { LaboratoryGroupData } from '@components/laboratory-groups/types';
 import type { ScheduleChangeData, SemesterData } from '@components/semesters/types';
 import type { SubjectData } from '@components/subjects/types';
-import type { UserPublicData } from '@components/users/types';
 import Calendar from '@components/Calendar.vue';
 import GenerateClassesForm from '@components/laboratory-classes/GenerateClassesForm.vue';
 import LaboratoryClassEditModals from '@components/laboratory-classes/LaboratoryClassEditModals.vue';
