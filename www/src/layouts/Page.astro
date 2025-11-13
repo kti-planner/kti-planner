@@ -1,4 +1,5 @@
 ---
+import '@layouts/style.scss';
 import { makeUserDetailsData } from '@backend/user';
 
 interface Props {
@@ -33,14 +34,16 @@ const userData = user ? makeUserDetailsData(user) : null;
         </script>
         <script is:inline src="/assets/js/bootstrap.bundle.min.js?ver=5.3.3"></script>
         <script>
-            import classicCSS from '@components/themes/classic.css?raw';
+            import { themes, themeKey, defaultTheme, type Theme } from '@components/themes/types';
 
-            const theme = localStorage.getItem('theme');
-            if (theme === 'classic') {
-                const classicTheme = new CSSStyleSheet();
-                classicTheme.replaceSync(classicCSS);
-                document.adoptedStyleSheets.push(classicTheme);
+            let theme = localStorage.getItem(themeKey);
+
+            if (!theme || !themes.includes(theme as Theme)) {
+                theme = defaultTheme;
+                localStorage.setItem(themeKey, theme);
             }
+
+            document.documentElement.dataset.bsTheme = theme;
         </script>
     </head>
     <body>

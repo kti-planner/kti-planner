@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { onMounted } from 'vue';
 import { type RemovableRef, useStorage } from '@vueuse/core';
 import { langId } from '@components/frontend/lang';
+import { defaultTheme, type Theme, themeKey } from '@components/themes/types';
 import IconButton from '@components/IconButton.vue';
 
 const translations = {
@@ -23,20 +23,12 @@ function translate(text: keyof (typeof translations)[LangId]): string {
     return translations[langId][text];
 }
 
-type Theme = 'modern' | 'classic';
-
 const themeLabels: Record<Theme, string> = {
     'modern': translate('Modern'),
     'classic': translate('Classic (green)'),
 };
 
-const theme = useStorage('theme', 'modern') as RemovableRef<Theme>;
-
-onMounted(() => {
-    if (theme.value !== 'modern' && theme.value !== 'classic') {
-        theme.value = 'modern';
-    }
-});
+const theme = useStorage(themeKey, defaultTheme) as RemovableRef<Theme>;
 
 function changeTheme(newTheme: Theme) {
     theme.value = newTheme;
