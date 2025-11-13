@@ -45,7 +45,7 @@ function changeTheme(newTheme: Theme) {
 </script>
 
 <template>
-    <div class="dropdown-">
+    <div class="dropdown">
         <ul class="dropdown-menu dropdown-menu-end">
             <li><button class="btn dropdown-item" type="button">foo</button></li>
             <li><button class="btn dropdown-item" type="button">bar</button></li>
@@ -78,3 +78,9 @@ function changeTheme(newTheme: Theme) {
         </ul>
     </div>
 </template>
+
+<style scoped lang="scss">
+.dropdown-item {
+    --bs-dropdown-link-active-bg: var(--bs-success);
+}
+</style>
