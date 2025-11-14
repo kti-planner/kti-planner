@@ -1,4 +1,5 @@
 ---
+import '@layouts/style.scss';
 import { makeUserDetailsData } from '@backend/user';
 
 interface Props {
@@ -30,6 +31,7 @@ const userData = user ? makeUserDetailsData(user) : null;
         <script is:inline define:vars={{ langId, userData }}>
             globalThis.langId = langId;
             globalThis.user = userData;
+            document.documentElement.dataset.bsTheme = localStorage.getItem('theme') ?? 'modern';
         </script>
         <script is:inline src="/assets/js/bootstrap.bundle.min.js?ver=5.3.3"></script>
     </head>

@@ -1,5 +1,6 @@
 ---
 import { makeLoginNextParam } from 'src/utils';
+import ThemeSwitcher from '@components/themes/ThemeSwitcher.vue';
 import UserProfileDropdown from '@components/UserProfileDropdown.astro';
 
 interface Props {
@@ -72,6 +73,7 @@ const loginParams = makeLoginNextParam(Astro.url);
             </div>
         </div>
         <div class="d-flex align-items-center gap-3 order-first order-md-last px-3 ms-auto">
+            <ThemeSwitcher client:only="vue" />
             {
                 user === null ? (
                     <a href={`/login/${loginParams}`} role="button" class="btn btn-success btn-sm">
