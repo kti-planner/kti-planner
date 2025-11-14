@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { watchEffect } from 'vue';
 import { type RemovableRef, useStorage } from '@vueuse/core';
 import { langId } from '@components/frontend/lang';
 import { defaultTheme, type Theme, themeKey } from '@components/themes/types';
@@ -30,10 +31,9 @@ const themeLabels: Record<Theme, string> = {
 
 const theme = useStorage(themeKey, defaultTheme) as RemovableRef<Theme>;
 
-function changeTheme(newTheme: Theme) {
-    theme.value = newTheme;
-    window.location.reload();
-}
+watchEffect(() => {
+    document.documentElement.dataset.bsTheme = theme.value;
+});
 </script>
 
 <template>
@@ -61,7 +61,7 @@ function changeTheme(newTheme: Theme) {
                     class="dropdown-item"
                     type="button"
                     :style="{ paddingLeft: theme !== themeName ? '37px' : undefined }"
-                    @click="changeTheme(themeName)"
+                    @click="theme = themeName"
                 >
                     <i v-if="theme === themeName" class="bi bi-check text-success"></i>
                     {{ label }}
