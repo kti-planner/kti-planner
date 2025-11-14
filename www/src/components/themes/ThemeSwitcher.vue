@@ -38,13 +38,6 @@ const themeLabels: Record<Theme, string> = {
 </script>
 
 <template>
-    <div class="dropdown">
-        <ul class="dropdown-menu dropdown-menu-end">
-            <li><button class="btn dropdown-item" type="button">foo</button></li>
-            <li><button class="btn dropdown-item" type="button">bar</button></li>
-        </ul>
-    </div>
-
     <div class="btn-group">
         <IconButton
             icon="palette-fill"
@@ -53,7 +46,7 @@ const themeLabels: Record<Theme, string> = {
             data-bs-toggle="dropdown"
             aria-expanded="false"
         />
-        <ul class="dropdown-menu dropdown-menu-end">
+        <ul class="dropdown-menu dropdown-menu-sm-end">
             <li>
                 <h6 class="dropdown-header">{{ translate('Themes') }}</h6>
             </li>
