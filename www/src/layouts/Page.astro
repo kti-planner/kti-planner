@@ -31,20 +31,9 @@ const userData = user ? makeUserDetailsData(user) : null;
         <script is:inline define:vars={{ langId, userData }}>
             globalThis.langId = langId;
             globalThis.user = userData;
+            document.documentElement.dataset.bsTheme = localStorage.getItem('theme') ?? 'modern';
         </script>
         <script is:inline src="/assets/js/bootstrap.bundle.min.js?ver=5.3.3"></script>
-        <script>
-            import { themes, themeKey, defaultTheme, type Theme } from '@components/themes/types';
-
-            let theme = localStorage.getItem(themeKey);
-
-            if (!theme || !themes.includes(theme as Theme)) {
-                theme = defaultTheme;
-                localStorage.setItem(themeKey, theme);
-            }
-
-            document.documentElement.dataset.bsTheme = theme;
-        </script>
     </head>
     <body>
         <div class="wrapper">

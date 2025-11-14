@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { watchEffect } from 'vue';
-import { type RemovableRef, useStorage } from '@vueuse/core';
+import { useStorage } from '@vueuse/core';
 import { langId } from '@components/frontend/lang';
-import { defaultTheme, type Theme, themeKey } from '@components/themes/types';
 import IconButton from '@components/IconButton.vue';
 
 const translations = {
@@ -24,16 +23,18 @@ function translate(text: keyof (typeof translations)[LangId]): string {
     return translations[langId][text];
 }
 
-const themeLabels: Record<Theme, string> = {
-    'modern': translate('Modern'),
-    'classic': translate('Classic (green)'),
-};
+type Theme = 'modern' | 'classic';
 
-const theme = useStorage(themeKey, defaultTheme) as RemovableRef<Theme>;
+const theme = useStorage('theme', 'modern');
 
 watchEffect(() => {
     document.documentElement.dataset.bsTheme = theme.value;
 });
+
+const themeLabels: Record<Theme, string> = {
+    'modern': translate('Modern'),
+    'classic': translate('Classic (green)'),
+};
 </script>
 
 <template>
@@ -57,13 +58,8 @@ watchEffect(() => {
                 <h6 class="dropdown-header">{{ translate('Themes') }}</h6>
             </li>
             <li v-for="(label, themeName) in themeLabels" :key="themeName">
-                <button
-                    class="dropdown-item"
-                    type="button"
-                    :style="{ paddingLeft: theme !== themeName ? '37px' : undefined }"
-                    @click="theme = themeName"
-                >
-                    <i v-if="theme === themeName" class="bi bi-check text-success"></i>
+                <button class="dropdown-item" type="button" @click="theme = themeName">
+                    <i class="bi bi-check text-success" :class="{ 'invisible': theme !== themeName }"></i>
                     {{ label }}
                 </button>
             </li>
