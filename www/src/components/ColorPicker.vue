@@ -1,16 +1,16 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import { contrastRatio } from 'src/utils';
+import { contrastRatio, randomColor } from 'src/utils';
 import { langId } from '@components/frontend/lang';
 
 const translations = {
     'en': {
         'Contrast': 'Contrast',
-        'Restore color': 'Restore color',
+        'Random color': 'Random color',
     },
     'pl': {
         'Contrast': 'Kontrast',
-        'Restore color': 'Przywróć kolor',
+        'Random color': 'Losowy kolor',
     },
 };
 
@@ -20,43 +20,27 @@ function translate(text: keyof (typeof translations)[LangId]): string {
 
 const model = defineModel<string>({ required: true });
 
+const { id = crypto.randomUUID() } = defineProps<{
+    id?: string;
+}>();
+
 const contrast = computed(() => contrastRatio(model.value, '#FFFFFF'));
 
-const { id = crypto.randomUUID(), defaultColors } = defineProps<{
-    id?: string;
-    defaultColors?: string[];
-}>();
-
-const listId = crypto.randomUUID();
-const hasDefaultColors = computed(() => defaultColors && defaultColors.length > 0);
-
-defineEmits<{
-    restoreColor: [];
-}>();
+function randomizeColor() {
+    model.value = randomColor();
+}
 </script>
 
 <template>
     <div class="hstack gap-3">
-        <div class="flex-grow-1">
-            <input
-                :id="id"
-                v-model="model"
-                type="color"
-                class="form-control"
-                required
-                :list="hasDefaultColors ? listId : undefined"
-            />
-            <datalist v-if="hasDefaultColors" :id="listId">
-                <option v-for="color in defaultColors" :key="color" :value="color" />
-            </datalist>
-        </div>
+        <input :id="id" v-model="model" type="color" class="form-control form-control-color" required />
         <div>
             {{ `${translate('Contrast')}: ` }}
             <span :class="contrast >= 4.47 ? 'text-success' : 'text-danger'">
                 {{ contrast.toPrecision(3) }}
             </span>
-            <button type="button" class="btn btn-success btn-sm ms-2" @click="$emit('restoreColor')">
-                {{ translate('Restore color') }}
+            <button type="button" class="btn btn-success btn-sm ms-2" @click="randomizeColor()">
+                {{ translate('Random color') }}
             </button>
         </div>
     </div>

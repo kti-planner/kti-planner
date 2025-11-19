@@ -40,8 +40,9 @@ function hslToHex(h: number, s: number, l: number): string {
     const f = (n: number) => l - a * Math.max(-1, Math.min(Math.min(k(n) - 3, 9 - k(n)), 1));
 
     const toHex = (x: number) => {
-        const hex = Math.round(x * 255).toString(16);
-        return hex.length === 1 ? '0' + hex : hex;
+        return Math.round(x * 255)
+            .toString(16)
+            .padStart(2, '0');
     };
 
     return `#${toHex(f(0))}${toHex(f(8))}${toHex(f(4))}`;
@@ -167,4 +168,8 @@ function maxLightnessForWhiteText(
     }
 
     return Math.round(low * 1000) / 1000; // return with milli-percent precision
+}
+
+export function randomColor(): string {
+    return stringToHexColor(crypto.randomUUID());
 }

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue';
-import { stringToHexColor } from 'src/utils';
+import { computed, ref } from 'vue';
+import { randomColor } from 'src/utils';
 import type { StudyCycleType, StudyModeType } from '@backend/subject';
 import { langId } from '@components/frontend/lang';
 import { apiDelete, apiPatch, apiPost } from '@components/api';
@@ -40,30 +40,7 @@ const classRepeatWeeks = ref<number | string>(subject?.classRepeatWeeks ?? 1);
 const studyMode = ref<StudyModeType>(subject?.studyMode ?? 'full-time');
 const studyCycle = ref<StudyCycleType>(subject?.studyCycle ?? 'first-cycle');
 const semesterNumber = ref<number>(subject?.semesterNumber ?? 1);
-const color = ref<string>(subject?.color ?? '#000000');
-
-const defaultColors = computed(() => {
-    const colors = new Set<string>();
-
-    if (subject) {
-        colors.add(subject.color.toLowerCase());
-        colors.add(stringToHexColor(makeSubjectFullName(subject.name, subject.semesterNumber)).toLowerCase());
-    }
-
-    return Array.from(colors);
-});
-
-watch([subjectName, semesterNumber], () => {
-    color.value = stringToHexColor(makeSubjectFullName(subjectName.value, semesterNumber.value));
-});
-
-function restoreColor() {
-    if (subject?.color) {
-        color.value = subject.color;
-    } else {
-        color.value = stringToHexColor(makeSubjectFullName(subjectName.value, semesterNumber.value));
-    }
-}
+const color = ref<string>(subject?.color ?? randomColor());
 
 async function submit() {
     if (typeof customDurationMinutes.value === 'string' || typeof classRepeatWeeks.value === 'string') {
@@ -263,12 +240,7 @@ const colorId = crypto.randomUUID();
 
         <div>
             <label :for="colorId" class="form-label">{{ translate('Color') }}</label>
-            <ColorPicker
-                :id="colorId"
-                v-model="color"
-                :default-colors="defaultColors"
-                @restore-color="restoreColor()"
-            />
+            <ColorPicker :id="colorId" v-model="color" />
         </div>
 
         <div>
