@@ -31,13 +31,7 @@ export function stringToHexColor(str: string): string {
 }
 
 function hslToHex(h: number, s: number, l: number): string {
-    s /= 100;
-    l /= 100;
-
-    const k = (n: number) => (n + h / 30) % 12;
-    const a = s * Math.min(l, 1 - l);
-
-    const f = (n: number) => l - a * Math.max(-1, Math.min(Math.min(k(n) - 3, 9 - k(n)), 1));
+    const [r, g, b] = hslToRgb(h, s, l);
 
     const toHex = (x: number) => {
         return Math.round(x * 255)
@@ -45,7 +39,7 @@ function hslToHex(h: number, s: number, l: number): string {
             .padStart(2, '0');
     };
 
-    return `#${toHex(f(0))}${toHex(f(8))}${toHex(f(4))}`;
+    return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
 }
 
 /**
