@@ -17,14 +17,22 @@ import listPlugin from '@fullcalendar/list';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import FullCalendar from '@fullcalendar/vue3';
 import { useWindowSize } from '@vueuse/core';
+import type { ScheduleChangeType } from '@backend/semester';
 import { langId } from '@components/frontend/lang';
+import { type ScheduleChangeData, scheduleChangeTypeLabels } from '@components/semesters/types';
+import { formatDateLocalYyyyMmDd } from '@components/utils';
 
-const { selectable, events, initialDate, initialView } = defineProps<{
+const { selectable, events, initialDate, initialView, scheduleChanges } = defineProps<{
     selectable?: boolean | undefined;
     events: CalendarEvent[];
     initialDate: DateInput | undefined;
     initialView?: string | undefined;
+    scheduleChanges: ScheduleChangeData[];
 }>();
+
+const scheduleChangesMap = computed(
+    () => new Map<string, ScheduleChangeType>(scheduleChanges?.map(change => [change.date, change.type]) ?? []),
+);
 
 const emit = defineEmits<{
     eventClick: [event: EventClickArg];
@@ -101,6 +109,23 @@ const options = computed((): CalendarOptions => {
         eventColor: 'var(--bs-success)',
         events,
         initialDate: initialDate ?? new Date(),
+        dayHeaderContent: arg => {
+            const currentDate = formatDateLocalYyyyMmDd(arg.date);
+            const scheduleChangeType = scheduleChangesMap.value.get(currentDate);
+
+            if (!scheduleChangeType) {
+                return { html: arg.text };
+            }
+
+            return {
+                html: `
+                    <div>
+                        <span>${arg.text}</span><br>
+                        <span class="schedule-change">${scheduleChangeTypeLabels[langId][scheduleChangeType]}</span>
+                    </div>
+                `,
+            };
+        },
     };
 });
 </script>
@@ -141,6 +166,10 @@ const options = computed((): CalendarOptions => {
             content: '';
             position: absolute;
             z-index: 1;
+        }
+
+        .schedule-change {
+            font-size: 0.9rem;
         }
     }
 
