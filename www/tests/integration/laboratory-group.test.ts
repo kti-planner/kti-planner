@@ -47,6 +47,7 @@ test('Laboratory groups', async () => {
         studyMode: 'full-time',
         studyCycle: 'first-cycle',
         semesterNumber: 5,
+        color: '#3F8366',
     });
 
     const subject2 = await Subject.create({
@@ -60,6 +61,7 @@ test('Laboratory groups', async () => {
         studyMode: 'full-time',
         studyCycle: 'first-cycle',
         semesterNumber: 6,
+        color: '#A5674F',
     });
 
     const laboratoryGroup1 = await LaboratoryGroup.create({

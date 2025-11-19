@@ -92,18 +92,18 @@ VALUES
   ( '2affdc99-7dd6-47f0-b26c-3c413bf063dd', 'EA 142' ),
   ( '8689d55d-508e-4f5d-aef8-d5052f220d20', 'EA 204' );
 
-INSERT INTO subjects (id, name, semester_id, teacher_ids, description, moodle_course_id, duration_minutes, class_repeat_weeks, study_mode, study_cycle, semester_number)
+INSERT INTO subjects (id, name, semester_id, teacher_ids, description, moodle_course_id, duration_minutes, class_repeat_weeks, study_mode, study_cycle, semester_number, color)
 VALUES
-  ( '60bd04c7-b83c-4b4d-8668-7bad4ea0a800', 'Lokalne sieci bezprzewodowe - Informatyka', 'a4560e99-9aa0-4c3e-9a6d-73c63b847d2e', '{c393c524-453c-4b02-bfad-5114fe828200,feeaa186-3d69-4801-a580-88be10d53553}', '', '', 105, 1, 'full-time', 'first-cycle', 6 ),
-  ( 'cfaa8255-992f-405e-9064-dd8baf9dfde3', 'Sieci komputerowe - Informatyka', '50138012-1f54-43a6-b5fd-8efea42020a9', '{c393c524-453c-4b02-bfad-5114fe828200}', '[Wyniki](http://wyniki.kti.gda.pl/?nazwa=2024Z-SK-I)', '', 105, 2, 'full-time', 'first-cycle', 5 ),
-  ( '25108321-0391-4c7a-b4d8-5ea20388e813', 'Lokalne sieci bezprzewodowe - Informatyka', '094f8324-7c58-4566-b5d7-e4fe8ed03a18', '{c393c524-453c-4b02-bfad-5114fe828200,feeaa186-3d69-4801-a580-88be10d53553}', '', '', 105, 1, 'full-time', 'first-cycle', 6 ),
-  ( '3f58b671-5b38-43f8-bf0f-49d93048c52e', 'Zarządzanie bezpieczeństwem sieci - Informatyka', '094f8324-7c58-4566-b5d7-e4fe8ed03a18', '{c393c524-453c-4b02-bfad-5114fe828200,feeaa186-3d69-4801-a580-88be10d53553}', '', '', 165, 2, 'full-time', 'first-cycle', 6 ),
-  ( '30ba7e6a-f3f8-46dc-bf2e-5defaf5f8277', 'Sieci komputerowe - Informatyka', '094f8324-7c58-4566-b5d7-e4fe8ed03a18', '{c393c524-453c-4b02-bfad-5114fe828200,feeaa186-3d69-4801-a580-88be10d53553}', '', '', 105, 2, 'part-time', 'first-cycle', 4 ),
-  ( '981c68ba-3f6a-459e-83af-f9fc578adc85', 'Sieci komputerowe - Informatyka', 'b2805b48-3d24-4169-8f67-88561345ee99', '{c393c524-453c-4b02-bfad-5114fe828200}', '', '', 105, 2, 'full-time', 'first-cycle', 5 ),
-  ( '9068cb5a-fe4b-4b93-af91-7050e61eceeb', 'Wstęp do sieci komputerowych - Automatyka i Robotyka, Inżynieria biomedyczna', 'b2805b48-3d24-4169-8f67-88561345ee99', '{c393c524-453c-4b02-bfad-5114fe828200,feeaa186-3d69-4801-a580-88be10d53553}', '', '', 105, 1, 'full-time', 'first-cycle', 5 ),
-  ( 'fbdb8147-35f7-45a1-a414-493cecde8de3', 'Administrowanie sieciami komputerowymi - Informatyka', 'b2805b48-3d24-4169-8f67-88561345ee99', '{c393c524-453c-4b02-bfad-5114fe828200,feeaa186-3d69-4801-a580-88be10d53553}', '', '', 165, 1, 'full-time', 'first-cycle', 7 ),
-  ( 'c8ce5ed0-4087-403e-a029-6c3d7c8ad731', 'Oprogramowanie komunikacyjne dla internetu rzeczy - Sieci komputerowe', 'b2805b48-3d24-4169-8f67-88561345ee99', '{c393c524-453c-4b02-bfad-5114fe828200,feeaa186-3d69-4801-a580-88be10d53553}', '', '', 165, 1, 'full-time', 'second-cycle', 2 ),
-  ( '75d33784-be0f-411f-90b6-ddbdf8412ee1', 'Sieciowe Systemy Operacyjne - Informatyka', 'b2805b48-3d24-4169-8f67-88561345ee99', '{c393c524-453c-4b02-bfad-5114fe828200,feeaa186-3d69-4801-a580-88be10d53553}', '', '', 165, 1, 'part-time', 'second-cycle', 3 );
+  ( '60bd04c7-b83c-4b4d-8668-7bad4ea0a800', 'Lokalne sieci bezprzewodowe - Informatyka', 'a4560e99-9aa0-4c3e-9a6d-73c63b847d2e', '{c393c524-453c-4b02-bfad-5114fe828200,feeaa186-3d69-4801-a580-88be10d53553}', '', '', 105, 1, 'full-time', 'first-cycle', 6, '#51833F'),
+  ( 'cfaa8255-992f-405e-9064-dd8baf9dfde3', 'Sieci komputerowe - Informatyka', '50138012-1f54-43a6-b5fd-8efea42020a9', '{c393c524-453c-4b02-bfad-5114fe828200}', '[Wyniki](http://wyniki.kti.gda.pl/?nazwa=2024Z-SK-I)', '', 105, 2, 'full-time', 'first-cycle', 5, '#3F8366' ),
+  ( '25108321-0391-4c7a-b4d8-5ea20388e813', 'Lokalne sieci bezprzewodowe - Informatyka', '094f8324-7c58-4566-b5d7-e4fe8ed03a18', '{c393c524-453c-4b02-bfad-5114fe828200,feeaa186-3d69-4801-a580-88be10d53553}', '', '', 105, 1, 'full-time', 'first-cycle', 6, '#51833F' ),
+  ( '3f58b671-5b38-43f8-bf0f-49d93048c52e', 'Zarządzanie bezpieczeństwem sieci - Informatyka', '094f8324-7c58-4566-b5d7-e4fe8ed03a18', '{c393c524-453c-4b02-bfad-5114fe828200,feeaa186-3d69-4801-a580-88be10d53553}', '', '', 165, 2, 'full-time', 'first-cycle', 6, '#A5674F' ),
+  ( '30ba7e6a-f3f8-46dc-bf2e-5defaf5f8277', 'Sieci komputerowe - Informatyka', '094f8324-7c58-4566-b5d7-e4fe8ed03a18', '{c393c524-453c-4b02-bfad-5114fe828200,feeaa186-3d69-4801-a580-88be10d53553}', '', '', 105, 2, 'part-time', 'first-cycle', 4, '#AE57A1' ),
+  ( '981c68ba-3f6a-459e-83af-f9fc578adc85', 'Sieci komputerowe - Informatyka', 'b2805b48-3d24-4169-8f67-88561345ee99', '{c393c524-453c-4b02-bfad-5114fe828200}', '', '', 105, 2, 'full-time', 'first-cycle', 5, '#3F8366' ),
+  ( '9068cb5a-fe4b-4b93-af91-7050e61eceeb', 'Wstęp do sieci komputerowych - Automatyka i Robotyka, Inżynieria biomedyczna', 'b2805b48-3d24-4169-8f67-88561345ee99', '{c393c524-453c-4b02-bfad-5114fe828200,feeaa186-3d69-4801-a580-88be10d53553}', '', '', 105, 1, 'full-time', 'first-cycle', 5, '#5D813E' ),
+  ( 'fbdb8147-35f7-45a1-a414-493cecde8de3', 'Administrowanie sieciami komputerowymi - Informatyka', 'b2805b48-3d24-4169-8f67-88561345ee99', '{c393c524-453c-4b02-bfad-5114fe828200,feeaa186-3d69-4801-a580-88be10d53553}', '', '', 165, 1, 'full-time', 'first-cycle', 7, '#4D7B9F' ),
+  ( 'c8ce5ed0-4087-403e-a029-6c3d7c8ad731', 'Oprogramowanie komunikacyjne dla internetu rzeczy - Sieci komputerowe', 'b2805b48-3d24-4169-8f67-88561345ee99', '{c393c524-453c-4b02-bfad-5114fe828200,feeaa186-3d69-4801-a580-88be10d53553}', '', '', 165, 1, 'full-time', 'second-cycle', 2, '#B25E60' ),
+  ( '75d33784-be0f-411f-90b6-ddbdf8412ee1', 'Sieciowe Systemy Operacyjne - Informatyka', 'b2805b48-3d24-4169-8f67-88561345ee99', '{c393c524-453c-4b02-bfad-5114fe828200,feeaa186-3d69-4801-a580-88be10d53553}', '', '', 165, 1, 'part-time', 'second-cycle', 3, '#408085' );
 
 INSERT INTO exercises (id, name, subject_id, exercise_number, classroom_id, teacher_id)
 VALUES
@@ -242,12 +242,12 @@ VALUES
   ( 'f8759326-af65-4e7c-975b-802cc8c6fa31', 'fc48900f-fd81-45a6-8878-5044076c0c06', '35ac8c7d-737c-4155-9c6d-9be5b6908c5a', '2025-10-29 09:15 Europe/Warsaw', '2025-10-29 11:00 Europe/Warsaw', 'c393c524-453c-4b02-bfad-5114fe828200' ),
   ( '5c7eff85-77a9-445d-8425-d54190e9a74a', '019e221d-85fe-4d00-afbc-c81b609ad252', '35ac8c7d-737c-4155-9c6d-9be5b6908c5a', '2025-11-05 09:15 Europe/Warsaw', '2025-11-05 11:00 Europe/Warsaw', 'c393c524-453c-4b02-bfad-5114fe828200' );
 
-INSERT INTO calendar_events (id, name, user_id, classroom_id, semester_id, start_date, end_date, type)
+INSERT INTO calendar_events (id, name, user_id, classroom_id, semester_id, start_date, end_date, type, color)
 VALUES
   -- Winter 2025/2026
-  ( '3dbd9654-e207-4c36-8c31-5e3ff4ef9187', 'Koło naukowe', 'feeaa186-3d69-4801-a580-88be10d53553', '8689d55d-508e-4f5d-aef8-d5052f220d20', 'b2805b48-3d24-4169-8f67-88561345ee99', '2025-10-02 11:15 Europe/Warsaw', '2025-10-02 13:00 Europe/Warsaw', 'class-reservation' ),
-  ( '5cef97c4-436d-4775-b05f-d144c9a84023', 'Koło naukowe', 'feeaa186-3d69-4801-a580-88be10d53553', '8689d55d-508e-4f5d-aef8-d5052f220d20', 'b2805b48-3d24-4169-8f67-88561345ee99', '2025-10-09 11:15 Europe/Warsaw', '2025-10-09 13:00 Europe/Warsaw', 'class-reservation' ),
-  ( '4357dae8-7d60-4444-8578-a737069b31e3', 'Szkolenie', 'c393c524-453c-4b02-bfad-5114fe828200', '2affdc99-7dd6-47f0-b26c-3c413bf063dd', 'b2805b48-3d24-4169-8f67-88561345ee99', '2025-10-03 14:15 Europe/Warsaw', '2025-10-03 17:00 Europe/Warsaw', 'class-reservation' ),
-  ( 'c047da6e-0a42-4f0b-b399-76bb2a99826f', 'Godziny Rektorskie - Rector''s hours', 'c393c524-453c-4b02-bfad-5114fe828200', null, 'b2805b48-3d24-4169-8f67-88561345ee99', '2025-10-03 11:00 Europe/Warsaw', '2025-10-03 13:00 Europe/Warsaw', 'classes-canceled' ),
-  ( 'b3147c24-7108-454a-98c4-33a7f851a186', 'Godziny Rektorskie - Rector''s hours', 'c393c524-453c-4b02-bfad-5114fe828200', null, 'b2805b48-3d24-4169-8f67-88561345ee99', '2025-11-07 15:00 Europe/Warsaw', '2025-11-07 17:00 Europe/Warsaw', 'classes-canceled' ),
-  ( '8149b77b-f4f4-4105-ba3c-2566ab4ced04', 'Godziny Dziekańskie - Dean''s hours', 'c393c524-453c-4b02-bfad-5114fe828200', null, 'b2805b48-3d24-4169-8f67-88561345ee99', '2025-11-05 12:00 Europe/Warsaw', '2025-11-05 14:00 Europe/Warsaw', 'classes-canceled' );
+  ( '3dbd9654-e207-4c36-8c31-5e3ff4ef9187', 'Koło naukowe', 'feeaa186-3d69-4801-a580-88be10d53553', '8689d55d-508e-4f5d-aef8-d5052f220d20', 'b2805b48-3d24-4169-8f67-88561345ee99', '2025-10-02 11:15 Europe/Warsaw', '2025-10-02 13:00 Europe/Warsaw', 'class-reservation', '#198754' ),
+  ( '5cef97c4-436d-4775-b05f-d144c9a84023', 'Koło naukowe', 'feeaa186-3d69-4801-a580-88be10d53553', '8689d55d-508e-4f5d-aef8-d5052f220d20', 'b2805b48-3d24-4169-8f67-88561345ee99', '2025-10-09 11:15 Europe/Warsaw', '2025-10-09 13:00 Europe/Warsaw', 'class-reservation', '#198754' ),
+  ( '4357dae8-7d60-4444-8578-a737069b31e3', 'Szkolenie', 'c393c524-453c-4b02-bfad-5114fe828200', '2affdc99-7dd6-47f0-b26c-3c413bf063dd', 'b2805b48-3d24-4169-8f67-88561345ee99', '2025-10-03 14:15 Europe/Warsaw', '2025-10-03 17:00 Europe/Warsaw', 'class-reservation', '#198754'  ),
+  ( 'c047da6e-0a42-4f0b-b399-76bb2a99826f', 'Godziny Rektorskie - Rector''s hours', 'c393c524-453c-4b02-bfad-5114fe828200', null, 'b2805b48-3d24-4169-8f67-88561345ee99', '2025-10-03 11:00 Europe/Warsaw', '2025-10-03 13:00 Europe/Warsaw', 'classes-canceled', '#DC3545' ),
+  ( 'b3147c24-7108-454a-98c4-33a7f851a186', 'Godziny Rektorskie - Rector''s hours', 'c393c524-453c-4b02-bfad-5114fe828200', null, 'b2805b48-3d24-4169-8f67-88561345ee99', '2025-11-07 15:00 Europe/Warsaw', '2025-11-07 17:00 Europe/Warsaw', 'classes-canceled', '#DC3545'),
+  ( '8149b77b-f4f4-4105-ba3c-2566ab4ced04', 'Godziny Dziekańskie - Dean''s hours', 'c393c524-453c-4b02-bfad-5114fe828200', null, 'b2805b48-3d24-4169-8f67-88561345ee99', '2025-11-05 12:00 Europe/Warsaw', '2025-11-05 14:00 Europe/Warsaw', 'classes-canceled', '#DC3545' );

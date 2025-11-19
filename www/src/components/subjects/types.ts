@@ -49,6 +49,7 @@ export const subjectCreateApiSchema = z.object({
     studyMode: studyModeSchema,
     studyCycle: studyCycleSchema,
     semesterNumber: z.int().min(1).max(7),
+    color: z.string(),
 });
 
 export type SubjectCreateApiData = z.input<typeof subjectCreateApiSchema>;
@@ -63,6 +64,7 @@ export const subjectEditApiSchema = z.object({
     studyMode: studyModeSchema.optional(),
     studyCycle: studyCycleSchema.optional(),
     semesterNumber: z.int().min(1).max(7).optional(),
+    color: z.string().optional(),
 });
 
 export type SubjectEditApiData = z.input<typeof subjectEditApiSchema>;

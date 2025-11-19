@@ -17,6 +17,7 @@ interface DbCalendarEvent {
     start_date: Date;
     end_date: Date;
     type: EventType;
+    color: string;
 }
 
 export interface CalendarEventCreateData {
@@ -27,6 +28,7 @@ export interface CalendarEventCreateData {
     startDate: Date;
     endDate: Date;
     type: EventType;
+    color: string;
 }
 
 export interface CalendarEventEditData {
@@ -36,6 +38,7 @@ export interface CalendarEventEditData {
     startDate?: Date | undefined;
     endDate?: Date | undefined;
     type?: EventType | undefined;
+    color?: string | undefined;
 }
 
 export class CalendarEvent {
@@ -47,6 +50,7 @@ export class CalendarEvent {
     startDate: Date;
     endDate: Date;
     type: EventType;
+    color: string;
 
     constructor(data: DbCalendarEvent) {
         this.id = data.id;
@@ -57,6 +61,7 @@ export class CalendarEvent {
         this.startDate = data.start_date;
         this.endDate = data.end_date;
         this.type = data.type;
+        this.color = data.color;
     }
 
     static async fetch(id: string): Promise<CalendarEvent | null> {
@@ -85,8 +90,8 @@ export class CalendarEvent {
     static async create(data: CalendarEventCreateData): Promise<CalendarEvent> {
         const result = (
             await db.query<DbCalendarEvent>(
-                'INSERT INTO calendar_events (id, name, user_id, classroom_id, semester_id, start_date, end_date, type)' +
-                    ' VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *',
+                'INSERT INTO calendar_events (id, name, user_id, classroom_id, semester_id, start_date, end_date, type, color)' +
+                    ' VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *',
                 [
                     crypto.randomUUID(),
                     data.name,
@@ -96,6 +101,7 @@ export class CalendarEvent {
                     data.startDate,
                     data.endDate,
                     data.type,
+                    data.color,
                 ],
             )
         ).rows[0];
@@ -130,9 +136,13 @@ export class CalendarEvent {
             this.type = data.type;
         }
 
+        if (data.color !== undefined) {
+            this.color = data.color;
+        }
+
         await db.query(
-            'UPDATE calendar_events SET name = $2, user_id = $3, classroom_id = $4, start_date = $5, end_date = $6, type = $7 WHERE id = $1',
-            [this.id, this.name, this.userId, this.classroomId, this.startDate, this.endDate, this.type],
+            'UPDATE calendar_events SET name = $2, user_id = $3, classroom_id = $4, start_date = $5, end_date = $6, type = $7, color = $8 WHERE id = $1',
+            [this.id, this.name, this.userId, this.classroomId, this.startDate, this.endDate, this.type, this.color],
         );
     }
 
@@ -156,5 +166,6 @@ export function makeCalendarEventData(
         startDate: formatDateLocalYyyyMmDdHhMm(calendarEvent.startDate),
         endDate: formatDateLocalYyyyMmDdHhMm(calendarEvent.endDate),
         type: calendarEvent.type,
+        color: calendarEvent.color,
     };
 }

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
+import { randomHexColor } from 'src/utils';
 import type { StudyCycleType, StudyModeType } from '@backend/subject';
 import { langId } from '@components/frontend/lang';
 import { apiDelete, apiPatch, apiPost } from '@components/api';
@@ -8,6 +9,7 @@ import type { SubjectCreateApiData, SubjectData, SubjectEditApiData } from '@com
 import type { UserPublicData } from '@components/users/types';
 import { makeSubjectFullName, romanNumerals, toHyphenatedLowercase } from '@components/utils';
 import ButtonWithConfirmationPopover from '@components/ButtonWithConfirmationPopover.vue';
+import ColorPicker from '@components/ColorPicker.vue';
 import UserMultiSelector from '@components/users/UserMultiSelector.vue';
 
 const { semester, subject } = defineProps<{
@@ -38,6 +40,7 @@ const classRepeatWeeks = ref<number | string>(subject?.classRepeatWeeks ?? 1);
 const studyMode = ref<StudyModeType>(subject?.studyMode ?? 'full-time');
 const studyCycle = ref<StudyCycleType>(subject?.studyCycle ?? 'first-cycle');
 const semesterNumber = ref<number>(subject?.semesterNumber ?? 1);
+const color = ref<string>(subject?.color ?? randomHexColor());
 
 async function submit() {
     if (typeof customDurationMinutes.value === 'string' || typeof classRepeatWeeks.value === 'string') {
@@ -58,6 +61,7 @@ async function submit() {
                   studyMode: studyMode.value,
                   studyCycle: studyCycle.value,
                   semesterNumber: semesterNumber.value,
+                  color: color.value,
               } satisfies SubjectCreateApiData)
             : await apiPatch<boolean>(`/api/subjects/${subject.id}/`, {
                   name: subjectName.value,
@@ -70,6 +74,7 @@ async function submit() {
                   studyMode: studyMode.value,
                   studyCycle: studyCycle.value,
                   semesterNumber: semesterNumber.value,
+                  color: color.value,
               } satisfies SubjectEditApiData);
 
     if (success === undefined) {
@@ -124,6 +129,7 @@ const translations = {
         'First-cycle': 'First-cycle',
         'Second-cycle': 'Second-cycle',
         'Semester': 'Semester',
+        'Color': 'Color',
     },
     'pl': {
         'Subject name': 'Nazwa przedmiotu',
@@ -146,6 +152,7 @@ const translations = {
         'First-cycle': 'Pierwszy stopień',
         'Second-cycle': 'Drugi stopień',
         'Semester': 'Semestr',
+        'Color': 'Kolor',
     },
 };
 
@@ -162,6 +169,7 @@ const classRepeatId = crypto.randomUUID();
 const studyModeId = crypto.randomUUID();
 const studyCycleId = crypto.randomUUID();
 const semesterNumberId = crypto.randomUUID();
+const colorId = crypto.randomUUID();
 </script>
 
 <template>
@@ -228,6 +236,11 @@ const semesterNumberId = crypto.randomUUID();
                     {{ romanNumeral }}
                 </option>
             </select>
+        </div>
+
+        <div>
+            <label :for="colorId" class="form-label">{{ translate('Color') }}</label>
+            <ColorPicker :id="colorId" v-model="color" />
         </div>
 
         <div>

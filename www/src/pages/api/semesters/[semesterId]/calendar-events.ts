@@ -125,6 +125,7 @@ export const POST: APIRoute = async ({ locals, params }) => {
                 startDate,
                 endDate,
                 type: data.type,
+                color: data.color,
             }),
         ),
     );

@@ -14,6 +14,7 @@ export interface CalendarEventData {
     startDate: string;
     endDate: string;
     type: EventType;
+    color: string;
 }
 
 const typeSchema = z.enum(['classes-canceled', 'class-reservation']);
@@ -29,6 +30,7 @@ export const calendarEventCreateApiSchema = z.object({
         })
         .array(),
     type: typeSchema,
+    color: z.string(),
 });
 
 export type CalendarEventCreateApiData = z.input<typeof calendarEventCreateApiSchema>;
@@ -40,6 +42,7 @@ export const calendarEventEditApiSchema = z.object({
     startDate: dateTimeStringSchema.optional(),
     endDate: dateTimeStringSchema.optional(),
     type: typeSchema.optional(),
+    color: z.string().optional(),
 });
 
 export type CalendarEventEditApiData = z.input<typeof calendarEventEditApiSchema>;

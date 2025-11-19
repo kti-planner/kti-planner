@@ -46,7 +46,8 @@ CREATE TABLE subjects (
     class_repeat_weeks integer NOT NULL,
     study_mode         study_mode_type NOT NULL,
     study_cycle        study_cycle_type NOT NULL,
-    semester_number    integer NOT NULL
+    semester_number    integer NOT NULL,
+    color              text NOT NULL
 );
 
 CREATE TABLE exercises (
@@ -85,5 +86,6 @@ CREATE TABLE calendar_events (
     semester_id  uuid NOT NULL REFERENCES semesters ON DELETE CASCADE,
     start_date   timestamptz NOT NULL,
     end_date     timestamptz NOT NULL,
-    type         event_type NOT NULL
+    type         event_type NOT NULL,
+    color        text NOT NULL
 );
