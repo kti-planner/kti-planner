@@ -1,5 +1,3 @@
-import { murmurhash3_32_gc } from 'src/murmurhash3_32_gc';
-
 export function getNextPage(url: URL): string {
     let nextPage = url.searchParams.get('next') ?? '/';
 
@@ -17,12 +15,11 @@ export function makeLoginNextParam(url: URL): string {
 export const env = import.meta.env.PROD ? process.env : import.meta.env;
 
 /**
- * Returns an HEX color generated deterministically from the input string.
+ * Returns a random generated HEX color.
  * Used as a background color for white text, it will meet the WCAG AA required contrast ratio of 4.5:1.
  */
-export function stringToHexColor(str: string): string {
-    const hash = murmurhash3_32_gc(str, 2);
-    const hue = hash % 360;
+export function randomHexColor(): string {
+    const hue = Math.round(Math.random() * 360);
     const saturation = 35;
     const requiredContrast = 4.5;
     const lightness = maxLightnessForWhiteText(hue, saturation, requiredContrast);
@@ -162,8 +159,4 @@ function maxLightnessForWhiteText(
     }
 
     return Math.round(low * 1000) / 1000; // return with milli-percent precision
-}
-
-export function randomColor(): string {
-    return stringToHexColor(crypto.randomUUID());
 }

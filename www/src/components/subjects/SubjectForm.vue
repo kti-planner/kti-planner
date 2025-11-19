@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import { randomColor } from 'src/utils';
+import { randomHexColor } from 'src/utils';
 import type { StudyCycleType, StudyModeType } from '@backend/subject';
 import { langId } from '@components/frontend/lang';
 import { apiDelete, apiPatch, apiPost } from '@components/api';
@@ -40,7 +40,7 @@ const classRepeatWeeks = ref<number | string>(subject?.classRepeatWeeks ?? 1);
 const studyMode = ref<StudyModeType>(subject?.studyMode ?? 'full-time');
 const studyCycle = ref<StudyCycleType>(subject?.studyCycle ?? 'first-cycle');
 const semesterNumber = ref<number>(subject?.semesterNumber ?? 1);
-const color = ref<string>(subject?.color ?? randomColor());
+const color = ref<string>(subject?.color ?? randomHexColor());
 
 async function submit() {
     if (typeof customDurationMinutes.value === 'string' || typeof classRepeatWeeks.value === 'string') {

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import { contrastRatio, randomColor } from 'src/utils';
+import { contrastRatio, randomHexColor } from 'src/utils';
 import { langId } from '@components/frontend/lang';
 
 const translations = {
@@ -27,7 +27,7 @@ const { id = crypto.randomUUID() } = defineProps<{
 const contrast = computed(() => contrastRatio(model.value, '#FFFFFF'));
 
 function randomizeColor() {
-    model.value = randomColor();
+    model.value = randomHexColor();
 }
 </script>
 
