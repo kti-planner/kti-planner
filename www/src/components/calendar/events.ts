@@ -48,7 +48,7 @@ export function getCalendarEvents(calendarEvents: CalendarEventData[]): Calendar
         start: calendarEvent.startDate,
         end: calendarEvent.endDate,
         extendedProps: { calendarEvent },
-        color: calendarEvent.type === 'classes-canceled' ? 'var(--bs-danger)' : 'var(--bs-success)',
+        color: calendarEvent.color,
     }));
 }
 

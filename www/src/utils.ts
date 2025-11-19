@@ -1,5 +1,3 @@
-import { murmurhash3_32_gc } from 'src/murmurhash3_32_gc';
-
 export function getNextPage(url: URL): string {
     let nextPage = url.searchParams.get('next') ?? '/';
 
@@ -17,17 +15,28 @@ export function makeLoginNextParam(url: URL): string {
 export const env = import.meta.env.PROD ? process.env : import.meta.env;
 
 /**
- * Returns an HSL color generated deterministically from the input string.
+ * Returns a random generated HEX color.
  * Used as a background color for white text, it will meet the WCAG AA required contrast ratio of 4.5:1.
  */
-export function stringToHslColor(str: string): string {
-    const hash = murmurhash3_32_gc(str, 2);
-    const hue = hash % 360;
+export function randomHexColor(): string {
+    const hue = Math.round(Math.random() * 360);
     const saturation = 35;
     const requiredContrast = 4.5;
     const lightness = maxLightnessForWhiteText(hue, saturation, requiredContrast);
 
-    return `hsl(${hue} ${saturation} ${lightness})`;
+    return hslToHex(hue, saturation, lightness);
+}
+
+function hslToHex(h: number, s: number, l: number): string {
+    const [r, g, b] = hslToRgb(h, s, l);
+
+    const toHex = (x: number) => {
+        return Math.round(x * 255)
+            .toString(16)
+            .padStart(2, '0');
+    };
+
+    return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
 }
 
 /**
@@ -94,6 +103,26 @@ function relativeLuminanceFromHsl(h: number, s: number, l: number): number {
     const G = srgbToLinear(g);
     const B = srgbToLinear(b);
     return 0.2126 * R + 0.7152 * G + 0.0722 * B;
+}
+
+function relativeLuminanceFromHex(hex: string): number {
+    const r = parseInt(hex.slice(1, 3), 16) / 255;
+    const g = parseInt(hex.slice(3, 5), 16) / 255;
+    const b = parseInt(hex.slice(5, 7), 16) / 255;
+    const R = srgbToLinear(r);
+    const G = srgbToLinear(g);
+    const B = srgbToLinear(b);
+    return 0.2126 * R + 0.7152 * G + 0.0722 * B;
+}
+
+export function contrastRatio(hex1: string, hex2: string): number {
+    const L1 = relativeLuminanceFromHex(hex1);
+    const L2 = relativeLuminanceFromHex(hex2);
+
+    const lighter = Math.max(L1, L2);
+    const darker = Math.min(L1, L2);
+
+    return (lighter + 0.05) / (darker + 0.05);
 }
 
 /**

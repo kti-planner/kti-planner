@@ -16,6 +16,7 @@ import type { SemesterData } from '@components/semesters/types';
 import type { UserPublicData } from '@components/users/types';
 import { formatDateLocalYyyyMmDd, parseDateLocalYyyyMmDd } from '@components/utils';
 import ButtonWithConfirmationPopover from '@components/ButtonWithConfirmationPopover.vue';
+import ColorPicker from '@components/ColorPicker.vue';
 import UserSelector from '@components/users/UserSelector.vue';
 
 const props = defineProps<{
@@ -36,6 +37,7 @@ const date = ref<string>(props.calendarEvent.startDate.split('T')[0] ?? '');
 const startTime = ref<string>(props.calendarEvent.startDate.split('T')[1] ?? '');
 const endTime = ref<string>(props.calendarEvent.endDate.split('T')[1] ?? '');
 const type = ref<EventType>(props.calendarEvent.type ?? 'class-reservation');
+const color = ref<string>(props.calendarEvent.color ?? '#198754');
 
 const user = ref<UserPublicData | null>(
     props.calendarEvent?.user ??
@@ -61,6 +63,7 @@ async function submit() {
     if (type.value === 'classes-canceled') {
         user.value = currentUser;
         classroomId.value = null;
+        color.value = '#DC3545';
     }
 
     if (name.value === '' || classroomId.value === undefined || !user.value) {
@@ -75,6 +78,7 @@ async function submit() {
                   classroomId: classroomId.value,
                   durations: repeatOptions.value.generateDurations(startTime.value, endTime.value),
                   type: type.value,
+                  color: color.value,
               } satisfies CalendarEventCreateApiData)
             : await apiPatch<EventConflict[]>(
                   `/api/semesters/${props.semester.id}/calendar-events/${props.calendarEvent.id}/`,
@@ -85,6 +89,7 @@ async function submit() {
                       startDate: `${date.value}T${startTime.value}`,
                       endDate: `${date.value}T${endTime.value}`,
                       type: type.value,
+                      color: color.value,
                   } satisfies CalendarEventEditApiData,
               );
 
@@ -143,6 +148,7 @@ const translations = {
         'Type': 'Type',
         'Classes canceled': 'Classes canceled',
         'Class reservation': 'Class reservation',
+        'Color': 'Color',
     },
     'pl': {
         'Name': 'Nazwa',
@@ -172,6 +178,7 @@ const translations = {
         'Type': 'Typ',
         'Classes canceled': 'Odwołane zajęcia',
         'Class reservation': 'Rezerwacja sali',
+        'Color': 'Kolor',
     },
 };
 
@@ -192,6 +199,7 @@ const repeatCountId = crypto.randomUUID();
 const nameId = crypto.randomUUID();
 const userId = crypto.randomUUID();
 const classroomInputId = crypto.randomUUID();
+const colorId = crypto.randomUUID();
 </script>
 
 <template>
@@ -315,6 +323,11 @@ const classroomInputId = crypto.randomUUID();
             {{ translate('Name') }}:
             <br />
             {{ name }}
+        </div>
+
+        <div v-if="currentUser && type !== 'classes-canceled'">
+            <label :for="colorId" class="form-label">{{ translate('Color') }}</label>
+            <ColorPicker :id="colorId" v-model="color" />
         </div>
 
         <template v-if="type !== `classes-canceled`">

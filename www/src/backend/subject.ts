@@ -1,5 +1,5 @@
 import assert from 'node:assert';
-import { env, stringToHslColor } from 'src/utils';
+import { env } from 'src/utils';
 import { db } from '@backend/db';
 import type { Semester } from '@backend/semester';
 import { makeUserPublicData, User } from '@backend/user';
@@ -24,6 +24,7 @@ interface DbSubject {
     study_mode: StudyModeType;
     study_cycle: StudyCycleType;
     semester_number: number;
+    color: string;
 }
 
 export interface SubjectCreateData {
@@ -37,6 +38,7 @@ export interface SubjectCreateData {
     studyMode: StudyModeType;
     studyCycle: StudyCycleType;
     semesterNumber: number;
+    color: string;
 }
 
 export interface SubjectEditData {
@@ -50,6 +52,7 @@ export interface SubjectEditData {
     studyMode?: StudyModeType | undefined;
     studyCycle?: StudyCycleType | undefined;
     semesterNumber?: number | undefined;
+    color?: string | undefined;
 }
 
 export class Subject {
@@ -64,6 +67,7 @@ export class Subject {
     studyMode: StudyModeType;
     studyCycle: StudyCycleType;
     semesterNumber: number;
+    color: string;
 
     constructor(data: DbSubject) {
         this.id = data.id;
@@ -77,6 +81,7 @@ export class Subject {
         this.studyMode = data.study_mode;
         this.studyCycle = data.study_cycle;
         this.semesterNumber = data.semester_number;
+        this.color = data.color;
     }
 
     get slug(): string {
@@ -129,8 +134,8 @@ export class Subject {
 
         const result = (
             await db.query<DbSubject>(
-                'INSERT INTO subjects (id, name, semester_id, teacher_ids, description, moodle_course_id, duration_minutes, class_repeat_weeks, study_mode, study_cycle, semester_number)' +
-                    ' VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING *',
+                'INSERT INTO subjects (id, name, semester_id, teacher_ids, description, moodle_course_id, duration_minutes, class_repeat_weeks, study_mode, study_cycle, semester_number, color)' +
+                    ' VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) RETURNING *',
                 [
                     crypto.randomUUID(),
                     data.name,
@@ -143,6 +148,7 @@ export class Subject {
                     data.studyMode,
                     data.studyCycle,
                     data.semesterNumber,
+                    data.color,
                 ],
             )
         ).rows[0];
@@ -193,9 +199,13 @@ export class Subject {
             this.semesterNumber = data.semesterNumber;
         }
 
+        if (data.color !== undefined) {
+            this.color = data.color;
+        }
+
         await db.query(
             'UPDATE subjects SET name = $2, semester_id = $3, teacher_ids = $4, description = $5, moodle_course_id = $6,' +
-                ' duration_minutes = $7, class_repeat_weeks = $8, study_mode = $9, study_cycle = $10, semester_number = $11 WHERE id = $1',
+                ' duration_minutes = $7, class_repeat_weeks = $8, study_mode = $9, study_cycle = $10, semester_number = $11, color = $12 WHERE id = $1',
             [
                 this.id,
                 this.name,
@@ -208,6 +218,7 @@ export class Subject {
                 this.studyMode,
                 this.studyCycle,
                 this.semesterNumber,
+                this.color,
             ],
         );
     }
@@ -235,6 +246,6 @@ export function makeSubjectData(subject: Subject, allUsers: User[]): SubjectData
         studyMode: subject.studyMode,
         studyCycle: subject.studyCycle,
         semesterNumber: subject.semesterNumber,
-        color: stringToHslColor(subject.fullName),
+        color: subject.color,
     };
 }

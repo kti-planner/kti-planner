@@ -61,6 +61,7 @@ export const POST: APIRoute = async ({ locals, params }) => {
         studyMode: subjectToBeCopied.studyMode,
         studyCycle: subjectToBeCopied.studyCycle,
         semesterNumber: subjectToBeCopied.semesterNumber,
+        color: subjectToBeCopied.color,
     });
 
     // Copy exercises

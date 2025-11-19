@@ -265,6 +265,7 @@ test.describe('API fetch tests', () => {
                 studyMode: 'full-time',
                 studyCycle: 'first-cycle',
                 semesterNumber: 5,
+                color: '#3F8366',
             },
         });
 
@@ -287,6 +288,7 @@ test.describe('API fetch tests', () => {
                 studyMode: 'full-time',
                 studyCycle: 'first-cycle',
                 semesterNumber: 5,
+                color: '#3F8366',
             },
         });
 
@@ -307,6 +309,7 @@ test.describe('API fetch tests', () => {
                 studyMode: 'part-time',
                 studyCycle: 'second-cycle',
                 semesterNumber: 6,
+                color: '#3F8366',
             },
         });
 
@@ -328,6 +331,7 @@ test.describe('API fetch tests', () => {
                 studyMode: 'part-time',
                 studyCycle: 'second-cycle',
                 semesterNumber: 6,
+                color: '#3F8366',
             },
         });
 
