@@ -22,9 +22,13 @@ const model = defineModel<string>({ required: true });
 
 const contrast = computed(() => contrastRatio(model.value, '#FFFFFF'));
 
-const { id = crypto.randomUUID() } = defineProps<{
+const { id = crypto.randomUUID(), defaultColors } = defineProps<{
     id?: string;
+    defaultColors?: string[];
 }>();
+
+const listId = crypto.randomUUID();
+const hasDefaultColors = computed(() => defaultColors && defaultColors.length > 0);
 
 defineEmits<{
     restoreColor: [];
@@ -34,7 +38,17 @@ defineEmits<{
 <template>
     <div class="hstack gap-3">
         <div class="flex-grow-1">
-            <input :id="id" v-model="model" type="color" class="form-control" required />
+            <input
+                :id="id"
+                v-model="model"
+                type="color"
+                class="form-control"
+                required
+                :list="hasDefaultColors ? listId : undefined"
+            />
+            <datalist v-if="hasDefaultColors" :id="listId">
+                <option v-for="color in defaultColors" :key="color" :value="color" />
+            </datalist>
         </div>
         <div>
             {{ `${translate('Contrast')}: ` }}

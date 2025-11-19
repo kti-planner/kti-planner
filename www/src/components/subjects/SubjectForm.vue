@@ -42,6 +42,17 @@ const studyCycle = ref<StudyCycleType>(subject?.studyCycle ?? 'first-cycle');
 const semesterNumber = ref<number>(subject?.semesterNumber ?? 1);
 const color = ref<string>(subject?.color ?? '#000000');
 
+const defaultColors = computed(() => {
+    const colors = new Set<string>();
+
+    if (subject) {
+        colors.add(subject.color.toLowerCase());
+        colors.add(stringToHexColor(makeSubjectFullName(subject.name, subject.semesterNumber)).toLowerCase());
+    }
+
+    return Array.from(colors);
+});
+
 watch([subjectName, semesterNumber], () => {
     color.value = stringToHexColor(makeSubjectFullName(subjectName.value, semesterNumber.value));
 });
@@ -252,7 +263,12 @@ const colorId = crypto.randomUUID();
 
         <div>
             <label :for="colorId" class="form-label">{{ translate('Color') }}</label>
-            <ColorPicker :id="colorId" v-model="color" @restore-color="restoreColor()" />
+            <ColorPicker
+                :id="colorId"
+                v-model="color"
+                :default-colors="defaultColors"
+                @restore-color="restoreColor()"
+            />
         </div>
 
         <div>

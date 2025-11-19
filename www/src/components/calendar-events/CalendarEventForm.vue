@@ -40,6 +40,16 @@ const endTime = ref<string>(props.calendarEvent.endDate.split('T')[1] ?? '');
 const type = ref<EventType>(props.calendarEvent.type ?? 'class-reservation');
 const color = ref<string>(props.calendarEvent.color ?? '#198754');
 
+const defaultColors = computed(() => {
+    const colors = ['#198754'];
+
+    if (props.calendarEvent?.color) {
+        colors.push(props.calendarEvent.color);
+    }
+
+    return colors;
+});
+
 watch([name], () => {
     if (type.value === 'classes-canceled') {
         return;
@@ -344,7 +354,7 @@ const colorId = crypto.randomUUID();
 
         <div v-if="currentUser && type !== 'classes-canceled'">
             <label :for="colorId" class="form-label">{{ translate('Color') }}</label>
-            <ColorPicker :id="colorId" v-model="color" @restore-color="restoreColor" />
+            <ColorPicker :id="colorId" v-model="color" :default-colors="defaultColors" @restore-color="restoreColor" />
         </div>
 
         <template v-if="type !== `classes-canceled`">
