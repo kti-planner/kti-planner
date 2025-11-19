@@ -17,17 +17,34 @@ export function makeLoginNextParam(url: URL): string {
 export const env = import.meta.env.PROD ? process.env : import.meta.env;
 
 /**
- * Returns an HSL color generated deterministically from the input string.
+ * Returns an HEX color generated deterministically from the input string.
  * Used as a background color for white text, it will meet the WCAG AA required contrast ratio of 4.5:1.
  */
-export function stringToHslColor(str: string): string {
+export function stringToHexColor(str: string): string {
     const hash = murmurhash3_32_gc(str, 2);
     const hue = hash % 360;
     const saturation = 35;
     const requiredContrast = 4.5;
     const lightness = maxLightnessForWhiteText(hue, saturation, requiredContrast);
 
-    return `hsl(${hue} ${saturation} ${lightness})`;
+    return hslToHex(hue, saturation, lightness);
+}
+
+function hslToHex(h: number, s: number, l: number): string {
+    s /= 100;
+    l /= 100;
+
+    const k = (n: number) => (n + h / 30) % 12;
+    const a = s * Math.min(l, 1 - l);
+
+    const f = (n: number) => l - a * Math.max(-1, Math.min(Math.min(k(n) - 3, 9 - k(n)), 1));
+
+    const toHex = (x: number) => {
+        const hex = Math.round(x * 255).toString(16);
+        return hex.length === 1 ? '0' + hex : hex;
+    };
+
+    return `#${toHex(f(0))}${toHex(f(8))}${toHex(f(4))}`;
 }
 
 /**

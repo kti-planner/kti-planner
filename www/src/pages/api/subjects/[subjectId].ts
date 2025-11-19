@@ -55,6 +55,7 @@ export const PATCH: APIRoute = async ({ locals, params }) => {
         studyMode: data.studyMode,
         studyCycle: data.studyCycle,
         semesterNumber: data.semesterNumber,
+        color: data.color,
     });
 
     return Response.json(true, { status: 200 });

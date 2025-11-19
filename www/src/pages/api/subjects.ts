@@ -50,6 +50,7 @@ export const POST: APIRoute = async ({ locals }) => {
         studyMode: data.studyMode,
         studyCycle: data.studyCycle,
         semesterNumber: data.semesterNumber,
+        color: data.color,
     });
 
     return Response.json(true, { status: 201 });
