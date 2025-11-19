@@ -32,14 +32,18 @@ defineEmits<{
 </script>
 
 <template>
-    <span>
-        {{ `${translate('Contrast')}: ` }}
-        <span :class="contrast >= 4.47 ? 'text-success' : 'text-danger'">
-            {{ contrast.toPrecision(3) }}
-        </span>
-    </span>
-    <button type="button" class="btn btn-success btn-sm ms-2" @click="$emit('restoreColor')">
-        {{ translate('Restore color') }}
-    </button>
-    <input :id="id" v-model="model" type="color" class="form-control" required />
+    <div class="hstack gap-3">
+        <div class="flex-grow-1">
+            <input :id="id" v-model="model" type="color" class="form-control" required />
+        </div>
+        <div>
+            {{ `${translate('Contrast')}: ` }}
+            <span :class="contrast >= 4.47 ? 'text-success' : 'text-danger'">
+                {{ contrast.toPrecision(3) }}
+            </span>
+            <button type="button" class="btn btn-success btn-sm ms-2" @click="$emit('restoreColor')">
+                {{ translate('Restore color') }}
+            </button>
+        </div>
+    </div>
 </template>
