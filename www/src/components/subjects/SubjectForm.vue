@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
-import { contrastRatio, stringToHexColor } from 'src/utils';
+import { stringToHexColor } from 'src/utils';
 import type { StudyCycleType, StudyModeType } from '@backend/subject';
 import { langId } from '@components/frontend/lang';
 import { apiDelete, apiPatch, apiPost } from '@components/api';
@@ -9,6 +9,7 @@ import type { SubjectCreateApiData, SubjectData, SubjectEditApiData } from '@com
 import type { UserPublicData } from '@components/users/types';
 import { makeSubjectFullName, romanNumerals, toHyphenatedLowercase } from '@components/utils';
 import ButtonWithConfirmationPopover from '@components/ButtonWithConfirmationPopover.vue';
+import ColorPicker from '@components/ColorPicker.vue';
 import UserMultiSelector from '@components/users/UserMultiSelector.vue';
 
 const { semester, subject } = defineProps<{
@@ -40,8 +41,6 @@ const studyMode = ref<StudyModeType>(subject?.studyMode ?? 'full-time');
 const studyCycle = ref<StudyCycleType>(subject?.studyCycle ?? 'first-cycle');
 const semesterNumber = ref<number>(subject?.semesterNumber ?? 1);
 const color = ref<string>(subject?.color ?? '#000000');
-
-const contrast = computed(() => contrastRatio(color.value, '#FFFFFF'));
 
 watch([subjectName, semesterNumber], () => {
     color.value = stringToHexColor(makeSubjectFullName(subjectName.value, semesterNumber.value));
@@ -143,8 +142,6 @@ const translations = {
         'Second-cycle': 'Second-cycle',
         'Semester': 'Semester',
         'Color': 'Color',
-        'Contrast': 'Contrast',
-        'Restore color': 'Restore color',
     },
     'pl': {
         'Subject name': 'Nazwa przedmiotu',
@@ -168,8 +165,6 @@ const translations = {
         'Second-cycle': 'Drugi stopień',
         'Semester': 'Semestr',
         'Color': 'Kolor',
-        'Contrast': 'Kontrast',
-        'Restore color': 'Przywróć kolor',
     },
 };
 
@@ -256,17 +251,8 @@ const colorId = crypto.randomUUID();
         </div>
 
         <div>
-            <label :for="colorId" class="form-label">
-                {{ translate('Color') }} <span class="text-danger">*</span>
-                {{ `${translate('Contrast')}: ` }}
-                <span :class="{ 'text-success': contrast >= 4.47, 'text-danger': contrast < 4.47 }">
-                    {{ contrast.toPrecision(3) }}
-                </span>
-            </label>
-            <button type="button" class="btn btn-success btn-sm ms-2" @click="restoreColor()">
-                {{ translate('Restore color') }}
-            </button>
-            <input :id="colorId" v-model="color" type="color" class="form-control" required />
+            <label :for="colorId" class="form-label">{{ translate('Color') }}</label>
+            <ColorPicker :id="colorId" v-model="color" @restore-color="restoreColor()" />
         </div>
 
         <div>

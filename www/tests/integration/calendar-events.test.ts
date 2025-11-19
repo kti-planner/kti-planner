@@ -52,6 +52,7 @@ test('Calendar events', async () => {
         startDate: new Date('2024-10-23T11:00:00'),
         endDate: new Date('2024-10-23T13:00:00'),
         type: 'class-reservation',
+        color: '#198754',
     });
 
     expect(calendarEvent1).toHaveProperty('name', calendarEvent1.name);
@@ -61,6 +62,7 @@ test('Calendar events', async () => {
     expect(calendarEvent1).toHaveProperty('startDate', new Date('2024-10-23T11:00:00'));
     expect(calendarEvent1).toHaveProperty('endDate', new Date('2024-10-23T13:00:00'));
     expect(calendarEvent1).toHaveProperty('type', 'class-reservation');
+    expect(calendarEvent1).toHaveProperty('color', '#198754');
 
     const calendarEventData1 = makeCalendarEventData(calendarEvent1, user1, classroom1, semester1);
 
@@ -87,6 +89,7 @@ test('Calendar events', async () => {
             role: 'teacher',
         },
         type: 'class-reservation',
+        color: '#198754',
     });
 
     expect(await CalendarEvent.fetch(calendarEvent1.id)).toStrictEqual(calendarEvent1);
@@ -101,6 +104,7 @@ test('Calendar events', async () => {
         startDate: new Date('2025-03-11T13:00:00'),
         endDate: new Date('2025-03-11T15:00:00'),
         type: 'class-reservation',
+        color: '#198754',
     });
 
     expect(calendarEvent2).toHaveProperty('name', calendarEvent2.name);
@@ -110,6 +114,7 @@ test('Calendar events', async () => {
     expect(calendarEvent2).toHaveProperty('startDate', new Date('2025-03-11T13:00:00'));
     expect(calendarEvent2).toHaveProperty('endDate', new Date('2025-03-11T15:00:00'));
     expect(calendarEvent2).toHaveProperty('type', 'class-reservation');
+    expect(calendarEvent2).toHaveProperty('color', '#198754');
 
     expect(await CalendarEvent.fetch(calendarEvent2.id)).toStrictEqual(calendarEvent2);
     expect(await CalendarEvent.fetch(calendarEvent1.id)).toStrictEqual(calendarEvent1);
@@ -125,6 +130,7 @@ test('Calendar events', async () => {
         user: user1,
         classroom: classroom1,
         name: 'event2 v2',
+        color: '#DDDDDD',
     });
 
     expect(calendarEvent2).toHaveProperty('name', calendarEvent2.name);
@@ -134,6 +140,7 @@ test('Calendar events', async () => {
     expect(calendarEvent2).toHaveProperty('startDate', new Date('2025-03-12T09:00:00'));
     expect(calendarEvent2).toHaveProperty('endDate', new Date('2025-03-12T11:00:00'));
     expect(calendarEvent2).toHaveProperty('type', 'class-reservation');
+    expect(calendarEvent2).toHaveProperty('color', '#DDDDDD');
 
     expect(calendarEvent1).toHaveProperty('name', calendarEvent1.name);
     expect(calendarEvent1).toHaveProperty('userId', user1.id);
@@ -142,6 +149,7 @@ test('Calendar events', async () => {
     expect(calendarEvent1).toHaveProperty('startDate', new Date('2024-10-23T11:00:00'));
     expect(calendarEvent1).toHaveProperty('endDate', new Date('2024-10-23T13:00:00'));
     expect(calendarEvent1).toHaveProperty('type', 'class-reservation');
+    expect(calendarEvent1).toHaveProperty('color', '#198754');
 
     await calendarEvent2.edit({
         classroom: null,
@@ -157,6 +165,7 @@ test('Calendar events', async () => {
         startDate: new Date('2024-10-30T11:00:00'),
         endDate: new Date('2024-10-30T13:00:00'),
         type: 'class-reservation',
+        color: '#198754',
     });
 
     const calendarEventData3 = makeCalendarEventData(calendarEvent3, null, null, semester1);
@@ -177,6 +186,7 @@ test('Calendar events', async () => {
         startDate: '2024-10-30T11:00',
         user: null,
         type: 'class-reservation',
+        color: '#198754',
     });
 
     const calendarEvent4 = await CalendarEvent.create({
@@ -187,6 +197,7 @@ test('Calendar events', async () => {
         startDate: new Date('2025-04-01T10:00:00'),
         endDate: new Date('2025-04-01T12:00:00'),
         type: 'class-reservation',
+        color: '#198754',
     });
 
     const calendarEventData4 = makeCalendarEventData(calendarEvent4, null, null, semester2);
@@ -207,6 +218,7 @@ test('Calendar events', async () => {
         startDate: '2025-04-01T10:00',
         user: null,
         type: 'class-reservation',
+        color: '#198754',
     });
 
     await calendarEvent4.edit({ user: user2, type: 'class-reservation', classroom: classroom2 });

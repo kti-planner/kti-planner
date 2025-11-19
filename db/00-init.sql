@@ -86,5 +86,6 @@ CREATE TABLE calendar_events (
     semester_id  uuid NOT NULL REFERENCES semesters ON DELETE CASCADE,
     start_date   timestamptz NOT NULL,
     end_date     timestamptz NOT NULL,
-    type         event_type NOT NULL
+    type         event_type NOT NULL,
+    color        text NOT NULL
 );

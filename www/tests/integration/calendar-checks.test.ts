@@ -92,6 +92,7 @@ test('Detects event conflicts', async () => {
         startDate: new Date('2025-11-05T11:15'),
         endDate: new Date('2025-11-05T13:00'),
         type: 'class-reservation',
+        color: '#198754',
     });
 
     expect(
