@@ -109,23 +109,6 @@ const options = computed((): CalendarOptions => {
         eventColor: 'var(--bs-success)',
         events,
         initialDate: initialDate ?? new Date(),
-        dayHeaderContent: arg => {
-            const currentDate = formatDateLocalYyyyMmDd(arg.date);
-            const scheduleChangeType = scheduleChangesMap.value.get(currentDate);
-
-            if (!scheduleChangeType) {
-                return { html: arg.text };
-            }
-
-            return {
-                html: `
-                    <div>
-                        <span>${arg.text}</span><br>
-                        <span class="schedule-change">${scheduleChangeTypeLabels[langId][scheduleChangeType]}</span>
-                    </div>
-                `,
-            };
-        },
     };
 });
 </script>
@@ -137,6 +120,14 @@ const options = computed((): CalendarOptions => {
                 <!-- eslint-disable-next-line vue/no-unused-vars -->
                 <template #eventContent="arg">
                     <slot name="eventContent" :="arg"></slot>
+                </template>
+                <template #dayHeaderContent="arg">
+                    <div>{{ arg.text }}</div>
+                    <div v-if="scheduleChangesMap.get(formatDateLocalYyyyMmDd(arg.date))" class="schedule-change">
+                        {{
+                            scheduleChangeTypeLabels[langId][scheduleChangesMap.get(formatDateLocalYyyyMmDd(arg.date))!]
+                        }}
+                    </div>
                 </template>
             </FullCalendar>
         </div>
