@@ -30,10 +30,6 @@ const { selectable, events, initialDate, initialView, scheduleChanges } = define
     scheduleChanges: ScheduleChangeData[];
 }>();
 
-const scheduleChangesMap = computed(
-    () => new Map<string, ScheduleChangeType>(scheduleChanges?.map(change => [change.date, change.type]) ?? []),
-);
-
 const emit = defineEmits<{
     eventClick: [event: EventClickArg];
     select: [event: DateSelectArg];
@@ -111,6 +107,14 @@ const options = computed((): CalendarOptions => {
         initialDate: initialDate ?? new Date(),
     };
 });
+
+const scheduleChangesMap = computed(
+    () => new Map<string, ScheduleChangeType>(scheduleChanges?.map(change => [change.date, change.type]) ?? []),
+);
+
+function scheduleChangeAt(date: Date): ScheduleChangeType | null {
+    return scheduleChangesMap.value.get(formatDateLocalYyyyMmDd(date)) ?? null;
+}
 </script>
 
 <template>
@@ -123,10 +127,8 @@ const options = computed((): CalendarOptions => {
                 </template>
                 <template #dayHeaderContent="arg">
                     <div>{{ arg.text }}</div>
-                    <div v-if="scheduleChangesMap.get(formatDateLocalYyyyMmDd(arg.date))" class="schedule-change">
-                        {{
-                            scheduleChangeTypeLabels[langId][scheduleChangesMap.get(formatDateLocalYyyyMmDd(arg.date))!]
-                        }}
+                    <div v-if="scheduleChangeAt(arg.date)" class="small">
+                        {{ scheduleChangeTypeLabels[langId][scheduleChangeAt(arg.date)!] }}
                     </div>
                 </template>
             </FullCalendar>
@@ -157,10 +159,6 @@ const options = computed((): CalendarOptions => {
             content: '';
             position: absolute;
             z-index: 1;
-        }
-
-        .schedule-change {
-            font-size: 0.9rem;
         }
     }
 
