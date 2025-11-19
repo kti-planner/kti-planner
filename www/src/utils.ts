@@ -113,6 +113,26 @@ function relativeLuminanceFromHsl(h: number, s: number, l: number): number {
     return 0.2126 * R + 0.7152 * G + 0.0722 * B;
 }
 
+function relativeLuminanceFromHex(hex: string): number {
+    const r = parseInt(hex.slice(1, 3), 16) / 255;
+    const g = parseInt(hex.slice(3, 5), 16) / 255;
+    const b = parseInt(hex.slice(5, 7), 16) / 255;
+    const R = srgbToLinear(r);
+    const G = srgbToLinear(g);
+    const B = srgbToLinear(b);
+    return 0.2126 * R + 0.7152 * G + 0.0722 * B;
+}
+
+export function contrastRatio(hex1: string, hex2: string): number {
+    const L1 = relativeLuminanceFromHex(hex1);
+    const L2 = relativeLuminanceFromHex(hex2);
+
+    const lighter = Math.max(L1, L2);
+    const darker = Math.min(L1, L2);
+
+    return (lighter + 0.05) / (darker + 0.05);
+}
+
 /**
  * Returns the maximum lightness (0..100) for the given hue and saturation
  * such that white text on that background meets the given contrast.

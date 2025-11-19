@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
-import { stringToHexColor } from 'src/utils';
+import { contrastRatio, stringToHexColor } from 'src/utils';
 import type { StudyCycleType, StudyModeType } from '@backend/subject';
 import { langId } from '@components/frontend/lang';
 import { apiDelete, apiPatch, apiPost } from '@components/api';
@@ -39,11 +39,21 @@ const classRepeatWeeks = ref<number | string>(subject?.classRepeatWeeks ?? 1);
 const studyMode = ref<StudyModeType>(subject?.studyMode ?? 'full-time');
 const studyCycle = ref<StudyCycleType>(subject?.studyCycle ?? 'first-cycle');
 const semesterNumber = ref<number>(subject?.semesterNumber ?? 1);
-const color = ref<string>(subject?.color ?? '#FFF');
+const color = ref<string>(subject?.color ?? '#000000');
+
+const contrast = computed(() => contrastRatio(color.value, '#FFFFFF'));
 
 watch([subjectName, semesterNumber], () => {
     color.value = stringToHexColor(makeSubjectFullName(subjectName.value, semesterNumber.value));
 });
+
+function restoreColor() {
+    if (subject?.color) {
+        color.value = subject.color;
+    } else {
+        color.value = stringToHexColor(makeSubjectFullName(subjectName.value, semesterNumber.value));
+    }
+}
 
 async function submit() {
     if (typeof customDurationMinutes.value === 'string' || typeof classRepeatWeeks.value === 'string') {
@@ -133,6 +143,8 @@ const translations = {
         'Second-cycle': 'Second-cycle',
         'Semester': 'Semester',
         'Color': 'Color',
+        'Contrast': 'Contrast',
+        'Restore color': 'Restore color',
     },
     'pl': {
         'Subject name': 'Nazwa przedmiotu',
@@ -156,6 +168,8 @@ const translations = {
         'Second-cycle': 'Drugi stopień',
         'Semester': 'Semestr',
         'Color': 'Kolor',
+        'Contrast': 'Kontrast',
+        'Restore color': 'Przywróć kolor',
     },
 };
 
@@ -244,7 +258,14 @@ const colorId = crypto.randomUUID();
         <div>
             <label :for="colorId" class="form-label">
                 {{ translate('Color') }} <span class="text-danger">*</span>
+                {{ `${translate('Contrast')}: ` }}
+                <span :class="{ 'text-success': contrast >= 4.47, 'text-danger': contrast < 4.47 }">
+                    {{ contrast.toPrecision(3) }}
+                </span>
             </label>
+            <button type="button" class="btn btn-success btn-sm ms-2" @click="restoreColor()">
+                {{ translate('Restore color') }}
+            </button>
             <input :id="colorId" v-model="color" type="color" class="form-control" required />
         </div>
 
