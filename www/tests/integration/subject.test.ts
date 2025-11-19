@@ -46,6 +46,7 @@ test('Subjects', async () => {
         studyMode: 'full-time',
         studyCycle: 'first-cycle',
         semesterNumber: 5,
+        color: '#3F8366',
     });
 
     expect(subject1).toHaveProperty('name', 'Sieci komputerowe - Informatyka');
@@ -59,6 +60,7 @@ test('Subjects', async () => {
     expect(subject1).toHaveProperty('studyMode', subject1.studyMode);
     expect(subject1).toHaveProperty('studyCycle', subject1.studyCycle);
     expect(subject1).toHaveProperty('semesterNumber', subject1.semesterNumber);
+    expect(subject1).toHaveProperty('color', '#3F8366');
 
     const subjectData1 = makeSubjectData(subject1, [user1]);
 
@@ -82,7 +84,7 @@ test('Subjects', async () => {
         classRepeatWeeks: 1,
         studyMode: 'full-time',
         studyCycle: 'first-cycle',
-        color: 'hsl(154 35 38.141)',
+        color: '#3F8366',
         semesterNumber: 5,
     });
 
@@ -111,6 +113,7 @@ test('Subjects', async () => {
             studyMode: 'full-time',
             studyCycle: 'first-cycle',
             semesterNumber: 5,
+            color: '#3F8366',
         }),
     ).rejects.toThrow(Error);
 
@@ -125,6 +128,7 @@ test('Subjects', async () => {
         studyMode: 'full-time',
         studyCycle: 'first-cycle',
         semesterNumber: 6,
+        color: '#A5674F',
     });
 
     expect(subject2).toHaveProperty('name', 'Zarządzanie bezpieczeństwem sieci - Informatyka');
@@ -138,6 +142,7 @@ test('Subjects', async () => {
     expect(subject2).toHaveProperty('studyMode', subject2.studyMode);
     expect(subject2).toHaveProperty('studyCycle', subject2.studyCycle);
     expect(subject2).toHaveProperty('semesterNumber', subject2.semesterNumber);
+    expect(subject2).toHaveProperty('color', '#A5674F');
 
     const subjectData2 = makeSubjectData(subject2, [user1, user2]);
 
@@ -166,7 +171,7 @@ test('Subjects', async () => {
         classRepeatWeeks: 2,
         studyMode: 'full-time',
         studyCycle: 'first-cycle',
-        color: 'hsl(17 35 47.84)',
+        color: '#A5674F',
         semesterNumber: 6,
     });
 
@@ -200,6 +205,7 @@ test('Subjects', async () => {
         studyMode: 'part-time',
         studyCycle: 'second-cycle',
         semesterNumber: 6,
+        color: '#DDDDDD',
     });
 
     expect(subject2).toHaveProperty('name', 'Lokalne sieci bezprzewodowe - Informatyka');
@@ -213,6 +219,7 @@ test('Subjects', async () => {
     expect(subject2).toHaveProperty('studyMode', subject2.studyMode);
     expect(subject2).toHaveProperty('studyCycle', subject2.studyCycle);
     expect(subject2).toHaveProperty('semesterNumber', subject2.semesterNumber);
+    expect(subject2).toHaveProperty('color', '#DDDDDD');
 
     expect(await subject2.getTeachers()).toStrictEqual([user2]);
 
@@ -227,6 +234,7 @@ test('Subjects', async () => {
     expect(subject1).toHaveProperty('studyMode', subject1.studyMode);
     expect(subject1).toHaveProperty('studyCycle', subject1.studyCycle);
     expect(subject1).toHaveProperty('semesterNumber', subject1.semesterNumber);
+    expect(subject1).toHaveProperty('color', '#3F8366');
 
     expect(await subject1.getTeachers()).toStrictEqual([user1]);
 

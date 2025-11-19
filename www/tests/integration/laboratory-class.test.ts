@@ -58,6 +58,7 @@ test('Laboratory classes', async () => {
         studyMode: 'full-time',
         studyCycle: 'first-cycle',
         semesterNumber: 5,
+        color: '#3F8366',
     });
 
     const subject2 = await Subject.create({
@@ -71,6 +72,7 @@ test('Laboratory classes', async () => {
         studyMode: 'full-time',
         studyCycle: 'first-cycle',
         semesterNumber: 6,
+        color: '#A5674F',
     });
 
     const exercise1 = await Exercise.create({

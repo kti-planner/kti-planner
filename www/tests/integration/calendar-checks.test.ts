@@ -44,6 +44,7 @@ test('Detects event conflicts', async () => {
         studyMode: 'full-time',
         studyCycle: 'first-cycle',
         semesterNumber: 5,
+        color: '#3F8366',
     });
 
     const classroom1 = await Classroom.create({
