@@ -127,6 +127,7 @@ function handleGenerateClassesDone() {
         :events
         :initial-date
         :selectable="currentUser !== null"
+        :schedule-changes="scheduleChanges"
         @event-click="handleEventClick"
         @select="handleCalendarSelection"
     >
