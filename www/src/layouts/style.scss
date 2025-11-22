@@ -1,43 +1,13 @@
-[data-bs-theme="classic"] {
-    --bs-body-bg: var(--bs-success-bg-subtle);
-    --bs-tertiary-bg: #bcdccd;
-    --bs-tertiary-bg-rgb: 188, 220, 205;
+[data-bs-theme='classic'] {
     --bs-border-color: var(--bs-gray-500);
-    --bs-secondary-border-subtle: var(--bs-gray-400);
     --fc-page-bg-color: var(--bs-success-bg-subtle);
-    --bs-secondary-bg: var(--bs-tertiary-bg);
-    --fc-list-event-hover-bg-color: var(--bs-tertiary-bg);
+
+    body {
+        background-color: var(--bs-success-bg-subtle);
+    }
 
     // FullCalendar table borders
     .fc {
         --bs-gray-400: var(--bs-border-color);
-    }
-
-    .btn-light {
-        --bs-btn-color: #000;
-        --bs-btn-bg: var(--bs-success-bg-subtle);
-        --bs-btn-border-color: var(--bs-border-color);
-        --bs-btn-hover-color: #000;
-        --bs-btn-hover-bg: #bcdccd;
-        --bs-btn-hover-border-color: var(--bs-border-color);
-        --bs-btn-focus-shadow-rgb: 211, 212, 213;
-        --bs-btn-active-color: #000;
-        --bs-btn-active-bg: #bcdccd;
-        --bs-btn-active-border-color: var(--bs-secondary-border-subtle);
-        --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
-        --bs-btn-disabled-color: #000;
-    }
-
-    .link-success {
-        color: RGBA(171, 41, 54, var(--bs-link-opacity, 1)) !important;
-        -webkit-text-decoration-color: RGBA(171, 41, 54, var(--bs-link-underline-opacity, 1)) !important;
-        text-decoration-color: RGBA(171, 41, 54, var(--bs-link-underline-opacity, 1)) !important;
-    }
-
-    .link-success:hover,
-    .link-success:focus {
-        color: RGBA(121, 29, 38, var(--bs-link-opacity, 1)) !important;
-        -webkit-text-decoration-color: RGBA(121, 29, 38, var(--bs-link-underline-opacity, 1)) !important;
-        text-decoration-color: RGBA(121, 29, 38, var(--bs-link-underline-opacity, 1)) !important;
     }
 }
