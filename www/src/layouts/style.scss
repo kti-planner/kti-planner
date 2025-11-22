@@ -1,10 +1,13 @@
 [data-bs-theme='classic'] {
+    --bs-border-color: var(--bs-gray-500);
+    --fc-page-bg-color: var(--bs-success-bg-subtle);
+
     body {
         background-color: var(--bs-success-bg-subtle);
     }
 
     // FullCalendar table borders
     .fc {
-        --bs-gray-400: var(--bs-gray-500);
+        --bs-gray-400: var(--bs-border-color);
     }
 }
