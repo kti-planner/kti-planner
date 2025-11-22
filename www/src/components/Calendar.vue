@@ -17,13 +17,17 @@ import listPlugin from '@fullcalendar/list';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import FullCalendar from '@fullcalendar/vue3';
 import { useWindowSize } from '@vueuse/core';
+import type { ScheduleChangeType } from '@backend/semester';
 import { langId } from '@components/frontend/lang';
+import { type ScheduleChangeData, scheduleChangeTypeLabels } from '@components/semesters/types';
+import { formatDateLocalYyyyMmDd } from '@components/utils';
 
-const { selectable, events, initialDate, initialView } = defineProps<{
+const { selectable, events, initialDate, initialView, scheduleChanges } = defineProps<{
     selectable?: boolean | undefined;
     events: CalendarEvent[];
     initialDate: DateInput | undefined;
     initialView?: string | undefined;
+    scheduleChanges: ScheduleChangeData[];
 }>();
 
 const emit = defineEmits<{
@@ -103,6 +107,14 @@ const options = computed((): CalendarOptions => {
         initialDate: initialDate ?? new Date(),
     };
 });
+
+const scheduleChangesMap = computed(
+    () => new Map<string, ScheduleChangeType>(scheduleChanges?.map(change => [change.date, change.type]) ?? []),
+);
+
+function scheduleChangeAt(date: Date): ScheduleChangeType | null {
+    return scheduleChangesMap.value.get(formatDateLocalYyyyMmDd(date)) ?? null;
+}
 </script>
 
 <template>
@@ -112,6 +124,12 @@ const options = computed((): CalendarOptions => {
                 <!-- eslint-disable-next-line vue/no-unused-vars -->
                 <template #eventContent="arg">
                     <slot name="eventContent" :="arg"></slot>
+                </template>
+                <template #dayHeaderContent="arg">
+                    <div>{{ arg.text }}</div>
+                    <div v-if="scheduleChangeAt(arg.date)" class="small">
+                        {{ scheduleChangeTypeLabels[langId][scheduleChangeAt(arg.date)!] }}
+                    </div>
                 </template>
             </FullCalendar>
         </div>

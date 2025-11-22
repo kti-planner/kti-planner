@@ -179,6 +179,7 @@ function handleAddEventClick() {
             <Calendar
                 :events
                 :initial-date
+                :schedule-changes="scheduleChanges"
                 :selectable="currentUser !== null"
                 @event-click="handleEventClick"
                 @select="handleCalendarSelection"
