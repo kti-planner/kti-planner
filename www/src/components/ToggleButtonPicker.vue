@@ -3,10 +3,15 @@ import { computed } from 'vue';
 
 const model = defineModel<T[]>({ required: true });
 
-const { options, center = false } = defineProps<{
+const {
+    options,
+    center = false,
+    fullWidthOptions = false,
+} = defineProps<{
     options: Readonly<Record<string, T>>;
-    center?: boolean;
+    center?: boolean | undefined;
     colors?: Record<string, string>;
+    fullWidthOptions?: boolean | undefined;
 }>();
 
 const selectedIds = computed(() => new Set<string>(model.value.map(item => item.id)));
@@ -36,7 +41,7 @@ const toggleBtnId = crypto.randomUUID();
 
 <template>
     <div class="hstack flex-wrap gap-2" :class="{ 'justify-content-center': center }">
-        <div v-for="(value, label) in options" :key="value.id">
+        <div v-for="(value, label) in options" :key="value.id" :class="{ 'w-100': fullWidthOptions }">
             <input
                 :id="`${toggleBtnId}-${value.id}`"
                 type="checkbox"
@@ -53,6 +58,7 @@ const toggleBtnId = crypto.randomUUID();
                     'btn-light': !selectedIds.has(value.id),
                     'btn-highlight': colors !== null,
                     'btn-colored': selectedIds.has(value.id) && colors,
+                    'w-100': fullWidthOptions,
                 }"
                 :style="{
                     '--str-color': colors ? colors[value.id] : undefined,

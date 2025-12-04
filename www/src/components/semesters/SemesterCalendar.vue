@@ -175,7 +175,7 @@ function handleAddEventClick() {
 
 <template>
     <div class="row g-4">
-        <div class="col-12 col-lg-9 mb-2 order-2 order-lg-1">
+        <div class="col-12 col-lg-9 mb-2">
             <Calendar
                 :events
                 :initial-date
@@ -235,7 +235,7 @@ function handleAddEventClick() {
                 />
             </Modal>
         </div>
-        <div class="col-12 col-lg-3 order-1 order-lg-2 d-flex gap-2 flex-column-reverse flex-lg-column">
+        <div class="col-12 col-lg-3 d-flex flex-column gap-2">
             <button
                 v-if="currentUser"
                 type="button"
@@ -265,6 +265,7 @@ function handleAddEventClick() {
                         center
                         :options="subjectOptions"
                         :colors="subjectColors"
+                        full-width-options
                     />
                 </template>
             </div>
@@ -274,7 +275,7 @@ function handleAddEventClick() {
                 </h2>
                 <ToggleButtonPicker v-model="selectedClassrooms" center :options="classroomOptions" />
             </div>
-            <div>
+            <div class="mb-2">
                 <h2 class="text-center fs-5">
                     {{ translate('Teachers') }}
                 </h2>
