@@ -27,7 +27,7 @@ import ToggleButtonPicker from '@components/ToggleButtonPicker.vue';
 
 const translations = {
     'en': {
-        'Subjects': 'Subjects',
+        'Filters': 'Filters',
         'Classrooms': 'Classrooms',
         'Teachers': 'Teachers',
         'Edit class': 'Edit class',
@@ -36,7 +36,7 @@ const translations = {
         'Export calendar': 'Export calendar',
     },
     'pl': {
-        'Subjects': 'Przedmioty',
+        'Filters': 'Filtry',
         'Classrooms': 'Sale',
         'Teachers': 'Prowadzący',
         'Edit class': 'Edytuj zajęcia',
@@ -174,7 +174,7 @@ function handleAddEventClick() {
 </script>
 
 <template>
-    <div class="row g-4">
+    <div class="row gy-2">
         <div class="col-12 col-lg-9 mb-2">
             <Calendar
                 :events
@@ -235,52 +235,41 @@ function handleAddEventClick() {
                 />
             </Modal>
         </div>
-        <div class="col-12 col-lg-3 d-flex flex-column gap-2">
+        <div class="col-12 col-lg-3">
+            <h2 class="text-center fs-5">
+                {{ translate('Filters') }}
+            </h2>
+            <template v-for="{ subjectOptions, title } in subjectGroupsOptions" :key="title">
+                <h3 class="fs-6 text-center mt-2">
+                    {{ title }}
+                </h3>
+                <ToggleButtonPicker
+                    v-model="selectedSubjects"
+                    center
+                    :options="subjectOptions"
+                    :colors="subjectColors"
+                    full-width-options
+                />
+            </template>
+            <h3 class="text-center fs-6 mt-2">
+                {{ translate('Classrooms') }}
+            </h3>
+            <ToggleButtonPicker v-model="selectedClassrooms" center :options="classroomOptions" />
+            <h3 class="text-center fs-6 mt-2">
+                {{ translate('Teachers') }}
+            </h3>
+            <ToggleButtonPicker v-model="selectedTeachers" center :options="teacherOptions" />
             <button
                 v-if="currentUser"
                 type="button"
-                class="btn btn-success mx-auto"
-                style="width: fit-content"
+                class="btn btn-success d-block mx-auto mt-2"
                 @click="handleAddEventClick()"
             >
                 {{ translate('Add event') }}
             </button>
-            <button
-                type="button"
-                class="btn btn-success mx-auto"
-                style="width: fit-content"
-                @click="exportModal?.show()"
-            >
+            <button type="button" class="btn btn-success d-block mx-auto mt-2" @click="exportModal?.show()">
                 {{ translate('Export calendar') }}
             </button>
-            <div>
-                <h2 class="text-center fs-5">
-                    {{ translate('Subjects') }}
-                </h2>
-
-                <template v-for="{ subjectOptions, title } in subjectGroupsOptions" :key="title">
-                    <h2 class="fs-6 text-center mt-3">{{ title }}</h2>
-                    <ToggleButtonPicker
-                        v-model="selectedSubjects"
-                        center
-                        :options="subjectOptions"
-                        :colors="subjectColors"
-                        full-width-options
-                    />
-                </template>
-            </div>
-            <div>
-                <h2 class="text-center fs-5">
-                    {{ translate('Classrooms') }}
-                </h2>
-                <ToggleButtonPicker v-model="selectedClassrooms" center :options="classroomOptions" />
-            </div>
-            <div class="mb-2">
-                <h2 class="text-center fs-5">
-                    {{ translate('Teachers') }}
-                </h2>
-                <ToggleButtonPicker v-model="selectedTeachers" center :options="teacherOptions" />
-            </div>
         </div>
     </div>
 </template>
