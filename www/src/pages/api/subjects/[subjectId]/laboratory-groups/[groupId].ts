@@ -18,7 +18,7 @@ export const PATCH: APIRoute = async ({ locals, params }) => {
 
     const group = await LaboratoryGroup.fetch(params.groupId ?? '');
 
-    if (group === null || group.subjectId !== subject.id) {
+    if (group?.subjectId !== subject.id) {
         return Response.json(null, { status: 404 });
     }
 
@@ -57,7 +57,7 @@ export const DELETE: APIRoute = async ({ locals, params }) => {
 
     const laboratoryGroup = await LaboratoryGroup.fetch(params.groupId ?? '');
 
-    if (!laboratoryGroup || laboratoryGroup.subjectId !== subject.id) {
+    if (laboratoryGroup?.subjectId !== subject.id) {
         return Response.json(null, { status: 404 });
     }
 

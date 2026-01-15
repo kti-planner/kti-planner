@@ -22,7 +22,7 @@ export const PATCH: APIRoute = async ({ locals, params }) => {
     }
 
     const calendarEvent = await CalendarEvent.fetch(params.eventId ?? '');
-    if (!calendarEvent || calendarEvent.semesterId !== semester.id) {
+    if (calendarEvent?.semesterId !== semester.id) {
         return Response.json(null, { status: 404 });
     }
 
@@ -99,7 +99,7 @@ export const DELETE: APIRoute = async ({ locals, params }) => {
 
     const calendarEvent = await CalendarEvent.fetch(params.eventId ?? '');
 
-    if (!calendarEvent || calendarEvent.semesterId !== semester.id) {
+    if (calendarEvent?.semesterId !== semester.id) {
         return Response.json(null, { status: 404 });
     }
 

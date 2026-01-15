@@ -1,5 +1,5 @@
-import { computed, isRef, toValue } from 'vue';
-import { type MaybeRefOrGetter, useFetch, type UseFetchOptions, type UseFetchReturn } from '@vueuse/core';
+import { computed, isRef, type MaybeRefOrGetter, toValue } from 'vue';
+import { useFetch, type UseFetchOptions, type UseFetchReturn } from '@vueuse/core';
 
 type NonUndefined = NonNullable<unknown> | null;
 
