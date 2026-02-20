@@ -87,6 +87,7 @@ defineExpose({
                 :key="exercise.id"
                 :href="`${subjectUrl}/${exercise.exerciseNumber}/`"
                 class="list-group-item list-group-item-action"
+                :title="`${exercise.teacher?.name}\n${exercise.classroom?.name}`"
             >
                 <div>{{ `${exercise.exerciseNumber}. ${exercise.name}` }}</div>
                 <template v-if="exerciseDateRanges.has(exercise.id)">
