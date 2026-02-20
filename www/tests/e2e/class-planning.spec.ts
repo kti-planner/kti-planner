@@ -396,3 +396,23 @@ test('Cannot move classes outside of semester', async ({ page }) => {
 
     await expect(page.getByText('2025-09-24: Outside of semester')).toBeVisible();
 });
+
+test('Classes sync with exercise teacher edits', async ({ page }) => {
+    await page.goto('/semesters/2025-winter/subjects/sieci-komputerowe---informatyka-sem.-v/');
+    await loginAsTeacher(page);
+
+    await expect(
+        page.locator('.calendar-wrapper a').filter({ hasText: '11:15 - 13:00' }).filter({ hasText: 'Jan Kowalski' }),
+    ).toBeVisible();
+
+    await page.getByRole('link', { name: 'Diagnostyka sieci IPv4' }).click();
+    await page.getByRole('button', { name: 'Edit exercise' }).click();
+    await page.getByRole('combobox', { name: 'Teacher' }).selectOption('Bogdan Nowak');
+    await page.getByRole('button', { name: 'Save' }).click();
+
+    await page.getByRole('link', { name: 'Sieci komputerowe - Informatyka sem. V' }).click();
+
+    await expect(
+        page.locator('.calendar-wrapper a').filter({ hasText: '11:15 - 13:00' }).filter({ hasText: 'Bogdan Nowak' }),
+    ).toBeVisible();
+});
