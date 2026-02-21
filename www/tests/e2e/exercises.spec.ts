@@ -71,6 +71,11 @@ test('Can add new exercise and prevent duplicate exercise creation', async ({ pa
 
     await expect(page.getByRole('link', { name: 'Wirtualne sieci lokalne (VLAN)' })).toBeVisible();
 
+    await expect(page.getByRole('link', { name: 'Wirtualne sieci lokalne (VLAN)' })).toHaveAttribute(
+        'title',
+        'Jan Kowalski\nEA 142',
+    );
+
     // Cannot add duplicate exercise
     await page.goto('/semesters/2024-winter/subjects/sieci-komputerowe---informatyka-sem.-v/');
 
