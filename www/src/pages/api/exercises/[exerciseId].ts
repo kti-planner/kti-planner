@@ -1,6 +1,7 @@
 import type { APIRoute } from 'astro';
 import { Classroom } from '@backend/classroom';
 import { Exercise } from '@backend/exercise';
+import { LaboratoryClass } from '@backend/laboratory-class';
 import { Subject } from '@backend/subject';
 import { User } from '@backend/user';
 import { exerciseEditApiSchema } from '@components/exercises/types';
@@ -54,12 +55,23 @@ export const PATCH: APIRoute = async ({ locals, params }) => {
         return Response.json(false, { status: 200 });
     }
 
+    const classesToUpdate =
+        teacher && data.teacherId !== exercise.teacherId ? await LaboratoryClass.fetchAllFromExercise(exercise) : [];
+
     await exercise.edit({
         name: data.name,
         exerciseNumber: data.exerciseNumber,
         classroom: classroom,
         teacher: teacher,
     });
+
+    await Promise.all(
+        classesToUpdate.map(async laboratoryClass => {
+            await laboratoryClass.edit({
+                teacher,
+            });
+        }),
+    );
 
     return Response.json(true, { status: 200 });
 };
