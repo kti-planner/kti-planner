@@ -1,7 +1,7 @@
 import assert from 'node:assert';
 import { env } from 'src/utils';
 import { db } from '@backend/db';
-import type { Semester } from '@backend/semester';
+import { Semester } from '@backend/semester';
 import { makeUserPublicData, User } from '@backend/user';
 import type { SubjectData } from '@components/subjects/types';
 import { makeSubjectFullName, toHyphenatedLowercase } from '@components/utils';
@@ -14,7 +14,8 @@ export type StudyCycleType = 'first-cycle' | 'second-cycle';
 
 interface DbSubject {
     id: string;
-    name: string;
+    name_pl: string;
+    name_en: string;
     semester_id: string;
     teacher_ids: string[];
     description: string;
@@ -28,7 +29,8 @@ interface DbSubject {
 }
 
 export interface SubjectCreateData {
-    name: string;
+    namePl: string | null;
+    nameEn: string | null;
     semester: Semester;
     teachers: User[];
     description: string;
@@ -42,7 +44,8 @@ export interface SubjectCreateData {
 }
 
 export interface SubjectEditData {
-    name?: string | undefined;
+    namePl?: string | null | undefined;
+    nameEn?: string | null | undefined;
     semester?: Semester | undefined;
     teachers?: User[] | undefined;
     description?: string | undefined;
@@ -57,7 +60,8 @@ export interface SubjectEditData {
 
 export class Subject {
     id: string;
-    name: string;
+    namePl: string | null;
+    nameEn: string | null;
     semesterId: string;
     teacherIds: string[];
     description: string;
@@ -71,7 +75,8 @@ export class Subject {
 
     constructor(data: DbSubject) {
         this.id = data.id;
-        this.name = data.name;
+        this.namePl = data.name_pl;
+        this.nameEn = data.name_en;
         this.semesterId = data.semester_id;
         this.teacherIds = data.teacher_ids;
         this.description = data.description;
@@ -85,11 +90,7 @@ export class Subject {
     }
 
     get slug(): string {
-        return toHyphenatedLowercase(this.fullName);
-    }
-
-    get fullName(): string {
-        return makeSubjectFullName(this.name, this.semesterNumber);
+        return toHyphenatedLowercase(makeSubjectFullName(this));
     }
 
     async getTeachers(): Promise<User[]> {
@@ -103,14 +104,16 @@ export class Subject {
     }
 
     static async fetchAll(): Promise<Subject[]> {
-        const records = (await db.query<DbSubject>('SELECT * FROM subjects ORDER BY name')).rows;
+        const records = (await db.query<DbSubject>('SELECT * FROM subjects ORDER BY name_pl, name_en')).rows;
 
         return records.map(record => new Subject(record));
     }
 
     static async fetchAllFromSemester(semester: Semester): Promise<Subject[]> {
         const records = (
-            await db.query<DbSubject>('SELECT * FROM subjects WHERE semester_id = $1 ORDER BY name', [semester.id])
+            await db.query<DbSubject>('SELECT * FROM subjects WHERE semester_id = $1 ORDER BY name_pl, name_en', [
+                semester.id,
+            ])
         ).rows;
 
         return records.map(record => new Subject(record));
@@ -123,22 +126,18 @@ export class Subject {
     }
 
     static async create(data: SubjectCreateData): Promise<Subject> {
-        if (
-            await Subject.fetchBySlug(
-                data.semester,
-                toHyphenatedLowercase(makeSubjectFullName(data.name, data.semesterNumber)),
-            )
-        ) {
-            throw new Error('Subject with this slug already exists');
+        if (await Subject.fetchBySlug(data.semester, toHyphenatedLowercase(makeSubjectFullName(data)))) {
+            throw new Error('A subject with this slug already exists');
         }
 
         const result = (
             await db.query<DbSubject>(
-                'INSERT INTO subjects (id, name, semester_id, teacher_ids, description, moodle_course_id, duration_minutes, class_repeat_weeks, study_mode, study_cycle, semester_number, color)' +
-                    ' VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) RETURNING *',
+                'INSERT INTO subjects (id, name_pl, name_en, semester_id, teacher_ids, description, moodle_course_id, duration_minutes, class_repeat_weeks, study_mode, study_cycle, semester_number, color)' +
+                    ' VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) RETURNING *',
                 [
                     crypto.randomUUID(),
-                    data.name,
+                    data.namePl,
+                    data.nameEn,
                     data.semester.id,
                     data.teachers.map(user => user.id),
                     data.description,
@@ -159,8 +158,12 @@ export class Subject {
     }
 
     async edit(data: SubjectEditData): Promise<void> {
-        if (data.name !== undefined) {
-            this.name = data.name;
+        if (data.namePl !== undefined) {
+            this.namePl = data.namePl;
+        }
+
+        if (data.nameEn !== undefined) {
+            this.nameEn = data.nameEn;
         }
 
         if (data.semester !== undefined) {
@@ -203,12 +206,22 @@ export class Subject {
             this.color = data.color;
         }
 
+        const semester = await Semester.fetch(this.semesterId);
+        assert(semester);
+
+        const existingSubject = await Subject.fetchBySlug(semester, this.slug);
+
+        if (existingSubject && existingSubject.id !== this.id) {
+            throw new Error('A subject with this slug already exists');
+        }
+
         await db.query(
-            'UPDATE subjects SET name = $2, semester_id = $3, teacher_ids = $4, description = $5, moodle_course_id = $6,' +
-                ' duration_minutes = $7, class_repeat_weeks = $8, study_mode = $9, study_cycle = $10, semester_number = $11, color = $12 WHERE id = $1',
+            'UPDATE subjects SET name_pl = $2, name_en = $3, semester_id = $4, teacher_ids = $5, description = $6, moodle_course_id = $7,' +
+                ' duration_minutes = $8, class_repeat_weeks = $9, study_mode = $10, study_cycle = $11, semester_number = $12, color = $13 WHERE id = $1',
             [
                 this.id,
-                this.name,
+                this.namePl,
+                this.nameEn,
                 this.semesterId,
                 this.teacherIds,
                 this.description,
@@ -233,8 +246,8 @@ export function makeSubjectData(subject: Subject, allUsers: User[]): SubjectData
 
     return {
         id: subject.id,
-        name: subject.name,
-        fullName: subject.fullName,
+        namePl: subject.namePl,
+        nameEn: subject.nameEn,
         semesterId: subject.semesterId,
         slug: subject.slug,
         teachers: teachers.map(makeUserPublicData),

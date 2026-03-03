@@ -37,7 +37,8 @@ test('Laboratory groups', async () => {
     });
 
     const subject1 = await Subject.create({
-        name: 'Sieci komputerowe - Informatyka',
+        namePl: 'Sieci komputerowe - Informatyka',
+        nameEn: null,
         semester: semester1,
         teachers: [user1],
         description: '',
@@ -51,7 +52,8 @@ test('Laboratory groups', async () => {
     });
 
     const subject2 = await Subject.create({
-        name: 'Zarządzanie bezpieczeństwem sieci - Informatyka',
+        namePl: 'Zarządzanie bezpieczeństwem sieci - Informatyka',
+        nameEn: null,
         semester: semester2,
         teachers: [user1, user2],
         description: '',

@@ -3,6 +3,7 @@ import { Semester } from '@backend/semester';
 import { Subject } from '@backend/subject';
 import { User } from '@backend/user';
 import { subjectEditApiSchema } from '@components/subjects/types';
+import { makeSubjectFullName, toHyphenatedLowercase } from '@components/utils';
 
 export const PATCH: APIRoute = async ({ locals, params }) => {
     const { jsonData, user } = locals;
@@ -35,18 +36,24 @@ export const PATCH: APIRoute = async ({ locals, params }) => {
         return Response.json(false, { status: 404 });
     }
 
-    const semesterSubjects = await Subject.fetchAllFromSemester(semester);
-
-    const otherSubject = semesterSubjects.find(
-        s => s.name.toLowerCase() === data.name?.toLowerCase() && s.semesterNumber === data.semesterNumber,
+    const existingSubject = await Subject.fetchBySlug(
+        semester,
+        toHyphenatedLowercase(
+            makeSubjectFullName({
+                namePl: data.namePl ?? subject.namePl,
+                nameEn: data.nameEn ?? subject.nameEn,
+                semesterNumber: data.semesterNumber ?? subject.semesterNumber,
+            }),
+        ),
     );
 
-    if (otherSubject && otherSubject.id !== subject.id) {
+    if (existingSubject && existingSubject.id !== subject.id) {
         return Response.json(false, { status: 200 });
     }
 
     await subject.edit({
-        name: data.name,
+        namePl: data.namePl,
+        nameEn: data.nameEn,
         teachers: teachers,
         description: data.description,
         moodleCourseId: data.moodleCourseId,
