@@ -22,7 +22,8 @@ const isEditing = computed(() => subject !== undefined);
 
 const submitFailed = ref(false);
 
-const subjectName = ref<string>(subject?.name ?? '');
+const subjectNamePl = ref<string>(subject?.namePl ?? '');
+const subjectNameEn = ref<string>(subject?.nameEn ?? '');
 const moodleCourseId = ref<string>(subject?.moodleCourseId ?? '');
 const description = ref<string>(subject?.description ?? '');
 const teachers = ref<UserPublicData[]>(subject?.teachers ?? []);
@@ -43,14 +44,19 @@ const semesterNumber = ref<number>(subject?.semesterNumber ?? 1);
 const color = ref<string>(subject?.color ?? randomHexColor());
 
 async function submit() {
-    if (typeof customDurationMinutes.value === 'string' || typeof classRepeatWeeks.value === 'string') {
+    if (
+        typeof customDurationMinutes.value === 'string' ||
+        typeof classRepeatWeeks.value === 'string' ||
+        (subjectNamePl.value === '' && subjectNameEn.value === '')
+    ) {
         return;
     }
 
     const success =
         subject === undefined
             ? await apiPost<boolean>('/api/subjects/', {
-                  name: subjectName.value,
+                  namePl: subjectNamePl.value || null,
+                  nameEn: subjectNameEn.value || null,
                   semesterId: semester.id,
                   teacherIds: teachers.value.map(user => user.id),
                   description: description.value,
@@ -64,7 +70,8 @@ async function submit() {
                   color: color.value,
               } satisfies SubjectCreateApiData)
             : await apiPatch<boolean>(`/api/subjects/${subject.id}/`, {
-                  name: subjectName.value,
+                  namePl: subjectNamePl.value || null,
+                  nameEn: subjectNameEn.value || null,
                   teacherIds: teachers.value.map(user => user.id),
                   description: description.value,
                   moodleCourseId: moodleCourseId.value,
@@ -84,7 +91,13 @@ async function submit() {
     submitFailed.value = !success;
 
     if (success) {
-        const newUrl = `/semesters/${semester.slug}/subjects/${toHyphenatedLowercase(makeSubjectFullName(subjectName.value, semesterNumber.value))}/`;
+        const newUrl = `/semesters/${semester.slug}/subjects/${toHyphenatedLowercase(
+            makeSubjectFullName({
+                namePl: subjectNamePl.value || null,
+                nameEn: subjectNameEn.value || null,
+                semesterNumber: semesterNumber.value,
+            }),
+        )}/`;
 
         if (isEditing.value) {
             window.history.replaceState({}, '', newUrl);
@@ -109,7 +122,8 @@ async function doDelete() {
 
 const translations = {
     'en': {
-        'Subject name': 'Subject name',
+        'Subject name (Polish)': 'Subject name (Polish)',
+        'Subject name (English)': 'Subject name (English)',
         'Moodle course ID': 'Moodle course ID',
         'Description': 'Description',
         'Teachers': 'Teachers',
@@ -132,6 +146,8 @@ const translations = {
         'Color': 'Color',
     },
     'pl': {
+        'Subject name (Polish)': 'Nazwa przedmiotu (Polska)',
+        'Subject name (English)': 'Nazwa przedmiotu (Angielska)',
         'Subject name': 'Nazwa przedmiotu',
         'Moodle course ID': 'ID kursu Moodle',
         'Description': 'Opis',
@@ -160,7 +176,8 @@ function translate(text: keyof (typeof translations)[LangId]): string {
     return translations[langId][text];
 }
 
-const nameId = crypto.randomUUID();
+const namePlId = crypto.randomUUID();
+const nameEnId = crypto.randomUUID();
 const moodleCourseInputId = crypto.randomUUID();
 const descriptionId = crypto.randomUUID();
 const teachersId = crypto.randomUUID();
@@ -175,17 +192,29 @@ const colorId = crypto.randomUUID();
 <template>
     <form class="vstack gap-2 mx-auto" style="max-width: 500px" @submit.prevent="submit">
         <div>
-            <label :for="nameId" class="form-label">
-                {{ translate('Subject name') }} <span class="text-danger">*</span>
+            <label :for="namePlId" class="form-label">
+                {{ translate('Subject name (Polish)') }} <span class="text-danger">*</span>
             </label>
             <input
-                :id="nameId"
-                v-model="subjectName"
+                :id="namePlId"
+                v-model="subjectNamePl"
                 type="text"
                 class="form-control"
                 placeholder="Sieci komputerowe - Informatyka"
-                required
                 autofocus
+            />
+        </div>
+
+        <div>
+            <label :for="nameEnId" class="form-label">
+                {{ translate('Subject name (English)') }} <span class="text-danger">*</span>
+            </label>
+            <input
+                :id="nameEnId"
+                v-model="subjectNameEn"
+                type="text"
+                class="form-control"
+                placeholder="Computer Networks - CS"
             />
         </div>
 

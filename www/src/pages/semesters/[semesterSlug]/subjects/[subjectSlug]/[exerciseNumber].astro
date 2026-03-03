@@ -4,6 +4,7 @@ import { Exercise, makeExerciseData } from '@backend/exercise';
 import { makeScheduleChangeData, makeSemesterData, Semester } from '@backend/semester';
 import { makeSubjectData, Subject } from '@backend/subject';
 import { makeUserPublicData, User } from '@backend/user';
+import { makeSubjectFullName } from '@components/utils';
 import Layout from '@layouts/Layout.astro';
 import EditExercise from '@components/exercises/EditExercise.vue';
 import ExerciseCalendar from '@components/exercises/ExerciseCalendar.vue';
@@ -82,7 +83,7 @@ const scheduleChangesData = scheduleChanges.map(makeScheduleChangeData);
             href: `/semesters/${semesterSlug}/`,
         },
         {
-            text: subject.fullName,
+            text: makeSubjectFullName(subject, langId),
             href: `/semesters/${semesterSlug}/subjects/${subjectSlug}/`,
         },
         {

@@ -5,6 +5,7 @@ import { LaboratoryGroup, makeLaboratoryGroupData } from '@backend/laboratory-gr
 import { makeScheduleChangeData, makeSemesterData, Semester } from '@backend/semester';
 import { makeSubjectData, Subject } from '@backend/subject';
 import { makeUserPublicData, User } from '@backend/user';
+import { makeSubjectFullName } from '@components/utils';
 import Layout from '@layouts/Layout.astro';
 import SubjectApp from '@components/subjects/SubjectApp.vue';
 
@@ -83,7 +84,7 @@ const groupData = groups.map(makeLaboratoryGroupData);
             href: `/semesters/${semesterSlug}/`,
         },
         {
-            text: subject.fullName,
+            text: makeSubjectFullName(subject, langId),
             href: '#',
         },
     ]}
