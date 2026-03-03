@@ -195,27 +195,14 @@ const colorId = crypto.randomUUID();
             <label :for="namePlId" class="form-label">
                 {{ translate('Subject name (Polish)') }} <span class="text-danger">*</span>
             </label>
-            <input
-                :id="namePlId"
-                v-model="subjectNamePl"
-                type="text"
-                class="form-control"
-                placeholder="Sieci komputerowe - Informatyka"
-                autofocus
-            />
+            <input :id="namePlId" v-model="subjectNamePl" type="text" class="form-control" autofocus />
         </div>
 
         <div>
             <label :for="nameEnId" class="form-label">
                 {{ translate('Subject name (English)') }} <span class="text-danger">*</span>
             </label>
-            <input
-                :id="nameEnId"
-                v-model="subjectNameEn"
-                type="text"
-                class="form-control"
-                placeholder="Computer Networks - CS"
-            />
+            <input :id="nameEnId" v-model="subjectNameEn" type="text" class="form-control" />
         </div>
 
         <div>
