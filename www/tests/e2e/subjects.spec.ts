@@ -42,7 +42,7 @@ test('Can add new subject and prevent duplicate subject creation', async ({ page
 
     await expect(page.getByRole('heading', { name: 'Add new subject' })).toBeVisible();
 
-    await page.getByRole('textbox', { name: 'Subject name' }).fill('Sieci komputerowe - Informatyka');
+    await page.getByRole('textbox', { name: 'Subject name (Polish)' }).fill('Sieci komputerowe - Informatyka');
     await page.getByRole('combobox', { name: 'Study mode' }).selectOption('Full-time');
     await page.getByRole('combobox', { name: 'Study cycle' }).selectOption('First-cycle');
     await page.getByRole('combobox', { name: 'Semester' }).selectOption('5');
@@ -67,7 +67,7 @@ test('Can add new subject and prevent duplicate subject creation', async ({ page
 
     await expect(page.getByRole('heading', { name: 'Add new subject' })).toBeVisible();
 
-    await page.getByRole('textbox', { name: 'Subject name' }).fill('Sieci komputerowe - Informatyka');
+    await page.getByRole('textbox', { name: 'Subject name (Polish)' }).fill('Sieci komputerowe - Informatyka');
     await page.getByRole('combobox', { name: 'Study mode' }).selectOption('Full-time');
     await page.getByRole('combobox', { name: 'Study cycle' }).selectOption('First-cycle');
     await page.getByRole('combobox', { name: 'Semester' }).selectOption('5');
@@ -120,7 +120,8 @@ test('Can edit subject and prevent duplicate subject', async ({ page }) => {
 
     await expect(page.getByRole('heading', { name: 'Edit subject Lokalne sieci bezprzewodowe' })).toBeVisible();
 
-    await page.getByRole('textbox', { name: 'Subject name' }).fill('Sieci Ethernet i IP');
+    await page.getByRole('textbox', { name: 'Subject name (Polish)' }).fill('Sieci Ethernet i IP');
+    await page.getByRole('textbox', { name: 'Subject name (English)' }).fill('Ethernet networks and IP');
     await page.getByRole('combobox', { name: 'Study mode' }).selectOption('Part-time');
     await page.getByRole('combobox', { name: 'Study cycle' }).selectOption('Second-cycle');
     await page.getByRole('combobox', { name: 'Semester' }).selectOption('6');
@@ -132,17 +133,20 @@ test('Can edit subject and prevent duplicate subject', async ({ page }) => {
 
     await page.getByRole('button', { name: 'Save' }).click();
 
-    await expect(page.locator('.breadcrumb')).toContainText('Sieci Ethernet i IP');
+    await expect(page.locator('.breadcrumb')).toContainText('Ethernet networks and IP');
     await expect(page.getByRole('link', { name: 'enauczanie' })).toHaveAttribute('href', /^.+15$/);
-    await expect(page.locator('body')).toContainText('Sieci Ethernet i IP');
+    await expect(page.locator('body')).toContainText('Ethernet networks and IP');
     await expect(page.locator('body')).toContainText('Test description');
 
     // Can not edit subject with data that match already existing subject
     await page.getByRole('button', { name: 'Edit subject' }).click();
 
-    await expect(page.getByRole('heading', { name: 'Edit subject Sieci Ethernet i IP' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Edit subject Ethernet networks and IP' })).toBeVisible();
 
-    await page.getByRole('textbox', { name: 'Subject name' }).fill('Zarządzanie bezpieczeństwem sieci - Informatyka');
+    await page
+        .getByRole('textbox', { name: 'Subject name (Polish)' })
+        .fill('Zarządzanie bezpieczeństwem sieci - Informatyka');
+
     await page.getByRole('combobox', { name: 'Study mode' }).selectOption('Full-time');
     await page.getByRole('combobox', { name: 'Study cycle' }).selectOption('First-cycle');
     await page.getByRole('combobox', { name: 'Semester' }).selectOption('6');
@@ -153,8 +157,8 @@ test('Can edit subject and prevent duplicate subject', async ({ page }) => {
 
     await page.getByRole('button', { name: 'Close' }).click();
 
-    await expect(page.locator('.breadcrumb')).toContainText('Sieci Ethernet i IP');
-    await expect(page.locator('body')).toContainText('Sieci Ethernet i IP');
+    await expect(page.locator('.breadcrumb')).toContainText('Ethernet networks and IP');
+    await expect(page.locator('body')).toContainText('Ethernet networks and IP');
 });
 
 test('Can delete subject', async ({ page }) => {
@@ -249,13 +253,22 @@ test('Can copy subject from previous semester and prevent duplicate subject copy
     await expect(page.getByRole('link', { name: 'Lokalne sieci bezprzewodowe - Informatyka sem. VI' })).toHaveCount(1);
 });
 
+test('Subject name changes with language', async ({ page }) => {
+    await page.goto('/semesters/2025-winter/subjects/network-operating-systems---cs-sem.-iii/');
+
+    await expect(page.locator('.breadcrumb')).toContainText('Network Operating Systems - CS');
+    await page.getByRole('link', { name: 'Polski' }).click();
+    await expect(page.locator('.breadcrumb')).toContainText('Sieciowe Systemy Operacyjne - Informatyka');
+});
+
 test.describe('API fetch tests', () => {
     test('Logged-out user cannot create new subject', async ({ page }) => {
         await page.goto('/semesters/2024-summer/');
 
         const response = await page.request.post('/api/subjects/', {
             data: {
-                name: 'New Subject',
+                namePl: null,
+                nameEn: 'New Subject',
                 semesterId: '094f8324-7c58-4566-b5d7-e4fe8ed03a18',
                 teacherIds: ['c393c524-453c-4b02-bfad-5114fe828200'],
                 description: '',
@@ -278,7 +291,8 @@ test.describe('API fetch tests', () => {
 
         const response = await page.request.post('/api/subjects/', {
             data: {
-                name: 'New Subject',
+                namePl: 'Nowy przedmiot',
+                nameEn: 'New Subject',
                 semesterId: '094f8324-7c58-4566-b5d7-e4fe8ed03a18',
                 teacherIds: ['c393c524-453c-4b02-bfad-5114fe828200'],
                 description: '',
@@ -300,7 +314,8 @@ test.describe('API fetch tests', () => {
 
         const response = await page.request.patch('/api/subjects/3f58b671-5b38-43f8-bf0f-49d93048c52e/', {
             data: {
-                name: 'Updated Subject',
+                namePl: null,
+                nameEn: 'Updated Subject',
                 teacherIds: ['feeaa186-3d69-4801-a580-88be10d53553'],
                 description: '',
                 moodleCourseId: '',
@@ -322,7 +337,8 @@ test.describe('API fetch tests', () => {
 
         const response = await page.request.patch('/api/subjects/3f58b671-5b38-43f8-bf0f-49d93048c52e/', {
             data: {
-                name: 'Updated Subject',
+                namePl: 'Zaktualizowany przedmiot',
+                nameEn: 'Updated Subject',
                 teacherIds: ['feeaa186-3d69-4801-a580-88be10d53553'],
                 description: '',
                 moodleCourseId: '',
