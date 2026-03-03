@@ -3,7 +3,6 @@ import { Semester } from '@backend/semester';
 import { Subject } from '@backend/subject';
 import { User } from '@backend/user';
 import { subjectEditApiSchema } from '@components/subjects/types';
-import { makeSubjectFullName, toHyphenatedLowercase } from '@components/utils';
 
 export const PATCH: APIRoute = async ({ locals, params }) => {
     const { jsonData, user } = locals;
@@ -36,18 +35,16 @@ export const PATCH: APIRoute = async ({ locals, params }) => {
         return Response.json(false, { status: 404 });
     }
 
-    const existingSubject = await Subject.fetchBySlug(
-        semester,
-        toHyphenatedLowercase(
-            makeSubjectFullName({
-                namePl: data.namePl ?? subject.namePl,
-                nameEn: data.nameEn ?? subject.nameEn,
-                semesterNumber: data.semesterNumber ?? subject.semesterNumber,
-            }),
-        ),
-    );
+    const subjects = await Subject.fetchAllFromSemester(semester);
 
-    if (existingSubject && existingSubject.id !== subject.id) {
+    if (
+        subjects.some(s => {
+            const equalNamePl = s.namePl !== null && s.namePl === (data.namePl ?? subject.namePl);
+            const equalNameEn = s.nameEn !== null && s.nameEn === (data.nameEn ?? subject.nameEn);
+
+            return s.id !== subject.id && s.semesterNumber === data.semesterNumber && (equalNamePl || equalNameEn);
+        })
+    ) {
         return Response.json(false, { status: 200 });
     }
 

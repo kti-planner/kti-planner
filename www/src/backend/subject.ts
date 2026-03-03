@@ -126,7 +126,16 @@ export class Subject {
     }
 
     static async create(data: SubjectCreateData): Promise<Subject> {
-        if (await Subject.fetchBySlug(data.semester, toHyphenatedLowercase(makeSubjectFullName(data)))) {
+        const subjects = await Subject.fetchAllFromSemester(data.semester);
+
+        if (
+            subjects.some(s => {
+                const equalNamePl = s.namePl !== null && s.namePl === data.namePl;
+                const equalNameEn = s.nameEn !== null && s.nameEn === data.nameEn;
+
+                return s.semesterNumber === data.semesterNumber && (equalNamePl || equalNameEn);
+            })
+        ) {
             throw new Error('A subject with this slug already exists');
         }
 
@@ -158,6 +167,22 @@ export class Subject {
     }
 
     async edit(data: SubjectEditData): Promise<void> {
+        const semester = await Semester.fetch(data.semester?.id ?? this.semesterId);
+        assert(semester);
+
+        const subjects = await Subject.fetchAllFromSemester(semester);
+
+        if (
+            subjects.some(s => {
+                const equalNamePl = s.namePl !== null && s.namePl === (data.namePl ?? this.namePl);
+                const equalNameEn = s.nameEn !== null && s.nameEn === (data.nameEn ?? this.nameEn);
+
+                return s.id !== this.id && s.semesterNumber === data.semesterNumber && (equalNamePl || equalNameEn);
+            })
+        ) {
+            throw new Error('A subject with this slug already exists');
+        }
+
         if (data.namePl !== undefined) {
             this.namePl = data.namePl;
         }
@@ -204,15 +229,6 @@ export class Subject {
 
         if (data.color !== undefined) {
             this.color = data.color;
-        }
-
-        const semester = await Semester.fetch(this.semesterId);
-        assert(semester);
-
-        const existingSubject = await Subject.fetchBySlug(semester, this.slug);
-
-        if (existingSubject && existingSubject.id !== this.id) {
-            throw new Error('A subject with this slug already exists');
         }
 
         await db.query(
