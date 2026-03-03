@@ -45,7 +45,7 @@ export function makeSubjectFullName(
     subject: { namePl: string | null; nameEn: string | null; semesterNumber: number },
     langId?: LangId,
 ): string {
-    const name = !langId || langId === 'pl' ? (subject.namePl ?? subject.nameEn!) : (subject.nameEn ?? subject.namePl!);
+    const name = !langId || langId === 'en' ? (subject.nameEn ?? subject.namePl!) : (subject.namePl ?? subject.nameEn!);
 
     return `${name} sem. ${romanNumerals[subject.semesterNumber - 1] ?? ''}`;
 }
