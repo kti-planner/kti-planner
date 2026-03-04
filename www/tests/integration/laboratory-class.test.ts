@@ -49,7 +49,7 @@ test('Laboratory classes', async () => {
 
     const subject1 = await Subject.create({
         namePl: 'Sieci komputerowe - Informatyka',
-        nameEn: null,
+        nameEn: '',
         semester: semester1,
         teachers: [user1],
         description: '',

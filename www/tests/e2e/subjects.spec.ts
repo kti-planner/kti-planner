@@ -267,7 +267,7 @@ test.describe('API fetch tests', () => {
 
         const response = await page.request.post('/api/subjects/', {
             data: {
-                namePl: null,
+                namePl: '',
                 nameEn: 'New Subject',
                 semesterId: '094f8324-7c58-4566-b5d7-e4fe8ed03a18',
                 teacherIds: ['c393c524-453c-4b02-bfad-5114fe828200'],
@@ -314,7 +314,7 @@ test.describe('API fetch tests', () => {
 
         const response = await page.request.patch('/api/subjects/3f58b671-5b38-43f8-bf0f-49d93048c52e/', {
             data: {
-                namePl: null,
+                namePl: '',
                 nameEn: 'Updated Subject',
                 teacherIds: ['feeaa186-3d69-4801-a580-88be10d53553'],
                 description: '',

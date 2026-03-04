@@ -4,8 +4,8 @@ import type { UserPublicData } from '@components/users/types';
 
 export interface SubjectData {
     id: string;
-    namePl: string | null;
-    nameEn: string | null;
+    namePl: string;
+    nameEn: string;
     semesterId: string;
     slug: string;
     teachers: UserPublicData[];
@@ -38,40 +38,36 @@ const studyModeSchema = z.enum(['full-time', 'part-time']);
 
 const studyCycleSchema = z.enum(['first-cycle', 'second-cycle']);
 
-export const subjectCreateApiSchema = z
-    .object({
-        namePl: z.string().trim().nonempty().nullable(),
-        nameEn: z.string().trim().nonempty().nullable(),
-        semesterId: z.uuid(),
-        teacherIds: z.uuid().array(),
-        description: z.string(),
-        moodleCourseId: z.string(),
-        durationMinutes: z.int().nonnegative().nullable(),
-        classRepeatWeeks: z.int().nonnegative(),
-        studyMode: studyModeSchema,
-        studyCycle: studyCycleSchema,
-        semesterNumber: z.int().min(1).max(7),
-        color: z.string(),
-    })
-    .refine(val => val.namePl !== null || val.nameEn !== null);
+export const subjectCreateApiSchema = z.object({
+    namePl: z.string().trim().nonempty(),
+    nameEn: z.string().trim().nonempty(),
+    semesterId: z.uuid(),
+    teacherIds: z.uuid().array(),
+    description: z.string(),
+    moodleCourseId: z.string(),
+    durationMinutes: z.int().nonnegative().nullable(),
+    classRepeatWeeks: z.int().nonnegative(),
+    studyMode: studyModeSchema,
+    studyCycle: studyCycleSchema,
+    semesterNumber: z.int().min(1).max(7),
+    color: z.string(),
+});
 
 export type SubjectCreateApiData = z.input<typeof subjectCreateApiSchema>;
 
-export const subjectEditApiSchema = z
-    .object({
-        namePl: z.string().nullable().optional(),
-        nameEn: z.string().nullable().optional(),
-        teacherIds: z.uuid().array().optional(),
-        description: z.string().optional(),
-        moodleCourseId: z.string().optional(),
-        durationMinutes: z.int().nonnegative().nullable().optional(),
-        classRepeatWeeks: z.int().nonnegative().optional(),
-        studyMode: studyModeSchema.optional(),
-        studyCycle: studyCycleSchema.optional(),
-        semesterNumber: z.int().min(1).max(7).optional(),
-        color: z.string().optional(),
-    })
-    .refine(val => val.namePl !== null || val.nameEn !== null);
+export const subjectEditApiSchema = z.object({
+    namePl: z.string().optional(),
+    nameEn: z.string().optional(),
+    teacherIds: z.uuid().array().optional(),
+    description: z.string().optional(),
+    moodleCourseId: z.string().optional(),
+    durationMinutes: z.int().nonnegative().nullable().optional(),
+    classRepeatWeeks: z.int().nonnegative().optional(),
+    studyMode: studyModeSchema.optional(),
+    studyCycle: studyCycleSchema.optional(),
+    semesterNumber: z.int().min(1).max(7).optional(),
+    color: z.string().optional(),
+});
 
 export type SubjectEditApiData = z.input<typeof subjectEditApiSchema>;
 

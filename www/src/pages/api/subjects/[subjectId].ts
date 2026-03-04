@@ -39,8 +39,8 @@ export const PATCH: APIRoute = async ({ locals, params }) => {
 
     if (
         subjects.some(s => {
-            const equalNamePl = s.namePl !== null && s.namePl === (data.namePl ?? subject.namePl);
-            const equalNameEn = s.nameEn !== null && s.nameEn === (data.nameEn ?? subject.nameEn);
+            const equalNamePl = s.namePl !== '' && s.namePl === (data.namePl ?? subject.namePl);
+            const equalNameEn = s.nameEn !== '' && s.nameEn === (data.nameEn ?? subject.nameEn);
 
             return s.id !== subject.id && s.semesterNumber === data.semesterNumber && (equalNamePl || equalNameEn);
         })

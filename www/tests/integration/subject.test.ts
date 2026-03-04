@@ -37,7 +37,7 @@ test('Subjects', async () => {
 
     const subject1 = await Subject.create({
         namePl: 'Sieci komputerowe - Informatyka',
-        nameEn: null,
+        nameEn: '',
         semester: semester1,
         teachers: [user1],
         description: 'Opis',
@@ -51,7 +51,7 @@ test('Subjects', async () => {
     });
 
     expect(subject1).toHaveProperty('namePl', 'Sieci komputerowe - Informatyka');
-    expect(subject1).toHaveProperty('nameEn', null);
+    expect(subject1).toHaveProperty('nameEn', '');
     expect(subject1).toHaveProperty('semesterId', semester1.id);
     expect(subject1).toHaveProperty('slug', 'sieci-komputerowe---informatyka-sem.-v');
     expect(subject1).toHaveProperty('teacherIds', [user1.id]);
@@ -72,7 +72,7 @@ test('Subjects', async () => {
         moodleCourseId: '1472',
         moodleCourseUrl: 'https://enauczanie.pg.edu.pl/2025/course/view.php?id=1472',
         namePl: 'Sieci komputerowe - Informatyka',
-        nameEn: null,
+        nameEn: '',
         semesterId: semester1.id,
         slug: 'sieci-komputerowe---informatyka-sem.-v',
         teachers: [
@@ -106,7 +106,7 @@ test('Subjects', async () => {
     await expect(
         Subject.create({
             namePl: 'Sieci komputerowe - Informatyka',
-            nameEn: null,
+            nameEn: '',
             semester: semester1,
             teachers: [user1],
             description: 'Opis',
@@ -121,7 +121,7 @@ test('Subjects', async () => {
     ).rejects.toThrow(Error);
 
     const subject2 = await Subject.create({
-        namePl: null,
+        namePl: '',
         nameEn: 'Managing network security',
         semester: semester2,
         teachers: [user1, user2],
@@ -135,7 +135,7 @@ test('Subjects', async () => {
         color: '#A5674F',
     });
 
-    expect(subject2).toHaveProperty('namePl', null);
+    expect(subject2).toHaveProperty('namePl', '');
     expect(subject2).toHaveProperty('nameEn', 'Managing network security');
     expect(subject2).toHaveProperty('semesterId', semester2.id);
     expect(subject2).toHaveProperty('slug', 'managing-network-security-sem.-vi');
@@ -156,7 +156,7 @@ test('Subjects', async () => {
         id: subject2.id,
         moodleCourseId: '',
         moodleCourseUrl: '',
-        namePl: null,
+        namePl: '',
         nameEn: 'Managing network security',
         semesterId: semester2.id,
         slug: 'managing-network-security-sem.-vi',
@@ -184,7 +184,7 @@ test('Subjects', async () => {
 
     expect(await Subject.fetch(subject2.id)).toStrictEqual(subject2);
     expect(await Subject.fetch(subject1.id)).toStrictEqual(subject1);
-    expect(await Subject.fetchAll()).toStrictEqual([subject1, subject2]);
+    expect(await Subject.fetchAll()).toStrictEqual([subject2, subject1]);
     expect(await Subject.fetchAllFromSemester(semester1)).toStrictEqual([subject1]);
     expect(await Subject.fetchAllFromSemester(semester2)).toStrictEqual([subject2]);
     expect(await Subject.fetchBySlug(semester1, 'sieci-komputerowe---informatyka-sem.-v')).toStrictEqual(subject1);
@@ -232,7 +232,7 @@ test('Subjects', async () => {
     ).rejects.toThrow(Error);
 
     expect(subject1).toHaveProperty('namePl', 'Sieci komputerowe - Informatyka');
-    expect(subject1).toHaveProperty('nameEn', null);
+    expect(subject1).toHaveProperty('nameEn', '');
     expect(subject1).toHaveProperty('semesterId', semester1.id);
     expect(subject1).toHaveProperty('slug', 'sieci-komputerowe---informatyka-sem.-v');
     expect(subject1).toHaveProperty('teacherIds', [user1.id]);

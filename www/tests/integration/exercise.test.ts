@@ -47,7 +47,7 @@ test('Exercises', async () => {
 
     const subject1 = await Subject.create({
         namePl: 'Sieci komputerowe - Informatyka',
-        nameEn: null,
+        nameEn: '',
         semester: semester1,
         teachers: [user1],
         description: '',
@@ -62,7 +62,7 @@ test('Exercises', async () => {
 
     const subject2 = await Subject.create({
         namePl: 'Zarządzanie bezpieczeństwem sieci - Informatyka',
-        nameEn: null,
+        nameEn: '',
         semester: semester2,
         teachers: [user1, user2],
         description: '',

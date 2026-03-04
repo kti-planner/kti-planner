@@ -15,7 +15,6 @@ export type StudyCycleType = 'first-cycle' | 'second-cycle';
 interface DbSubject {
     id: string;
     name_pl: string;
-    name_en: string;
     semester_id: string;
     teacher_ids: string[];
     description: string;
@@ -26,11 +25,12 @@ interface DbSubject {
     study_cycle: StudyCycleType;
     semester_number: number;
     color: string;
+    name_en: string;
 }
 
 export interface SubjectCreateData {
-    namePl: string | null;
-    nameEn: string | null;
+    namePl: string;
+    nameEn: string;
     semester: Semester;
     teachers: User[];
     description: string;
@@ -44,8 +44,8 @@ export interface SubjectCreateData {
 }
 
 export interface SubjectEditData {
-    namePl?: string | null | undefined;
-    nameEn?: string | null | undefined;
+    namePl?: string | undefined;
+    nameEn?: string | undefined;
     semester?: Semester | undefined;
     teachers?: User[] | undefined;
     description?: string | undefined;
@@ -60,8 +60,8 @@ export interface SubjectEditData {
 
 export class Subject {
     id: string;
-    namePl: string | null;
-    nameEn: string | null;
+    namePl: string;
+    nameEn: string;
     semesterId: string;
     teacherIds: string[];
     description: string;
@@ -130,8 +130,8 @@ export class Subject {
 
         if (
             subjects.some(s => {
-                const equalNamePl = s.namePl !== null && s.namePl === data.namePl;
-                const equalNameEn = s.nameEn !== null && s.nameEn === data.nameEn;
+                const equalNamePl = s.namePl !== '' && s.namePl === data.namePl;
+                const equalNameEn = s.nameEn !== '' && s.nameEn === data.nameEn;
 
                 return s.semesterNumber === data.semesterNumber && (equalNamePl || equalNameEn);
             })
@@ -174,8 +174,8 @@ export class Subject {
 
         if (
             subjects.some(s => {
-                const equalNamePl = s.namePl !== null && s.namePl === (data.namePl ?? this.namePl);
-                const equalNameEn = s.nameEn !== null && s.nameEn === (data.nameEn ?? this.nameEn);
+                const equalNamePl = s.namePl !== '' && s.namePl === (data.namePl ?? this.namePl);
+                const equalNameEn = s.nameEn !== '' && s.nameEn === (data.nameEn ?? this.nameEn);
 
                 return s.id !== this.id && s.semesterNumber === data.semesterNumber && (equalNamePl || equalNameEn);
             })

@@ -42,10 +42,10 @@ export const dateTimeStringSchema = z.iso.datetime({ local: true }).transform(st
 export const romanNumerals = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII'];
 
 export function makeSubjectFullName(
-    subject: { namePl: string | null; nameEn: string | null; semesterNumber: number },
+    subject: { namePl: string; nameEn: string; semesterNumber: number },
     langId?: LangId,
 ): string {
-    const name = !langId || langId === 'en' ? (subject.nameEn ?? subject.namePl!) : (subject.namePl ?? subject.nameEn!);
+    const name = !langId || langId === 'en' ? subject.nameEn || subject.namePl : subject.namePl || subject.nameEn;
 
     return `${name} sem. ${romanNumerals[subject.semesterNumber - 1] ?? ''}`;
 }

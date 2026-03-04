@@ -55,8 +55,8 @@ async function submit() {
     const success =
         subject === undefined
             ? await apiPost<boolean>('/api/subjects/', {
-                  namePl: subjectNamePl.value || null,
-                  nameEn: subjectNameEn.value || null,
+                  namePl: subjectNamePl.value,
+                  nameEn: subjectNameEn.value,
                   semesterId: semester.id,
                   teacherIds: teachers.value.map(user => user.id),
                   description: description.value,
@@ -70,8 +70,8 @@ async function submit() {
                   color: color.value,
               } satisfies SubjectCreateApiData)
             : await apiPatch<boolean>(`/api/subjects/${subject.id}/`, {
-                  namePl: subjectNamePl.value || null,
-                  nameEn: subjectNameEn.value || null,
+                  namePl: subjectNamePl.value,
+                  nameEn: subjectNameEn.value,
                   teacherIds: teachers.value.map(user => user.id),
                   description: description.value,
                   moodleCourseId: moodleCourseId.value,
@@ -93,8 +93,8 @@ async function submit() {
     if (success) {
         const newUrl = `/semesters/${semester.slug}/subjects/${toHyphenatedLowercase(
             makeSubjectFullName({
-                namePl: subjectNamePl.value || null,
-                nameEn: subjectNameEn.value || null,
+                namePl: subjectNamePl.value,
+                nameEn: subjectNameEn.value,
                 semesterNumber: semesterNumber.value,
             }),
         )}/`;

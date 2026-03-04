@@ -33,8 +33,8 @@ export const POST: APIRoute = async ({ locals }) => {
 
     if (
         subjects.some(s => {
-            const equalNamePl = s.namePl !== null && s.namePl === data.namePl;
-            const equalNameEn = s.nameEn !== null && s.nameEn === data.nameEn;
+            const equalNamePl = s.namePl !== '' && s.namePl === data.namePl;
+            const equalNameEn = s.nameEn !== '' && s.nameEn === data.nameEn;
 
             return s.semesterNumber === data.semesterNumber && (equalNamePl || equalNameEn);
         })
