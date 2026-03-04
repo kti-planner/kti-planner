@@ -125,18 +125,30 @@ export class Subject {
         return subjects.find(subject => subject.slug === slug) ?? null;
     }
 
+    static async isDuplicateName({
+        semester,
+        namePl,
+        nameEn,
+        semesterNumber,
+    }: {
+        semester: Semester;
+        namePl: string;
+        nameEn: string;
+        semesterNumber: number;
+    }): Promise<boolean> {
+        const subjects = await Subject.fetchAllFromSemester(semester);
+
+        return subjects.some(s => {
+            const equalNamePl = s.namePl !== '' && s.namePl === namePl;
+            const equalNameEn = s.nameEn !== '' && s.nameEn === nameEn;
+
+            return s.semesterNumber === semesterNumber && (equalNamePl || equalNameEn);
+        });
+    }
+
     static async create(data: SubjectCreateData): Promise<Subject> {
-        const subjects = await Subject.fetchAllFromSemester(data.semester);
-
-        if (
-            subjects.some(s => {
-                const equalNamePl = s.namePl !== '' && s.namePl === data.namePl;
-                const equalNameEn = s.nameEn !== '' && s.nameEn === data.nameEn;
-
-                return s.semesterNumber === data.semesterNumber && (equalNamePl || equalNameEn);
-            })
-        ) {
-            throw new Error('A subject with this slug already exists');
+        if (await Subject.isDuplicateName(data)) {
+            throw new Error('A subject with this name already exists');
         }
 
         const result = (
@@ -170,17 +182,15 @@ export class Subject {
         const semester = await Semester.fetch(data.semester?.id ?? this.semesterId);
         assert(semester);
 
-        const subjects = await Subject.fetchAllFromSemester(semester);
-
         if (
-            subjects.some(s => {
-                const equalNamePl = s.namePl !== '' && s.namePl === (data.namePl ?? this.namePl);
-                const equalNameEn = s.nameEn !== '' && s.nameEn === (data.nameEn ?? this.nameEn);
-
-                return s.id !== this.id && s.semesterNumber === data.semesterNumber && (equalNamePl || equalNameEn);
+            await Subject.isDuplicateName({
+                semester,
+                namePl: data.namePl ?? this.namePl,
+                nameEn: data.nameEn ?? this.nameEn,
+                semesterNumber: data.semesterNumber ?? this.semesterNumber,
             })
         ) {
-            throw new Error('A subject with this slug already exists');
+            throw new Error('A subject with this name already exists');
         }
 
         if (data.namePl !== undefined) {

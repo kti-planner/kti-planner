@@ -35,14 +35,12 @@ export const PATCH: APIRoute = async ({ locals, params }) => {
         return Response.json(false, { status: 404 });
     }
 
-    const subjects = await Subject.fetchAllFromSemester(semester);
-
     if (
-        subjects.some(s => {
-            const equalNamePl = s.namePl !== '' && s.namePl === (data.namePl ?? subject.namePl);
-            const equalNameEn = s.nameEn !== '' && s.nameEn === (data.nameEn ?? subject.nameEn);
-
-            return s.id !== subject.id && s.semesterNumber === data.semesterNumber && (equalNamePl || equalNameEn);
+        await Subject.isDuplicateName({
+            semester,
+            namePl: data.namePl ?? subject.namePl,
+            nameEn: data.nameEn ?? subject.nameEn,
+            semesterNumber: data.semesterNumber ?? subject.semesterNumber,
         })
     ) {
         return Response.json(false, { status: 200 });

@@ -29,16 +29,7 @@ export const POST: APIRoute = async ({ locals }) => {
         return Response.json(false, { status: 404 });
     }
 
-    const subjects = await Subject.fetchAllFromSemester(semester);
-
-    if (
-        subjects.some(s => {
-            const equalNamePl = s.namePl !== '' && s.namePl === data.namePl;
-            const equalNameEn = s.nameEn !== '' && s.nameEn === data.nameEn;
-
-            return s.semesterNumber === data.semesterNumber && (equalNamePl || equalNameEn);
-        })
-    ) {
+    if (await Subject.isDuplicateName({ semester, ...data })) {
         return Response.json(false, { status: 200 });
     }
 

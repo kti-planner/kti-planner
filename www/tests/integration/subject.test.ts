@@ -14,6 +14,15 @@ test('Subjects', async () => {
         endDate: new Date('2025-01-30T00:00:00'),
     });
 
+    expect(
+        await Subject.isDuplicateName({
+            semester: semester1,
+            namePl: 'Sieci komputerowe - Informatyka',
+            nameEn: '',
+            semesterNumber: 5,
+        }),
+    ).toBe(false);
+
     const semester2 = await Semester.create({
         year: 2024,
         type: 'summer',
@@ -63,6 +72,42 @@ test('Subjects', async () => {
     expect(subject1).toHaveProperty('studyCycle', subject1.studyCycle);
     expect(subject1).toHaveProperty('semesterNumber', subject1.semesterNumber);
     expect(subject1).toHaveProperty('color', '#3F8366');
+
+    expect(
+        await Subject.isDuplicateName({
+            semester: semester1,
+            namePl: 'Sieci komputerowe - Informatyka',
+            nameEn: '',
+            semesterNumber: 5,
+        }),
+    ).toBe(true);
+
+    expect(
+        await Subject.isDuplicateName({
+            semester: semester2,
+            namePl: 'Sieci komputerowe - Informatyka',
+            nameEn: '',
+            semesterNumber: 5,
+        }),
+    ).toBe(false);
+
+    expect(
+        await Subject.isDuplicateName({
+            semester: semester1,
+            namePl: 'Sieci komputerowe - Informatyka',
+            nameEn: '',
+            semesterNumber: 6,
+        }),
+    ).toBe(false);
+
+    expect(
+        await Subject.isDuplicateName({
+            semester: semester1,
+            namePl: '',
+            nameEn: 'Sieci komputerowe - Informatyka',
+            semesterNumber: 5,
+        }),
+    ).toBe(false);
 
     const subjectData1 = makeSubjectData(subject1, [user1]);
 
