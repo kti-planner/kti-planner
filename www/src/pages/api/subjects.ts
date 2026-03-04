@@ -17,6 +17,10 @@ export const POST: APIRoute = async ({ locals }) => {
         return Response.json(null, { status: 400 });
     }
 
+    if (data.namePl === '' && data.nameEn === '') {
+        return Response.json(null, { status: 400 });
+    }
+
     const semester = await Semester.fetch(data.semesterId);
 
     if (semester === null) {

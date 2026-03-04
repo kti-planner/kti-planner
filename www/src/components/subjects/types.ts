@@ -39,8 +39,8 @@ const studyModeSchema = z.enum(['full-time', 'part-time']);
 const studyCycleSchema = z.enum(['first-cycle', 'second-cycle']);
 
 export const subjectCreateApiSchema = z.object({
-    namePl: z.string().trim().nonempty(),
-    nameEn: z.string().trim().nonempty(),
+    namePl: z.string().trim(),
+    nameEn: z.string().trim(),
     semesterId: z.uuid(),
     teacherIds: z.uuid().array(),
     description: z.string(),

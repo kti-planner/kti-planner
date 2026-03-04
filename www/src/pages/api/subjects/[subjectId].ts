@@ -23,6 +23,10 @@ export const PATCH: APIRoute = async ({ locals, params }) => {
         return Response.json(null, { status: 400 });
     }
 
+    if (data.namePl === '' && data.nameEn === '') {
+        return Response.json(null, { status: 400 });
+    }
+
     const semester = await Semester.fetch(subject.semesterId);
 
     if (semester === null) {
