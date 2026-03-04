@@ -202,6 +202,22 @@ test('Can delete exercise', async ({ page }) => {
     await expect(page.getByRole('link', { name: 'IPv6 cz. II' })).not.toBeVisible();
 });
 
+test('Properly formats classroom name in exercise hover', async ({ page }) => {
+    await page.goto('/semesters/2024-summer/subjects/zarządzanie-bezpieczeństwem-sieci---informatyka-sem.-vi/');
+
+    await expect(page.getByRole('link', { name: 'Tunele IPv6 i IPSec' })).toHaveAttribute(
+        'title',
+        'Bogdan Nowak\nRemote',
+    );
+
+    await page.getByRole('link', { name: 'Polski' }).click();
+
+    await expect(page.getByRole('link', { name: 'Tunele IPv6 i IPSec' })).toHaveAttribute(
+        'title',
+        'Bogdan Nowak\nZdalnie',
+    );
+});
+
 test.describe('API fetch tests', () => {
     test('Logged-out user cannot create new exercise', async ({ page }) => {
         await page.goto('/semesters/2024-summer/subjects/lokalne-sieci-bezprzewodowe---informatyka-sem.-vi/');

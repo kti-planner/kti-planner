@@ -3,7 +3,7 @@ import { computed } from 'vue';
 import { langId } from '@components/frontend/lang';
 import { currentUser } from '@components/frontend/user';
 import { useApiFetch } from '@components/api';
-import type { ClassroomData } from '@components/classrooms/types';
+import { type ClassroomData, formatClassroomName } from '@components/classrooms/types';
 import type { ExerciseData } from '@components/exercises/types';
 import type { LaboratoryClassData } from '@components/laboratory-classes/types';
 import type { SemesterData } from '@components/semesters/types';
@@ -87,7 +87,7 @@ defineExpose({
                 :key="exercise.id"
                 :href="`${subjectUrl}/${exercise.exerciseNumber}/`"
                 class="list-group-item list-group-item-action"
-                :title="`${exercise.teacher?.name}\n${exercise.classroom?.name}`"
+                :title="`${exercise.teacher?.name}\n${formatClassroomName(exercise.classroom, langId)}`"
             >
                 <div>{{ `${exercise.exerciseNumber}. ${exercise.name}` }}</div>
                 <template v-if="exerciseDateRanges.has(exercise.id)">
