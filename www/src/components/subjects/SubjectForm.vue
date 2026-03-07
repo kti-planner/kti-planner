@@ -146,7 +146,6 @@ const translations = {
     'pl': {
         'Subject name (Polish)': 'Nazwa przedmiotu (Polska)',
         'Subject name (English)': 'Nazwa przedmiotu (Angielska)',
-        'Subject name': 'Nazwa przedmiotu',
         'Moodle course ID': 'ID kursu Moodle',
         'Description': 'Opis',
         'Teachers': 'Nauczyciele',
