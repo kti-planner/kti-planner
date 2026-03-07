@@ -2,6 +2,7 @@ import { expect, test } from 'vitest';
 import { Semester } from '@backend/semester';
 import { makeSubjectData, Subject } from '@backend/subject';
 import { User } from '@backend/user';
+import { makeSubjectSlug } from '@components/utils';
 
 test('Subjects', async () => {
     expect(await Subject.fetchAll()).toStrictEqual([]);
@@ -15,12 +16,14 @@ test('Subjects', async () => {
     });
 
     expect(
-        await Subject.isDuplicateName({
-            semester: semester1,
-            namePl: 'Sieci komputerowe - Informatyka',
-            nameEn: '',
-            semesterNumber: 5,
-        }),
+        await Subject.isDuplicateSlug(
+            semester1,
+            makeSubjectSlug({
+                namePl: 'Sieci komputerowe - Informatyka',
+                nameEn: '',
+                semesterNumber: 5,
+            }),
+        ),
     ).toBe(false);
 
     const semester2 = await Semester.create({
@@ -74,40 +77,48 @@ test('Subjects', async () => {
     expect(subject1).toHaveProperty('color', '#3F8366');
 
     expect(
-        await Subject.isDuplicateName({
-            semester: semester1,
-            namePl: 'Sieci komputerowe - Informatyka',
-            nameEn: '',
-            semesterNumber: 5,
-        }),
+        await Subject.isDuplicateSlug(
+            semester1,
+            makeSubjectSlug({
+                namePl: 'Sieci komputerowe - Informatyka',
+                nameEn: '',
+                semesterNumber: 5,
+            }),
+        ),
     ).toBe(true);
 
     expect(
-        await Subject.isDuplicateName({
-            semester: semester2,
-            namePl: 'Sieci komputerowe - Informatyka',
-            nameEn: '',
-            semesterNumber: 5,
-        }),
+        await Subject.isDuplicateSlug(
+            semester2,
+            makeSubjectSlug({
+                namePl: 'Sieci komputerowe - Informatyka',
+                nameEn: '',
+                semesterNumber: 5,
+            }),
+        ),
     ).toBe(false);
 
     expect(
-        await Subject.isDuplicateName({
-            semester: semester1,
-            namePl: 'Sieci komputerowe - Informatyka',
-            nameEn: '',
-            semesterNumber: 6,
-        }),
+        await Subject.isDuplicateSlug(
+            semester1,
+            makeSubjectSlug({
+                namePl: 'Sieci komputerowe - Informatyka',
+                nameEn: '',
+                semesterNumber: 6,
+            }),
+        ),
     ).toBe(false);
 
     expect(
-        await Subject.isDuplicateName({
-            semester: semester1,
-            namePl: '',
-            nameEn: 'Sieci komputerowe - Informatyka',
-            semesterNumber: 5,
-        }),
-    ).toBe(false);
+        await Subject.isDuplicateSlug(
+            semester1,
+            makeSubjectSlug({
+                namePl: '',
+                nameEn: 'Sieci komputerowe - Informatyka',
+                semesterNumber: 5,
+            }),
+        ),
+    ).toBe(true);
 
     const subjectData1 = makeSubjectData(subject1, [user1]);
 
@@ -271,7 +282,20 @@ test('Subjects', async () => {
 
     await expect(
         subject1.edit({
-            namePl: 'Zarządzanie bezpieczeństwem sieci',
+            nameEn: 'Managing network security',
+            semesterNumber: 6,
+        }),
+    ).rejects.toThrow(Error);
+
+    await subject2.edit({
+        nameEn: 'Managing network security',
+        semesterNumber: 6,
+    });
+
+    await expect(
+        subject1.edit({
+            namePl: 'Managing network security',
+            nameEn: '',
             semesterNumber: 6,
         }),
     ).rejects.toThrow(Error);

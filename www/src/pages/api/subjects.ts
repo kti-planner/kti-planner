@@ -33,24 +33,24 @@ export const POST: APIRoute = async ({ locals }) => {
         return Response.json(false, { status: 404 });
     }
 
-    if (await Subject.isDuplicateName({ semester, ...data })) {
+    try {
+        await Subject.create({
+            namePl: data.namePl,
+            nameEn: data.nameEn,
+            semester: semester,
+            teachers: teachers,
+            description: data.description,
+            moodleCourseId: data.moodleCourseId,
+            durationMinutes: data.durationMinutes,
+            classRepeatWeeks: data.classRepeatWeeks,
+            studyMode: data.studyMode,
+            studyCycle: data.studyCycle,
+            semesterNumber: data.semesterNumber,
+            color: data.color,
+        });
+    } catch {
         return Response.json(false, { status: 200 });
     }
-
-    await Subject.create({
-        namePl: data.namePl,
-        nameEn: data.nameEn,
-        semester: semester,
-        teachers: teachers,
-        description: data.description,
-        moodleCourseId: data.moodleCourseId,
-        durationMinutes: data.durationMinutes,
-        classRepeatWeeks: data.classRepeatWeeks,
-        studyMode: data.studyMode,
-        studyCycle: data.studyCycle,
-        semesterNumber: data.semesterNumber,
-        color: data.color,
-    });
 
     return Response.json(true, { status: 201 });
 };

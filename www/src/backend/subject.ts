@@ -4,7 +4,7 @@ import { db } from '@backend/db';
 import { Semester } from '@backend/semester';
 import { makeUserPublicData, User } from '@backend/user';
 import type { SubjectData } from '@components/subjects/types';
-import { makeSubjectFullName, toHyphenatedLowercase } from '@components/utils';
+import { makeSubjectSlug } from '@components/utils';
 
 assert(env.MOODLE_BASE_URL !== undefined);
 const moodleBaseUrl = env.MOODLE_BASE_URL;
@@ -90,7 +90,7 @@ export class Subject {
     }
 
     get slug(): string {
-        return toHyphenatedLowercase(makeSubjectFullName(this, 'en'));
+        return makeSubjectSlug(this);
     }
 
     async getTeachers(): Promise<User[]> {
@@ -125,29 +125,14 @@ export class Subject {
         return subjects.find(subject => subject.slug === slug) ?? null;
     }
 
-    static async isDuplicateName({
-        semester,
-        namePl,
-        nameEn,
-        semesterNumber,
-    }: {
-        semester: Semester;
-        namePl: string;
-        nameEn: string;
-        semesterNumber: number;
-    }): Promise<boolean> {
+    static async isDuplicateSlug(semester: Semester, slug: string, ignore?: Subject): Promise<boolean> {
         const subjects = await Subject.fetchAllFromSemester(semester);
 
-        return subjects.some(s => {
-            const equalNamePl = s.namePl !== '' && s.namePl === namePl;
-            const equalNameEn = s.nameEn !== '' && s.nameEn === nameEn;
-
-            return s.semesterNumber === semesterNumber && (equalNamePl || equalNameEn);
-        });
+        return subjects.some(subject => subject.slug === slug && subject.id !== ignore?.id);
     }
 
     static async create(data: SubjectCreateData): Promise<Subject> {
-        if (await Subject.isDuplicateName(data)) {
+        if (await Subject.isDuplicateSlug(data.semester, makeSubjectSlug(data))) {
             throw new Error('A subject with this name already exists');
         }
 
@@ -183,12 +168,15 @@ export class Subject {
         assert(semester);
 
         if (
-            await Subject.isDuplicateName({
+            await Subject.isDuplicateSlug(
                 semester,
-                namePl: data.namePl ?? this.namePl,
-                nameEn: data.nameEn ?? this.nameEn,
-                semesterNumber: data.semesterNumber ?? this.semesterNumber,
-            })
+                makeSubjectSlug({
+                    namePl: data.namePl ?? this.namePl,
+                    nameEn: data.nameEn ?? this.nameEn,
+                    semesterNumber: data.semesterNumber ?? this.semesterNumber,
+                }),
+                this,
+            )
         ) {
             throw new Error('A subject with this name already exists');
         }

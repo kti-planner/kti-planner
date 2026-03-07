@@ -39,30 +39,23 @@ export const PATCH: APIRoute = async ({ locals, params }) => {
         return Response.json(false, { status: 404 });
     }
 
-    if (
-        await Subject.isDuplicateName({
-            semester,
-            namePl: data.namePl ?? subject.namePl,
-            nameEn: data.nameEn ?? subject.nameEn,
-            semesterNumber: data.semesterNumber ?? subject.semesterNumber,
-        })
-    ) {
+    try {
+        await subject.edit({
+            namePl: data.namePl,
+            nameEn: data.nameEn,
+            teachers: teachers,
+            description: data.description,
+            moodleCourseId: data.moodleCourseId,
+            durationMinutes: data.durationMinutes,
+            classRepeatWeeks: data.classRepeatWeeks,
+            studyMode: data.studyMode,
+            studyCycle: data.studyCycle,
+            semesterNumber: data.semesterNumber,
+            color: data.color,
+        });
+    } catch {
         return Response.json(false, { status: 200 });
     }
-
-    await subject.edit({
-        namePl: data.namePl,
-        nameEn: data.nameEn,
-        teachers: teachers,
-        description: data.description,
-        moodleCourseId: data.moodleCourseId,
-        durationMinutes: data.durationMinutes,
-        classRepeatWeeks: data.classRepeatWeeks,
-        studyMode: data.studyMode,
-        studyCycle: data.studyCycle,
-        semesterNumber: data.semesterNumber,
-        color: data.color,
-    });
 
     return Response.json(true, { status: 200 });
 };
