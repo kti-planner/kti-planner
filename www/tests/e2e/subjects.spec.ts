@@ -144,7 +144,7 @@ test('Can edit subject and prevent duplicate subject', async ({ page }) => {
     await expect(page.getByRole('heading', { name: 'Edit subject Ethernet networks and IP' })).toBeVisible();
 
     await page
-        .getByRole('textbox', { name: 'Subject name (Polish)' })
+        .getByRole('textbox', { name: 'Subject name (English)' })
         .fill('Zarządzanie bezpieczeństwem sieci - Informatyka');
 
     await page.getByRole('combobox', { name: 'Study mode' }).selectOption('Full-time');
