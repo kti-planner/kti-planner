@@ -10,6 +10,7 @@ import { isLangId } from '@backend/lang';
 import { Semester } from '@backend/semester';
 import { Subject } from '@backend/subject';
 import { User } from '@backend/user';
+import { makeSubjectFullName } from '@components/utils';
 
 const translations = {
     'en': {
@@ -116,7 +117,7 @@ export const ALL: APIRoute = async ({ params, url, request }) => {
 
             return {
                 uid: laboratoryClass.id,
-                title: `${subject.fullName} - ${exercise.name}`,
+                title: `${makeSubjectFullName(subject, langId)} - ${exercise.name}`,
                 description,
                 ...(exerciseClassroom ? { location: exerciseClassroom.name } : {}),
                 start: laboratoryClass.startDate.getTime(),

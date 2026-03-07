@@ -37,21 +37,15 @@ export const POST: APIRoute = async ({ locals, params }) => {
         return Response.json(null, { status: 404 });
     }
 
-    const currentSemesterSubjects = await Subject.fetchAllFromSemester(currentSemester);
+    const existingSubject = await Subject.fetchBySlug(currentSemester, subjectToBeCopied.slug);
 
-    // Copy subject
-    if (
-        currentSemesterSubjects.find(
-            s =>
-                s.name.toLowerCase() === subjectToBeCopied.name.toLowerCase() &&
-                s.semesterNumber === subjectToBeCopied.semesterNumber,
-        )
-    ) {
+    if (existingSubject) {
         return Response.json(false, { status: 200 });
     }
 
     const newSubject = await Subject.create({
-        name: subjectToBeCopied.name,
+        namePl: subjectToBeCopied.namePl,
+        nameEn: subjectToBeCopied.nameEn,
         semester: currentSemester,
         teachers: await subjectToBeCopied.getTeachers(),
         description: subjectToBeCopied.description,

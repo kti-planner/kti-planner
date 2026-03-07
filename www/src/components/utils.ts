@@ -41,6 +41,15 @@ export const dateTimeStringSchema = z.iso.datetime({ local: true }).transform(st
 
 export const romanNumerals = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII'];
 
-export function makeSubjectFullName(name: string, semesterNumber: number): string {
-    return `${name} sem. ${romanNumerals[semesterNumber - 1] ?? ''}`;
+export function makeSubjectFullName(
+    subject: { namePl: string; nameEn: string; semesterNumber: number },
+    langId: LangId,
+): string {
+    const name = langId === 'en' ? subject.nameEn || subject.namePl : subject.namePl || subject.nameEn;
+
+    return `${name} sem. ${romanNumerals[subject.semesterNumber - 1] ?? ''}`;
+}
+
+export function makeSubjectSlug(subject: { namePl: string; nameEn: string; semesterNumber: number }): string {
+    return toHyphenatedLowercase(makeSubjectFullName(subject, 'en'));
 }

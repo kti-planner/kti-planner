@@ -4,8 +4,8 @@ import type { UserPublicData } from '@components/users/types';
 
 export interface SubjectData {
     id: string;
-    name: string;
-    fullName: string;
+    namePl: string;
+    nameEn: string;
     semesterId: string;
     slug: string;
     teachers: UserPublicData[];
@@ -39,7 +39,8 @@ const studyModeSchema = z.enum(['full-time', 'part-time']);
 const studyCycleSchema = z.enum(['first-cycle', 'second-cycle']);
 
 export const subjectCreateApiSchema = z.object({
-    name: z.string().trim().nonempty(),
+    namePl: z.string().trim(),
+    nameEn: z.string().trim(),
     semesterId: z.uuid(),
     teacherIds: z.uuid().array(),
     description: z.string(),
@@ -55,7 +56,8 @@ export const subjectCreateApiSchema = z.object({
 export type SubjectCreateApiData = z.input<typeof subjectCreateApiSchema>;
 
 export const subjectEditApiSchema = z.object({
-    name: z.string().optional(),
+    namePl: z.string().optional(),
+    nameEn: z.string().optional(),
     teacherIds: z.uuid().array().optional(),
     description: z.string().optional(),
     moodleCourseId: z.string().optional(),

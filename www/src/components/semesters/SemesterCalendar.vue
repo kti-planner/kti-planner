@@ -16,6 +16,7 @@ import type { LaboratoryClassData } from '@components/laboratory-classes/types';
 import type { ScheduleChangeData, SemesterData } from '@components/semesters/types';
 import type { SubjectData } from '@components/subjects/types';
 import type { UserPublicData } from '@components/users/types';
+import { makeSubjectFullName } from '@components/utils';
 import Calendar from '@components/Calendar.vue';
 import CalendarExportForm from '@components/calendar/CalendarExportForm.vue';
 import CalendarEvent from '@components/calendar-events/CalendarEvent.vue';
@@ -111,7 +112,9 @@ const subjectGroupsOptions = computed(() =>
         .filter(group => group.subjectsData.length > 0)
         .map(group => ({
             title: group.title,
-            subjectOptions: Object.fromEntries(group.subjectsData.map(subject => [subject.fullName, subject])),
+            subjectOptions: Object.fromEntries(
+                group.subjectsData.map(subject => [makeSubjectFullName(subject, langId), subject]),
+            ),
         })),
 );
 

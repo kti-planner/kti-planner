@@ -8,6 +8,7 @@ import type { LaboratoryGroupData } from '@components/laboratory-groups/types';
 import type { ScheduleChangeData, SemesterData } from '@components/semesters/types';
 import { makeSubjectStudyDetails, type SubjectData } from '@components/subjects/types';
 import type { UserPublicData } from '@components/users/types';
+import { makeSubjectFullName } from '@components/utils';
 import ExerciseList from '@components/exercises/ExerciseList.vue';
 import GenerateClasses from '@components/laboratory-classes/GenerateClasses.vue';
 import LaboratoryGroupListModal from '@components/laboratory-groups/LaboratoryGroupListModal.vue';
@@ -62,7 +63,7 @@ function refreshClasses() {
 
 <template>
     <h1 class="text-center fs-4 mb-3">
-        {{ subject.fullName }}
+        {{ makeSubjectFullName(subject, langId) }}
         <EditSubject v-if="currentUser" :semester :subject :all-users />
         <br />
         <span class="fs-5">{{ makeSubjectStudyDetails(subject, langId) }}</span>

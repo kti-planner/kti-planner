@@ -9,7 +9,12 @@ import type { LaboratoryClassData, LaboratoryClassEditApiData } from '@component
 import type { SemesterData } from '@components/semesters/types';
 import { makeSubjectStudyDetails, type SubjectData } from '@components/subjects/types';
 import type { UserPublicData } from '@components/users/types';
-import { formatDateLocalHhMm, formatDateLocalYyyyMmDd, parseDateLocalYyyyMmDd } from '@components/utils';
+import {
+    formatDateLocalHhMm,
+    formatDateLocalYyyyMmDd,
+    makeSubjectFullName,
+    parseDateLocalYyyyMmDd,
+} from '@components/utils';
 import ButtonWithConfirmationPopover from '@components/ButtonWithConfirmationPopover.vue';
 import UserSelector from '@components/users/UserSelector.vue';
 
@@ -127,7 +132,7 @@ const teacherId = crypto.randomUUID();
             {{ translate('Subject') }}:
             <br />
             <a :href="`/semesters/${semester.slug}/subjects/${subject.slug}/`" class="link-success">
-                {{ subject.fullName }} - {{ makeSubjectStudyDetails(subject, langId) }}
+                {{ makeSubjectFullName(subject, langId) }} - {{ makeSubjectStudyDetails(subject, langId) }}
             </a>
         </div>
 
