@@ -92,11 +92,14 @@ async function submit() {
 
     if (success) {
         const newUrl = `/semesters/${semester.slug}/subjects/${toHyphenatedLowercase(
-            makeSubjectFullName({
-                namePl: subjectNamePl.value,
-                nameEn: subjectNameEn.value,
-                semesterNumber: semesterNumber.value,
-            }),
+            makeSubjectFullName(
+                {
+                    namePl: subjectNamePl.value,
+                    nameEn: subjectNameEn.value,
+                    semesterNumber: semesterNumber.value,
+                },
+                'en',
+            ),
         )}/`;
 
         if (isEditing.value) {

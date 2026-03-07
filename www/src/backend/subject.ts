@@ -90,7 +90,7 @@ export class Subject {
     }
 
     get slug(): string {
-        return toHyphenatedLowercase(makeSubjectFullName(this));
+        return toHyphenatedLowercase(makeSubjectFullName(this, 'en'));
     }
 
     async getTeachers(): Promise<User[]> {
