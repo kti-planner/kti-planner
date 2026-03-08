@@ -37,7 +37,7 @@ CREATE TYPE study_cycle_type AS ENUM ('first-cycle', 'second-cycle');
 
 CREATE TABLE subjects (
     id                 uuid PRIMARY KEY,
-    name               text NOT NULL,
+    name_pl            text NOT NULL,
     semester_id        uuid NOT NULL REFERENCES semesters ON DELETE NO ACTION,
     teacher_ids        uuid[] NOT NULL,
     description        text NOT NULL,
@@ -47,7 +47,8 @@ CREATE TABLE subjects (
     study_mode         study_mode_type NOT NULL,
     study_cycle        study_cycle_type NOT NULL,
     semester_number    integer NOT NULL,
-    color              text NOT NULL
+    color              text NOT NULL,
+    name_en            text NOT NULL
 );
 
 CREATE TABLE exercises (

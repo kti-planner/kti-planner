@@ -50,7 +50,7 @@ test('Can plan single class without selecting a group beforehand', async ({ page
 });
 
 test('Cannot plan classes from calendar when not logged in', async ({ page }) => {
-    await page.goto('/semesters/2025-winter/subjects/sieci-komputerowe---informatyka-sem.-v/');
+    await page.goto('/semesters/2025-winter/subjects/computer-networks---cs-sem.-v/');
 
     await page.locator('.fc-timegrid-slot-lane[data-time="14:00:00"]').click();
 
@@ -58,7 +58,7 @@ test('Cannot plan classes from calendar when not logged in', async ({ page }) =>
 });
 
 test('Can plan classes from calendar when logged in', async ({ page }) => {
-    await page.goto('/semesters/2025-winter/subjects/sieci-komputerowe---informatyka-sem.-v/');
+    await page.goto('/semesters/2025-winter/subjects/computer-networks---cs-sem.-v/');
     await loginAsTeacher(page);
 
     await page.locator('.fc-timegrid-slot-lane[data-time="14:00:00"]').click();
@@ -80,7 +80,7 @@ test('Can plan classes from calendar when logged in', async ({ page }) => {
 });
 
 test('Can regenerate classes for a group', async ({ page }) => {
-    await page.goto('/semesters/2025-winter/subjects/sieci-komputerowe---informatyka-sem.-v/');
+    await page.goto('/semesters/2025-winter/subjects/computer-networks---cs-sem.-v/');
     await loginAsTeacher(page);
 
     await expect(page.locator('p', { hasText: '11:15 - 13:00' })).toBeVisible();
@@ -104,7 +104,7 @@ test('Can regenerate classes for a group', async ({ page }) => {
 });
 
 test('Can regenerate single class for a group', async ({ page }) => {
-    await page.goto('/semesters/2025-winter/subjects/sieci-komputerowe---informatyka-sem.-v/');
+    await page.goto('/semesters/2025-winter/subjects/computer-networks---cs-sem.-v/');
     await loginAsTeacher(page);
 
     await expect(page.locator('p', { hasText: '11:15 - 13:00' })).toBeVisible();
@@ -130,7 +130,7 @@ test('Can regenerate single class for a group', async ({ page }) => {
 });
 
 test('Cannot plan classes when there are conflicts', async ({ page }) => {
-    await page.goto('/semesters/2025-winter/subjects/sieci-komputerowe---informatyka-sem.-v//');
+    await page.goto('/semesters/2025-winter/subjects/computer-networks---cs-sem.-v//');
     await loginAsTeacher(page);
 
     await page.getByRole('button', { name: 'Plan classes' }).click();
@@ -150,7 +150,7 @@ test('Cannot plan classes when there are conflicts', async ({ page }) => {
 });
 
 test('Cannot plan classes when there are holidays', async ({ page }) => {
-    await page.goto('/semesters/2025-winter/subjects/sieci-komputerowe---informatyka-sem.-v//');
+    await page.goto('/semesters/2025-winter/subjects/computer-networks---cs-sem.-v//');
     await loginAsTeacher(page);
 
     await page.getByRole('button', { name: 'Plan classes' }).click();
@@ -242,7 +242,7 @@ test('Can plan classes with two weeks between each one', async ({ page }) => {
 });
 
 test('Show class-canceled event conflict when generating classes', async ({ page }) => {
-    await page.goto('/semesters/2025-winter/subjects/sieci-komputerowe---informatyka-sem.-v/');
+    await page.goto('/semesters/2025-winter/subjects/computer-networks---cs-sem.-v/');
     await loginAsTeacher(page);
 
     await page.getByRole('button', { name: 'Plan classes' }).click();
@@ -278,7 +278,7 @@ test('Generating classes that extend beyond semester end results in a warning', 
 });
 
 test('Cannot edit classes when not logged in', async ({ page }) => {
-    await page.goto('/semesters/2025-winter/subjects/sieci-komputerowe---informatyka-sem.-v/');
+    await page.goto('/semesters/2025-winter/subjects/computer-networks---cs-sem.-v/');
 
     await page.locator('.calendar-wrapper a').filter({ hasText: '11:15 - 13:00' }).click();
 
@@ -295,7 +295,7 @@ test('Cannot edit classes when not logged in', async ({ page }) => {
 });
 
 test('Can edit class time when logged in', async ({ page }) => {
-    await page.goto('/semesters/2025-winter/subjects/sieci-komputerowe---informatyka-sem.-v/');
+    await page.goto('/semesters/2025-winter/subjects/computer-networks---cs-sem.-v/');
     await loginAsTeacher(page);
 
     await page.locator('.calendar-wrapper a').filter({ hasText: '11:15 - 13:00' }).click();
@@ -321,7 +321,7 @@ test('Can edit class time when logged in', async ({ page }) => {
 });
 
 test('Cannot edit class time to another class', async ({ page }) => {
-    await page.goto('/semesters/2025-winter/subjects/sieci-komputerowe---informatyka-sem.-v/');
+    await page.goto('/semesters/2025-winter/subjects/computer-networks---cs-sem.-v/');
     await loginAsTeacher(page);
 
     await page.locator('.calendar-wrapper a').filter({ hasText: '11:15 - 13:00' }).click();
@@ -346,7 +346,7 @@ test('Cannot edit class time to another class', async ({ page }) => {
 });
 
 test('Can move classes forwards', async ({ page }) => {
-    await page.goto('/semesters/2025-winter/subjects/sieci-komputerowe---informatyka-sem.-v/');
+    await page.goto('/semesters/2025-winter/subjects/computer-networks---cs-sem.-v/');
     await loginAsTeacher(page);
 
     await page.locator('.calendar-wrapper a').filter({ hasText: '11:15 - 13:00' }).click();
@@ -374,7 +374,7 @@ test('Can move classes forwards', async ({ page }) => {
 });
 
 test('Cannot move classes outside of semester', async ({ page }) => {
-    await page.goto('/semesters/2025-winter/subjects/sieci-komputerowe---informatyka-sem.-v/');
+    await page.goto('/semesters/2025-winter/subjects/computer-networks---cs-sem.-v/');
     await loginAsTeacher(page);
 
     await page.locator('.calendar-wrapper a').filter({ hasText: '11:15 - 13:00' }).click();
@@ -398,7 +398,7 @@ test('Cannot move classes outside of semester', async ({ page }) => {
 });
 
 test('Classes sync with exercise teacher edits', async ({ page }) => {
-    await page.goto('/semesters/2025-winter/subjects/sieci-komputerowe---informatyka-sem.-v/');
+    await page.goto('/semesters/2025-winter/subjects/computer-networks---cs-sem.-v/');
     await loginAsTeacher(page);
 
     await expect(
@@ -410,7 +410,7 @@ test('Classes sync with exercise teacher edits', async ({ page }) => {
     await page.getByRole('combobox', { name: 'Teacher' }).selectOption('Bogdan Nowak');
     await page.getByRole('button', { name: 'Save' }).click();
 
-    await page.getByRole('link', { name: 'Sieci komputerowe - Informatyka sem. V' }).click();
+    await page.getByRole('link', { name: 'Computer Networks - CS sem. V' }).click();
 
     await expect(
         page.locator('.calendar-wrapper a').filter({ hasText: '11:15 - 13:00' }).filter({ hasText: 'Bogdan Nowak' }),

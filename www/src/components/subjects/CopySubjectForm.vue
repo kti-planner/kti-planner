@@ -8,6 +8,7 @@ import {
     type SubjectCopyFromPreviousSemesterApiData,
     type SubjectData,
 } from '@components/subjects/types';
+import { makeSubjectFullName } from '@components/utils';
 
 const { currentSemester } = defineProps<{
     currentSemester: SemesterData;
@@ -133,7 +134,7 @@ const subjectId = crypto.randomUUID();
                 <label :for="subjectId" class="form-label">{{ translate('Subject to copy') }}</label>
                 <select :id="subjectId" v-model="selectedSubject" class="form-select" required>
                     <option v-for="subject in subjectsData" :key="subject.slug" :value="subject">
-                        {{ subject.fullName }} - {{ makeSubjectStudyDetails(subject, langId) }}
+                        {{ makeSubjectFullName(subject, langId) }} - {{ makeSubjectStudyDetails(subject, langId) }}
                     </option>
                 </select>
             </p>

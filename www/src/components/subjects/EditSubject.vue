@@ -3,6 +3,7 @@ import { langId } from '@components/frontend/lang';
 import type { SemesterData } from '@components/semesters/types';
 import type { SubjectData } from '@components/subjects/types';
 import type { UserPublicData } from '@components/users/types';
+import { makeSubjectFullName } from '@components/utils';
 import IconButton from '@components/IconButton.vue';
 import Modal from '@components/Modal.vue';
 import SubjectForm from '@components/subjects/SubjectForm.vue';
@@ -42,7 +43,7 @@ const modalId = crypto.randomUUID();
     />
 
     <Modal :id="modalId">
-        <template #header>{{ translate('Edit subject') }} {{ subject.fullName }}</template>
+        <template #header>{{ translate('Edit subject') }} {{ makeSubjectFullName(subject, langId) }}</template>
         <SubjectForm :semester :subject :all-users />
     </Modal>
 </template>

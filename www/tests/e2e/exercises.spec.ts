@@ -2,7 +2,7 @@ import { expect } from 'playwright/test';
 import { loginAsAdmin, loginAsTeacher, test } from './fixtures';
 
 test('Can access exercises list', async ({ page }) => {
-    await page.goto('/semesters/2025-winter/subjects/sieci-komputerowe---informatyka-sem.-v/');
+    await page.goto('/semesters/2025-winter/subjects/computer-networks---cs-sem.-v/');
 
     await expect(page.locator('body')).toContainText('1. Diagnostyka sieci IPv4');
     await expect(page.locator('body')).toContainText('1.10.2025 - 8.10.2025');
@@ -18,7 +18,7 @@ test('Can access exercises list', async ({ page }) => {
 });
 
 test('Can access exercise page', async ({ page }) => {
-    await page.goto('/semesters/2025-winter/subjects/sieci-komputerowe---informatyka-sem.-v/');
+    await page.goto('/semesters/2025-winter/subjects/computer-networks---cs-sem.-v/');
     await page.getByRole('link', { name: 'Diagnostyka sieci IPv4' }).click();
 
     await expect(page.locator('.breadcrumb')).toContainText('Diagnostyka sieci IPv4');

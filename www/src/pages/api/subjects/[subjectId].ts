@@ -23,6 +23,10 @@ export const PATCH: APIRoute = async ({ locals, params }) => {
         return Response.json(null, { status: 400 });
     }
 
+    if (data.namePl === '' && data.nameEn === '') {
+        return Response.json(null, { status: 400 });
+    }
+
     const semester = await Semester.fetch(subject.semesterId);
 
     if (semester === null) {
@@ -35,28 +39,23 @@ export const PATCH: APIRoute = async ({ locals, params }) => {
         return Response.json(false, { status: 404 });
     }
 
-    const semesterSubjects = await Subject.fetchAllFromSemester(semester);
-
-    const otherSubject = semesterSubjects.find(
-        s => s.name.toLowerCase() === data.name?.toLowerCase() && s.semesterNumber === data.semesterNumber,
-    );
-
-    if (otherSubject && otherSubject.id !== subject.id) {
+    try {
+        await subject.edit({
+            namePl: data.namePl,
+            nameEn: data.nameEn,
+            teachers: teachers,
+            description: data.description,
+            moodleCourseId: data.moodleCourseId,
+            durationMinutes: data.durationMinutes,
+            classRepeatWeeks: data.classRepeatWeeks,
+            studyMode: data.studyMode,
+            studyCycle: data.studyCycle,
+            semesterNumber: data.semesterNumber,
+            color: data.color,
+        });
+    } catch {
         return Response.json(false, { status: 200 });
     }
-
-    await subject.edit({
-        name: data.name,
-        teachers: teachers,
-        description: data.description,
-        moodleCourseId: data.moodleCourseId,
-        durationMinutes: data.durationMinutes,
-        classRepeatWeeks: data.classRepeatWeeks,
-        studyMode: data.studyMode,
-        studyCycle: data.studyCycle,
-        semesterNumber: data.semesterNumber,
-        color: data.color,
-    });
 
     return Response.json(true, { status: 200 });
 };

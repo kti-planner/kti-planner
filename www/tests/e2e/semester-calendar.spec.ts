@@ -25,10 +25,10 @@ test('Can use subjects filter in semester calendar', async ({ page }) => {
     ).toBeVisible();
 
     await expect(
-        page.locator('.calendar-wrapper a').filter({ hasText: 'Sieci komputerowe - Informatyka sem. V' }).first(),
+        page.locator('.calendar-wrapper a').filter({ hasText: 'Computer Networks - CS sem. V' }).first(),
     ).toBeVisible();
 
-    await page.locator('label', { hasText: 'Sieci komputerowe - Informatyka sem. V' }).click();
+    await page.locator('label', { hasText: 'Computer Networks - CS sem. V' }).click();
 
     await expect(
         page
@@ -38,7 +38,7 @@ test('Can use subjects filter in semester calendar', async ({ page }) => {
     ).not.toBeVisible();
 
     await expect(
-        page.locator('.calendar-wrapper a').filter({ hasText: 'Sieci komputerowe - Informatyka sem. V' }).first(),
+        page.locator('.calendar-wrapper a').filter({ hasText: 'Computer Networks - CS sem. V' }).first(),
     ).toBeVisible();
 
     await page
@@ -55,7 +55,7 @@ test('Can use subjects filter in semester calendar', async ({ page }) => {
     ).toBeVisible();
 
     await expect(
-        page.locator('.calendar-wrapper a').filter({ hasText: 'Sieci komputerowe - Informatyka sem. V' }).first(),
+        page.locator('.calendar-wrapper a').filter({ hasText: 'Computer Networks - CS sem. V' }).first(),
     ).toBeVisible();
 });
 
@@ -99,14 +99,14 @@ test('Can view class details', async ({ page }) => {
     await page
         .locator('.calendar-wrapper a')
         .filter({ hasText: '11:15 - 13:00' })
-        .filter({ hasText: 'Sieci komputerowe' })
+        .filter({ hasText: 'Computer Networks' })
         .click();
 
     await expect(page.getByRole('heading', { name: 'Class details' })).toBeVisible();
 
     await expect(
         page.locator('.modal').getByRole('link', {
-            name: 'Sieci komputerowe - Informatyka sem. V - Full-time first-cycle studies',
+            name: 'Computer Networks - CS sem. V - Full-time first-cycle studies',
             exact: true,
         }),
     ).toBeVisible();
@@ -127,14 +127,14 @@ test('Can edit class time when logged in', async ({ page }) => {
     await page
         .locator('.calendar-wrapper a')
         .filter({ hasText: '11:15 - 13:00' })
-        .filter({ hasText: 'Sieci komputerowe' })
+        .filter({ hasText: 'Computer Networks' })
         .click();
 
     await expect(page.getByRole('heading', { name: 'Edit class' })).toBeVisible();
 
     await expect(
         page.locator('.modal').getByRole('link', {
-            name: 'Sieci komputerowe - Informatyka sem. V - Full-time first-cycle studies',
+            name: 'Computer Networks - CS sem. V - Full-time first-cycle studies',
             exact: true,
         }),
     ).toBeVisible();
@@ -157,7 +157,7 @@ test('Can edit class time when logged in', async ({ page }) => {
         page
             .locator('.calendar-wrapper a')
             .filter({ hasText: '11:15 - 13:00' })
-            .filter({ hasText: 'Sieci komputerowe' }),
+            .filter({ hasText: 'Computer Networks' }),
     ).not.toBeVisible();
 
     await expect(page.locator('.calendar-wrapper a').filter({ hasText: '13:15 - 15:00' })).toBeVisible();
